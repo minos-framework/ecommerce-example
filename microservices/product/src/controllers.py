@@ -20,7 +20,8 @@ from .services import (
 class ProductController:
     """Ticket Controller class"""
 
-    async def create_product(self, request: Request) -> Response:
+    @staticmethod
+    async def create_product(request: Request) -> Response:
         """TODO
 
         :param request:TODO
@@ -30,7 +31,8 @@ class ProductController:
         product = await ProductService().create_product(**content[0])
         return Response(product)
 
-    async def get_products(self, request: Request) -> Response:
+    @staticmethod
+    async def get_products(request: Request) -> Response:
         """TODO
 
         :param request: TODO

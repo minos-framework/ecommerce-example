@@ -11,7 +11,7 @@ from minos.common import (
 
 
 class Product(Aggregate):
-    """Ticket model."""
+    """TODO"""
 
     external_id: int
     name: str

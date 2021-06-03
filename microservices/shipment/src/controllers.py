@@ -23,7 +23,8 @@ from .services import (
 class ShipmentController:
     """TODO"""
 
-    async def create_shipment(self, request: Request) -> Response:
+    @staticmethod
+    async def create_shipment(request: Request) -> Response:
         """TODO"""
         content = await request.content()
 
@@ -31,7 +32,8 @@ class ShipmentController:
         uuid: UUID = await ShipmentService().create_shipment(products_query=products_query)
         return Response(str(uuid))
 
-    async def get_shipments(self, request: Request) -> Response:
+    @staticmethod
+    async def get_shipments(request: Request) -> Response:
         """TODO"""
         content = await request.content()
         shipments = await ShipmentService().get_shipments(content)

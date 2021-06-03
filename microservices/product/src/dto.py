@@ -11,6 +11,7 @@ from minos.common import (
 
 
 class ProductDto(MinosModel):
+    """TODO"""
     id: int
     external_id: int
     name: str
@@ -20,4 +21,5 @@ class ProductDto(MinosModel):
 
 
 class ProductsQueryDto(MinosModel):
+    """TODO"""
     ids: list[int]

@@ -11,9 +11,11 @@ from minos.common import (
 
 
 class ProductDto(MinosModel):
+    """TODO"""
     id: int
     unit_price: float
 
 
 class ProductsQueryDto(MinosModel):
+    """TODO"""
     ids: list[int]

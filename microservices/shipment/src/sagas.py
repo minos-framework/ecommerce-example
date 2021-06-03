@@ -15,6 +15,7 @@ from .aggregates import Shipment
 
 
 def get_product(context: SagaContext):
+    """TODO"""
     return context["products_query"]
 
 

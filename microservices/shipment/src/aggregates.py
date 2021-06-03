@@ -11,5 +11,7 @@ from minos.common import (
 
 
 class Shipment(Aggregate):
+    """TODO"""
+
     product_ids: list[int]
     price: float
