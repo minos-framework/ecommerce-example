@@ -18,28 +18,28 @@ repository:
     database: shipment_db
     user: minos
     password: min0s
-    host: postgres
+    host: localhost
     port: 5432
 snapshot:
     database: shipment_db
     user: minos
     password: min0s
-    host: postgres
+    host: localhost
     port: 5432
 events:
-    broker: kafka
+    broker: localhost
     port: 9092
     queue:
         database: shipment_db
         user: minos
         password: min0s
-        host: postgres
+        host: localhost
         port: 5432
         records: 10
         retry: 2
     items: []
 commands:
-    broker: kafka
+    broker: localhost
     port: 9092
     items:
         -   name: CreateShipment
@@ -49,12 +49,12 @@ commands:
         database: shipment_db
         user: minos
         password: min0s
-        host: postgres
+        host: localhost
         port: 5432
         records: 10
         retry: 2
 saga:
-    broker: kafka
+    broker: localhost
     port: 9092
     storage:
         path: "./shipment.lmdb"
@@ -66,7 +66,7 @@ saga:
         database: shipment_db
         user: minos
         password: min0s
-        host: postgres
+        host: localhost
         port: 5432
         records: 10
         retry: 2
