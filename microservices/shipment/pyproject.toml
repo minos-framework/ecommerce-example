@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "shipment"
+version = "0.1.0"
+description = ""
+authors = ["Clariteia Devs <devs@clariteia.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+minos-microservice-common = "^0.0"
+minos-microservice-networks = "^0.0"
+minos-microservice-saga = "^0.0"
+minos-microservice = { git = "https://github.com/clariteia/microservice.git", rev = "e845cdb58c37d63581b5204aeeef00dc2d6b5414" }
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
