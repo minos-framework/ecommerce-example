@@ -11,7 +11,10 @@ from minos.common import (
     Response,
 )
 
-from .dto import ProductDto, ProductsQueryDto
+from .dto import (
+    ProductDto,
+    ProductsQueryDto,
+)
 from .services import (
     ProductService,
 )

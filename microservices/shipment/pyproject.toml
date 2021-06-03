@@ -6,10 +6,9 @@ authors = ["Clariteia Devs <devs@clariteia.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = "^0.0"
+minos-microservice-common = { git = "https://github.com/clariteia/minos_microservice_common.git", rev = "bd831f3a96597e61f48a20be8ae3fe4bc4b3dbce" }
 minos-microservice-networks = "^0.0"
 minos-microservice-saga = "^0.0"
-minos-microservice = { git = "https://github.com/clariteia/microservice.git", rev = "e845cdb58c37d63581b5204aeeef00dc2d6b5414" }
 [tool.poetry.dev-dependencies]
 
 [build-system]

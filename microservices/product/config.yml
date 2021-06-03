@@ -2,7 +2,7 @@ service:
     name: Product
 rest:
     host: 0.0.0.0
-    port: 8080
+    port: 8081
     endpoints:
         -   route: /products
             method: POST

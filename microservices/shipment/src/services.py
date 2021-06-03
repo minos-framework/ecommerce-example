@@ -9,7 +9,7 @@ from uuid import (
     UUID,
 )
 
-from minos.microservice import (
+from minos.common import (
     Service,
 )
 from minos.saga import (
