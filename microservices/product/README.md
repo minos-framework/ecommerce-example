@@ -1,11 +1,13 @@
 # `product` microservice
 
-## Installation
+## Development
+
+### Installation
 ```shell
 poetry install
 ```
 
-## How to run?
+### How to run?
 ```shell
 poetry run microservice start
 ```
