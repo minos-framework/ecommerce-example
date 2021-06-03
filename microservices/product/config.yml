@@ -2,7 +2,7 @@ service:
     name: Product
 rest:
     host: 0.0.0.0
-    port: 8081
+    port: 8080
     endpoints:
         -   route: /products
             method: POST
@@ -18,28 +18,28 @@ repository:
     database: product_db
     user: minos
     password: min0s
-    host: localhost
+    host: postgres
     port: 5432
 snapshot:
     database: product_db
     user: minos
     password: min0s
-    host: localhost
+    host: postgres
     port: 5432
 events:
-    broker: localhost
+    broker: kafka
     port: 9092
     queue:
         database: product_db
         user: minos
         password: min0s
-        host: localhost
+        host: postgres
         port: 5432
         records: 10
         retry: 2
     items: []
 commands:
-    broker: localhost
+    broker: kafka
     port: 9092
     items:
         -   name: CreateProduct
@@ -52,12 +52,12 @@ commands:
         database: product_db
         user: minos
         password: min0s
-        host: localhost
+        host: postgres
         port: 5432
         records: 10
         retry: 2
 saga:
-    broker: localhost
+    broker: kafka
     port: 9092
     storage:
         path: "./product.lmdb"
@@ -66,7 +66,7 @@ saga:
         database: product_db
         user: minos
         password: min0s
-        host: localhost
+        host: postgres
         port: 5432
         records: 10
         retry: 2

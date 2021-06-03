@@ -1,5 +1,15 @@
 # `shipment` microservice
 
+# Production
+
+### Installation
+```shell
+docker build . --tag minos-ecommerce-microservice-shipment
+```
+### How to run?
+```shell
+docker run -it minos-ecommerce-microservice-shipment ...
+```
 
 ## Development
 
