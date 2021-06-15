@@ -1,38 +1,38 @@
 rest:
-    host: localhost
-    port: 8900
-    endpoints:
-        - name: AddOrder
-          route: /order
-          method: POST
-          controller: minos.services.OrderService
-          action: add_order
+  host: localhost
+  port: 8900
+  endpoints:
+    - name: AddOrder
+      route: /order
+      method: POST
+      controller: minos.services.OrderService
+      action: add_order
 discovery:
-    host: localhost
-    port: 8080
-    path: /discover
-    endpoints:
-        - name: Discover
-          route: /discover
-          method: GET
-          controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-          action: discover
-        - name: Subscribe
-          route: /subscribe
-          method: POST
-          controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-          action: subscribe
-        - name: Unsubscribe
-          route: /unsubscribe
-          method: POST
-          controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-          action: unsubscribe
-        - name: SystemHealth
-          route: /system/health
-          method: GET
-          controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-          action: system_health
-    db:
-        host: redis
-        port: 6379
-        password:
+  host: localhost
+  port: 8080
+  path: /discover
+  endpoints:
+    - name: Discover
+      route: /discover
+      method: GET
+      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
+      action: discover
+    - name: Subscribe
+      route: /subscribe
+      method: POST
+      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
+      action: subscribe
+    - name: Unsubscribe
+      route: /unsubscribe
+      method: POST
+      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
+      action: unsubscribe
+    - name: SystemHealth
+      route: /system/health
+      method: GET
+      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
+      action: system_health
+  db:
+    host: redis
+    port: 6379
+    password:
