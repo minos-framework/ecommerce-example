@@ -5,24 +5,13 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from pathlib import (
-    Path,
-)
-from typing import (
-    Optional,
-)
+from pathlib import Path
+from typing import Optional
 
 import typer
-
-from minos.api_gateway.common import (
-    MinosConfig,
-)
-from minos.api_gateway.rest.launchers import (
-    EntrypointLauncher,
-)
-from minos.api_gateway.rest.service import (
-    ApiGatewayRestService,
-)
+from minos.api_gateway.common import MinosConfig
+from minos.api_gateway.rest.launchers import EntrypointLauncher
+from minos.api_gateway.rest.service import ApiGatewayRestService
 
 app = typer.Typer()
 
