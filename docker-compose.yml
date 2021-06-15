@@ -30,9 +30,9 @@ services:
   api-gateway:
     restart: always
     build: ./api_gateway
-    command: api_gateway start config.yml
-    environment:
-      - DISCOVERY_SERVICE_DB_HOST=redis
+    command: python -m src start
+    ports:
+      - 5566:5566
 
   microservice-product:
     restart: always
