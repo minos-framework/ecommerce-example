@@ -27,6 +27,13 @@ services:
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
 
+  api-gateway:
+    restart: always
+    build: ./api_gateway
+    command: api_gateway start config.yml
+    environment:
+      - DISCOVERY_SERVICE_DB_HOST=redis
+
   microservice-product:
     restart: always
     build:
