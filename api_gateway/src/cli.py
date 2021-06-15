@@ -17,13 +17,11 @@ app = typer.Typer()
 
 
 @app.command("start")
-def start(
-    file_path: Optional[Path] = typer.Argument(
-        "config.yml",
-        help="API Gateway configuration file.",
-        envvar="MINOS_API_GATEWAY_CONFIG_FILE_PATH",
-    )
-):  # pragma: no cover
+def start(file_path: Optional[Path] = typer.Argument(
+    "config.yml",
+    help="API Gateway configuration file.",
+    envvar="MINOS_API_GATEWAY_CONFIG_FILE_PATH",
+)):  # pragma: no cover
     """Start Api Gateway services."""
 
     try:
@@ -32,7 +30,7 @@ def start(
         typer.echo(f"Error loading config: {exc!r}")
         raise typer.Exit(code=1)
 
-    services = (ApiGatewayRestService(config=config),)
+    services = (ApiGatewayRestService(config=config), )
     try:
         EntrypointLauncher(config=config, services=services).launch()
     except Exception as exc:
