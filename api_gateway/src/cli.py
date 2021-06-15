@@ -30,7 +30,9 @@ app = typer.Typer()
 @app.command("start")
 def start(
     file_path: Optional[Path] = typer.Argument(
-        "config.yml", help="API Gateway configuration file.", envvar="MINOS_API_GATEWAY_CONFIG_FILE_PATH"
+        "config.yml",
+        help="API Gateway configuration file.",
+        envvar="MINOS_API_GATEWAY_CONFIG_FILE_PATH",
     )
 ):  # pragma: no cover
     """Start Api Gateway services."""
