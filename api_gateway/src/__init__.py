@@ -1,4 +1,1 @@
-from .controllers import (
-    Order,
-    Product,
-)
+from .controllers import Order, Product
