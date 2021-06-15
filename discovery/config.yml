@@ -8,7 +8,7 @@ rest:
       controller: minos.services.OrderService
       action: add_order
 discovery:
-  host: localhost
+  host: 0.0.0.0
   port: 8080
   path: /discover
   endpoints:
