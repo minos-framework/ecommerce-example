@@ -1,27 +1,27 @@
 service:
-    name: Product
+    name: Order
 rest:
     host: 0.0.0.0
     port: 8081
     endpoints:
-        -   route: /products
+        -   route: /orders
             method: POST
-            controller: src.ProductController
-            action: create_product
+            controller: src.OrderController
+            action: create_orders
             name: ""
-        -   route: /products
+        -   route: /orders
             method: GET
-            controller: src.ProductController
-            action: get_products
+            controller: src.OrderController
+            action: get_orders
             name: ""
 repository:
-    database: product_db
+    database: order_db
     user: minos
     password: min0s
     host: localhost
     port: 5432
 snapshot:
-    database: product_db
+    database: order_db
     user: minos
     password: min0s
     host: localhost
@@ -30,7 +30,7 @@ events:
     broker: localhost
     port: 9092
     queue:
-        database: product_db
+        database: order_db
         user: minos
         password: min0s
         host: localhost
@@ -43,13 +43,13 @@ commands:
     port: 9092
     items:
         -   name: CreateProduct
-            controller: src.ProductController
-            action: create_product
+            controller: src.OrderController
+            action: create_order
         -   name: GetProducts
-            controller: src.ProductController
-            action: get_products
+            controller: src.OrderController
+            action: get_orders
     queue:
-        database: product_db
+        database: order_db
         user: minos
         password: min0s
         host: localhost
@@ -60,10 +60,10 @@ saga:
     broker: localhost
     port: 9092
     storage:
-        path: "./product.lmdb"
+        path: "./order.lmdb"
     items: []
     queue:
-        database: product_db
+        database: order_db
         user: minos
         password: min0s
         host: localhost

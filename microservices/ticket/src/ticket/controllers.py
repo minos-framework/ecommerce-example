@@ -12,15 +12,15 @@ from minos.common import (
 )
 
 from .dto import (
-    ProductDto,
-    ProductsQueryDto,
+    TicketDto,
+    TicketsQueryDto,
 )
 from .services import (
-    ProductService,
+    TicketService,
 )
 
 
-class ProductController:
+class TicketController:
     """Ticket Controller class"""
 
     @staticmethod
@@ -31,8 +31,8 @@ class ProductController:
         :return: TODO
         """
         content = await request.content()
-        product = await ProductService().create_product(**content[0])
-        return Response(product)
+        ticket = await TicketService().create_ticket(**content[0])
+        return Response(ticket)
 
     @staticmethod
     async def get_tickets(request: Request) -> Response:
@@ -42,7 +42,7 @@ class ProductController:
         :return: TODO
         """
         content = await request.content()
-        if len(content) and isinstance(content[0], ProductsQueryDto):
+        if len(content) and isinstance(content[0], TicketsQueryDto):
             content = content[0].ids
-        products = [ProductDto.from_dict(product.avro_data) for product in await ProductService().get_products(content)]
-        return Response(products)
+        tickets = [TicketDto.from_dict(ticket.avro_data) for ticket in await TicketService().get_tickets(content)]
+        return Response(tickets)

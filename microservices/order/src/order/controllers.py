@@ -31,8 +31,8 @@ class OrderController:
         :return: TODO
         """
         content = await request.content()
-        product = await OrderService().create_order(**content[0])
-        return Response(product)
+        order = await OrderService().create_order(**content[0])
+        return Response(order)
 
     @staticmethod
     async def get_orders(request: Request) -> Response:
@@ -44,5 +44,5 @@ class OrderController:
         content = await request.content()
         if len(content) and isinstance(content[0], ProductsQueryDto):
             content = content[0].ids
-        orders = [ProductDto.from_dict(product.avro_data) for product in await OrderService().get_products(content)]
-        return Response(products)
+        orders = [ProductDto.from_dict(order.avro_data) for order in await OrderService().get_orders(content)]
+        return Response(orders)

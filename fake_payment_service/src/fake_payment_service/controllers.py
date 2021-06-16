@@ -12,37 +12,37 @@ from minos.common import (
 )
 
 from .dto import (
-    ProductDto,
-    ProductsQueryDto,
+    FakePaymentDto,
+    FakePaymentsQueryDto,
 )
 from .services import (
-    ProductService, OrderService,
+    FakePaymentService, FakePaymentService,
 )
 
 
-class OrderController:
+class FakePaymentController:
     """Ticket Controller class"""
 
     @staticmethod
-    async def create_order(request: Request) -> Response:
+    async def create_fake_payment(request: Request) -> Response:
         """TODO
 
         :param request:TODO
         :return: TODO
         """
         content = await request.content()
-        product = await OrderService().create_order(**content[0])
-        return Response(product)
+        fake_payment = await FakePaymentService().create_fake_payment(**content[0])
+        return Response(fake_payment)
 
     @staticmethod
-    async def get_orders(request: Request) -> Response:
+    async def get_fake_payments(request: Request) -> Response:
         """TODO
 
         :param request: TODO
         :return: TODO
         """
         content = await request.content()
-        if len(content) and isinstance(content[0], ProductsQueryDto):
+        if len(content) and isinstance(content[0], FakePaymentsQueryDto):
             content = content[0].ids
-        orders = [ProductDto.from_dict(product.avro_data) for product in await OrderService().get_products(content)]
-        return Response(products)
+        fake_payments = [FakePaymentDto.from_dict(fake_payment.avro_data) for fake_payment in await FakePaymentService().get_fake_payments(content)]
+        return Response(fake_payments)

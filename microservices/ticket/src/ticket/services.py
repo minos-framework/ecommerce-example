@@ -12,7 +12,7 @@ from minos.common import (
 )
 
 from .aggregates import (
-    Product,
+    Ticket,
 )
 
 
@@ -20,7 +20,7 @@ class TicketService(Service):
     """Ticket Service class"""
 
     @staticmethod
-    async def create_ticket(code: str, order: int, amount: int) -> Product:
+    async def create_ticket(code: str, order: int, amount: int) -> Ticket:
         """
         Creates a ticket
 

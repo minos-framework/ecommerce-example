@@ -1,27 +1,27 @@
 service:
-    name: Product
+    name: FakePayment
 rest:
     host: 0.0.0.0
     port: 8081
     endpoints:
-        -   route: /products
+        -   route: /fake_payments
             method: POST
-            controller: src.ProductController
-            action: create_product
+            controller: src.FakePaymentController
+            action: create_fake_payment
             name: ""
-        -   route: /products
+        -   route: /fake_payments
             method: GET
-            controller: src.ProductController
-            action: get_products
+            controller: src.FakePaymentController
+            action: get_fake_payments
             name: ""
 repository:
-    database: product_db
+    database: fake_payment_db
     user: minos
     password: min0s
     host: localhost
     port: 5432
 snapshot:
-    database: product_db
+    database: fake_payment_db
     user: minos
     password: min0s
     host: localhost
@@ -30,7 +30,7 @@ events:
     broker: localhost
     port: 9092
     queue:
-        database: product_db
+        database: fake_payment_db
         user: minos
         password: min0s
         host: localhost
@@ -42,14 +42,14 @@ commands:
     broker: localhost
     port: 9092
     items:
-        -   name: CreateProduct
-            controller: src.ProductController
-            action: create_product
-        -   name: GetProducts
-            controller: src.ProductController
-            action: get_products
+        -   name: CreateFakePayment
+            controller: src.FakePaymentController
+            action: create_fake_payment
+        -   name: GetFakePayments
+            controller: src.FakePaymentController
+            action: get_fake_payments
     queue:
-        database: product_db
+        database: fake_payment_db
         user: minos
         password: min0s
         host: localhost
@@ -60,10 +60,10 @@ saga:
     broker: localhost
     port: 9092
     storage:
-        path: "./product.lmdb"
+        path: "./fake_payment.lmdb"
     items: []
     queue:
-        database: product_db
+        database: fake_payment_db
         user: minos
         password: min0s
         host: localhost
