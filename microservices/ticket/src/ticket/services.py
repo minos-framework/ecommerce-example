@@ -5,20 +5,13 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from minos.common import Service
 
-
-from minos.common import (
-    Service,
-)
-
-from .aggregates import (
-    Ticket,
-)
+from .aggregates import Ticket
 
 
 class TicketService(Service):
     """Ticket Service class"""
-
     @staticmethod
     async def create_ticket(code: str, order: int, amount: int) -> Ticket:
         """
