@@ -16,7 +16,6 @@ from .services import ProductService
 
 class OrderController:
     """Ticket Controller class"""
-
     @staticmethod
     async def create_order(request: Request) -> Response:
         """TODO

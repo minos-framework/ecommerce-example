@@ -12,7 +12,6 @@ from .aggregates import Ticket
 
 class TicketService(Service):
     """Ticket Service class"""
-
     @staticmethod
     async def create_ticket(code: str, order: int, amount: int) -> Ticket:
         """

@@ -15,7 +15,6 @@ from .services import TicketService
 
 class TicketController:
     """Ticket Controller class"""
-
     @staticmethod
     async def create_ticket(request: Request) -> Response:
         """TODO

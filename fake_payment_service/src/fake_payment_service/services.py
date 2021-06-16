@@ -12,11 +12,9 @@ from .aggregates import FakePayment
 
 class FakePaymentService(Service):
     """Ticket Service class"""
-
     @staticmethod
-    async def create_fake_payment(
-        products: list(int), date: int, state: int
-    ) -> FakePayment:
+    async def create_fake_payment(products: list(int), date: int,
+                                  state: int) -> FakePayment:
         """
         Creates a fake_payment_service
 

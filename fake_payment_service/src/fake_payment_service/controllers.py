@@ -15,7 +15,6 @@ from .services import FakePaymentService
 
 class FakePaymentController:
     """Ticket Controller class"""
-
     @staticmethod
     async def create_fake_payment(request: Request) -> Response:
         """TODO
@@ -24,7 +23,8 @@ class FakePaymentController:
         :return: TODO
         """
         content = await request.content()
-        fake_payment = await FakePaymentService().create_fake_payment(**content[0])
+        fake_payment = await FakePaymentService().create_fake_payment(
+            **content[0])
         return Response(fake_payment)
 
     @staticmethod
@@ -38,7 +38,7 @@ class FakePaymentController:
         if len(content) and isinstance(content[0], FakePaymentsQueryDto):
             content = content[0].ids
         fake_payments = [
-            FakePaymentDto.from_dict(fake_payment.avro_data)
-            for fake_payment in await FakePaymentService().get_fake_payments(content)
+            FakePaymentDto.from_dict(fake_payment.avro_data) for fake_payment
+            in await FakePaymentService().get_fake_payments(content)
         ]
         return Response(fake_payments)
