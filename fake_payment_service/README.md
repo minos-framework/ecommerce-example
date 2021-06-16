@@ -1,14 +1,14 @@
-# `shipment` microservice
+# `product` microservice
 
 # Production
 
 ### Installation
 ```shell
-docker build . --tag minos-ecommerce-microservice-shipment
+docker build . --tag minos-ecommerce-microservice-ticket
 ```
 ### How to run?
 ```shell
-docker run -it minos-ecommerce-microservice-shipment ...
+docker run -it minos-ecommerce-microservice-ticket ...
 ```
 
 ## Development

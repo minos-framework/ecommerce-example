@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "shipment"
+name = "product"
 version = "0.1.0"
 description = ""
 authors = ["Clariteia Devs <devs@clariteia.com>"]
@@ -10,6 +10,7 @@ minos-microservice-common = { git = "https://github.com/clariteia/minos_microser
 minos-microservice-networks = "^0.0"
 minos-microservice-saga = "^0.0"
 typer = "^0.3.2"
+
 [tool.poetry.dev-dependencies]
 
 [build-system]

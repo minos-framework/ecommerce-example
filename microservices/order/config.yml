@@ -1,0 +1,72 @@
+service:
+    name: Product
+rest:
+    host: 0.0.0.0
+    port: 8081
+    endpoints:
+        -   route: /products
+            method: POST
+            controller: src.ProductController
+            action: create_product
+            name: ""
+        -   route: /products
+            method: GET
+            controller: src.ProductController
+            action: get_products
+            name: ""
+repository:
+    database: product_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+snapshot:
+    database: product_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+events:
+    broker: localhost
+    port: 9092
+    queue:
+        database: product_db
+        user: minos
+        password: min0s
+        host: localhost
+        port: 5432
+        records: 10
+        retry: 2
+    items: []
+commands:
+    broker: localhost
+    port: 9092
+    items:
+        -   name: CreateProduct
+            controller: src.ProductController
+            action: create_product
+        -   name: GetProducts
+            controller: src.ProductController
+            action: get_products
+    queue:
+        database: product_db
+        user: minos
+        password: min0s
+        host: localhost
+        port: 5432
+        records: 10
+        retry: 2
+saga:
+    broker: localhost
+    port: 9092
+    storage:
+        path: "./product.lmdb"
+    items: []
+    queue:
+        database: product_db
+        user: minos
+        password: min0s
+        host: localhost
+        port: 5432
+        records: 10
+        retry: 2
