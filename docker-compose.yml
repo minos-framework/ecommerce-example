@@ -36,7 +36,6 @@ services:
     command: ["redis-server", "/redis.conf"]
 
   discovery-service:
-    name: discovery-service
     restart: always
     build: ./discovery
     command: discovery start config.yml
