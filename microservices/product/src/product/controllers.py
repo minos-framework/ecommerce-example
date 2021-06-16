@@ -44,5 +44,8 @@ class ProductController:
         content = await request.content()
         if len(content) and isinstance(content[0], ProductsQueryDto):
             content = content[0].ids
-        products = [ProductDto.from_dict(product.avro_data) for product in await ProductService().get_products(content)]
+        products = [
+            ProductDto.from_dict(product.avro_data)
+            for product in await ProductService().get_products(content)
+        ]
         return Response(products)

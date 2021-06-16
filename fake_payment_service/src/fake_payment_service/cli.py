@@ -24,9 +24,11 @@ app = typer.Typer()
 
 @app.command("start")
 def start(
-        file_path: Optional[Path] = typer.Argument(
-            "config.yml", help="Microservice configuration file.", envvar="MINOS_CONFIGURATION_FILE_PATH"
-        )
+    file_path: Optional[Path] = typer.Argument(
+        "config.yml",
+        help="Microservice configuration file.",
+        envvar="MINOS_CONFIGURATION_FILE_PATH",
+    )
 ):
     """Start the microservice."""
 
@@ -43,7 +45,8 @@ def start(
         raise typer.Exit(code=1)
 
     launcher = EntrypointLauncher(
-        config=config, injections=injections, services=services)
+        config=config, injections=injections, services=services
+    )
     try:
         launcher.launch()
     except Exception as exc:

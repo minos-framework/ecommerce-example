@@ -16,7 +16,8 @@ from .dto import (
     FakePaymentsQueryDto,
 )
 from .services import (
-    FakePaymentService, FakePaymentService,
+    FakePaymentService,
+    FakePaymentService,
 )
 
 
@@ -44,5 +45,8 @@ class FakePaymentController:
         content = await request.content()
         if len(content) and isinstance(content[0], FakePaymentsQueryDto):
             content = content[0].ids
-        fake_payments = [FakePaymentDto.from_dict(fake_payment.avro_data) for fake_payment in await FakePaymentService().get_fake_payments(content)]
+        fake_payments = [
+            FakePaymentDto.from_dict(fake_payment.avro_data)
+            for fake_payment in await FakePaymentService().get_fake_payments(content)
+        ]
         return Response(fake_payments)

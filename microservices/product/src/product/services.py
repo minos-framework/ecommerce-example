@@ -20,7 +20,9 @@ class ProductService(Service):
     """Ticket Service class"""
 
     @staticmethod
-    async def create_product(product_code: str, title: str, description: str, price: int) -> Product:
+    async def create_product(
+        product_code: str, title: str, description: str, price: int
+    ) -> Product:
         """
         Creates a product
 

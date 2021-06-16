@@ -16,7 +16,8 @@ from .dto import (
     ProductsQueryDto,
 )
 from .services import (
-    ProductService, OrderService,
+    ProductService,
+    OrderService,
 )
 
 
@@ -44,5 +45,8 @@ class OrderController:
         content = await request.content()
         if len(content) and isinstance(content[0], ProductsQueryDto):
             content = content[0].ids
-        orders = [ProductDto.from_dict(order.avro_data) for order in await OrderService().get_orders(content)]
+        orders = [
+            ProductDto.from_dict(order.avro_data)
+            for order in await OrderService().get_orders(content)
+        ]
         return Response(orders)
