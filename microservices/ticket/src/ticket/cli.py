@@ -42,7 +42,8 @@ def start(
         typer.echo(f"Error loading config: {exc!r}")
         raise typer.Exit(code=1)
 
-    launcher = EntrypointLauncher(config=config, injections=injections, services=services)
+    launcher = EntrypointLauncher(
+        config=config, injections=injections, services=services)
     try:
         launcher.launch()
     except Exception as exc:
