@@ -28,7 +28,6 @@ services:
       - POSTGRES_PASSWORD=min0s
 
   api-gateway:
-    name: api-gateway
     restart: always
     build: ./api_gateway
     command: python -m src start
