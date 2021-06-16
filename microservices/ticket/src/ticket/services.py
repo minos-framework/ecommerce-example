@@ -7,13 +7,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 
 
-from minos.common import (
-    Service,
-)
+from minos.common import Service
 
-from .aggregates import (
-    Ticket,
-)
+from .aggregates import Ticket
 
 
 class TicketService(Service):

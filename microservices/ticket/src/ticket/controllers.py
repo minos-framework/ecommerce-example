@@ -6,18 +6,10 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 
-from minos.common import (
-    Request,
-    Response,
-)
+from minos.common import Request, Response
 
-from .dto import (
-    TicketDto,
-    TicketsQueryDto,
-)
-from .services import (
-    TicketService,
-)
+from .dto import TicketDto, TicketsQueryDto
+from .services import TicketService
 
 
 class TicketController:
