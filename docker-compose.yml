@@ -27,12 +27,25 @@ services:
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
 
-  api-gateway:
-    restart: always
-    build: ./api_gateway
-    command: bash -c 'export PYTHONPATH="${PYTHONPATH}:$$PWD/api_gateway"; api_gateway start config.yml'
+  redis:
+    image: redis:latest
     ports:
-      - 5566:5566
+      - 6379:6379
+    volumes:
+      - ./config/redis.conf:/redis.conf
+    command: ["redis-server", "/redis.conf"]
+
+  discovery-service:
+    restart: always
+    build: ./discovery
+    command: discovery start config.yml
+    environment:
+      - DISCOVERY_SERVICE_DB_HOST=redis
+
+    ports:
+      - 8090:8080
+    depends_on:
+      - redis
 
   microservice-product:
     restart: always
