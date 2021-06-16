@@ -35,6 +35,13 @@ services:
       - ./config/redis.conf:/redis.conf
     command: ["redis-server", "/redis.conf"]
 
+  api-gateway:
+    restart: always
+    build: ./api_gateway
+    command: bash -c 'export PYTHONPATH="${PYTHONPATH}:$$PWD/api_gateway"; api_gateway start config.yml'
+    ports:
+      - 5566:5566
+    
   discovery-service:
     restart: always
     build: ./discovery
