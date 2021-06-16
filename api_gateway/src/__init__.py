@@ -1,2 +1,1 @@
-from .controllers import Order
-from .controllers import Product
+from .controllers import Order, Product
