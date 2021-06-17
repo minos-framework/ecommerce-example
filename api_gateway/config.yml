@@ -28,13 +28,13 @@ rest:
       controller: src.Product
       action: add
     - name: AllProducts
-      route: /products/all
+      route: /product/all
       method: GET
       controller: src.Product
       action: all
 discovery:
   host: localhost
-  port: 55909
+  port: 5567
   path: discover
   endpoints:
     - name: Discover

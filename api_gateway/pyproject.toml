@@ -10,6 +10,8 @@ minos-apigateway = "^0.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+Flask = "^2.0.1"
+requests = "^2.25.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
