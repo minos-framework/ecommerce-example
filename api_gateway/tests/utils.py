@@ -10,4 +10,3 @@ from pathlib import (
 )
 
 BASE_PATH = Path(__file__).parent.parent
-

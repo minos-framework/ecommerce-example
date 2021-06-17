@@ -41,9 +41,12 @@ class TestProduct(AioHTTPTestCase):
                                                               'status': True, 'subscribed': True}, methods=('GET',))
 
         self.order_microservice = MockServer(host="localhost", port=5568)
-        self.order_microservice.add_json_response('/product/5', {}, methods=('GET',))
-        self.order_microservice.add_json_response('/product', {'product_added': 5}, methods=('POST',))
-        self.order_microservice.add_json_response('/product/all', {'products': [1, 7, 49]}, methods=('GET',))
+        self.order_microservice.add_json_response(
+            '/product/5', {}, methods=('GET',))
+        self.order_microservice.add_json_response(
+            '/product', {'product_added': 5}, methods=('POST',))
+        self.order_microservice.add_json_response(
+            '/product/all', {'products': [1, 7, 49]}, methods=('GET',))
 
         self.discovery_server.start()
         self.order_microservice.start()

@@ -27,7 +27,8 @@ class MockServer(Thread):
         self.join()
 
     def add_callback_response(self, url, callback, methods=('GET',)):
-        callback.__name__ = str(uuid.uuid4())  # change name of method to mitigate flask exception
+        # change name of method to mitigate flask exception
+        callback.__name__ = str(uuid.uuid4())
         self.app.add_url_rule(url, view_func=callback, methods=methods)
 
     def add_json_response(self, url, serializable, methods=('GET',)):
