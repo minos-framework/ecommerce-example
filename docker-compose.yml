@@ -38,9 +38,11 @@ services:
   api-gateway:
     restart: always
     build: ./api_gateway
-    command: bash -c 'export PYTHONPATH="${PYTHONPATH}:$$PWD/api_gateway"; api_gateway start config.yml'
+    command: api_gateway start config.yml
     ports:
       - 5566:5566
+    environment:
+      - PYTHONPATH=/api_gateway
 
   discovery-service:
     restart: always
