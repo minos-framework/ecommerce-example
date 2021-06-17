@@ -5,22 +5,16 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from minos.common import Service
 
-
-from minos.common import (
-    Service,
-)
-
-from .aggregates import (
-    Product,
-)
+from .aggregates import Product
 
 
 class ProductService(Service):
     """Ticket Service class"""
-
     @staticmethod
-    async def create_product(product_code: str, title: str, description: str, price: int) -> Product:
+    async def create_product(product_code: str, title: str, description: str,
+                             price: int) -> Product:
         """
         Creates a product
 

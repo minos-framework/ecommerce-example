@@ -1,72 +1,72 @@
 service:
-    name: FakePayment
+  name: FakePayment
 rest:
-    host: 0.0.0.0
-    port: 8081
-    endpoints:
-        -   route: /fake_payments
-            method: POST
-            controller: src.FakePaymentController
-            action: create_fake_payment
-            name: ""
-        -   route: /fake_payments
-            method: GET
-            controller: src.FakePaymentController
-            action: get_fake_payments
-            name: ""
+  host: 0.0.0.0
+  port: 8081
+  endpoints:
+    - route: /fake_payments
+      method: POST
+      controller: src.FakePaymentController
+      action: create_fake_payment
+      name: ""
+    - route: /fake_payments
+      method: GET
+      controller: src.FakePaymentController
+      action: get_fake_payments
+      name: ""
 repository:
-    database: fake_payment_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
+  database: fake_payment_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
 snapshot:
+  database: fake_payment_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+events:
+  broker: localhost
+  port: 9092
+  queue:
     database: fake_payment_db
     user: minos
     password: min0s
     host: localhost
     port: 5432
-events:
-    broker: localhost
-    port: 9092
-    queue:
-        database: fake_payment_db
-        user: minos
-        password: min0s
-        host: localhost
-        port: 5432
-        records: 10
-        retry: 2
-    items: []
+    records: 10
+    retry: 2
+  items: []
 commands:
-    broker: localhost
-    port: 9092
-    items:
-        -   name: CreateFakePayment
-            controller: src.FakePaymentController
-            action: create_fake_payment
-        -   name: GetFakePayments
-            controller: src.FakePaymentController
-            action: get_fake_payments
-    queue:
-        database: fake_payment_db
-        user: minos
-        password: min0s
-        host: localhost
-        port: 5432
-        records: 10
-        retry: 2
+  broker: localhost
+  port: 9092
+  items:
+    - name: CreateFakePayment
+      controller: src.FakePaymentController
+      action: create_fake_payment
+    - name: GetFakePayments
+      controller: src.FakePaymentController
+      action: get_fake_payments
+  queue:
+    database: fake_payment_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
 saga:
-    broker: localhost
-    port: 9092
-    storage:
-        path: "./fake_payment.lmdb"
-    items: []
-    queue:
-        database: fake_payment_db
-        user: minos
-        password: min0s
-        host: localhost
-        port: 5432
-        records: 10
-        retry: 2
+  broker: localhost
+  port: 9092
+  storage:
+    path: "./fake_payment.lmdb"
+  items: []
+  queue:
+    database: fake_payment_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
