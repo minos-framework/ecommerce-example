@@ -1,8 +1,8 @@
-import requests
-
-from flask import Flask, jsonify
-from threading import Thread
 import uuid
+from threading import Thread
+
+import requests
+from flask import Flask, jsonify
 
 
 class MockServer(Thread):
