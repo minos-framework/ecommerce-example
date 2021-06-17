@@ -22,12 +22,8 @@ from minos.api_gateway.rest import (
     ApiGatewayRestService,
 )
 
-from tests.mock_servers.server import (
-    MockServer
-)
-from tests.utils import (
-    BASE_PATH
-)
+from tests.mock_servers.server import MockServer
+from tests.utils import BASE_PATH
 
 
 class TestOrder(AioHTTPTestCase):
@@ -35,18 +31,30 @@ class TestOrder(AioHTTPTestCase):
 
     def setUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
-        self.discovery_server = MockServer(host=self.config.discovery.connection.host,
-                                           port=self.config.discovery.connection.port)
-        self.discovery_server.add_json_response('/discover', {'ip': 'localhost', 'port': '5568', 'name': 'order',
-                                                              'status': True, 'subscribed': True}, methods=('GET',))
+        self.discovery_server = MockServer(
+            host=self.config.discovery.connection.host,
+            port=self.config.discovery.connection.port,
+        )
+        self.discovery_server.add_json_response(
+            "/discover",
+            {
+                "ip": "localhost",
+                "port": "5568",
+                "name": "order",
+                "status": True,
+                "subscribed": True,
+            },
+            methods=("GET",),
+        )
 
         self.order_microservice = MockServer(host="localhost", port=5568)
+        self.order_microservice.add_json_response("/order/5", {}, methods=("GET",))
         self.order_microservice.add_json_response(
-            '/order/5', {}, methods=('GET',))
+            "/order", {"product_added": 5}, methods=("POST",)
+        )
         self.order_microservice.add_json_response(
-            '/order', {'product_added': 5}, methods=('POST',))
-        self.order_microservice.add_json_response(
-            '/order/5/history', {'products': [1, 7, 49]}, methods=('GET',))
+            "/order/5/history", {"products": [1, 7, 49]}, methods=("GET",)
+        )
 
         self.discovery_server.start()
         self.order_microservice.start()
@@ -69,14 +77,18 @@ class TestOrder(AioHTTPTestCase):
     @unittest_run_loop
     async def test_discovery_up_and_running(self):
         response = requests.get(
-            "http://%s:%s/discover" % (self.config.discovery.connection.host, self.config.discovery.connection.port))
+            "http://%s:%s/discover"
+            % (
+                self.config.discovery.connection.host,
+                self.config.discovery.connection.port,
+            )
+        )
 
         self.assertEqual(200, response.status_code)
 
     @unittest_run_loop
     async def test_microservice_up_and_running(self):
-        response = requests.get(
-            "http://localhost:5568/order/5")
+        response = requests.get("http://localhost:5568/order/5")
 
         self.assertEqual(200, response.status_code)
 
@@ -85,21 +97,21 @@ class TestOrder(AioHTTPTestCase):
         resp = await self.client.request("GET", "/order/5")
         assert resp.status == 200
         text = await resp.text()
-        #assert "works" in text
+        # assert "works" in text
 
     @unittest_run_loop
     async def test_add(self):
         resp = await self.client.request("POST", "/order")
         assert resp.status == 200
         text = await resp.text()
-        #assert "works" in text
+        # assert "works" in text
 
     @unittest_run_loop
     async def test_history(self):
         resp = await self.client.request("GET", "/order/5/history")
         assert resp.status == 200
         text = await resp.text()
-        #assert "works" in text
+        # assert "works" in text
 
 
 if __name__ == "__main__":
