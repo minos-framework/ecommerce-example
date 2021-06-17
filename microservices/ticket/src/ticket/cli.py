@@ -9,8 +9,7 @@ from pathlib import Path
 from typing import Optional
 
 import typer
-from minos.common import EntrypointLauncher
-from minos.common import MinosConfig
+from minos.common import EntrypointLauncher, MinosConfig
 
 app = typer.Typer()
 
