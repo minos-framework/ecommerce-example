@@ -68,26 +68,9 @@ services:
       - postgres
       - kafka
 
-  microservice-shipment:
+  integration-tests:
     restart: always
-    build: microservices/shipment
-    command: bash -c 'PGPASSWORD=min0s psql -U minos -h postgres -tc "CREATE DATABASE shipment_db OWNER minos;"; python -m src start'
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
-
-    ports:
-      - 8082:8082
-    depends_on:
-      - postgres
-      - kafka
+    build: integration_tests/
 
 volumes:
   postgres_volume:
