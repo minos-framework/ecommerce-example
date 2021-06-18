@@ -45,7 +45,8 @@ class TestProduct(AioHTTPTestCase):
                                                   {"product_added": 5},
                                                   methods=("POST", ))
         self.order_microservice.add_json_response("/products",
-                                                  {"products": [3442, 223, 44242]},
+                                                  {"products": [
+                                                      3442, 223, 44242]},
                                                   methods=("GET", ))
 
         self.discovery_server.start()
