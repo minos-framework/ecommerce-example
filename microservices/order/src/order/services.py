@@ -12,9 +12,9 @@ from .aggregates import Product
 
 class OrderService(Service):
     """Ticket Service class"""
+
     @staticmethod
-    async def create_order(orders: list(int), date: int,
-                           state: int) -> Product:
+    async def create_order(orders: list(int), date: int, state: int) -> Product:
         """
         Creates a fake_payment_service
 
