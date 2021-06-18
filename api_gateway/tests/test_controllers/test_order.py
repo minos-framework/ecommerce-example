@@ -6,7 +6,7 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 import unittest
-
+import json
 import requests
 from aiohttp import web
 from aiohttp.test_utils import AioHTTPTestCase
@@ -39,13 +39,13 @@ class TestOrder(AioHTTPTestCase):
         )
 
         self.order_microservice = MockServer(host="localhost", port=5568)
-        self.order_microservice.add_json_response("/order/5", {},
+        self.order_microservice.add_json_response("/order/5", {"cost": 10},
                                                   methods=("GET", ))
         self.order_microservice.add_json_response("/order",
-                                                  {"product_added": 5},
+                                                  {"order_added": 5},
                                                   methods=("POST", ))
         self.order_microservice.add_json_response("/order/5/history",
-                                                  {"products": [1, 7, 49]},
+                                                  {"orders": [1, 7, 49]},
                                                   methods=("GET", ))
 
         self.discovery_server.start()
@@ -86,21 +86,21 @@ class TestOrder(AioHTTPTestCase):
         resp = await self.client.request("GET", "/order/5")
         assert resp.status == 200
         text = await resp.text()
-        # assert "works" in text
+        self.assertTrue("cost" in text)
 
     @unittest_run_loop
     async def test_add(self):
         resp = await self.client.request("POST", "/order")
         assert resp.status == 200
         text = await resp.text()
-        # assert "works" in text
+        self.assertTrue("order_added" in text)
 
     @unittest_run_loop
     async def test_history(self):
         resp = await self.client.request("GET", "/order/5/history")
         assert resp.status == 200
         text = await resp.text()
-        # assert "works" in text
+        self.assertTrue("[1,7,49]" in text)
 
 
 if __name__ == "__main__":

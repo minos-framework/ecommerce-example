@@ -28,10 +28,10 @@ rest:
       controller: src.Product
       action: add
     - name: AllProducts
-      route: /product/all
+      route: /products
       method: GET
       controller: src.Product
-      action: all
+      action: all_products
 discovery:
   host: localhost
   port: 5567

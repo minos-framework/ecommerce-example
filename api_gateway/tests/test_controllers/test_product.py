@@ -39,13 +39,13 @@ class TestProduct(AioHTTPTestCase):
         )
 
         self.order_microservice = MockServer(host="localhost", port=5568)
-        self.order_microservice.add_json_response("/product/5", {},
+        self.order_microservice.add_json_response("/product/5", {"testing_product_microservice": True},
                                                   methods=("GET", ))
         self.order_microservice.add_json_response("/product",
                                                   {"product_added": 5},
                                                   methods=("POST", ))
-        self.order_microservice.add_json_response("/product/all",
-                                                  {"products": [1, 7, 49]},
+        self.order_microservice.add_json_response("/products",
+                                                  {"products": [3442, 223, 44242]},
                                                   methods=("GET", ))
 
         self.discovery_server.start()
@@ -86,21 +86,21 @@ class TestProduct(AioHTTPTestCase):
         resp = await self.client.request("GET", "/product/5")
         assert resp.status == 200
         text = await resp.text()
-        # assert "works" in text
+        self.assertTrue("testing_product_microservice" in text)
 
     @unittest_run_loop
     async def test_add(self):
         resp = await self.client.request("POST", "/product")
         assert resp.status == 200
         text = await resp.text()
-        # assert "works" in text
+        self.assertTrue("product_added" in text)
 
     @unittest_run_loop
-    async def test_history(self):
-        resp = await self.client.request("GET", "/product/all")
+    async def test_all(self):
+        resp = await self.client.request("GET", "/products")
         assert resp.status == 200
         text = await resp.text()
-        # assert "works" in text
+        self.assertTrue("[3442,223,44242]" in text)
 
 
 if __name__ == "__main__":
