@@ -35,18 +35,19 @@ class TestOrder(AioHTTPTestCase):
                 "status": True,
                 "subscribed": True,
             },
-            methods=("GET", ),
+            methods=("GET",),
         )
 
         self.order_microservice = MockServer(host="localhost", port=5568)
-        self.order_microservice.add_json_response("/order/5", {"cost": 10},
-                                                  methods=("GET", ))
-        self.order_microservice.add_json_response("/order",
-                                                  {"order_added": 5},
-                                                  methods=("POST", ))
-        self.order_microservice.add_json_response("/order/5/history",
-                                                  {"orders": [1, 7, 49]},
-                                                  methods=("GET", ))
+        self.order_microservice.add_json_response(
+            "/order/5", {"cost": 10}, methods=("GET",)
+        )
+        self.order_microservice.add_json_response(
+            "/order", {"order_added": 5}, methods=("POST",)
+        )
+        self.order_microservice.add_json_response(
+            "/order/5/history", {"orders": [1, 7, 49]}, methods=("GET",)
+        )
 
         self.discovery_server.start()
         self.order_microservice.start()
@@ -68,10 +69,13 @@ class TestOrder(AioHTTPTestCase):
 
     @unittest_run_loop
     async def test_discovery_up_and_running(self):
-        response = requests.get("http://%s:%s/discover" % (
-            self.config.discovery.connection.host,
-            self.config.discovery.connection.port,
-        ))
+        response = requests.get(
+            "http://%s:%s/discover"
+            % (
+                self.config.discovery.connection.host,
+                self.config.discovery.connection.port,
+            )
+        )
 
         self.assertEqual(200, response.status_code)
 

@@ -17,8 +17,7 @@ class Order:
         response = await coordinator.orchestrate()
         return response
 
-    async def history(self, request: web.Request, config: MinosConfig,
-                      **kwargs):
+    async def history(self, request: web.Request, config: MinosConfig, **kwargs):
         coordinator = MicroserviceCallCoordinator(
             config,
             request,
