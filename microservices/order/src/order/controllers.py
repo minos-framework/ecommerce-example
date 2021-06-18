@@ -16,6 +16,7 @@ from .services import ProductService
 
 class OrderController:
     """Ticket Controller class"""
+
     @staticmethod
     async def create_order(request: Request) -> Response:
         """TODO
@@ -37,8 +38,5 @@ class OrderController:
         content = await request.content()
         if len(content) and isinstance(content[0], ProductsQueryDto):
             content = content[0].ids
-        orders = [
-            ProductDto.from_dict(order.avro_data)
-            for order in await OrderService().get_orders(content)
-        ]
+        orders = [ProductDto.from_dict(order.avro_data) for order in await OrderService().get_orders(content)]
         return Response(orders)
