@@ -5,11 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from minos.common import Request
-from minos.common import Response
+from minos.common import Request, Response
 
-from .dto import ProductDto
-from .dto import ProductsQueryDto
+from .dto import ProductDto, ProductsQueryDto
 from .services import ProductService
 
 
