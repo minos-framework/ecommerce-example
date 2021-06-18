@@ -1,4 +1,4 @@
-# `product` microservice
+# `fake_payment` microservice
 
 # Production
 

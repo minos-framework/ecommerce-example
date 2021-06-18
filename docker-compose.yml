@@ -58,8 +58,7 @@ services:
 
   microservice-product:
     restart: always
-    build:
-      context: ./microservices/product
+    build: microservices/product
     command: bash -c 'PGPASSWORD=min0s psql -U minos -h postgres -tc "CREATE DATABASE product_db OWNER minos;"; python -m src start'
     environment:
       - PYTHONPATH=/microservice
@@ -80,8 +79,7 @@ services:
 
   microservice-shipment:
     restart: always
-    build:
-      context: ./microservices/shipment
+    build: microservices/shipment
     command: bash -c 'PGPASSWORD=min0s psql -U minos -h postgres -tc "CREATE DATABASE shipment_db OWNER minos;"; python -m src start'
     environment:
       - PYTHONPATH=/microservice
