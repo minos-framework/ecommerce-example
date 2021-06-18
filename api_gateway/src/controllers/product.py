@@ -14,7 +14,8 @@ class Product:
         response = await coordinator.orchestrate()
         return response
 
-    async def all_products(self, request: web.Request, config: MinosConfig, **kwargs):
+    async def all_products(self, request: web.Request, config: MinosConfig,
+                           **kwargs):
         coordinator = MicroserviceCallCoordinator(config, request)
         response = await coordinator.orchestrate()
         return response

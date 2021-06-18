@@ -5,8 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-import unittest
 import json
+import unittest
+
 import requests
 from aiohttp import web
 from aiohttp.test_utils import AioHTTPTestCase
@@ -41,8 +42,7 @@ class TestOrder(AioHTTPTestCase):
         self.order_microservice = MockServer(host="localhost", port=5568)
         self.order_microservice.add_json_response("/order/5", {"cost": 10},
                                                   methods=("GET", ))
-        self.order_microservice.add_json_response("/order",
-                                                  {"order_added": 5},
+        self.order_microservice.add_json_response("/order", {"order_added": 5},
                                                   methods=("POST", ))
         self.order_microservice.add_json_response("/order/5/history",
                                                   {"orders": [1, 7, 49]},
