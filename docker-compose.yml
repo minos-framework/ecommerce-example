@@ -35,13 +35,21 @@ services:
       - ./config/redis.conf:/redis.conf
     command: ["redis-server", "/redis.conf"]
 
+  api-gateway:
+    restart: always
+    build: ./api_gateway
+    command: api_gateway start config.yml
+    ports:
+      - 5566:5566
+    environment:
+      - PYTHONPATH=/api_gateway
+
   discovery-service:
     restart: always
     build: ./discovery
     command: discovery start config.yml
     environment:
       - DISCOVERY_SERVICE_DB_HOST=redis
-
     ports:
       - 8090:8080
     depends_on:
@@ -61,7 +69,6 @@ services:
       - MINOS_SNAPSHOT_HOST=postgres
       - MINOS_SAGA_QUEUE_HOST=postgres
       - MINOS_SAGA_BROKER=kafka
-
     ports:
       - 8081:8081
     depends_on:
