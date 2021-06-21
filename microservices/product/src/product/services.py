@@ -5,25 +5,31 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from minos.common import Service
 
-from .aggregates import Product
+from minos.common import (
+    Service,
+)
+
+from .aggregates import (
+    Product,
+)
 
 
 class ProductService(Service):
     """Ticket Service class"""
 
     @staticmethod
-    async def create_product(product_code: str, title: str, description: str, price: int) -> Product:
-        """
-        Creates a product
+    async def create_product(external_id: int, name: str, description: str, brand: str, unit_price: float) -> Product:
+        """Create a product.
 
-        :param product_code: Unique str representing the product
-        :param title: Detailed nome of the product
-        :param description: Additional considerations
-        :param price: Price in €
+        :param external_id: TODO.
+        :param name: TODO.
+        :param description: TODO.
+        :param brand: TODO.
+        :param unit_price: TODO.
+        :return: TODO.
         """
-        return await Product.create(product_code, title, description, price)
+        return await Product.create(external_id, name, description, brand, unit_price)
 
     @staticmethod
     async def get_products(ids: list[int]) -> list[Product]:
@@ -32,4 +38,5 @@ class ProductService(Service):
         :param ids: List of ticket identifiers.
         :return: A list of ``Ticket`` instances.
         """
-        return await Product.get(ids=ids)
+        values = {v.id: v async for v in Product.get(ids=ids)}
+        return [values[id] for id in ids]

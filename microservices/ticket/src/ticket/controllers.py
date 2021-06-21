@@ -7,7 +7,6 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from minos.common import Request, Response
 
-from .dto import TicketDto, TicketsQueryDto
 from .services import TicketService
 
 
@@ -33,7 +32,9 @@ class TicketController:
         :return: TODO
         """
         content = await request.content()
-        if len(content) and isinstance(content[0], TicketsQueryDto):
+        if len(content) and hasattr(content[0], "ids"):
             content = content[0].ids
-        tickets = [TicketDto.from_dict(ticket.avro_data) for ticket in await TicketService().get_tickets(content)]
+        else:
+            content = list(map(int, content))
+        tickets = await TicketService().get_tickets(content)
         return Response(tickets)

@@ -7,8 +7,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from minos.common import Request, Response
 
-from .dto import ProductDto, ProductsQueryDto
-from .services import OrderService, ProductService
+from .services import OrderService
 
 
 class OrderController:
@@ -33,7 +32,9 @@ class OrderController:
         :return: TODO
         """
         content = await request.content()
-        if len(content) and isinstance(content[0], ProductsQueryDto):
+        if len(content) and hasattr(content[0], "ids"):
             content = content[0].ids
-        orders = [ProductDto.from_dict(order.avro_data) for order in await OrderService().get_orders(content)]
+        else:
+            content = list(map(int, content))
+        orders = await OrderService().get_orders(content)
         return Response(orders)

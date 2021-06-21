@@ -31,4 +31,5 @@ class TicketService(Service):
         :param ids: List of ticket identifiers.
         :return: A list of ``Ticket`` instances.
         """
-        return await Ticket.get(ids=ids)
+        values = {v.id: v async for v in Ticket.get(ids=ids)}
+        return [values[id] for id in ids]

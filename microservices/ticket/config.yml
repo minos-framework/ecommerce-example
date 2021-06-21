@@ -2,16 +2,16 @@ service:
   name: Ticket
 rest:
   host: 0.0.0.0
-  port: 8081
+  port: 8082
   endpoints:
     - route: /tickets
       method: POST
-      controller: src.TicketController
+      controller: src.ticket.TicketController
       action: create_ticket
       name: ""
     - route: /tickets
       method: GET
-      controller: src.TicketController
+      controller: src.ticket.TicketController
       action: get_tickets
       name: ""
 repository:
@@ -43,10 +43,10 @@ commands:
   port: 9092
   items:
     - name: CreateTicket
-      controller: src.TicketController
+      controller: src.ticket.TicketController
       action: create_ticket
     - name: GetTickets
-      controller: src.TicketController
+      controller: src.ticket.TicketController
       action: get_tickets
   queue:
     database: ticket_db

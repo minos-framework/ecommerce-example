@@ -58,7 +58,7 @@ services:
   microservice-product:
     restart: always
     build: microservices/product
-    command: bash -c 'PGPASSWORD=min0s psql -U minos -h postgres -tc "CREATE DATABASE product_db OWNER minos;"; python -m src start'
+    command: bash -c 'PGPASSWORD=min0s psql -U minos -h postgres -tc "CREATE DATABASE product_db OWNER minos;"; microservice start'
     environment:
       - PYTHONPATH=/microservice
       - MINOS_EVENTS_QUEUE_HOST=postgres

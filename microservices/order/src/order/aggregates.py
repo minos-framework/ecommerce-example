@@ -11,6 +11,6 @@ from minos.common import Aggregate
 class Order(Aggregate):
     """TODO"""
 
-    products: list(int)
+    products: list[int]
     date: int
     state: int

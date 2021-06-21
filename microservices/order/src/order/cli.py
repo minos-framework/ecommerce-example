@@ -23,6 +23,7 @@ def start(
     """Start the microservice."""
 
     try:
+        # noinspection PyUnresolvedReferences
         from config import injections, services
     except Exception as exc:
         typer.echo(f"Error loading config: {exc!r}")
