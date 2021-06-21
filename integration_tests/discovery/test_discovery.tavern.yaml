@@ -1,10 +1,12 @@
 test_name: Test Discovery Service Rest API
+includes:
+  - !include ../includes.yaml
 
 stages:
   - name: Make sure that the subscription is working properly
 
     request:
-      url: http://localhost:8090/subscribe
+      url: "{discovery.protocol:s}://{discovery.host:s}:{discovery.port:d}/subscribe"
       json:
         ip: "microservice-test"
         port: 8081
@@ -19,7 +21,7 @@ stages:
   - name: Make sure that the endpoint info returns right data
 
     request:
-      url: http://localhost:8090/discover?name=test
+      url: "{discovery.protocol:s}://{discovery.host:s}:{discovery.port:d}/discover?name=test"
       method: GET
 
     response:
@@ -34,7 +36,7 @@ stages:
   - name: Make sure that the unsubscription is working properly
 
     request:
-      url: http://127.0.0.1:8090/unsubscribe?name=test
+      url: "{discovery.protocol:s}://{discovery.host:s}:{discovery.port:d}/unsubscribe?name=test"
       method: POST
 
     response:
@@ -45,7 +47,7 @@ stages:
   - name: Make sure that the unsubscription was done
 
     request:
-      url: http://localhost:8090/discover?name=test
+      url: "{discovery.protocol:s}://{discovery.host:s}:{discovery.port:d}/discover?name=test"
       method: GET
 
     response:

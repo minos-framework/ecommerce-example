@@ -1,0 +1,9 @@
+name: Common test information
+description: Login information for test server
+
+# Variables should just be a mapping of key: value pairs
+variables:
+  discovery:
+    protocol: http
+    host: discovery-service
+    port: 8090
