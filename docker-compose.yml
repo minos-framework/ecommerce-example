@@ -18,12 +18,13 @@ services:
 
   postgres:
     restart: always
-    image: postgres
+    build: external/postgres
     volumes:
       - postgres_volume:/var/lib/postgresql
     ports:
       - 5432:5432
     environment:
+      - POSTGRES_MULTIPLE_DATABASES=order_db,product_db,ticket_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
 
@@ -55,10 +56,30 @@ services:
     depends_on:
       - redis
 
+  microservice-order:
+    restart: always
+    build: microservices/order
+    command: python -m src.order start
+    environment:
+      - PYTHONPATH=/microservice
+      - MINOS_EVENTS_QUEUE_HOST=postgres
+      - MINOS_EVENTS_BROKER=kafka
+      - MINOS_COMMANDS_QUEUE_HOST=postgres
+      - MINOS_COMMANDS_BROKER=kafka
+      - MINOS_REPOSITORY_HOST=postgres
+      - MINOS_SNAPSHOT_HOST=postgres
+      - MINOS_SAGA_QUEUE_HOST=postgres
+      - MINOS_SAGA_BROKER=kafka
+    ports:
+      - 8083:8083
+    depends_on:
+      - postgres
+      - kafka
+
   microservice-product:
     restart: always
     build: microservices/product
-    command: bash -c 'PGPASSWORD=min0s psql -U minos -h postgres -tc "CREATE DATABASE product_db OWNER minos;"; microservice start'
+    command: python -m src.product start
     environment:
       - PYTHONPATH=/microservice
       - MINOS_EVENTS_QUEUE_HOST=postgres
@@ -75,9 +96,30 @@ services:
       - postgres
       - kafka
 
-  integration-tests:
+  microservice-ticket:
     restart: always
-    build: integration_tests/
+    build: microservices/ticket
+    command: python -m src.ticket start
+    environment:
+      - PYTHONPATH=/microservice
+      - MINOS_EVENTS_QUEUE_HOST=postgres
+      - MINOS_EVENTS_BROKER=kafka
+      - MINOS_COMMANDS_QUEUE_HOST=postgres
+      - MINOS_COMMANDS_BROKER=kafka
+      - MINOS_REPOSITORY_HOST=postgres
+      - MINOS_SNAPSHOT_HOST=postgres
+      - MINOS_SAGA_QUEUE_HOST=postgres
+      - MINOS_SAGA_BROKER=kafka
+    ports:
+      - 8082:8082
+    depends_on:
+      - postgres
+      - kafka
+
+# FIXME: Improve configuration
+#  integration-tests:
+#    restart: always
+#    build: integration_tests/
 
 volumes:
   postgres_volume:
