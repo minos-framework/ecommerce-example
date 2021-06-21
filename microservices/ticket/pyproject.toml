@@ -3,10 +3,11 @@ name = "ticket"
 version = "0.1.0"
 description = ""
 authors = ["Clariteia Devs <devs@clariteia.com>"]
+packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = { git = "https://github.com/clariteia/minos_microservice_common.git", rev = "e69cb5dbb95da323f3b15ddc428888d34f1415cd" }
+minos-microservice-common = { git = "https://github.com/clariteia/minos_microservice_common.git", rev = "e791de98483a1b393d6eb055b086cb62d67d07ec" }
 minos-microservice-networks = { git = "https://github.com/clariteia/minos_microservice_networks.git", rev = "a801e0bdc94b4947d54d38f9eb80fc35bda50beb" }
 minos-microservice-saga = { git = "https://github.com/clariteia/minos_microservice_saga.git", rev = "58c319e17b23b14cdd0877d936fc0587d0326a8a" }
 typer = "^0.3.2"
@@ -18,4 +19,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-microservice = "src.ticket.cli:main"
+microservice = "src.cli:main"

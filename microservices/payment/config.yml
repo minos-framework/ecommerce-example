@@ -6,12 +6,12 @@ rest:
   endpoints:
     - route: /payments
       method: POST
-      controller: src.payment.PaymentController
+      controller: src.PaymentController
       action: create_payment
       name: ""
     - route: /payments
       method: GET
-      controller: src.payment.PaymentController
+      controller: src.PaymentController
       action: get_payments
       name: ""
 repository:
@@ -43,10 +43,10 @@ commands:
   port: 9092
   items:
     - name: CreatePayment
-      controller: src.payment.PaymentController
+      controller: src.PaymentController
       action: create_payment
     - name: GetPayments
-      controller: src.payment.PaymentController
+      controller: src.PaymentController
       action: get_payments
   queue:
     database: payment_db

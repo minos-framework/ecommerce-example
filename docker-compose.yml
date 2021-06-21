@@ -58,7 +58,7 @@ services:
   microservice-order:
     restart: always
     build: microservices/order
-    command: python -m src.order start
+    command: microservice start
     environment:
       - PYTHONPATH=/microservice
       - MINOS_EVENTS_QUEUE_HOST=postgres
@@ -78,7 +78,7 @@ services:
   microservice-product:
     restart: always
     build: microservices/product
-    command: python -m src.product start
+    command: microservice start
     environment:
       - PYTHONPATH=/microservice
       - MINOS_EVENTS_QUEUE_HOST=postgres
@@ -98,7 +98,7 @@ services:
   microservice-ticket:
     restart: always
     build: microservices/ticket
-    command: python -m src.ticket start
+    command: microservice start
     environment:
       - PYTHONPATH=/microservice
       - MINOS_EVENTS_QUEUE_HOST=postgres
@@ -118,7 +118,7 @@ services:
   microservice-payment:
     restart: always
     build: microservices/payment
-    command: python -m src.payment start
+    command: microservice start
     environment:
       - PYTHONPATH=/microservice
       - MINOS_EVENTS_QUEUE_HOST=postgres
@@ -134,7 +134,6 @@ services:
     depends_on:
       - postgres
       - kafka
-
 
 # FIXME: Improve configuration
 #  integration-tests:
