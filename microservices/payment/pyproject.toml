@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fake_payment"
+name = "payment"
 version = "0.1.0"
 description = ""
 authors = ["Clariteia Devs <devs@clariteia.com>"]

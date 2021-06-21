@@ -1,27 +1,27 @@
 service:
-  name: FakePayment
+  name: Payment
 rest:
   host: 0.0.0.0
   port: 8081
   endpoints:
-    - route: /fake_payments
+    - route: /payments
       method: POST
-      controller: src.FakePaymentController
-      action: create_fake_payment
+      controller: src.payment.PaymentController
+      action: create_payment
       name: ""
-    - route: /fake_payments
+    - route: /payments
       method: GET
-      controller: src.FakePaymentController
-      action: get_fake_payments
+      controller: src.payment.PaymentController
+      action: get_payments
       name: ""
 repository:
-  database: fake_payment_db
+  database: payment_db
   user: minos
   password: min0s
   host: localhost
   port: 5432
 snapshot:
-  database: fake_payment_db
+  database: payment_db
   user: minos
   password: min0s
   host: localhost
@@ -30,7 +30,7 @@ events:
   broker: localhost
   port: 9092
   queue:
-    database: fake_payment_db
+    database: payment_db
     user: minos
     password: min0s
     host: localhost
@@ -42,14 +42,14 @@ commands:
   broker: localhost
   port: 9092
   items:
-    - name: CreateFakePayment
-      controller: src.FakePaymentController
-      action: create_fake_payment
-    - name: GetFakePayments
-      controller: src.FakePaymentController
-      action: get_fake_payments
+    - name: CreatePayment
+      controller: src.payment.PaymentController
+      action: create_payment
+    - name: GetPayments
+      controller: src.payment.PaymentController
+      action: get_payments
   queue:
-    database: fake_payment_db
+    database: payment_db
     user: minos
     password: min0s
     host: localhost
@@ -60,10 +60,10 @@ saga:
   broker: localhost
   port: 9092
   storage:
-    path: "./fake_payment.lmdb"
+    path: "./payment.lmdb"
   items: []
   queue:
-    database: fake_payment_db
+    database: payment_db
     user: minos
     password: min0s
     host: localhost
