@@ -45,10 +45,9 @@ services:
     environment:
       - PYTHONPATH=/api_gateway
 
-  discovery-service:
+  discovery:
     restart: always
-    build: ./discovery
-    command: discovery start config.yml
+    build: ./external/discovery
     environment:
       - DISCOVERY_SERVICE_DB_HOST=redis
     ports:
