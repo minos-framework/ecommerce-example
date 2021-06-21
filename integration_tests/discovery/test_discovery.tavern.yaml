@@ -1,0 +1,58 @@
+test_name: Test Discovery Service Rest API
+
+stages:
+  - name: Make sure that the subscription is working properly
+
+    request:
+      url: http://localhost:8090/subscribe
+      json:
+        ip: "microservice-test"
+        port: 8081
+        name: "test"
+      method: POST
+
+    response:
+      status_code: 200
+      #json:
+      #  status: "Service added"
+
+  - name: Make sure that the endpoint info returns right data
+
+    request:
+      url: http://localhost:8090/discover?name=test
+      method: GET
+
+    response:
+      status_code: 200
+      json:
+        ip: "microservice-test"
+        port: 8081
+        name: "test"
+        status: true
+        subscribed: true
+
+  - name: Make sure that the unsubscription is working properly
+
+    request:
+      url: http://127.0.0.1:8090/unsubscribe?name=test
+      method: POST
+
+    response:
+      status_code: 200
+      #json:
+      #  status: "Unsubscription done!"
+
+  - name: Make sure that the unsubscription was done
+
+    request:
+      url: http://localhost:8090/discover?name=test
+      method: GET
+
+    response:
+      status_code: 200
+      json:
+        ip: "microservice-test"
+        port: 8081
+        name: "test"
+        status: true
+        subscribed: false
