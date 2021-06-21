@@ -5,6 +5,12 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from .aggregates import Order
-from .controllers import OrderController
-from .services import OrderService
+from .aggregates import (
+    Order,
+)
+from .controllers import (
+    OrderController,
+)
+from .services import (
+    OrderService,
+)
