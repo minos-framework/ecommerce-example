@@ -8,9 +8,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 from .aggregates import (
     Product,
 )
-from .services import (
-    ProductService,
-)
 from .controllers import (
     ProductController,
+)
+from .services import (
+    ProductService,
 )
