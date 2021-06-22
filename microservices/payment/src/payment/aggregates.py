@@ -5,7 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from .cli import main
+from minos.common import (
+    Aggregate,
+)
 
-if __name__ == "__main__":
-    main()
+
+class Payment(Aggregate):
+    """TODO"""

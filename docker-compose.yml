@@ -24,7 +24,7 @@ services:
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=order_db,product_db,ticket_db
+      - POSTGRES_MULTIPLE_DATABASES=order_db,product_db,ticket_db,payment_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
 
@@ -114,6 +114,27 @@ services:
     depends_on:
       - postgres
       - kafka
+
+  microservice-payment:
+    restart: always
+    build: microservices/payment
+    command: python -m src.payment start
+    environment:
+      - PYTHONPATH=/microservice
+      - MINOS_EVENTS_QUEUE_HOST=postgres
+      - MINOS_EVENTS_BROKER=kafka
+      - MINOS_COMMANDS_QUEUE_HOST=postgres
+      - MINOS_COMMANDS_BROKER=kafka
+      - MINOS_REPOSITORY_HOST=postgres
+      - MINOS_SNAPSHOT_HOST=postgres
+      - MINOS_SAGA_QUEUE_HOST=postgres
+      - MINOS_SAGA_BROKER=kafka
+    ports:
+      - 8084:8084
+    depends_on:
+      - postgres
+      - kafka
+
 
 # FIXME: Improve configuration
 #  integration-tests:
