@@ -5,32 +5,32 @@ rest:
     - name: GetOrder
       route: /orders/{id}
       method: GET
-      controller: src.Order
+      controller: src.OrderController
       action: get
     - name: AddOrder
       route: /orders
       method: POST
-      controller: src.Order
+      controller: src.OrderController
       action: add
     - name: History
       route: /orders/{id}/history
       method: GET
-      controller: src.Order
+      controller: src.OrderController
       action: history
     - name: GetProduct
       route: /products/{id}
       method: GET
-      controller: src.Product
+      controller: src.ProductController
       action: get
     - name: AddOrder
       route: /products
       method: POST
-      controller: src.Product
+      controller: src.ProductController
       action: add
     - name: AllProducts
       route: /products
       method: GET
-      controller: src.Product
+      controller: src.ProductController
       action: all_products
 discovery:
   host: discovery
