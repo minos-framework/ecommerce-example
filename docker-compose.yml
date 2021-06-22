@@ -34,6 +34,11 @@ services:
     ports:
       - 6379:6379
 
+# FIXME: Configure tavern
+#  tavern:
+#    restart: always
+#    build: external/tavern
+
   api-gateway:
     restart: always
     build: ./api_gateway
@@ -42,6 +47,8 @@ services:
       - 5566:5566
     environment:
       - PYTHONPATH=/api_gateway
+    depends_on:
+      - discovery
 
   discovery:
     restart: always
@@ -132,11 +139,6 @@ services:
     depends_on:
       - postgres
       - kafka
-
-# FIXME: Improve configuration
-#  integration-tests:
-#    restart: always
-#    build: integration_tests/
 
 volumes:
   postgres_volume:

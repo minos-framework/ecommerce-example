@@ -2,7 +2,7 @@
 name = "api_gateway"
 version = "0.1.0"
 description = ""
-authors = ["vladyslav-fenchak <vladyslav.fenchak@clariteia.com>"]
+authors = ["Clariteia Devs <devs@clariteia.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
