@@ -23,9 +23,7 @@ from minos.networks import (
     RestService,
     SnapshotService,
 )
-from minos.saga import (
-    SagaManager,
-)
+from minos.saga import SagaManager
 
 injections = {
     "command_broker": CommandBroker,

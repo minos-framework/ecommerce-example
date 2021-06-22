@@ -17,18 +17,11 @@ class OrderController:
         return response
 
     async def get(self, request: web.Request, config: MinosConfig, **kwargs):
-        coordinator = MicroserviceCallCoordinator(
-            config,
-            request,
-        )
+        coordinator = MicroserviceCallCoordinator(config, request,)
         response = await coordinator.orchestrate()
         return response
 
-    async def history(self, request: web.Request, config: MinosConfig,
-                      **kwargs):
-        coordinator = MicroserviceCallCoordinator(
-            config,
-            request,
-        )
+    async def history(self, request: web.Request, config: MinosConfig, **kwargs):
+        coordinator = MicroserviceCallCoordinator(config, request,)
         response = await coordinator.orchestrate()
         return response

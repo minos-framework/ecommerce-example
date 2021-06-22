@@ -10,9 +10,7 @@ from minos.common import (
     Response,
 )
 
-from .services import (
-    TicketService,
-)
+from .services import TicketService
 
 
 class TicketController:
