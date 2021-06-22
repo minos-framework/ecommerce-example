@@ -30,11 +30,9 @@ services:
 
   redis:
     image: redis:latest
+    command: "redis-server"
     ports:
       - 6379:6379
-    volumes:
-      - ./config/redis.conf:/redis.conf
-    command: ["redis-server", "/redis.conf"]
 
   api-gateway:
     restart: always
