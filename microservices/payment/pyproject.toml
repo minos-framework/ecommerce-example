@@ -3,6 +3,7 @@ name = "payment"
 version = "0.1.0"
 description = ""
 authors = ["Clariteia Devs <devs@clariteia.com>"]
+packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
