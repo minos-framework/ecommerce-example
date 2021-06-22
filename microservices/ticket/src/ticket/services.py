@@ -5,9 +5,13 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from minos.common import Service
+from minos.common import (
+    Service,
+)
 
-from .aggregates import Ticket
+from .aggregates import (
+    Ticket,
+)
 
 
 class TicketService(Service):
@@ -31,4 +35,5 @@ class TicketService(Service):
         :param ids: List of ticket identifiers.
         :return: A list of ``Ticket`` instances.
         """
-        return await Ticket.get(ids=ids)
+        values = {v.id: v async for v in Ticket.get(ids=ids)}
+        return [values[id] for id in ids]

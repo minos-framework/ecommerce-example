@@ -2,16 +2,16 @@ service:
   name: Order
 rest:
   host: 0.0.0.0
-  port: 8081
+  port: 8083
   endpoints:
     - route: /orders
       method: POST
-      controller: src.OrderController
-      action: create_orders
+      controller: src.order.OrderController
+      action: create_order
       name: ""
     - route: /orders
       method: GET
-      controller: src.OrderController
+      controller: src.order.OrderController
       action: get_orders
       name: ""
 repository:
@@ -43,10 +43,10 @@ commands:
   port: 9092
   items:
     - name: CreateProduct
-      controller: src.OrderController
+      controller: src.order.OrderController
       action: create_order
     - name: GetProducts
-      controller: src.OrderController
+      controller: src.order.OrderController
       action: get_orders
   queue:
     database: order_db

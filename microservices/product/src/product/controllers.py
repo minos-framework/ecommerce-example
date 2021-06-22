@@ -5,10 +5,15 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from minos.common import Request, Response
 
-from .dto import ProductDto, ProductsQueryDto
-from .services import ProductService
+from minos.common import (
+    Request,
+    Response,
+)
+
+from .services import (
+    ProductService,
+)
 
 
 class ProductController:
@@ -33,7 +38,9 @@ class ProductController:
         :return: TODO
         """
         content = await request.content()
-        if len(content) and isinstance(content[0], ProductsQueryDto):
+        if len(content) and hasattr(content[0], "ids"):
             content = content[0].ids
-        products = [ProductDto.from_dict(product.avro_data) for product in await ProductService().get_products(content)]
+        else:
+            content = list(map(int, content))
+        products = await ProductService().get_products(content)
         return Response(products)
