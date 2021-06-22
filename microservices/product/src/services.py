@@ -19,17 +19,16 @@ class ProductService(Service):
     """Ticket Service class"""
 
     @staticmethod
-    async def create_product(external_id: int, name: str, description: str, brand: str, unit_price: float) -> Product:
+    async def create_product(product_code: int, title: str, description: str, price: float) -> Product:
         """Create a product.
 
-        :param external_id: TODO.
-        :param name: TODO.
+        :param product_code: TODO.
+        :param title: TODO.
         :param description: TODO.
-        :param brand: TODO.
-        :param unit_price: TODO.
+        :param price: TODO.
         :return: TODO.
         """
-        return await Product.create(external_id, name, description, brand, unit_price)
+        return await Product.create(product_code, title, description, price)
 
     @staticmethod
     async def get_products(ids: list[int]) -> list[Product]:

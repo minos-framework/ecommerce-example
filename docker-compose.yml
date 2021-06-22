@@ -49,7 +49,7 @@ services:
     environment:
       - DISCOVERY_SERVICE_DB_HOST=redis
     ports:
-      - 8090:8080
+      - 8080:8080
     depends_on:
       - redis
 
@@ -72,6 +72,7 @@ services:
     depends_on:
       - postgres
       - kafka
+      - discovery
 
   microservice-product:
     restart: always
@@ -92,6 +93,7 @@ services:
     depends_on:
       - postgres
       - kafka
+      - discovery
 
   microservice-ticket:
     restart: always
@@ -112,6 +114,7 @@ services:
     depends_on:
       - postgres
       - kafka
+      - discovery
 
   microservice-payment:
     restart: always
@@ -132,6 +135,7 @@ services:
     depends_on:
       - postgres
       - kafka
+      - discovery
 
 # FIXME: Improve configuration
 #  integration-tests:

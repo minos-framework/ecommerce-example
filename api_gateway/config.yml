@@ -3,27 +3,27 @@ rest:
   port: 5566
   endpoints:
     - name: GetOrder
-      route: /order/{id}
+      route: /orders/{id}
       method: GET
       controller: src.Order
       action: get
     - name: AddOrder
-      route: /order
+      route: /orders
       method: POST
       controller: src.Order
       action: add
     - name: History
-      route: /order/{id}/history
+      route: /orders/{id}/history
       method: GET
       controller: src.Order
       action: history
     - name: GetProduct
-      route: /product/{id}
+      route: /products/{id}
       method: GET
       controller: src.Product
       action: get
     - name: AddOrder
-      route: /product
+      route: /products
       method: POST
       controller: src.Product
       action: add
@@ -33,8 +33,8 @@ rest:
       controller: src.Product
       action: all_products
 discovery:
-  host: localhost
-  port: 5567
+  host: discovery
+  port: 8080
   path: discover
   endpoints:
     - name: Discover
