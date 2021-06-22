@@ -6,9 +6,13 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 
-from minos.common import Service
+from minos.common import (
+    Service,
+)
 
-from .aggregates import Product
+from .aggregates import (
+    Product,
+)
 
 
 class ProductService(Service):

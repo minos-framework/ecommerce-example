@@ -5,9 +5,15 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from aiohttp import web
-from minos.api_gateway.common import MinosConfig
-from minos.api_gateway.rest import MicroserviceCallCoordinator
+from aiohttp import (
+    web,
+)
+from minos.api_gateway.common import (
+    MinosConfig,
+)
+from minos.api_gateway.rest import (
+    MicroserviceCallCoordinator,
+)
 
 
 class OrderController:

@@ -1,9 +1,13 @@
 import uuid
-from threading import Thread
+from threading import (
+    Thread,
+)
 
 import requests
-from flask import Flask
-from flask import jsonify
+from flask import (
+    Flask,
+    jsonify,
+)
 
 
 class MockServer(Thread):
@@ -17,7 +21,9 @@ class MockServer(Thread):
         self.app.add_url_rule("/shutdown", view_func=self._shutdown_server)
 
     def _shutdown_server(self):
-        from flask import request
+        from flask import (
+            request,
+        )
 
         if not "werkzeug.server.shutdown" in request.environ:
             raise RuntimeError("Not running the development server")
