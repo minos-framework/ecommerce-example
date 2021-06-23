@@ -16,6 +16,7 @@ from minos.networks import (
     CommandReplyBroker,
     CommandReplyConsumerService,
     CommandReplyHandlerService,
+    DiscoveryConnector,
     EventBroker,
     EventConsumerService,
     EventHandlerService,
@@ -34,6 +35,7 @@ injections = {
     "repository": PostgreSqlRepository,
     "saga_manager": SagaManager,
     "snapshot": PostgreSqlSnapshot,
+    "discovery": DiscoveryConnector,
 }
 
 services = [
