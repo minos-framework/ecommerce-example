@@ -28,6 +28,8 @@ class OrderService(Service):
 
         :param products: List of `orders`
         """
+        # TODO: validate product identifiers.
+
         now = datetime.now()
         status = "created"
         return await Order.create(products, status, created_at=now, updated_at=now)

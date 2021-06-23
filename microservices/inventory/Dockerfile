@@ -1,29 +1,13 @@
-#FROM ghcr.io/clariteia/minos:1.0 as build
-#
-#RUN poetry build
-#
-#FROM debian:buster as production
-#
-#COPY --from=build /microservice/dist/ ./dist
-
-# START FIXME: must be on the base docker image for building.
-FROM python:slim
-
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE 1
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED 1
-
-RUN apt-get update && apt-get install --yes postgresql-client git curl netcat
-
-# Install and setup poetry
-RUN pip install -U pip \
-    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-ENV PATH="${PATH}:/root/.poetry/bin"
-
+FROM ghcr.io/clariteia/minos:0.1.0 as build
+WORKDIR /microservice
+ENV PYTHONPATH=/microservice:$PYTHONPATH
+COPY ./pyproject.toml ./poetry.lock ./
+RUN poetry export --without-hashes > req.txt && pip wheel -r req.txt --wheel-dir ./dist
 COPY . .
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-interaction --no-ansi
-## END FIXME
+RUN poetry build --format wheel
 
+FROM python:slim as production
+COPY --from=build /microservice/dist/ ./dist
+RUN pip install --no-deps ./dist/*
+COPY ./config.yml ./config.yml
 CMD ["microservice", "start"]
