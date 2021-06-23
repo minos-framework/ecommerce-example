@@ -2,61 +2,60 @@ rest:
   host: 0.0.0.0
   port: 5566
   endpoints:
-    - name: GetOrder
-      route: /orders/{id}
-      method: GET
-      controller: src.OrderController
-      action: get
+
     - name: AddOrder
       route: /orders
       method: POST
-      controller: src.OrderController
-      action: add
-    - name: History
-      route: /orders/{id}/history
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: GetOrders
+      route: /orders
       method: GET
-      controller: src.OrderController
-      action: history
-    - name: GetProduct
-      route: /products/{id}
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: AddPayment
+      route: /payments
+      method: POST
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: GetPayments
+      route: /payments
       method: GET
-      controller: src.ProductController
-      action: get
-    - name: AddOrder
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: AddProduct
       route: /products
       method: POST
-      controller: src.ProductController
-      action: add
-    - name: AllProducts
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: GetProducts
       route: /products
       method: GET
-      controller: src.ProductController
-      action: all_products
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: AddTicket
+      route: /tickets
+      method: POST
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: GetTickets
+      route: /tickets
+      method: GET
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
 discovery:
   host: discovery
   port: 8080
   path: discover
-  endpoints:
-    - name: Discover
-      route: /discover
-      method: GET
-      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-      action: discover
-    - name: Subscribe
-      route: /subscribe
-      method: POST
-      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-      action: subscribe
-    - name: Unsubscribe
-      route: /unsubscribe
-      method: POST
-      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-      action: unsubscribe
-    - name: SystemHealth
-      route: /system/health
-      method: GET
-      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-      action: system_health
+  endpoints: []
   db:
     host: localhost
     port: 6379

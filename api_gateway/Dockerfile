@@ -17,3 +17,6 @@ WORKDIR /api_gateway
 COPY . .
 RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
+
+
+CMD ["api_gateway", "start"]
