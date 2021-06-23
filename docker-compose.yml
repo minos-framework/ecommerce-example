@@ -1,6 +1,6 @@
 version: "3.9"
 
-x-common-microservice-variables: &common-microservice-variables
+x-microservice-environment: &microservice-environment
   - PYTHONPATH=/microservice
   - MINOS_EVENTS_QUEUE_HOST=postgres
   - MINOS_EVENTS_BROKER=kafka
@@ -10,6 +10,11 @@ x-common-microservice-variables: &common-microservice-variables
   - MINOS_SNAPSHOT_HOST=postgres
   - MINOS_SAGA_QUEUE_HOST=postgres
   - MINOS_SAGA_BROKER=kafka
+
+x-microservice-depends-on: &microservice-depends-on
+  - postgres
+  - kafka
+  - discovery
 
 services:
   zookeeper:
@@ -73,47 +78,32 @@ services:
   microservice-inventory:
     restart: always
     build: microservices/inventory
-    environment: *common-microservice-variables
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-order:
     restart: always
     build: microservices/order
-    environment: *common-microservice-variables
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-payment:
     restart: always
     build: microservices/payment
-    environment: *common-microservice-variables
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-product:
     restart: always
     build: microservices/product
-    environment: *common-microservice-variables
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-ticket:
     restart: always
     build: microservices/ticket
-    environment: *common-microservice-variables
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
 volumes:
   postgres_volume:
