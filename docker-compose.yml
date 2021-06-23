@@ -1,11 +1,22 @@
 version: "3.9"
 
+x-common-microservice-variables: &common-microservice-variables
+  - PYTHONPATH=/microservice
+  - MINOS_EVENTS_QUEUE_HOST=postgres
+  - MINOS_EVENTS_BROKER=kafka
+  - MINOS_COMMANDS_QUEUE_HOST=postgres
+  - MINOS_COMMANDS_BROKER=kafka
+  - MINOS_REPOSITORY_HOST=postgres
+  - MINOS_SNAPSHOT_HOST=postgres
+  - MINOS_SAGA_QUEUE_HOST=postgres
+  - MINOS_SAGA_BROKER=kafka
+
 services:
   zookeeper:
     restart: always
     image: wurstmeister/zookeeper:latest
     logging:
-        driver: none
+      driver: none
 
   kafka:
     restart: always
@@ -16,7 +27,7 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     logging:
-        driver: none
+      driver: none
 
   postgres:
     restart: always
@@ -28,18 +39,18 @@ services:
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
-        driver: none
+      driver: none
 
   redis:
     image: redis:latest
     command: "redis-server"
     logging:
-        driver: none
+      driver: none
 
-# FIXME: Configure tavern
-#  tavern:
-#    restart: always
-#    build: external/tavern
+  # FIXME: Configure tavern
+  #  tavern:
+  #    restart: always
+  #    build: external/tavern
 
   api-gateway:
     restart: always
@@ -62,16 +73,7 @@ services:
   microservice-inventory:
     restart: always
     build: microservices/inventory
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
+    environment: *common-microservice-variables
     depends_on:
       - postgres
       - kafka
@@ -80,16 +82,7 @@ services:
   microservice-order:
     restart: always
     build: microservices/order
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
+    environment: *common-microservice-variables
     depends_on:
       - postgres
       - kafka
@@ -98,16 +91,7 @@ services:
   microservice-payment:
     restart: always
     build: microservices/payment
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
+    environment: *common-microservice-variables
     depends_on:
       - postgres
       - kafka
@@ -116,16 +100,7 @@ services:
   microservice-product:
     restart: always
     build: microservices/product
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
+    environment: *common-microservice-variables
     depends_on:
       - postgres
       - kafka
@@ -134,16 +109,7 @@ services:
   microservice-ticket:
     restart: always
     build: microservices/ticket
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
+    environment: *common-microservice-variables
     depends_on:
       - postgres
       - kafka

@@ -30,22 +30,13 @@ def start(
     """Start the microservice."""
 
     try:
-        # noinspection PyUnresolvedReferences
-        from config import (
-            injections,
-            services,
-        )
-    except Exception as exc:
-        typer.echo(f"Error loading config: {exc!r}")
-        raise typer.Exit(code=1)
-
-    try:
         config = MinosConfig(file_path)
     except Exception as exc:
         typer.echo(f"Error loading config: {exc!r}")
         raise typer.Exit(code=1)
 
-    launcher = EntrypointLauncher(config=config, injections=injections, services=services)
+    launcher = EntrypointLauncher.from_config(config=config)
+
     try:
         launcher.launch()
     except Exception as exc:
