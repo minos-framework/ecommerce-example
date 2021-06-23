@@ -6,7 +6,7 @@ authors = ["Clariteia Devs <devs@clariteia.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-apigateway = "^0.0.2"
+minos-apigateway = { git = "https://github.com/Clariteia/api_gateway.git", rev = "909f693c172cd1947f06e26e3f79f5f9e48becc3" }
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
