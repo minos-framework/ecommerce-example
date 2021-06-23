@@ -2,7 +2,7 @@ service:
   name: payments
 rest:
   host: 0.0.0.0
-  port: 8084
+  port: 8083
   endpoints:
     - route: /payments
       method: POST

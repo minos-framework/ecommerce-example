@@ -13,7 +13,7 @@ from minos.common import (
 class Product(Aggregate):
     """TODO"""
 
-    product_code: str
+    code: str
     title: str
     description: str
-    price: int
+    price: float

@@ -26,7 +26,8 @@ class TicketService(Service):
         :param order: `Order` associated to the `Ticket`
         :param amount: Total amount in €
         """
-        return await Ticket.create(code, order, amount)
+        payments = list()
+        return await Ticket.create(code, order, payments, amount)
 
     @staticmethod
     async def get_tickets(ids: list[int]) -> list[Ticket]:
