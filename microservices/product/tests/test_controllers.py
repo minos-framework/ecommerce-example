@@ -13,13 +13,15 @@ from src import (
 
 
 class TestProductController(unittest.IsolatedAsyncioTestCase):
+    @unittest.skip
     async def test_create_product(self):
         controller = ProductController()
-        # controller.create_product()
+        await controller.create_product()
 
+    @unittest.skip
     async def test_get_products(self):
         controller = ProductController()
-        # controller.get_products()
+        await controller.get_products()
 
 
 if __name__ == "__main__":
