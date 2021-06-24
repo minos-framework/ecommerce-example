@@ -1,11 +1,27 @@
 version: "3.9"
 
+x-microservice-environment: &microservice-environment
+  - PYTHONPATH=/microservice
+  - MINOS_EVENTS_QUEUE_HOST=postgres
+  - MINOS_EVENTS_BROKER=kafka
+  - MINOS_COMMANDS_QUEUE_HOST=postgres
+  - MINOS_COMMANDS_BROKER=kafka
+  - MINOS_REPOSITORY_HOST=postgres
+  - MINOS_SNAPSHOT_HOST=postgres
+  - MINOS_SAGA_QUEUE_HOST=postgres
+  - MINOS_SAGA_BROKER=kafka
+
+x-microservice-depends-on: &microservice-depends-on
+  - postgres
+  - kafka
+  - discovery
+
 services:
   zookeeper:
     restart: always
     image: wurstmeister/zookeeper:latest
     logging:
-        driver: none
+      driver: none
 
   kafka:
     restart: always
@@ -16,7 +32,7 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     logging:
-        driver: none
+      driver: none
 
   postgres:
     restart: always
@@ -28,18 +44,18 @@ services:
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
-        driver: none
+      driver: none
 
   redis:
     image: redis:latest
     command: "redis-server"
     logging:
-        driver: none
+      driver: none
 
-# FIXME: Configure tavern
-#  tavern:
-#    restart: always
-#    build: external/tavern
+  # FIXME: Configure tavern
+  #  tavern:
+  #    restart: always
+  #    build: external/tavern
 
   api-gateway:
     restart: always
@@ -62,92 +78,32 @@ services:
   microservice-inventory:
     restart: always
     build: microservices/inventory
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-order:
     restart: always
     build: microservices/order
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-payment:
     restart: always
     build: microservices/payment
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-product:
     restart: always
     build: microservices/product
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-ticket:
     restart: always
     build: microservices/ticket
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
 volumes:
   postgres_volume:
