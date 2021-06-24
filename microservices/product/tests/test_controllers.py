@@ -7,11 +7,12 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import unittest.async_case
 
-from src import ProductController
+from src import (
+    ProductController,
+)
 
 
 class TestProductController(unittest.IsolatedAsyncioTestCase):
-
     async def test_create_product(self):
         controller = ProductController()
         # controller.create_product()
@@ -21,5 +22,5 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         # controller.get_products()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
