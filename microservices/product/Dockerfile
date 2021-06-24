@@ -1,6 +1,4 @@
 FROM ghcr.io/clariteia/minos:0.1.0 as build
-WORKDIR /microservice
-ENV PYTHONPATH=/microservice:$PYTHONPATH
 COPY ./pyproject.toml ./poetry.lock ./
 RUN poetry export --without-hashes > req.txt && pip wheel -r req.txt --wheel-dir ./dist
 COPY . .
