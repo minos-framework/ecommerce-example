@@ -51,10 +51,12 @@ services:
     logging:
       driver: none
 
-  # FIXME: Configure tavern
-  #  tavern:
-  #    restart: always
-  #    build: external/tavern
+  tavern:
+    build: external/tavern
+    profiles:
+      - donotstart
+    volumes:
+      - ./external/tavern/:/tavern/
 
   api-gateway:
     restart: always

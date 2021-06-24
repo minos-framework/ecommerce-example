@@ -1,0 +1,40 @@
+---
+test_name: Create a product and get by identifier.
+
+stages:
+  - name: Create a Product
+
+    request:
+      url: http://api-gateway:5566/products
+      method: POST
+      json:
+        code: '45322451'
+        title: Cacao 1kg
+        description: Desayuno y merienda
+        price: 2.3
+
+    response:
+      status_code: 200
+      json:
+        - id: !anyint
+          version: 1
+          code: '45322451'
+          title: Cacao 1kg
+          description: Desayuno y merienda
+          price: 2.3
+
+  - name: Get a Product
+
+    request:
+      url: http://api-gateway:5566/products?ids=2
+      method: GET
+
+    response:
+      status_code: 200
+      json:
+        - id: 2
+          version: 1
+          code: 'abc45322451'
+          title: Cacao 1kg
+          description: Desayuno y merienda
+          price: 2.0
