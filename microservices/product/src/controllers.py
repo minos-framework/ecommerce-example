@@ -17,7 +17,7 @@ from .services import (
 
 
 class ProductController:
-    """Ticket Controller class"""
+    """Product Controller class"""
 
     @staticmethod
     async def create_product(request: Request) -> Response:

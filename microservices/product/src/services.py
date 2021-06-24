@@ -16,7 +16,7 @@ from .aggregates import (
 
 
 class ProductService(Service):
-    """Ticket Service class"""
+    """Product Service class"""
 
     @staticmethod
     async def create_product(code: str, title: str, description: str, price: float) -> Product:
@@ -32,10 +32,10 @@ class ProductService(Service):
 
     @staticmethod
     async def get_products(ids: list[int]) -> list[Product]:
-        """Get a list of tickets.
+        """Get a list of products.
 
-        :param ids: List of ticket identifiers.
-        :return: A list of ``Ticket`` instances.
+        :param ids: List of product identifiers.
+        :return: A list of ``Product`` instances.
         """
         values = {v.id: v async for v in Product.get(ids=ids)}
         return [values[id] for id in ids]
