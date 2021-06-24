@@ -1,8 +1,14 @@
-on: push
+on:
+  push:
+    paths:
+      - 'microservices/product/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:Impr
+        working-directory: ./microservices/product
 
     steps:
       - name: Check out repository code
