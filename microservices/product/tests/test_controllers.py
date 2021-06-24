@@ -11,7 +11,6 @@ from src import ProductController
 
 
 class TestProductController(unittest.IsolatedAsyncioTestCase):
-
     async def test_create_product(self):
         controller = ProductController()
         # controller.create_product()
@@ -21,5 +20,5 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         # controller.get_products()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
