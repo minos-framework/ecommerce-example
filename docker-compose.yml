@@ -56,7 +56,7 @@ services:
     profiles:
       - donotstart
     volumes:
-      - ./external/tavern/:/tavern/
+      - ./external/tavern/:/tavern/:ro
 
   api-gateway:
     restart: always
