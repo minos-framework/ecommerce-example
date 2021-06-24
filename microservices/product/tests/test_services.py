@@ -7,8 +7,12 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import sys
 import unittest
-from asyncio import gather
-from pathlib import Path
+from asyncio import (
+    gather,
+)
+from pathlib import (
+    Path,
+)
 
 from minos.common import (
     DependencyInjector,
@@ -16,8 +20,12 @@ from minos.common import (
     PostgreSqlRepository,
     PostgreSqlSnapshot,
 )
-from minos.networks import EventBroker
-from minos.saga import SagaManager
+from minos.networks import (
+    EventBroker,
+)
+from minos.saga import (
+    SagaManager,
+)
 from src import (
     Product,
     ProductService,
