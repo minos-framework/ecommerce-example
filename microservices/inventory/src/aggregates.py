@@ -10,10 +10,8 @@ from minos.common import (
 )
 
 
-class Ticket(Aggregate):
+class Inventory(Aggregate):
     """TODO"""
 
-    code: str
-    order: int
-    payments: list[int]
+    product: int
     amount: int

@@ -1,27 +1,27 @@
 service:
-    name: products
+    name: inventories
 rest:
     host: 0.0.0.0
-    port: 8084
+    port: 8081
     endpoints:
-        -   route: /products
+        -   route: /inventories
             method: POST
-            controller: src.ProductController
-            action: create_product
+            controller: src.InventoryController
+            action: create_inventory
             name: ""
-        -   route: /products
+        -   route: /inventories
             method: GET
-            controller: src.ProductController
-            action: get_products
+            controller: src.InventoryController
+            action: get_inventories
             name: ""
 repository:
-    database: product_db
+    database: inventory_db
     user: minos
     password: min0s
     host: localhost
     port: 5432
 snapshot:
-    database: product_db
+    database: inventory_db
     user: minos
     password: min0s
     host: localhost
@@ -30,7 +30,7 @@ events:
     broker: localhost
     port: 9092
     queue:
-        database: product_db
+        database: inventory_db
         user: minos
         password: min0s
         host: localhost
@@ -42,14 +42,14 @@ commands:
     broker: localhost
     port: 9092
     items:
-        -   name: CreateProduct
-            controller: src.ProductController
-            action: create_product
-        -   name: GetProducts
-            controller: src.ProductController
-            action: get_products
+        -   name: Createinventory
+            controller: src.InventoryController
+            action: create_inventory
+        -   name: Getinventories
+            controller: src.InventoryController
+            action: get_inventories
     queue:
-        database: product_db
+        database: inventory_db
         user: minos
         password: min0s
         host: localhost
@@ -60,10 +60,10 @@ saga:
     broker: localhost
     port: 9092
     storage:
-        path: "./product.lmdb"
+        path: "./inventory.lmdb"
     items: []
     queue:
-        database: product_db
+        database: inventory_db
         user: minos
         password: min0s
         host: localhost

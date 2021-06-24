@@ -18,15 +18,15 @@ class PaymentService(Service):
     """Ticket Service class"""
 
     @staticmethod
-    async def create_payment(products: list[int], date: int, state: int) -> Payment:
+    async def create_payment(credit_number: int, amount: float) -> Payment:
         """
-        Creates a payment_service
+        Creates a payment
 
-        :param products: List of `Payments`
-        :param date: Creation date
-        :param state: State of the payment_service
+        :param credit_number: TODO
+        :param amount; TODO
         """
-        return await Payment.create(products, date, state)
+        status = "created"
+        return await Payment.create(credit_number, amount, status)
 
     @staticmethod
     async def get_payments(ids: list[int]) -> list[Payment]:

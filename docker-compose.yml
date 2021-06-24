@@ -24,7 +24,7 @@ services:
     volumes:
       - postgres_volume:/var/lib/postgresql
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=order_db,product_db,ticket_db,payment_db
+      - POSTGRES_MULTIPLE_DATABASES=inventory_db,order_db,payment_db,product_db,ticket_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
@@ -59,9 +59,45 @@ services:
     depends_on:
       - redis
 
+  microservice-inventory:
+    restart: always
+    build: microservices/inventory
+    environment:
+      - PYTHONPATH=/microservice
+      - MINOS_EVENTS_QUEUE_HOST=postgres
+      - MINOS_EVENTS_BROKER=kafka
+      - MINOS_COMMANDS_QUEUE_HOST=postgres
+      - MINOS_COMMANDS_BROKER=kafka
+      - MINOS_REPOSITORY_HOST=postgres
+      - MINOS_SNAPSHOT_HOST=postgres
+      - MINOS_SAGA_QUEUE_HOST=postgres
+      - MINOS_SAGA_BROKER=kafka
+    depends_on:
+      - postgres
+      - kafka
+      - discovery
+
   microservice-order:
     restart: always
     build: microservices/order
+    environment:
+      - PYTHONPATH=/microservice
+      - MINOS_EVENTS_QUEUE_HOST=postgres
+      - MINOS_EVENTS_BROKER=kafka
+      - MINOS_COMMANDS_QUEUE_HOST=postgres
+      - MINOS_COMMANDS_BROKER=kafka
+      - MINOS_REPOSITORY_HOST=postgres
+      - MINOS_SNAPSHOT_HOST=postgres
+      - MINOS_SAGA_QUEUE_HOST=postgres
+      - MINOS_SAGA_BROKER=kafka
+    depends_on:
+      - postgres
+      - kafka
+      - discovery
+
+  microservice-payment:
+    restart: always
+    build: microservices/payment
     environment:
       - PYTHONPATH=/microservice
       - MINOS_EVENTS_QUEUE_HOST=postgres
@@ -98,24 +134,6 @@ services:
   microservice-ticket:
     restart: always
     build: microservices/ticket
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
-    depends_on:
-      - postgres
-      - kafka
-      - discovery
-
-  microservice-payment:
-    restart: always
-    build: microservices/payment
     environment:
       - PYTHONPATH=/microservice
       - MINOS_EVENTS_QUEUE_HOST=postgres

@@ -5,6 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from datetime import (
+    datetime,
+)
+
 from minos.common import (
     Service,
 )
@@ -18,15 +22,15 @@ class OrderService(Service):
     """Ticket Service class"""
 
     @staticmethod
-    async def create_order(orders: list[int], date: int, state: int) -> Order:
+    async def create_order(products: list[int]) -> Order:
         """
         Creates a fake_payment_service
 
-        :param orders: List of `orders`
-        :param date: Creation date
-        :param state: State of the fake_payment_service
+        :param products: List of `orders`
         """
-        return await Order.create(orders, date, state)
+        now = datetime.now()
+        status = "created"
+        return await Order.create(products, status, created_at=now, updated_at=now)
 
     @staticmethod
     async def get_orders(ids: list[int]) -> list[Order]:
