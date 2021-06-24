@@ -11,7 +11,7 @@ stages:
         code: '45322451'
         title: Cacao 1kg
         description: Desayuno y merienda
-        price: 2.3
+        price: 2.0
 
     response:
       status_code: 200
@@ -21,20 +21,24 @@ stages:
           code: '45322451'
           title: Cacao 1kg
           description: Desayuno y merienda
-          price: 2.3
+          price: 2.0
+      save:
+        json:
+          product_id: "[0].id"
+
 
   - name: Get a Product
 
     request:
-      url: http://api-gateway:5566/products?ids=2
+      url: "http://api-gateway:5566/products?ids={product_id:d}"
       method: GET
 
     response:
       status_code: 200
       json:
-        - id: 2
+        - id: !int "{product_id:d}"
           version: 1
-          code: 'abc45322451'
+          code: '45322451'
           title: Cacao 1kg
           description: Desayuno y merienda
           price: 2.0
