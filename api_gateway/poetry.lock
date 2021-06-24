@@ -203,8 +203,8 @@ typer = "^0.3.2"
 [package.source]
 type = "git"
 url = "https://github.com/Clariteia/api_gateway.git"
-reference = "db15757ab0392595b2b07b8e0780e912e514662d"
-resolved_reference = "db15757ab0392595b2b07b8e0780e912e514662d"
+reference = "25b74d73cb79195449b39aba514818b8f832db13"
+resolved_reference = "25b74d73cb79195449b39aba514818b8f832db13"
 
 [[package]]
 name = "minos-apigateway-common"
@@ -402,7 +402,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "cf41195efa8597c43001fec98aa36c75dd8bcebcd8d73e7f1be3280b68819db5"
+content-hash = "1d1984e0fefe99e8f2c358ceb38eb64b4ab7238bc127dcd89d6b70814b207443"
 
 [metadata.files]
 aiohttp = [
