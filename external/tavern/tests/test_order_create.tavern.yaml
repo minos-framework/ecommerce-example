@@ -1,0 +1,35 @@
+---
+test_name: Create an order and get by identifier.
+
+stages:
+  - name: Create an order
+
+    request:
+      url: http://api-gateway:5566/orders
+      method: POST
+      json:
+        products: [1, 2, 3,4]
+
+    response:
+      status_code: 200
+      json:
+        - id: !anyint
+          version: 1
+          products: [1, 2, 3,4]
+      save:
+        json:
+          order_id: "[0].id"
+
+
+  - name: Get a Product
+
+    request:
+      url: "http://api-gateway:5566/orders?ids={order_id:d}"
+      method: GET
+
+    response:
+      status_code: 200
+      json:
+        - id: !int "{order_id:d}"
+          version: 1
+          products: [1, 2, 3,4]

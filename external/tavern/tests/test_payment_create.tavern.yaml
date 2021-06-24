@@ -1,0 +1,37 @@
+---
+test_name: Create a payment and get by identifier.
+
+stages:
+  - name: Create a payment
+
+    request:
+      url: http://api-gateway:5566/payments
+      method: POST
+      json:
+        credit_number: 12345678123456768
+        amount: 30.0
+
+    response:
+      status_code: 200
+      json:
+        - id: !anyint
+          credit_number: 12345678123456768
+          amount: 30.0
+      save:
+        json:
+          payment_id: "[0].id"
+
+
+  - name: Get a Product
+
+    request:
+      url: "http://api-gateway:5566/payments?ids={payment_id:d}"
+      method: GET
+
+    response:
+      status_code: 200
+      json:
+        - id: !int "{payment_id:d}"
+          version: 1
+          credit_number: 12345678123456768
+          amount: 30.0
