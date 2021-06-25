@@ -31,12 +31,12 @@ from src import (
     ProductService,
 )
 
-CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
-
 
 class TestProductService(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+
     async def asyncSetUp(self) -> None:
-        self.config = MinosConfig(CONFIG_FILE_PATH)
+        self.config = MinosConfig(self.CONFIG_FILE_PATH)
         self.injector = DependencyInjector(
             self.config,
             saga_manager=SagaManager,
@@ -45,6 +45,7 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
             snapshot=PostgreSqlSnapshot,
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
+
         self.service = ProductService()
 
     async def asyncTearDown(self) -> None:
@@ -58,13 +59,14 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(3, product.price)
 
     async def test_get_products(self):
-        service = ProductService()
         expected = await gather(
-            self.service.create_product("abc", "Cacao", "1KG", 3), self.service.create_product("def", "Cafe", "2KG", 1)
+            self.service.create_product("abc", "Cacao", "1KG", 3),
+            self.service.create_product("def", "Cafe", "2KG", 1),
+            self.service.create_product("ghi", "Milk", "1L", 2),
         )
         ids = [v.id for v in expected]
 
-        observed = await service.get_products(ids)
+        observed = await self.service.get_products(ids)
         self.assertEqual(expected, observed)
 
 

@@ -5,23 +5,90 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+import sys
 import unittest.async_case
+from asyncio import (
+    gather,
+)
+from pathlib import (
+    Path,
+)
 
+from minos.common import (
+    DependencyInjector,
+    MinosConfig,
+    PostgreSqlRepository,
+    PostgreSqlSnapshot,
+    Request,
+    Response,
+)
+from minos.networks import (
+    EventBroker,
+)
+from minos.saga import (
+    SagaManager,
+)
 from src import (
+    Product,
     ProductController,
+    ProductService,
 )
 
 
-class TestProductController(unittest.IsolatedAsyncioTestCase):
-    @unittest.skip
-    async def test_create_product(self):
-        controller = ProductController()
-        await controller.create_product()
+class _FakeRequest(Request):
+    """For testing purposes"""
 
-    @unittest.skip
+    def __init__(self, content):
+        super().__init__()
+        self._content = content
+
+    async def content(self):
+        """For testing purposes"""
+        return self._content
+
+
+class TestProductController(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+
+    async def asyncSetUp(self) -> None:
+        self.config = MinosConfig(self.CONFIG_FILE_PATH)
+        self.injector = DependencyInjector(
+            self.config,
+            saga_manager=SagaManager,
+            event_broker=EventBroker,
+            repository=PostgreSqlRepository,
+            snapshot=PostgreSqlSnapshot,
+        )
+        await self.injector.wire(modules=[sys.modules[__name__]])
+
+        self.controller = ProductController()
+
+    async def asyncTearDown(self) -> None:
+        await self.injector.unwire()
+
+    async def test_create_product(self):
+        request = _FakeRequest([{"code": "abc", "title": "Cacao", "description": "1KG", "price": 3}])
+        response = await self.controller.create_product(request)
+
+        self.assertIsInstance(response, Response)
+
+        observed = await response.content()
+        self.assertEqual(1, len(observed))
+        self.assertEqual(Product("abc", "Cacao", "1KG", 3, id=observed[0].id, version=observed[0].version), observed[0])
+
     async def test_get_products(self):
-        controller = ProductController()
-        await controller.get_products()
+        service = ProductService()
+        expected = await gather(
+            service.create_product("abc", "Cacao", "1KG", 3),
+            service.create_product("def", "Cafe", "2KG", 1),
+            service.create_product("ghi", "Milk", "1L", 2),
+        )
+        ids = [v.id for v in expected]
+        request = _FakeRequest(ids)
+
+        response = await self.controller.get_products(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
 
 
 if __name__ == "__main__":
