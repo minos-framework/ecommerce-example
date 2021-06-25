@@ -17,14 +17,14 @@ from .services import (
 
 
 class ProductController:
-    """Ticket Controller class"""
+    """Product Controller class"""
 
     @staticmethod
     async def create_product(request: Request) -> Response:
-        """TODO
+        """Create a new product instance.
 
-        :param request:TODO
-        :return: TODO
+        :param request: The ``Request`` that contains the needed information to create the product.
+        :return: A ``Response`` containing the already created product.
         """
         content = await request.content()
         product = await ProductService().create_product(**content[0])
@@ -32,10 +32,10 @@ class ProductController:
 
     @staticmethod
     async def get_products(request: Request) -> Response:
-        """TODO
+        """Get products.
 
-        :param request: TODO
-        :return: TODO
+        :param request: The ``Request`` instance that contains the product identifiers.
+        :return: A ``Response`` instance containing the requested products.
         """
         content = await request.content()
         if len(content) and hasattr(content[0], "ids"):
