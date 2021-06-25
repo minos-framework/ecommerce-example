@@ -66,7 +66,7 @@ rest:
 discovery:
   host: localhost
   port: 5567
-  path: discover
+  path: /discover
   endpoints: []
   db:
     host: localhost
