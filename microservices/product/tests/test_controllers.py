@@ -32,7 +32,6 @@ from minos.common import (
     Request,
     Response,
 )
-
 from src import (
     Product,
     ProductController,
