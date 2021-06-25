@@ -1,0 +1,38 @@
+---
+test_name: Create an inventory and get by identifier.
+
+stages:
+  - name: Create an inventory
+
+    request:
+      url: http://api-gateway:5566/inventories
+      method: POST
+      json:
+        product: 1
+        amount: 34
+
+    response:
+      status_code: 200
+      json:
+        - id: !anyint
+          version: 1
+          product: 1
+          amount: 34
+      save:
+        json:
+          inventory_id: "[0].id"
+
+
+  - name: Get a Product
+
+    request:
+      url: "http://api-gateway:5566/inventories?ids={inventory_id:d}"
+      method: GET
+
+    response:
+      status_code: 200
+      json:
+        - id: !int "{inventory_id:d}"
+          version: 1
+          product: 1
+          amount: 34
