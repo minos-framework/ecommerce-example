@@ -106,6 +106,7 @@ ENV/
 
 # Intellij IDEa / PyCharm / etc.
 .idea
+.run
 
 # lmdb database
 *.mdb

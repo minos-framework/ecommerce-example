@@ -9,6 +9,7 @@ x-microservice-environment: &microservice-environment
   - MINOS_SNAPSHOT_HOST=postgres
   - MINOS_SAGA_QUEUE_HOST=postgres
   - MINOS_SAGA_BROKER=kafka
+  - MINOS_DISCOVERY_HOST=discovery
 
 x-microservice-depends-on: &microservice-depends-on
   - postgres
@@ -65,6 +66,7 @@ services:
       - 5566:5566
     environment:
       - PYTHONPATH=/api_gateway
+      - DISCOVERY_SERVICE_HOST=discovery
     depends_on:
       - discovery
 

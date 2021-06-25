@@ -64,9 +64,9 @@ rest:
       action: default
 
 discovery:
-  host: discovery
-  port: 8080
-  path: discover
+  host: localhost
+  port: 5567
+  path: /discover
   endpoints: []
   db:
     host: localhost

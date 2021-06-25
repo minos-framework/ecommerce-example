@@ -89,8 +89,8 @@ saga:
     records: 10
     retry: 2
 discovery:
-  host: discovery
-  port: 8080
+  host: localhost
+  port: 5567
   endpoints:
     subscribe:
       path: subscribe
