@@ -13,23 +13,64 @@ from asyncio import (
 from pathlib import (
     Path,
 )
+from typing import (
+    Any,
+    NoReturn,
+    Optional,
+)
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
+    CommandReply,
     DependencyInjector,
+    InMemoryRepository,
+    InMemorySnapshot,
+    MinosBroker,
     MinosConfig,
-    PostgreSqlRepository,
-    PostgreSqlSnapshot,
-)
-from minos.networks import (
-    EventBroker,
-)
-from minos.saga import (
-    SagaManager,
+    MinosSagaManager,
+    Model,
 )
 from src import (
     Product,
     ProductService,
 )
+
+
+class _FakeBroker(MinosBroker):
+    """For testing purposes."""
+
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.call_count = 0
+        self.calls_kwargs = list()
+
+    async def send(self, items: list[Model], **kwargs) -> NoReturn:
+        """For testing purposes."""
+        self.call_count += 1
+        self.calls_kwargs.append({"items": items} | kwargs)
+
+    @property
+    def call_kwargs(self) -> Optional[dict[str, Any]]:
+        """For testing purposes."""
+        if len(self.calls_kwargs) == 0:
+            return None
+        return self.calls_kwargs[-1]
+
+    def reset_mock(self):
+        self.call_count = 0
+        self.calls_kwargs = list()
+
+
+class _FakeSagaManager(MinosSagaManager):
+    """For testing purposes."""
+
+    async def _run_new(self, name: str, **kwargs) -> UUID:
+        """For testing purposes."""
+
+    async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
+        """For testing purposes."""
 
 
 class TestProductService(unittest.IsolatedAsyncioTestCase):
@@ -39,10 +80,10 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
         self.injector = DependencyInjector(
             self.config,
-            saga_manager=SagaManager,
-            event_broker=EventBroker,
-            repository=PostgreSqlRepository,
-            snapshot=PostgreSqlSnapshot,
+            saga_manager=_FakeSagaManager,
+            event_broker=_FakeBroker,
+            repository=InMemoryRepository,
+            snapshot=InMemorySnapshot,
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
