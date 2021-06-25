@@ -7,18 +7,10 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import sys
 import unittest.async_case
-from asyncio import (
-    gather,
-)
-from pathlib import (
-    Path,
-)
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from asyncio import gather
+from pathlib import Path
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     CommandReply,
@@ -100,9 +92,7 @@ class TestInventoryController(unittest.IsolatedAsyncioTestCase):
     async def test_get_inventorys(self):
         service = InventoryService()
         expected = await gather(
-            service.create_inventory(1, 34),
-            service.create_inventory(2, 12),
-            service.create_inventory(3, 43),
+            service.create_inventory(1, 34), service.create_inventory(2, 12), service.create_inventory(3, 43),
         )
         ids = [v.id for v in expected]
         request = _FakeRequest(ids)

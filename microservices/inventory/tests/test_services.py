@@ -7,18 +7,10 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
-from pathlib import (
-    Path,
-)
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from asyncio import gather
+from pathlib import Path
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     CommandReply,
