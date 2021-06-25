@@ -11,7 +11,7 @@ from minos.common import (
 
 
 class Product(Aggregate):
-    """TODO"""
+    """Product class."""
 
     code: str
     title: str

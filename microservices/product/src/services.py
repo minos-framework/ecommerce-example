@@ -22,11 +22,11 @@ class ProductService(Service):
     async def create_product(code: str, title: str, description: str, price: float) -> Product:
         """Create a product.
 
-        :param code: TODO.
-        :param title: TODO.
-        :param description: TODO.
-        :param price: TODO.
-        :return: TODO.
+        :param code: External product identifier.
+        :param title: Name of the product.
+        :param description: Description of the product.
+        :param price: Price of the product.
+        :return: A ``Product`` instance.
         """
         return await Product.create(code, title, description, price)
 
