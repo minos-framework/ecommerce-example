@@ -14,9 +14,7 @@ from pathlib import (
     Path,
 )
 from typing import (
-    Any,
     NoReturn,
-    Optional,
 )
 from uuid import (
     UUID,
@@ -41,26 +39,8 @@ from src import (
 class _FakeBroker(MinosBroker):
     """For testing purposes."""
 
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.call_count = 0
-        self.calls_kwargs = list()
-
     async def send(self, items: list[Model], **kwargs) -> NoReturn:
         """For testing purposes."""
-        self.call_count += 1
-        self.calls_kwargs.append({"items": items} | kwargs)
-
-    @property
-    def call_kwargs(self) -> Optional[dict[str, Any]]:
-        """For testing purposes."""
-        if len(self.calls_kwargs) == 0:
-            return None
-        return self.calls_kwargs[-1]
-
-    def reset_mock(self):
-        self.call_count = 0
-        self.calls_kwargs = list()
 
 
 class _FakeSagaManager(MinosSagaManager):
