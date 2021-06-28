@@ -28,22 +28,9 @@ def start(
     )
 ):
     """Start the microservice."""
-
-    try:
-        config = MinosConfig(file_path)
-    except Exception as exc:
-        typer.echo(f"Error loading config: {exc!r}")
-        raise typer.Exit(code=1)
-
+    config = MinosConfig(file_path)
     launcher = EntrypointLauncher.from_config(config=config)
-
-    try:
-        launcher.launch()
-    except Exception as exc:
-        typer.echo(f"Error launching microservice: {exc!r}")
-        raise typer.Exit(code=1)
-
-    typer.echo("Microservice is up and running!\n")
+    launcher.launch()
 
 
 @app.command("status")
