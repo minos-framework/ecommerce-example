@@ -7,13 +7,17 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 
 from minos.common import (
+    ModelType,
     Request,
     Response,
-    ModelType,
 )
-from minos.networks import HttpRequest
+from minos.networks import (
+    HttpRequest,
+)
 
-from .services import ProductService
+from .services import (
+    ProductService,
+)
 
 
 class ProductController:

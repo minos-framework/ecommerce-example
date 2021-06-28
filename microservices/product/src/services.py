@@ -7,9 +7,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 
 from minos.common import (
-    Service,
     MinosRepositoryAggregateNotFoundException,
     MinosRepositoryException,
+    Service,
 )
 
 from .aggregates import (
