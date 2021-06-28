@@ -9,9 +9,5 @@ from .aggregates import (
     Inventory,
     Product,
 )
-from .controllers import (
-    ProductController,
-)
-from .services import (
-    ProductService,
-)
+from .controllers import ProductController
+from .services import ProductService
