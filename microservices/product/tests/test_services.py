@@ -31,6 +31,7 @@ from minos.common import (
     Model,
 )
 from src import (
+    Inventory,
     Product,
     ProductService,
 )
@@ -89,6 +90,22 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
 
         observed = await self.service.get_products(ids)
         self.assertEqual(expected, observed)
+
+    async def test_update_inventory(self):
+        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
+        await self.service.update_inventory(product.id, 56)
+        await product.refresh()
+        self.assertEqual(Inventory(56), product.inventory)
+
+    async def test_update_inventory_diff(self):
+        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
+        await self.service.update_inventory_diff(product.id, 12)
+        await product.refresh()
+        self.assertEqual(Inventory(24), product.inventory)
+
+        await self.service.update_inventory_diff(product.id, -10)
+        await product.refresh()
+        self.assertEqual(Inventory(14), product.inventory)
 
 
 if __name__ == "__main__":

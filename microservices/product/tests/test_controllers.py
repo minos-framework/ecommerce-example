@@ -35,7 +35,6 @@ from minos.common import (
 from src import (
     Product,
     ProductController,
-    ProductService,
     Inventory,
 )
 
@@ -99,16 +98,33 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_get_products(self):
-        service = ProductService()
         expected = await gather(
-            service.create_product("abc", "Cacao", "1KG", 3),
-            service.create_product("def", "Cafe", "2KG", 1),
-            service.create_product("ghi", "Milk", "1L", 2),
+            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
+            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
+            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
         )
         ids = [v.id for v in expected]
         request = _FakeRequest(ids)
 
         response = await self.controller.get_products(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
+
+    async def test_update_inventory(self):
+        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
+        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(56), id=product.id, version=2)]
+
+        request = _FakeRequest([{"product_id": product.id, "amount": 56}])
+        response = await self.controller.update_inventory(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
+
+    async def test_update_inventory_diff(self):
+        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
+        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(24), id=product.id, version=2)]
+
+        request = _FakeRequest([{"product_id": product.id, "amount_diff": 12}])
+        response = await self.controller.update_inventory_diff(request)
         observed = await response.content()
         self.assertEqual(expected, observed)
 
