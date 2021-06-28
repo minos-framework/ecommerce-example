@@ -26,8 +26,8 @@ class OrderController:
         :return: TODO
         """
         content = await request.content()
-        order = await OrderService().create_order(**content[0])
-        return Response(order)
+        uuid = await OrderService().create_order(**content[0])
+        return Response(str(uuid))
 
     @staticmethod
     async def get_orders(request: Request) -> Response:

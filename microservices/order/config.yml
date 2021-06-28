@@ -60,12 +60,9 @@ commands:
   broker: localhost
   port: 9092
   items:
-    - name: CreateProduct
+    - name: CreateOrder
       controller: src.OrderController
       action: create_order
-    - name: GetProducts
-      controller: src.OrderController
-      action: get_orders
   queue:
     database: order_db
     user: minos
@@ -79,7 +76,10 @@ saga:
   port: 9092
   storage:
     path: "./order.lmdb"
-  items: []
+  items:
+    - name: CreateOrder
+      controller: src
+      action: CREATE_ORDER
   queue:
     database: order_db
     user: minos

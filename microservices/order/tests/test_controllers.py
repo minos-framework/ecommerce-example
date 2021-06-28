@@ -21,8 +21,13 @@ from pathlib import (
 from typing import (
     NoReturn,
 )
+from unittest.mock import (
+    call,
+    patch,
+)
 from uuid import (
     UUID,
+    uuid4,
 )
 
 from minos.common import (
@@ -92,23 +97,22 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_product(self):
-        request = _FakeRequest([{"products": [1, 2, 3]}])
-        response = await self.controller.create_order(request)
+        uuid = uuid4()
 
-        self.assertIsInstance(response, Response)
+        async def _fn(*args, **kwargs):
+            return uuid
 
-        observed = await response.content()
-        expected = [
-            Order(
-                [1, 2, 3],
-                "created",
-                created_at=observed[0].created_at,
-                updated_at=observed[0].updated_at,
-                id=observed[0].id,
-                version=observed[0].version,
-            )
-        ]
-        self.assertEqual(expected, observed)
+        with patch("src.OrderService.create_order") as mock:
+            mock.side_effect = _fn
+
+            request = _FakeRequest([{"products": [1, 2, 3]}])
+            response = await self.controller.create_order(request)
+
+            self.assertIsInstance(response, Response)
+
+            observed = await response.content()
+            self.assertEqual([str(uuid)], observed)
+            self.assertEqual(call(products=[1, 2, 3]), mock.call_args)
 
     async def test_get_products(self):
         now = datetime.now(tz=timezone.utc)

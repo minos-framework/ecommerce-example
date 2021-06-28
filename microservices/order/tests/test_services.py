@@ -21,8 +21,13 @@ from pathlib import (
 from typing import (
     NoReturn,
 )
+from unittest.mock import (
+    MagicMock,
+    call,
+)
 from uuid import (
     UUID,
+    uuid4,
 )
 
 from minos.common import (
@@ -34,6 +39,9 @@ from minos.common import (
     MinosConfig,
     MinosSagaManager,
     Model,
+)
+from minos.saga import (
+    SagaContext,
 )
 from src import (
     Order,
@@ -78,12 +86,18 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_order(self):
-        order = await self.service.create_order([1, 2, 3])
-        self.assertIsInstance(order, Order)
-        self.assertEqual([1, 2, 3], order.products)
-        self.assertEqual("created", order.status)
-        self.assertIsInstance(order.created_at, datetime)
-        self.assertIsInstance(order.updated_at, datetime)
+        expected = uuid4()
+
+        async def _fn(*args, **kwargs):
+            return expected
+
+        mock = MagicMock(side_effect=_fn)
+        self.service.saga_manager._run_new = mock
+
+        observed = await self.service.create_order([1, 2, 3])
+
+        self.assertEqual(expected, observed)
+        self.assertEqual(call("CreateOrder", context=SagaContext(product_ids=[1, 2, 3])), mock.call_args)
 
     async def test_get_orders(self):
         now = datetime.now(tz=timezone.utc)
