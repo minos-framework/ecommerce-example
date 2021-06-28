@@ -7,19 +7,11 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
+from asyncio import gather
 from datetime import datetime, timezone, timedelta
-from pathlib import (
-    Path,
-)
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from pathlib import Path
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     CommandReply,
@@ -86,8 +78,7 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         now -= timedelta(microseconds=now.microsecond)
 
         expected = await gather(
-            Order.create([1, 2, 3], "created", now, now),
-            Order.create([1, 1, 1], "cancelled", now, now),
+            Order.create([1, 2, 3], "created", now, now), Order.create([1, 1, 1], "cancelled", now, now),
         )
         ids = [v.id for v in expected]
 
