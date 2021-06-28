@@ -7,20 +7,14 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import sys
 import unittest.async_case
-from asyncio import (
-    gather,
-)
+from asyncio import gather
 from datetime import (
     datetime,
     timedelta,
     timezone,
 )
-from pathlib import (
-    Path,
-)
-from typing import (
-    NoReturn,
-)
+from pathlib import Path
+from typing import NoReturn
 from unittest.mock import (
     call,
     patch,

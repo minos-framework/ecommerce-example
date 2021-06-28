@@ -11,13 +11,9 @@ from minos.common import (
     Request,
     Response,
 )
-from minos.networks import (
-    HttpRequest,
-)
+from minos.networks import HttpRequest
 
-from .services import (
-    ProductService,
-)
+from .services import ProductService
 
 
 class ProductController:
