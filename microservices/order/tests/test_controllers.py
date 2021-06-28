@@ -96,7 +96,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_product(self):
+    async def test_create_order(self):
         uuid = uuid4()
 
         async def _fn(*args, **kwargs):
@@ -114,9 +114,9 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
             self.assertEqual([str(uuid)], observed)
             self.assertEqual(call(products=[1, 2, 3]), mock.call_args)
 
-    async def test_get_products(self):
+    async def test_get_orders(self):
         now = datetime.now(tz=timezone.utc)
-        now -= timedelta(microseconds=now.microsecond)
+        now -= timedelta(microseconds=now.microsecond)  # FIXME: Improve ``minos`` to avoid these tricky fixes.
 
         expected = await gather(
             Order.create([1, 2, 3], "created", now, now), Order.create([1, 1, 1], "cancelled", now, now),
