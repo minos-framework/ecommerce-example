@@ -7,7 +7,6 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 
 from minos.common import (
-    MinosRepositoryAggregateNotFoundException,
     MinosRepositoryException,
     Service,
 )
@@ -86,3 +85,19 @@ class ProductService(Service):
             return True
         except MinosRepositoryException:
             return False
+
+    @staticmethod
+    async def reserve_products(quantities: dict[int, int]) -> bool:
+        """TODO
+
+        :param quantities: TODO
+        :return: TODO
+        """
+        feasible = True
+        async for product in Product.get(ids=list(quantities.keys())):
+            inventory = product.inventory
+            if feasible and inventory.amount < quantities[product.id]:
+                feasible = False
+            inventory.amount -= quantities[product.id]
+            await product.save()
+        return feasible

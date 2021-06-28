@@ -85,7 +85,7 @@ class ProductController:
     async def validate_products(request: Request) -> Response:
         """Check if the list of passed products is valid.
 
-        :return:
+        :return: TODO
         """
         content = await request.content()
         if len(content) and hasattr(content[0], "ids"):
@@ -94,4 +94,17 @@ class ProductController:
             content = list(map(int, content))
         exist = await ProductService().validate_products(content)
         model = ModelType.build("ValidProductList", {"exist": bool})(exist=exist)
+        return Response(model)
+
+    @staticmethod
+    async def reserve_products(request: Request) -> Response:
+        """TODO
+
+        :return: TODO
+        """
+        content = await request.content()
+        quantities = {int(k): v for k, v in content[0].quantities.items()}
+
+        exist = await ProductService().reserve_products(quantities)
+        model = ModelType.build("ValidProductInventoryList", {"exist": bool})(exist=exist)
         return Response(model)
