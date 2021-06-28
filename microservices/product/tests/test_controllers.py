@@ -33,10 +33,10 @@ from minos.common import (
     Response,
 )
 from src import (
+    Inventory,
     Product,
     ProductController,
     ProductService,
-    Inventory,
 )
 
 
