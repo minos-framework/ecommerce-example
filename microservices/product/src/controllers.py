@@ -12,9 +12,7 @@ from minos.common import (
 )
 from minos.networks import HttpRequest
 
-from .services import (
-    ProductService,
-)
+from .services import ProductService
 
 
 class ProductController:
@@ -42,7 +40,7 @@ class ProductController:
 
         # FIXME: This should be performed internally by the framework.
         if isinstance(request, HttpRequest):
-            content[0]["product_id"] = int(request.raw_request.match_info['product_id'])  # FIXME
+            content[0]["product_id"] = int(request.raw_request.match_info["product_id"])  # FIXME
 
         product = await ProductService().update_inventory(**content[0])
         return Response(product)
@@ -58,7 +56,7 @@ class ProductController:
 
         # FIXME: This should be performed internally by the framework.
         if isinstance(request, HttpRequest):
-            content[0]["product_id"] = int(request.raw_request.match_info['product_id'])
+            content[0]["product_id"] = int(request.raw_request.match_info["product_id"])
 
         product = await ProductService().update_inventory_diff(**content[0])
         return Response(product)
