@@ -1,0 +1,92 @@
+---
+test_name: Create a product and get by identifier.
+
+stages:
+  - name: Create a Product
+
+    request:
+      url: http://api-gateway:5566/products
+      method: POST
+      json:
+        code: '45322451'
+        title: Cacao 1kg
+        description: Desayuno y merienda
+        price: 2.0
+
+    response:
+      status_code: 200
+      json:
+        - id: !anyint
+          version: 1
+          code: '45322451'
+          title: Cacao 1kg
+          description: Desayuno y merienda
+          price: 2.0
+          inventory:
+            amount: 0
+      save:
+        json:
+          product_id: "[0].id"
+
+
+  - name: Get a Product
+
+    request:
+      url: "http://api-gateway:5566/products?ids={product_id:d}"
+      method: GET
+
+    response:
+      status_code: 200
+      json:
+        - id: !int "{product_id:d}"
+          version: 1
+          code: '45322451'
+          title: Cacao 1kg
+          description: Desayuno y merienda
+          price: 2.0
+          inventory:
+            amount: 0
+
+
+  - name: Update inventory amount
+
+    request:
+      url: "http://api-gateway:5566/products/{product_id:d}/inventory"
+      method: PUT
+      json:
+        product_id: !int "{product_id:d}"
+        amount: 56
+
+    response:
+      status_code: 200
+      json:
+        - id: !int "{product_id:d}"
+          version: 2
+          code: '45322451'
+          title: Cacao 1kg
+          description: Desayuno y merienda
+          price: 2.0
+          inventory:
+            amount: 56
+
+
+  - name: Update inventory amount diff
+
+    request:
+      url: "http://api-gateway:5566/products/{product_id:d}/inventory"
+      method: PATCH
+      json:
+        product_id: !int "{product_id:d}"
+        amount_diff: -12
+
+    response:
+      status_code: 200
+      json:
+        - id: !int "{product_id:d}"
+          version: 3
+          code: '45322451'
+          title: Cacao 1kg
+          description: Desayuno y merienda
+          price: 2.0
+          inventory:
+            amount: 44
