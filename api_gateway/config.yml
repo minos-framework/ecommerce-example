@@ -45,6 +45,18 @@ rest:
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
+    - name: UpdateInventory
+      route: /products/{product_id}/inventory
+      method: PUT
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: UpdateInventoryDiff
+      route: /products/{product_id}/inventory
+      method: PATCH
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
     - name: GetProducts
       route: /products
       method: GET

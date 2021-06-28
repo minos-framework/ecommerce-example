@@ -7,7 +7,14 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from minos.common import (
     Aggregate,
+    DeclarativeModel,
 )
+
+
+class Inventory(DeclarativeModel):
+    """Inventory Object Value class."""
+
+    amount: int
 
 
 class Product(Aggregate):
@@ -17,3 +24,5 @@ class Product(Aggregate):
     title: str
     description: str
     price: float
+
+    inventory: Inventory
