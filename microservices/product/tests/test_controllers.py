@@ -36,6 +36,7 @@ from src import (
     Product,
     ProductController,
     ProductService,
+    Inventory,
 )
 
 
@@ -94,8 +95,8 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        self.assertEqual(1, len(observed))
-        self.assertEqual(Product("abc", "Cacao", "1KG", 3, id=observed[0].id, version=observed[0].version), observed[0])
+        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(0), id=observed[0].id, version=observed[0].version)]
+        self.assertEqual(expected, observed)
 
     async def test_get_products(self):
         service = ProductService()
