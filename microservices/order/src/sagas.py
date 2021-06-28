@@ -39,8 +39,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
     now = datetime.now()
     status = "created"
     order = await Order.create(product_ids, status, created_at=now, updated_at=now)
-    context["order"] = order
-    return context
+    return SagaContext(order=order)
 
 
 CREATE_ORDER = (
