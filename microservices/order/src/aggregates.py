@@ -18,6 +18,7 @@ class Order(Aggregate):
     """TODO"""
 
     products: list[int]
+    ticket: int
     status: str
 
     created_at: datetime

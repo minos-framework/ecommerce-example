@@ -26,7 +26,11 @@ class TicketController:
         :return: TODO
         """
         content = await request.content()
-        ticket = await TicketService().create_ticket(**content[0])
+        if len(content) and hasattr(content[0], "ids"):
+            content = content[0].ids
+        else:
+            content = list(map(int, content))
+        ticket = await TicketService().create_ticket(content)
         return Response(ticket)
 
     @staticmethod
