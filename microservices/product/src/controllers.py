@@ -8,7 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 
 from minos.common import (
     Request,
-    Response,
+    Response, ModelType,
 )
 from minos.networks import (
     HttpRequest,
@@ -79,3 +79,18 @@ class ProductController:
             content = list(map(int, content))
         products = await ProductService().get_products(content)
         return Response(products)
+
+    @staticmethod
+    async def validate_products(request: Request) -> Response:
+        """Check if the list of passed products is valid.
+
+        :return:
+        """
+        content = await request.content()
+        if len(content) and hasattr(content[0], "ids"):
+            content = content[0].ids
+        else:
+            content = list(map(int, content))
+        exist = await ProductService().validate_products(content)
+        model = ModelType.build("ValidProductList", {"exist": bool})(exist=exist)
+        return Response(model)

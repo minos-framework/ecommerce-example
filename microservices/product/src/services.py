@@ -7,7 +7,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 
 from minos.common import (
-    Service,
+    Service, MinosRepositoryAggregateNotFoundException, MinosRepositoryException,
 )
 
 from .aggregates import (
@@ -68,3 +68,19 @@ class ProductService(Service):
         product.inventory.amount += amount_diff
         await product.save()
         return product
+
+    @staticmethod
+    async def validate_products(ids: list[int]) -> bool:
+        """TODO
+
+        :param ids: TODO
+        :return: TODO
+        """
+        ids = list(set(ids))
+
+        try:
+            # noinspection PyStatementEffect
+            v = [v async for v in Product.get(ids=ids)]
+            return True
+        except MinosRepositoryException:
+            return False

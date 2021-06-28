@@ -128,6 +128,24 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         observed = await response.content()
         self.assertEqual(expected, observed)
 
+    async def test_validate_products_true(self):
+        expected = await gather(
+            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
+            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
+            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
+        )
+        ids = [v.id for v in expected]
+        request = _FakeRequest(ids)
+        response = await self.controller.validate_products(request)
+        observed = await response.content()
+        self.assertTrue(observed[0].exist)
+
+    async def test_validate_products_false(self):
+        request = _FakeRequest([9999])
+        response = await self.controller.validate_products(request)
+        observed = await response.content()
+        self.assertFalse(observed[0].exist)
+
 
 if __name__ == "__main__":
     unittest.main()

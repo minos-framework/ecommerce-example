@@ -107,6 +107,18 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         await product.refresh()
         self.assertEqual(Inventory(14), product.inventory)
 
+    async def test_validate_products_true(self):
+        expected = await gather(
+            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
+            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
+            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
+        )
+        ids = [v.id for v in expected]
+        self.assertTrue(await self.service.validate_products(ids))
+
+    async def test_validate_products_false(self):
+        self.assertFalse(await self.service.validate_products([9999]))
+
 
 if __name__ == "__main__":
     unittest.main()
