@@ -11,7 +11,8 @@ from minos.common import (
 )
 
 from .aggregates import (
-    Product, Inventory,
+    Inventory,
+    Product,
 )
 
 
