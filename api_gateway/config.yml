@@ -3,18 +3,6 @@ rest:
   port: 5566
   endpoints:
 
-    - name: AddInventory
-      route: /inventories
-      method: POST
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: GetInventories
-      route: /inventories
-      method: GET
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
     - name: AddOrder
       route: /orders
       method: POST
