@@ -40,7 +40,7 @@ services:
     volumes:
       - postgres_volume:/var/lib/postgresql
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=inventory_db,order_db,payment_db,product_db,ticket_db
+      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
@@ -77,12 +77,6 @@ services:
       - DISCOVERY_SERVICE_DB_HOST=redis
     depends_on:
       - redis
-
-  microservice-inventory:
-    restart: always
-    build: microservices/inventory
-    environment: *microservice-environment
-    depends_on: *microservice-depends-on
 
   microservice-order:
     restart: always

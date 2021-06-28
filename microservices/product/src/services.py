@@ -11,6 +11,7 @@ from minos.common import (
 )
 
 from .aggregates import (
+    Inventory,
     Product,
 )
 
@@ -18,8 +19,7 @@ from .aggregates import (
 class ProductService(Service):
     """Product Service class"""
 
-    @staticmethod
-    async def create_product(code: str, title: str, description: str, price: float) -> Product:
+    async def create_product(self, code: str, title: str, description: str, price: float) -> Product:
         """Create a product.
 
         :param code: External product identifier.
@@ -28,7 +28,10 @@ class ProductService(Service):
         :param price: Price of the product.
         :return: A ``Product`` instance.
         """
-        return await Product.create(code, title, description, price)
+        inventory = Inventory(amount=0)
+        product = await Product.create(code, title, description, price, inventory)
+        # await self.saga_manager.run("_CreateProduct", context=SagaContext(product=product))
+        return product
 
     @staticmethod
     async def get_products(ids: list[int]) -> list[Product]:
@@ -39,3 +42,29 @@ class ProductService(Service):
         """
         values = {v.id: v async for v in Product.get(ids=ids)}
         return [values[id] for id in ids]
+
+    @staticmethod
+    async def update_inventory(product_id: int, amount: int) -> Product:
+        """Update inventory with a difference.
+
+        :param product_id: Identifier of the product.
+        :param amount: Amount to be set.
+        :return: The updated product instance.
+        """
+        product = await Product.get_one(product_id)
+        product.inventory.amount = amount
+        await product.save()
+        return product
+
+    @staticmethod
+    async def update_inventory_diff(product_id: int, amount_diff: int) -> Product:
+        """Update inventory with a difference.
+
+        :param product_id: Identifier of the product.
+        :param amount_diff: Amount difference to be applied.
+        :return: The updated product instance.
+        """
+        product = await Product.get_one(product_id)
+        product.inventory.amount += amount_diff
+        await product.save()
+        return product
