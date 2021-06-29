@@ -119,7 +119,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         now -= timedelta(microseconds=now.microsecond)  # FIXME: Improve ``minos`` to avoid these tricky fixes.
 
         expected = await gather(
-            Order.create([1, 2, 3], "created", now, now), Order.create([1, 1, 1], "cancelled", now, now),
+            Order.create([1, 2, 3], 1, "created", now, now), Order.create([1, 1, 1], 2, "cancelled", now, now),
         )
 
         ids = [v.id for v in expected]
