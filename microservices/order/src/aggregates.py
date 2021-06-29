@@ -15,7 +15,7 @@ from minos.common import (
 
 
 class Order(Aggregate):
-    """TODO"""
+    """Order Aggregate class."""
 
     products: list[int]
     status: str
