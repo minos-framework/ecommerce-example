@@ -11,7 +11,7 @@ from minos.common import (
 
 
 class Ticket(Aggregate):
-    """TODO"""
+    """Ticket Aggregate class."""
 
     code: str
 

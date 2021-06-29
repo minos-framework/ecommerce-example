@@ -26,7 +26,7 @@ class TicketService(Service):
         """
         Creates a ticket
 
-        :param products: TODO
+        :param products: The list of product identifiers to be included in the ticket.
         """
         code = uuid.uuid4().hex.upper()[0:6]
         payments = list()

@@ -20,10 +20,10 @@ class TicketController:
 
     @staticmethod
     async def create_ticket(request: Request) -> Response:
-        """TODO
+        """Create a new ticket.
 
-        :param request:TODO
-        :return: TODO
+        :param request: The ``Request`` instance to be use to compute the price.
+        :return: A ``Response`` containing the created ticket.
         """
         content = await request.content()
         if len(content) and hasattr(content[0], "ids"):
@@ -35,10 +35,10 @@ class TicketController:
 
     @staticmethod
     async def get_tickets(request: Request) -> Response:
-        """TODO
+        """Get a list of tickets by id.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A ``Request`` instance containing the list of ticket identifiers.
+        :return: A ``Response`` containing the list of requested tickets.
         """
         content = await request.content()
         if len(content) and hasattr(content[0], "ids"):
