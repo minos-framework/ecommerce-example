@@ -72,10 +72,10 @@ class ProductService(Service):
 
     @staticmethod
     async def validate_products(ids: list[int]) -> bool:
-        """TODO
+        """Check if all products exist.
 
-        :param ids: TODO
-        :return: TODO
+        :param ids: List of product identifiers.
+        :return: ``True`` if all products exists or ``False`` otherwise.
         """
         ids = list(set(ids))
 
@@ -88,10 +88,11 @@ class ProductService(Service):
 
     @staticmethod
     async def reserve_products(quantities: dict[int, int]) -> bool:
-        """TODO
+        """Reserve product quantities.
 
-        :param quantities: TODO
-        :return: TODO
+        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are the number
+            of units to be reserved.
+        :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
         async for product in Product.get(ids=list(quantities.keys())):

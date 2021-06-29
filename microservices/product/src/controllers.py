@@ -85,7 +85,8 @@ class ProductController:
     async def validate_products(request: Request) -> Response:
         """Check if the list of passed products is valid.
 
-        :return: TODO
+        :param: request: The ``Request`` containing the list of identifiers.
+        :return: A ``Response containing a ``ValidProductList`` DTO.
         """
         content = await request.content()
         if len(content) and hasattr(content[0], "ids"):
@@ -98,9 +99,10 @@ class ProductController:
 
     @staticmethod
     async def reserve_products(request: Request) -> Response:
-        """TODO
+        """Reserve the requested quantities of products.
 
-        :return: TODO
+        :param: request: The ``Request`` instance that contains the quantities dictionary.
+        :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
         """
         content = await request.content()
         quantities = {int(k): v for k, v in content[0].quantities.items()}
