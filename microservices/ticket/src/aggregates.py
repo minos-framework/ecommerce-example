@@ -15,7 +15,5 @@ class Ticket(Aggregate):
 
     code: str
 
-    # FIXME: Uncomment this line.
-    # payments: list[int]
-
+    payments: list[int]
     total_price: float

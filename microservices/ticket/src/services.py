@@ -27,7 +27,8 @@ class TicketService(Service):
         :param products: TODO
         """
         code = uuid.uuid4().hex.upper()[0:6]
-        ticket = await Ticket.create(code, 0.0)
+        payments = list()
+        ticket = await Ticket.create(code, payments, 0.0)
         await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_ids=products))
 
         return ticket
