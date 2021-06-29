@@ -74,9 +74,10 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_product(self):
-        product = await self.service.create_product("abc", "Cacao", "1KG", 3)
+        product = await self.service.create_product("Cacao", "1KG", 3)
         self.assertIsInstance(product, Product)
-        self.assertEqual("abc", product.code)
+        self.assertIsInstance(product.code, str)
+        self.assertEqual(6, len(product.code))
         self.assertEqual("Cacao", product.title)
         self.assertEqual(3, product.price)
 
