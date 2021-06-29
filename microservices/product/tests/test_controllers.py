@@ -88,13 +88,15 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_product(self):
-        request = _FakeRequest([{"code": "abc", "title": "Cacao", "description": "1KG", "price": 3}])
+        request = _FakeRequest([{"title": "Cacao", "description": "1KG", "price": 3}])
         response = await self.controller.create_product(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(0), id=observed[0].id, version=observed[0].version)]
+        expected = [
+            Product(observed[0].code, "Cacao", "1KG", 3, Inventory(0), id=observed[0].id, version=observed[0].version)
+        ]
         self.assertEqual(expected, observed)
 
     async def test_get_products(self):

@@ -5,6 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from uuid import (
+    uuid4,
+)
 
 from minos.common import (
     MinosRepositoryException,
@@ -20,15 +23,16 @@ from .aggregates import (
 class ProductService(Service):
     """Product Service class"""
 
-    async def create_product(self, code: str, title: str, description: str, price: float) -> Product:
+    @staticmethod
+    async def create_product(title: str, description: str, price: float) -> Product:
         """Create a product.
 
-        :param code: External product identifier.
         :param title: Name of the product.
         :param description: Description of the product.
         :param price: Price of the product.
         :return: A ``Product`` instance.
         """
+        code = uuid4().hex.upper()[0:6]
         inventory = Inventory(amount=0)
         product = await Product.create(code, title, description, price, inventory)
         # await self.saga_manager.run("_CreateProduct", context=SagaContext(product=product))
