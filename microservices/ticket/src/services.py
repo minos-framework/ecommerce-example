@@ -5,7 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-import uuid
+from uuid import (
+    uuid4,
+)
 
 from minos.common import (
     Service,
@@ -28,7 +30,7 @@ class TicketService(Service):
 
         :param products: The list of product identifiers to be included in the ticket.
         """
-        code = uuid.uuid4().hex.upper()[0:6]
+        code = uuid4().hex.upper()[0:6]
         payments = list()
         ticket = await Ticket.create(code, payments, 0.0)
         await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_ids=products))
