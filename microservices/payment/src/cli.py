@@ -36,16 +36,9 @@ def start(
     launcher.launch()
 
 
-@app.command("status")
-def status():
-    """Get the microservice status."""
-    raise NotImplementedError
-
-
-@app.command("stop")
-def stop():
-    """Stop the microservice."""
-    raise NotImplementedError
+@app.callback()
+def callback():
+    """Minos microservice CLI."""
 
 
 def main():  # pragma: no cover
