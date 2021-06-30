@@ -54,7 +54,7 @@ uvloop = ["uvloop (>=0.14,<1)"]
 
 [[package]]
 name = "aiopg"
-version = "1.2.1"
+version = "1.3.0"
 description = "Postgres integration with asyncio."
 category = "main"
 optional = false
@@ -65,7 +65,7 @@ async-timeout = ">=3.0,<4.0"
 psycopg2-binary = ">=2.8.4"
 
 [package.extras]
-sa = ["sqlalchemy[postgresql_psycopg2binary] (>=1.1,<1.4)"]
+sa = ["sqlalchemy[postgresql_psycopg2binary] (>=1.3,<1.5)"]
 
 [[package]]
 name = "async-timeout"
@@ -242,8 +242,8 @@ PyYAML = "^5.4.1"
 [package.source]
 type = "git"
 url = "https://github.com/clariteia/minos_microservice_common.git"
-reference = "28513ecf0f9f005874b8aa9beb9f8c993faa768e"
-resolved_reference = "28513ecf0f9f005874b8aa9beb9f8c993faa768e"
+reference = "98cdb0c9c75f554e4ff294e06910bacf5c03aa3b"
+resolved_reference = "98cdb0c9c75f554e4ff294e06910bacf5c03aa3b"
 
 [[package]]
 name = "minos-microservice-networks"
@@ -265,8 +265,8 @@ minos-microservice-common = "^0.1.0"
 [package.source]
 type = "git"
 url = "https://github.com/clariteia/minos_microservice_networks.git"
-reference = "737399b21aef0148e8abe3fb84eb670ec459d6dc"
-resolved_reference = "737399b21aef0148e8abe3fb84eb670ec459d6dc"
+reference = "8b1a69e288cd6cb8bd97eaa069cc383a0f6e26e1"
+resolved_reference = "8b1a69e288cd6cb8bd97eaa069cc383a0f6e26e1"
 
 [[package]]
 name = "minos-microservice-saga"
@@ -297,7 +297,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "orjson"
-version = "3.5.3"
+version = "3.5.4"
 description = "Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy"
 category = "main"
 optional = false
@@ -442,7 +442,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "a7b02eab095b3dcab97978fc7a1c4ee2193c67d0c09e1efb061e943d141eaded"
+content-hash = "66a171dc7c538991d02e6e2f2ec7539b858dd28f6070a47844856129449bc1b6"
 
 [metadata.files]
 aiohttp = [
@@ -520,8 +520,8 @@ aiomisc = [
     {file = "aiomisc-14.1.0.tar.gz", hash = "sha256:6ad99346dbe98c995ba76e9c50dffe492c6dffd383653b20593b44601c89ea7a"},
 ]
 aiopg = [
-    {file = "aiopg-1.2.1-py3-none-any.whl", hash = "sha256:736776982f49defe85351687abf745fc49184749eb9d245ab08ce52e0d26c3b7"},
-    {file = "aiopg-1.2.1.tar.gz", hash = "sha256:e841da17e56b42de7565890df1a0da247aca4cd6185927be2f7ebb2505a01e92"},
+    {file = "aiopg-1.3.0-py3-none-any.whl", hash = "sha256:e4e203d192a8dc3477b5f324614cd98e92ae72a55127b67ddba37484c967213c"},
+    {file = "aiopg-1.3.0.tar.gz", hash = "sha256:71624a70dccc438e8d29728373c7ed14ee44ec0454cc35ef158b07cfd4afbc65"},
 ]
 async-timeout = [
     {file = "async-timeout-3.0.1.tar.gz", hash = "sha256:0c3c816a028d47f659d6ff5c745cb2acf1f966da1fe5c19c77a70282b25f4c5f"},
@@ -764,23 +764,7 @@ multidict = [
     {file = "multidict-5.1.0.tar.gz", hash = "sha256:25b4e5f22d3a37ddf3effc0710ba692cfc792c2b9edfb9c05aefe823256e84d5"},
 ]
 orjson = [
-    {file = "orjson-3.5.3-cp36-cp36m-macosx_10_7_x86_64.whl", hash = "sha256:f22e2b3a1686a0f90aca920a522033b326cb2f945c8ed8fd8effa9f302672627"},
-    {file = "orjson-3.5.3-cp36-cp36m-macosx_10_9_universal2.whl", hash = "sha256:eb0cfe56687ac915e83dcfa1aa100e68883b42fe8eecae7275dc05da8cf96faa"},
-    {file = "orjson-3.5.3-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b2add8eeb14746f961330330ab5ce3dd09c858fb634eeeb26ceac14443e82830"},
-    {file = "orjson-3.5.3-cp36-none-win_amd64.whl", hash = "sha256:7e65fc393a77b5db391f28c7ccfcdc844f9dd0624e42dcf17d36fc20ddd3f3a0"},
-    {file = "orjson-3.5.3-cp37-cp37m-macosx_10_7_x86_64.whl", hash = "sha256:4c80de99cb9617fe023201b543b8ed4b02dd8b52fbf7dd9b399d3b9d5f352398"},
-    {file = "orjson-3.5.3-cp37-cp37m-macosx_10_9_universal2.whl", hash = "sha256:b3b7ffdca6408b268aed9492e8558ac80f2e3bb362b992c2e7ecbbeb49b2a51e"},
-    {file = "orjson-3.5.3-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b427ad034625ed522b683c1333ab2de83c25c1787fee47968a27f72fa2b55dca"},
-    {file = "orjson-3.5.3-cp37-none-win_amd64.whl", hash = "sha256:0c70bee40f215ede3949b34f1ae6b5260e108c00c914a7c62741ce6f8de2e27c"},
-    {file = "orjson-3.5.3-cp38-cp38-macosx_10_7_x86_64.whl", hash = "sha256:e0e74f47a3aafc6751d6dc238e34b38ae9a77a2373b98a722c428d832c919617"},
-    {file = "orjson-3.5.3-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:91c31999cbd4650459ef5160f5cf248cb4a7f1e24407f90cd9c58d113d335561"},
-    {file = "orjson-3.5.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:27fa08fe5d2b9913b3ac8728960971544f255778e120849add596d67a7720f1f"},
-    {file = "orjson-3.5.3-cp38-none-win_amd64.whl", hash = "sha256:dcf711f6e4f5ee33206d51436eb9a2322a4338fd9081729c662e37d062f51c9d"},
-    {file = "orjson-3.5.3-cp39-cp39-macosx_10_7_x86_64.whl", hash = "sha256:6186755180e53436ebac3e0ce1590b27f218727f888c6e3f4c8fdabcb3ef840e"},
-    {file = "orjson-3.5.3-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:d61edb73c5a7287e776dc000c056d59e1cc8d548cc672977b74e74c0164be3ef"},
-    {file = "orjson-3.5.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:45b249d9d7ef6f241bca0a09cde57c99d019a0ca73df9bffb25c768b0f806b6d"},
-    {file = "orjson-3.5.3-cp39-none-win_amd64.whl", hash = "sha256:111ebdbca5fe51d4b22d155861ec8d35ce48f62d92717ed5828566b13a284c1a"},
-    {file = "orjson-3.5.3.tar.gz", hash = "sha256:8818f651ef7ed55f7c0ee34fa51f3de0988dd35386e8cefd0c2e1f32ff9f1966"},
+    {file = "orjson-3.5.4-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:57d38172b3b010efa5d2bd83df612353028570fc3fc5cecba743df98624c43bf"},
 ]
 packaging = [
     {file = "packaging-20.9-py2.py3-none-any.whl", hash = "sha256:67714da7f7bc052e064859c05c595155bd1ee9f69f76557e21f051443c20947a"},
