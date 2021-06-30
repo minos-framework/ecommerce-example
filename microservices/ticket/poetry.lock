@@ -226,8 +226,8 @@ PyYAML = "^5.4.1"
 [package.source]
 type = "git"
 url = "https://github.com/clariteia/minos_microservice_common.git"
-reference = "078a6b03c1830b6cef3aef70e0c8b7aa37ddc2e5"
-resolved_reference = "078a6b03c1830b6cef3aef70e0c8b7aa37ddc2e5"
+reference = "28513ecf0f9f005874b8aa9beb9f8c993faa768e"
+resolved_reference = "28513ecf0f9f005874b8aa9beb9f8c993faa768e"
 
 [[package]]
 name = "minos-microservice-networks"
@@ -249,8 +249,8 @@ minos-microservice-common = "^0.1.0"
 [package.source]
 type = "git"
 url = "https://github.com/clariteia/minos_microservice_networks.git"
-reference = "4a418e60cb0b2c01b1ecd36d7ef4bd2394b3277a"
-resolved_reference = "4a418e60cb0b2c01b1ecd36d7ef4bd2394b3277a"
+reference = "737399b21aef0148e8abe3fb84eb670ec459d6dc"
+resolved_reference = "737399b21aef0148e8abe3fb84eb670ec459d6dc"
 
 [[package]]
 name = "minos-microservice-saga"
@@ -359,7 +359,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "42c7ab9ace90b0eca883fe81bab6cde8bd8cb213d95d25cec256fa36a73a7482"
+content-hash = "68159f8b04c6f45b22a18648873e76defd649cac2227626236dd3f81c568b1e6"
 
 [metadata.files]
 aiohttp = [
