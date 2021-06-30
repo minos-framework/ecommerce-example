@@ -5,6 +5,7 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+import logging
 from pathlib import (
     Path,
 )
@@ -17,6 +18,8 @@ from minos.common import (
     EntrypointLauncher,
     MinosConfig,
 )
+
+logging.getLogger("aiohttp.access").setLevel(logging.WARNING)
 
 app = typer.Typer()
 
