@@ -5,6 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
 import sys
 import unittest.async_case
 from asyncio import (
@@ -50,6 +53,12 @@ class _FakeRequest(Request):
         """For testing purposes"""
         return self._content
 
+    def __eq__(self, other: _FakeRequest) -> bool:
+        return self._content == other._content
+
+    def __repr__(self) -> str:
+        return str()
+
 
 class _FakeBroker(MinosBroker):
     """For testing purposes."""
@@ -88,7 +97,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_product(self):
-        request = _FakeRequest([{"code": "abc", "title": "Cacao", "description": "1KG", "price": 3}])
+        request = _FakeRequest({"code": "abc", "title": "Cacao", "description": "1KG", "price": 3})
         response = await self.controller.create_product(request)
 
         self.assertIsInstance(response, Response)
@@ -103,8 +112,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
             Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
             Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
         )
-        ids = [v.id for v in expected]
-        request = _FakeRequest(ids)
+        request = _FakeRequest({"ids": [v.id for v in expected]})
 
         response = await self.controller.get_products(request)
         observed = await response.content()
@@ -114,7 +122,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
         expected = [Product("abc", "Cacao", "1KG", 3, Inventory(56), id=product.id, version=2)]
 
-        request = _FakeRequest([{"product_id": product.id, "amount": 56}])
+        request = _FakeRequest({"product_id": product.id, "amount": 56})
         response = await self.controller.update_inventory(request)
         observed = await response.content()
         self.assertEqual(expected, observed)
@@ -123,7 +131,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
         expected = [Product("abc", "Cacao", "1KG", 3, Inventory(24), id=product.id, version=2)]
 
-        request = _FakeRequest([{"product_id": product.id, "amount_diff": 12}])
+        request = _FakeRequest({"product_id": product.id, "amount_diff": 12})
         response = await self.controller.update_inventory_diff(request)
         observed = await response.content()
         self.assertEqual(expected, observed)
