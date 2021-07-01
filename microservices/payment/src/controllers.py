@@ -37,5 +37,6 @@ class PaymentController:
         :return: TODO
         """
         content = await request.content()
-        payments = await PaymentService().get_payments(**content)
+        ids = list(map(int, content["ids"]))
+        payments = await PaymentService().get_payments(ids)
         return Response(payments)

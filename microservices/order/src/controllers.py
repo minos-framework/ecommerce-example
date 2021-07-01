@@ -37,5 +37,6 @@ class OrderController:
         :return: A ``Response`` containing the list of ``Order`` instances.
         """
         content = await request.content()
-        orders = await OrderService().get_orders(**content)
+        ids = list(map(int, content["ids"]))
+        orders = await OrderService().get_orders(ids)
         return Response(orders)

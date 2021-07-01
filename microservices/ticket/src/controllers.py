@@ -37,5 +37,6 @@ class TicketController:
         :return: TODO
         """
         content = await request.content()
-        tickets = await TicketService().get_tickets(**content)
+        ids = list(map(int, content["ids"]))
+        tickets = await TicketService().get_tickets(ids)
         return Response(tickets)
