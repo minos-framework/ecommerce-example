@@ -5,6 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
+
 import sys
 import unittest.async_case
 from asyncio import (
@@ -59,6 +63,12 @@ class _FakeRequest(Request):
         """For testing purposes"""
         return self._content
 
+    def __eq__(self, other: _FakeRequest) -> bool:
+        return self._content == other._content
+
+    def __repr__(self) -> str:
+        return str()
+
 
 class _FakeBroker(MinosBroker):
     """For testing purposes."""
@@ -105,7 +115,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         with patch("src.OrderService.create_order") as mock:
             mock.side_effect = _fn
 
-            request = _FakeRequest([{"products": [1, 2, 3]}])
+            request = _FakeRequest({"products": [1, 2, 3]})
             response = await self.controller.create_order(request)
 
             self.assertIsInstance(response, Response)
@@ -122,8 +132,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
             Order.create([1, 2, 3], "created", now, now), Order.create([1, 1, 1], "cancelled", now, now),
         )
 
-        ids = [v.id for v in expected]
-        request = _FakeRequest(ids)
+        request = _FakeRequest({"ids": [v.id for v in expected]})
 
         response = await self.controller.get_orders(request)
         observed = await response.content()
