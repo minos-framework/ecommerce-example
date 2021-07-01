@@ -12,9 +12,7 @@ from minos.common import (
     Response,
 )
 
-from .services import (
-    ProductService,
-)
+from .services import ProductService
 
 
 class ProductController:

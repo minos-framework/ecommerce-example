@@ -7,20 +7,14 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
+from asyncio import gather
 from datetime import (
     datetime,
     timedelta,
     timezone,
 )
-from pathlib import (
-    Path,
-)
-from typing import (
-    NoReturn,
-)
+from pathlib import Path
+from typing import NoReturn
 from unittest.mock import (
     MagicMock,
     call,
@@ -40,9 +34,7 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 from src import (
     Order,
     OrderService,
