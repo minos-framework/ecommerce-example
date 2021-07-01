@@ -60,5 +60,6 @@ class ProductController:
         :return: A ``Response`` instance containing the requested products.
         """
         content = await request.content()
-        products = await ProductService().get_products(**content)
+        ids = list(map(int, content["ids"]))
+        products = await ProductService().get_products(ids)
         return Response(products)
