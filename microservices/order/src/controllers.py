@@ -10,7 +10,9 @@ from minos.common import (
     Response,
 )
 
-from .services import OrderService
+from .services import (
+    OrderService,
+)
 
 
 class OrderController:
