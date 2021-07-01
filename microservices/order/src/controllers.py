@@ -26,7 +26,7 @@ class OrderController:
         :return: A ``Response`` containing the ``UUID`` that identifies the ``SagaExecution``.
         """
         content = await request.content()
-        uuid = await OrderService().create_order(**content[0])
+        uuid = await OrderService().create_order(**content)
         return Response(str(uuid))
 
     @staticmethod
@@ -37,9 +37,5 @@ class OrderController:
         :return: A ``Response`` containing the list of ``Order`` instances.
         """
         content = await request.content()
-        if len(content) and hasattr(content[0], "ids"):
-            content = content[0].ids
-        else:
-            content = list(map(int, content))
-        orders = await OrderService().get_orders(content)
+        orders = await OrderService().get_orders(**content)
         return Response(orders)

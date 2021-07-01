@@ -7,8 +7,8 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = { git = "https://github.com/clariteia/minos_microservice_common.git", rev = "98cdb0c9c75f554e4ff294e06910bacf5c03aa3b" }
-minos-microservice-networks = { git = "https://github.com/clariteia/minos_microservice_networks.git", rev = "8b1a69e288cd6cb8bd97eaa069cc383a0f6e26e1" }
+minos-microservice-common = { git = "https://github.com/clariteia/minos_microservice_common.git", rev = "a50033aba2ae6ffa8506313a7e1a756935fee9ca" }
+minos-microservice-networks = { git = "https://github.com/clariteia/minos_microservice_networks.git", rev = "b14566c9a82ebed116e6c20937749378aff6a70e" }
 minos-microservice-saga = { git = "https://github.com/clariteia/minos_microservice_saga.git", rev = "58c319e17b23b14cdd0877d936fc0587d0326a8a" }
 typer = "^0.3.2"
 
