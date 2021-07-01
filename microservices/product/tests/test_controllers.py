@@ -8,6 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 from __future__ import (
     annotations,
 )
+
 import sys
 import unittest.async_case
 from asyncio import (
