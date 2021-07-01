@@ -37,5 +37,6 @@ class TicketController:
         :return: A ``Response`` containing the list of requested tickets.
         """
         content = await request.content()
-        tickets = await TicketService().get_tickets(**content)
+        ids = list(map(int, content["ids"]))
+        tickets = await TicketService().get_tickets(ids)
         return Response(tickets)
