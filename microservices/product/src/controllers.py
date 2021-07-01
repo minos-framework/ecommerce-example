@@ -72,11 +72,7 @@ class ProductController:
         :return: A ``Response containing a ``ValidProductList`` DTO.
         """
         content = await request.content()
-        if len(content) and hasattr(content[0], "ids"):
-            content = content[0].ids
-        else:
-            content = list(map(int, content))
-        exist = await ProductService().validate_products(content)
+        exist = await ProductService().validate_products(**content)
         model = ModelType.build("ValidProductList", {"exist": bool})(exist=exist)
         return Response(model)
 
