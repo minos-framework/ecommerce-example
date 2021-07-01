@@ -26,11 +26,7 @@ class TicketController:
         :return: A ``Response`` containing the created ticket.
         """
         content = await request.content()
-        if len(content) and hasattr(content[0], "ids"):
-            content = content[0].ids
-        else:
-            content = list(map(int, content))
-        ticket = await TicketService().create_ticket(content)
+        ticket = await TicketService().create_ticket(**content)
         return Response(ticket)
 
     @staticmethod
@@ -41,9 +37,5 @@ class TicketController:
         :return: A ``Response`` containing the list of requested tickets.
         """
         content = await request.content()
-        if len(content) and hasattr(content[0], "ids"):
-            content = content[0].ids
-        else:
-            content = list(map(int, content))
-        tickets = await TicketService().get_tickets(content)
+        tickets = await TicketService().get_tickets(**content)
         return Response(tickets)

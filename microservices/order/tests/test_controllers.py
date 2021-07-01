@@ -12,7 +12,6 @@ from asyncio import (
 )
 from datetime import (
     datetime,
-    timedelta,
     timezone,
 )
 from pathlib import (
@@ -116,7 +115,6 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
 
     async def test_get_orders(self):
         now = datetime.now(tz=timezone.utc)
-        now -= timedelta(microseconds=now.microsecond)  # FIXME: Improve ``minos`` to avoid these tricky fixes.
 
         expected = await gather(
             Order.create([1, 2, 3], 1, "created", now, now), Order.create([1, 1, 1], 2, "cancelled", now, now),

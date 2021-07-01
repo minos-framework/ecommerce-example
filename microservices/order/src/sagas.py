@@ -67,7 +67,8 @@ def _reserve_products_reply_callback(value) -> None:
 
 def _create_ticket_callback(context: SagaContext) -> Model:
     product_ids = context["product_ids"]
-    model = _ProductsQuery(ids=product_ids)
+    _ProductsQ = ModelType.build("ProductsQuery", {"product_ids": list[int]})
+    model = _ProductsQ(product_ids=product_ids)
     return model
 
 

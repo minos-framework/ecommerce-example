@@ -24,16 +24,16 @@ from .aggregates import (
 class TicketService(Service):
     """Ticket Service class"""
 
-    async def create_ticket(self, products: list[int]) -> Ticket:
+    async def create_ticket(self, product_ids: list[int]) -> Ticket:
         """
         Creates a ticket
 
-        :param products: The list of product identifiers to be included in the ticket.
+        :param product_ids: The list of product identifiers to be included in the ticket.
         """
         code = uuid4().hex.upper()[0:6]
         payments = list()
         ticket = await Ticket.create(code, payments, 0.0)
-        await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_ids=products))
+        await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_ids=product_ids))
 
         return ticket
 

@@ -11,9 +11,6 @@ from minos.common import (
     Request,
     Response,
 )
-from minos.networks import (
-    HttpRequest,
-)
 
 from .services import (
     ProductService,
@@ -31,7 +28,7 @@ class ProductController:
         :return: A ``Response`` containing the already created product.
         """
         content = await request.content()
-        product = await ProductService().create_product(**content[0])
+        product = await ProductService().create_product(**content)
         return Response(product)
 
     @staticmethod
@@ -42,12 +39,7 @@ class ProductController:
         :return: ``Response`` containing the updated product.
         """
         content = await request.content()
-
-        # FIXME: This should be performed internally by the framework.
-        if isinstance(request, HttpRequest):
-            content[0]["product_id"] = int(request.raw_request.match_info["product_id"])  # FIXME
-
-        product = await ProductService().update_inventory(**content[0])
+        product = await ProductService().update_inventory(**content)
         return Response(product)
 
     @staticmethod
@@ -58,12 +50,7 @@ class ProductController:
         :return: ``Response`` containing the updated product.
         """
         content = await request.content()
-
-        # FIXME: This should be performed internally by the framework.
-        if isinstance(request, HttpRequest):
-            content[0]["product_id"] = int(request.raw_request.match_info["product_id"])
-
-        product = await ProductService().update_inventory_diff(**content[0])
+        product = await ProductService().update_inventory_diff(**content)
         return Response(product)
 
     @staticmethod
@@ -74,11 +61,7 @@ class ProductController:
         :return: A ``Response`` instance containing the requested products.
         """
         content = await request.content()
-        if len(content) and hasattr(content[0], "ids"):
-            content = content[0].ids
-        else:
-            content = list(map(int, content))
-        products = await ProductService().get_products(content)
+        products = await ProductService().get_products(**content)
         return Response(products)
 
     @staticmethod
@@ -89,11 +72,7 @@ class ProductController:
         :return: A ``Response containing a ``ValidProductList`` DTO.
         """
         content = await request.content()
-        if len(content) and hasattr(content[0], "ids"):
-            content = content[0].ids
-        else:
-            content = list(map(int, content))
-        exist = await ProductService().validate_products(content)
+        exist = await ProductService().validate_products(**content)
         model = ModelType.build("ValidProductList", {"exist": bool})(exist=exist)
         return Response(model)
 
@@ -105,8 +84,7 @@ class ProductController:
         :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
         """
         content = await request.content()
-        quantities = {int(k): v for k, v in content[0].quantities.items()}
-
+        quantities = {int(k): v for k, v in content.quantities.items()}
         exist = await ProductService().reserve_products(quantities)
         model = ModelType.build("ValidProductInventoryList", {"exist": bool})(exist=exist)
         return Response(model)
