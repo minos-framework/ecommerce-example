@@ -61,7 +61,10 @@ class ProductController:
         :return: A ``Response`` instance containing the requested products.
         """
         content = await request.content()
-        ids = list(map(int, content["ids"]))
+        if isinstance(content["ids"], list):
+            ids = list(map(int, content["ids"]))
+        else:
+            ids = [int(content["ids"])]
         products = await ProductService().get_products(ids)
         return Response(products)
 

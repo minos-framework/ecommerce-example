@@ -37,6 +37,9 @@ class PaymentController:
         :return: TODO
         """
         content = await request.content()
-        ids = list(map(int, content["ids"]))
+        if isinstance(content["ids"], list):
+            ids = list(map(int, content["ids"]))
+        else:
+            ids = [int(content["ids"])]
         payments = await PaymentService().get_payments(ids)
         return Response(payments)
