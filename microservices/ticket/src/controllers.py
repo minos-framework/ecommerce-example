@@ -6,6 +6,7 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from minos.common import (
+    ModelType,
     Request,
     Response,
 )
@@ -13,6 +14,8 @@ from minos.common import (
 from .services import (
     TicketService,
 )
+
+_Query = ModelType.build("Query", {"ids": list[int]})
 
 
 class TicketController:
@@ -36,10 +39,6 @@ class TicketController:
         :param request: A ``Request`` instance containing the list of ticket identifiers.
         :return: A ``Response`` containing the list of requested tickets.
         """
-        content = await request.content()
-        if isinstance(content["ids"], list):
-            ids = list(map(int, content["ids"]))
-        else:
-            ids = [int(content["ids"])]
-        tickets = await TicketService().get_tickets(ids)
+        content = await request.content(model_type=_Query)
+        tickets = await TicketService().get_tickets(**content)
         return Response(tickets)

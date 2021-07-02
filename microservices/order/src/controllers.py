@@ -8,11 +8,14 @@ Minos framework can not be copied and/or distributed without the express permiss
 from minos.common import (
     Request,
     Response,
+    ModelType,
 )
 
 from .services import (
     OrderService,
 )
+
+_Query = ModelType.build("Query", {"ids": list[int]})
 
 
 class OrderController:
@@ -36,10 +39,6 @@ class OrderController:
         :param request: The ``Request`` instance containing the list of ``Order`` identifiers.
         :return: A ``Response`` containing the list of ``Order`` instances.
         """
-        content = await request.content()
-        if isinstance(content["ids"], list):
-            ids = list(map(int, content["ids"]))
-        else:
-            ids = [int(content["ids"])]
-        orders = await OrderService().get_orders(ids)
+        content = await request.content(model_type=_Query)
+        orders = await OrderService().get_orders(**content)
         return Response(orders)

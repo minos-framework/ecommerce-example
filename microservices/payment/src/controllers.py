@@ -6,6 +6,7 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from minos.common import (
+    ModelType,
     Request,
     Response,
 )
@@ -13,6 +14,8 @@ from minos.common import (
 from .services import (
     PaymentService,
 )
+
+_Query = ModelType.build("Query", {"ids": list[int]})
 
 
 class PaymentController:
@@ -36,10 +39,6 @@ class PaymentController:
         :param request: TODO
         :return: TODO
         """
-        content = await request.content()
-        if isinstance(content["ids"], list):
-            ids = list(map(int, content["ids"]))
-        else:
-            ids = [int(content["ids"])]
-        payments = await PaymentService().get_payments(ids)
+        content = await request.content(model_type=_Query)
+        payments = await PaymentService().get_payments(**content)
         return Response(payments)

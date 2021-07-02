@@ -16,6 +16,8 @@ from .services import (
     ProductService,
 )
 
+_Query = ModelType.build("Query", {"ids": list[int]})
+
 
 class ProductController:
     """Product Controller class"""
@@ -60,12 +62,8 @@ class ProductController:
         :param request: The ``Request`` instance that contains the product identifiers.
         :return: A ``Response`` instance containing the requested products.
         """
-        content = await request.content()
-        if isinstance(content["ids"], list):
-            ids = list(map(int, content["ids"]))
-        else:
-            ids = [int(content["ids"])]
-        products = await ProductService().get_products(ids)
+        content = await request.content(model_type=_Query)
+        products = await ProductService().get_products(**content)
         return Response(products)
 
     @staticmethod
