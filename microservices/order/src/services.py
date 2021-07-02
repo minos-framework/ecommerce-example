@@ -5,12 +5,15 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from datetime import (
-    datetime,
+from uuid import (
+    UUID,
 )
 
 from minos.common import (
     Service,
+)
+from minos.saga import (
+    SagaContext,
 )
 
 from .aggregates import (
@@ -21,18 +24,13 @@ from .aggregates import (
 class OrderService(Service):
     """Ticket Service class"""
 
-    @staticmethod
-    async def create_order(products: list[int]) -> Order:
+    async def create_order(self, products: list[int]) -> UUID:
         """
         Creates a fake_payment_service
 
         :param products: List of `orders`
         """
-        # TODO: validate product identifiers.
-
-        now = datetime.now()
-        status = "created"
-        return await Order.create(products, status, created_at=now, updated_at=now)
+        return await self.saga_manager.run("CreateOrder", context=SagaContext(product_ids=products))
 
     @staticmethod
     async def get_orders(ids: list[int]) -> list[Order]:

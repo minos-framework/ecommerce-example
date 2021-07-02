@@ -8,6 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 from __future__ import (
     annotations,
 )
+
 import sys
 import unittest.async_case
 from asyncio import (
@@ -97,13 +98,15 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_product(self):
-        request = _FakeRequest({"code": "abc", "title": "Cacao", "description": "1KG", "price": 3})
+        request = _FakeRequest({"title": "Cacao", "description": "1KG", "price": 3})
         response = await self.controller.create_product(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(0), id=observed[0].id, version=observed[0].version)]
+        expected = [
+            Product(observed[0].code, "Cacao", "1KG", 3, Inventory(0), id=observed[0].id, version=observed[0].version)
+        ]
         self.assertEqual(expected, observed)
 
     async def test_get_products(self):
@@ -135,6 +138,23 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         response = await self.controller.update_inventory_diff(request)
         observed = await response.content()
         self.assertEqual(expected, observed)
+
+    async def test_validate_products_true(self):
+        expected = await gather(
+            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
+            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
+            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
+        )
+        request = _FakeRequest({"ids": [v.id for v in expected]})
+        response = await self.controller.validate_products(request)
+        observed = await response.content()
+        self.assertTrue(observed[0].exist)
+
+    async def test_validate_products_false(self):
+        request = _FakeRequest({"ids": [9999]})
+        response = await self.controller.validate_products(request)
+        observed = await response.content()
+        self.assertFalse(observed[0].exist)
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 
 from minos.common import (
+    ModelType,
     Request,
     Response,
 )
@@ -63,3 +64,29 @@ class ProductController:
         ids = list(map(int, content["ids"]))
         products = await ProductService().get_products(ids)
         return Response(products)
+
+    @staticmethod
+    async def validate_products(request: Request) -> Response:
+        """Check if the list of passed products is valid.
+
+        :param: request: The ``Request`` containing the list of identifiers.
+        :return: A ``Response containing a ``ValidProductList`` DTO.
+        """
+        content = await request.content()
+        exist = await ProductService().validate_products(**content)
+        model = ModelType.build("ValidProductList", {"exist": bool})(exist=exist)
+        return Response(model)
+
+    @staticmethod
+    async def reserve_products(request: Request) -> Response:
+        """Reserve the requested quantities of products.
+
+        :param: request: The ``Request`` instance that contains the quantities dictionary.
+        :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
+        """
+        content = await request.content()
+        quantities = {int(k): v for k, v in content[0].quantities.items()}
+
+        exist = await ProductService().reserve_products(quantities)
+        model = ModelType.build("ValidProductInventoryList", {"exist": bool})(exist=exist)
+        return Response(model)

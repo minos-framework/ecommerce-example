@@ -79,6 +79,12 @@ commands:
         -   name: GetProducts
             controller: src.ProductController
             action: get_products
+        -   name: ValidateProducts
+            controller: src.ProductController
+            action: validate_products
+        -   name: ReserveProducts
+            controller: src.ProductController
+            action: reserve_products
     queue:
         database: product_db
         user: minos
