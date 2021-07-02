@@ -85,8 +85,7 @@ class ProductController:
         :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
         """
         content = await request.content()
-        quantities = {int(k): v for k, v in content[0].quantities.items()}
-
+        quantities = {int(k): v for k, v in content.quantities.items()}
         exist = await ProductService().reserve_products(quantities)
         model = ModelType.build("ValidProductInventoryList", {"exist": bool})(exist=exist)
         return Response(model)

@@ -65,11 +65,23 @@ def _reserve_products_reply_callback(value) -> None:
         raise ValueError("One or more products have not enough stock.")
 
 
+def _create_ticket_callback(context: SagaContext) -> Model:
+    product_ids = context["product_ids"]
+    _ProductsQ = ModelType.build("ProductsQuery", {"product_ids": list[int]})
+    model = _ProductsQ(product_ids=product_ids)
+    return model
+
+
+def _create_ticket_reply_callback(value) -> int:
+    return value.id
+
+
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
     product_ids = context["product_ids"]
+    ticket_id = context["ticket_id"]
     now = datetime.now()
     status = "created"
-    order = await Order.create(product_ids, status, created_at=now, updated_at=now)
+    order = await Order.create(product_ids, ticket_id, status, created_at=now, updated_at=now)
     return SagaContext(order=order)
 
 
@@ -82,5 +94,8 @@ CREATE_ORDER = (
     .invoke_participant("ReserveProducts", _reserve_products_callback)
     .with_compensation("ReserveProducts", _release_products_callback)
     .on_reply("_", _reserve_products_reply_callback)
+    .step()
+    .invoke_participant("CreateTicket", _create_ticket_callback)
+    .on_reply("ticket_id", _create_ticket_reply_callback)
     .commit(_create_commit_callback)
 )

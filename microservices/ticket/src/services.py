@@ -5,8 +5,15 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from uuid import (
+    uuid4,
+)
+
 from minos.common import (
     Service,
+)
+from minos.saga import (
+    SagaContext,
 )
 
 from .aggregates import (
@@ -17,17 +24,18 @@ from .aggregates import (
 class TicketService(Service):
     """Ticket Service class"""
 
-    @staticmethod
-    async def create_ticket(code: str, order: int, amount: int) -> Ticket:
+    async def create_ticket(self, product_ids: list[int]) -> Ticket:
         """
         Creates a ticket
 
-        :param code: Unique str representing the ticket
-        :param order: `Order` associated to the `Ticket`
-        :param amount: Total amount in €
+        :param product_ids: The list of product identifiers to be included in the ticket.
         """
+        code = uuid4().hex.upper()[0:6]
         payments = list()
-        return await Ticket.create(code, order, payments, amount)
+        ticket = await Ticket.create(code, payments, 0.0)
+        await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_ids=product_ids))
+
+        return ticket
 
     @staticmethod
     async def get_tickets(ids: list[int]) -> list[Ticket]:

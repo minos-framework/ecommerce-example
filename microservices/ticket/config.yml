@@ -79,7 +79,10 @@ saga:
   port: 9092
   storage:
     path: "./ticket.lmdb"
-  items: []
+  items:
+    - name: _CreateTicket
+      controller: src
+      action: _CREATE_TICKET
   queue:
     database: ticket_db
     user: minos

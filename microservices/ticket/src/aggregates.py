@@ -11,9 +11,9 @@ from minos.common import (
 
 
 class Ticket(Aggregate):
-    """TODO"""
+    """Ticket Aggregate class."""
 
     code: str
-    order: int
+
     payments: list[int]
-    amount: int
+    total_price: float
