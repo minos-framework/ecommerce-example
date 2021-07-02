@@ -58,7 +58,7 @@ class _FakeRequest(Request):
         super().__init__()
         self._content = content
 
-    async def content(self):
+    async def content(self, **kwargs):
         """For testing purposes"""
         return self._content
 
