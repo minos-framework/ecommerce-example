@@ -25,8 +25,11 @@ stages:
   - name: Get a Product
 
     request:
-      url: "http://api-gateway:5566/payments?ids={payment_id:d}"
+      url: "http://api-gateway:5566/payments"
       method: GET
+      json:
+        ids:
+          - !int "{payment_id:d}"
 
     response:
       status_code: 200

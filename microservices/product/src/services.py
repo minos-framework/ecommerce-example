@@ -5,12 +5,14 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from typing import (
+    NoReturn,
+)
 from uuid import (
     uuid4,
 )
 
 from minos.common import (
-    MinosRepositoryException,
     Service,
 )
 
@@ -49,6 +51,16 @@ class ProductService(Service):
         return [values[id] for id in ids]
 
     @staticmethod
+    async def delete_product(id: int) -> NoReturn:
+        """TODO
+
+        :param id: TODO
+        :return: TODO
+        """
+        product = await Product.get_one(id)
+        await product.delete()
+
+    @staticmethod
     async def update_inventory(product_id: int, amount: int) -> Product:
         """Update inventory with a difference.
 
@@ -74,24 +86,7 @@ class ProductService(Service):
         await product.save()
         return product
 
-    @staticmethod
-    async def validate_products(ids: list[int]) -> bool:
-        """Check if all products exist.
-
-        :param ids: List of product identifiers.
-        :return: ``True`` if all products exists or ``False`` otherwise.
-        """
-        ids = list(set(ids))
-
-        try:
-            # noinspection PyStatementEffect
-            v = [v async for v in Product.get(ids=ids)]
-            return True
-        except MinosRepositoryException:
-            return False
-
-    @staticmethod
-    async def reserve_products(quantities: dict[int, int]) -> bool:
+    async def reserve_products(self, quantities: dict[int, int]):
         """Reserve product quantities.
 
         :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are the number
@@ -105,4 +100,7 @@ class ProductService(Service):
                 feasible = False
             inventory.amount -= quantities[product.id]
             await product.save()
-        return feasible
+
+        if not feasible:
+            await self.reserve_products({k: -v for k, v in quantities.items()})
+            raise ValueError("The reservation query could not be satisfied.")

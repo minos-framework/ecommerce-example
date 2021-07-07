@@ -32,8 +32,11 @@ stages:
   - name: Get a Product
 
     request:
-      url: "http://api-gateway:5566/products?ids={product_id:d}"
+      url: "http://api-gateway:5566/products"
       method: GET
+      json:
+        ids:
+          - !int "{product_id:d}"
 
     response:
       status_code: 200

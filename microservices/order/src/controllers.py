@@ -6,9 +6,10 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from minos.common import (
+    ModelType,
     Request,
     Response,
-    ModelType,
+    ResponseException,
 )
 
 from .services import (
@@ -39,6 +40,14 @@ class OrderController:
         :param request: The ``Request`` instance containing the list of ``Order`` identifiers.
         :return: A ``Response`` containing the list of ``Order`` instances.
         """
-        content = await request.content(model_type=_Query)
-        orders = await OrderService().get_orders(**content)
+        try:
+            content = await request.content(model_type=_Query)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        try:
+            orders = await OrderService().get_orders(**content)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting orders: {exc!r}")
+
         return Response(orders)
