@@ -12,9 +12,7 @@ from minos.common import (
     ModelType,
 )
 
-from .services import (
-    OrderService,
-)
+from .services import OrderService
 
 _Query = ModelType.build("Query", {"ids": list[int]})
 

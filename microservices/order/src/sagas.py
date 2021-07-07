@@ -5,12 +5,8 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from collections import (
-    defaultdict,
-)
-from datetime import (
-    datetime,
-)
+from collections import defaultdict
+from datetime import datetime
 
 from minos.common import (
     Model,
@@ -21,9 +17,7 @@ from minos.saga import (
     SagaContext,
 )
 
-from .aggregates import (
-    Order,
-)
+from .aggregates import Order
 
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 

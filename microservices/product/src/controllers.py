@@ -15,9 +15,7 @@ from minos.common import (
     ResponseException,
 )
 
-from .services import (
-    ProductService,
-)
+from .services import ProductService
 
 _Query = ModelType.build("Query", {"ids": list[int]})
 
