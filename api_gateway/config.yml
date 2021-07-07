@@ -39,6 +39,12 @@ rest:
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
+    - name: DeleteProduct
+      route: /products/{id}
+      method: DELETE
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
     - name: UpdateInventory
       route: /products/{product_id}/inventory
       method: PUT

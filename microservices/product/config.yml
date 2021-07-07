@@ -45,6 +45,13 @@ rest:
             controller: src.ProductController
             action: get_products
             name: ""
+
+        -   route: /products/{id}
+            method: DELETE
+            controller: src.ProductController
+            action: delete_product
+            name: ""
+
 repository:
     database: product_db
     user: minos
@@ -79,9 +86,6 @@ commands:
         -   name: GetProducts
             controller: src.ProductController
             action: get_products
-        -   name: ValidateProducts
-            controller: src.ProductController
-            action: validate_products
         -   name: ReserveProducts
             controller: src.ProductController
             action: reserve_products

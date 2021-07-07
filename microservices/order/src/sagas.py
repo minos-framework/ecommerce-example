@@ -25,19 +25,7 @@ from .aggregates import (
     Order,
 )
 
-_ProductsQuery = ModelType.build("ProductsQuery", {"ids": list[int]})
-_ValidateProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
-
-
-def _validate_products_callback(context: SagaContext) -> Model:
-    product_ids = context["product_ids"]
-    model = _ProductsQuery(ids=product_ids)
-    return model
-
-
-def _validate_products_reply_callback(value) -> None:
-    if not value.exist:
-        raise ValueError("One or more products do not exist.")
+_ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 
 
 def _reserve_products_callback(context: SagaContext) -> Model:
@@ -46,8 +34,7 @@ def _reserve_products_callback(context: SagaContext) -> Model:
     for product_id in product_ids:
         quantities[str(product_id)] += 1
 
-    model = _ValidateProductsQuery(quantities=quantities)
-    return model
+    return _ReserveProductsQuery(quantities=quantities)
 
 
 def _release_products_callback(context: SagaContext) -> Model:
@@ -56,13 +43,7 @@ def _release_products_callback(context: SagaContext) -> Model:
     for product_id in product_ids:
         quantities[str(product_id)] -= 1
 
-    model = _ValidateProductsQuery(quantities=quantities)
-    return model
-
-
-def _reserve_products_reply_callback(value) -> None:
-    if not value.exist:
-        raise ValueError("One or more products have not enough stock.")
+    return _ReserveProductsQuery(quantities=quantities)
 
 
 def _create_ticket_callback(context: SagaContext) -> Model:
@@ -88,12 +69,8 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 CREATE_ORDER = (
     Saga("CreateOrder")
     .step()
-    .invoke_participant("ValidateProducts", _validate_products_callback)
-    .on_reply("_", _validate_products_reply_callback)
-    .step()
     .invoke_participant("ReserveProducts", _reserve_products_callback)
     .with_compensation("ReserveProducts", _release_products_callback)
-    .on_reply("_", _reserve_products_reply_callback)
     .step()
     .invoke_participant("CreateTicket", _create_ticket_callback)
     .on_reply("ticket_id", _create_ticket_reply_callback)

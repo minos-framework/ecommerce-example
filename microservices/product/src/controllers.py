@@ -7,9 +7,12 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 
 from minos.common import (
+    MinosSnapshotAggregateNotFoundException,
+    MinosSnapshotDeletedAggregateException,
     ModelType,
     Request,
     Response,
+    ResponseException,
 )
 
 from .services import (
@@ -62,21 +65,30 @@ class ProductController:
         :param request: The ``Request`` instance that contains the product identifiers.
         :return: A ``Response`` instance containing the requested products.
         """
-        content = await request.content(model_type=_Query)
-        products = await ProductService().get_products(**content)
+        try:
+            content = await request.content(model_type=_Query)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        try:
+            products = await ProductService().get_products(**content)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting products: {exc!r}")
+
         return Response(products)
 
     @staticmethod
-    async def validate_products(request: Request) -> Response:
-        """Check if the list of passed products is valid.
+    async def delete_product(request: Request) -> Response:
+        """TODO
 
-        :param: request: The ``Request`` containing the list of identifiers.
-        :return: A ``Response containing a ``ValidProductList`` DTO.
+        :param request: TODO
+        :return: TODO
         """
         content = await request.content()
-        exist = await ProductService().validate_products(**content)
-        model = ModelType.build("ValidProductList", {"exist": bool})(exist=exist)
-        return Response(model)
+
+        await ProductService().delete_product(**content)
+
+        return Response([])
 
     @staticmethod
     async def reserve_products(request: Request) -> Response:
@@ -87,6 +99,12 @@ class ProductController:
         """
         content = await request.content()
         quantities = {int(k): v for k, v in content.quantities.items()}
-        exist = await ProductService().reserve_products(quantities)
-        model = ModelType.build("ValidProductInventoryList", {"exist": bool})(exist=exist)
-        return Response(model)
+
+        try:
+            await ProductService().reserve_products(quantities)
+        except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
+            raise ResponseException(f"Some products do not exist: {exc!r}")
+        except Exception as exc:
+            raise ResponseException(f"There is not enough product amount: {exc!r}")
+
+        return Response([])
