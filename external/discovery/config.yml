@@ -1,0 +1,29 @@
+discovery:
+  host: 0.0.0.0
+  port: 5567
+  path: /discover
+  endpoints:
+    - name: Discover
+      route: /discover
+      method: GET
+      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
+      action: discover
+    - name: Subscribe
+      route: /subscribe
+      method: POST
+      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
+      action: subscribe
+    - name: Unsubscribe
+      route: /unsubscribe
+      method: POST
+      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
+      action: unsubscribe
+    - name: SystemHealth
+      route: /system/health
+      method: GET
+      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
+      action: system_health
+  db:
+    host: localhost
+    port: 6379
+    password:

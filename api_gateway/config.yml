@@ -2,61 +2,72 @@ rest:
   host: 0.0.0.0
   port: 5566
   endpoints:
-    - name: GetOrder
-      route: /order/{id}
-      method: GET
-      controller: src.Order
-      action: get
+
     - name: AddOrder
-      route: /order
+      route: /orders
       method: POST
-      controller: src.Order
-      action: add
-    - name: History
-      route: /order/{id}/history
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: GetOrders
+      route: /orders
       method: GET
-      controller: src.Order
-      action: history
-    - name: GetProduct
-      route: /product/{id}
-      method: GET
-      controller: src.Product
-      action: get
-    - name: AddOrder
-      route: /product
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: AddPayment
+      route: /payments
       method: POST
-      controller: src.Product
-      action: add
-    - name: AllProducts
-      route: /products/all
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: GetPayments
+      route: /payments
       method: GET
-      controller: src.Product
-      action: all
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: AddProduct
+      route: /products
+      method: POST
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: GetProducts
+      route: /products
+      method: GET
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: DeleteProduct
+      route: /products/{id}
+      method: DELETE
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: UpdateInventory
+      route: /products/{product_id}/inventory
+      method: PUT
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: UpdateInventoryDiff
+      route: /products/{product_id}/inventory
+      method: PATCH
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: GetTickets
+      route: /tickets
+      method: GET
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
 discovery:
   host: localhost
-  port: 55909
-  path: discover
-  endpoints:
-    - name: Discover
-      route: /discover
-      method: GET
-      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-      action: discover
-    - name: Subscribe
-      route: /subscribe
-      method: POST
-      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-      action: subscribe
-    - name: Unsubscribe
-      route: /unsubscribe
-      method: POST
-      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-      action: unsubscribe
-    - name: SystemHealth
-      route: /system/health
-      method: GET
-      controller: minos.api_gateway.discovery.handlers.DiscoveryHandlers
-      action: system_health
+  port: 5567
+  path: /discover
+  endpoints: []
   db:
     host: localhost
     port: 6379

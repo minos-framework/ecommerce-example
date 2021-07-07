@@ -1,0 +1,17 @@
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Start System
+        run: make up
+
+      - name: Run Integration Tests
+        run: make integration-tests
+
+      - name: Stop System
+        run: make down

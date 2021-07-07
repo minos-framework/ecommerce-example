@@ -7,14 +7,22 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from minos.common import (
     Aggregate,
+    DeclarativeModel,
 )
 
 
-class Product(Aggregate):
-    """TODO"""
+class Inventory(DeclarativeModel):
+    """Inventory Object Value class."""
 
-    external_id: int
-    name: str
+    amount: int
+
+
+class Product(Aggregate):
+    """Product class."""
+
+    code: str
+    title: str
     description: str
-    brand: str
-    unit_price: float
+    price: float
+
+    inventory: Inventory

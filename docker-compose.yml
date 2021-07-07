@@ -1,104 +1,106 @@
 version: "3.9"
 
+x-microservice-environment: &microservice-environment
+  - MINOS_EVENTS_QUEUE_HOST=postgres
+  - MINOS_EVENTS_BROKER=kafka
+  - MINOS_COMMANDS_QUEUE_HOST=postgres
+  - MINOS_COMMANDS_BROKER=kafka
+  - MINOS_REPOSITORY_HOST=postgres
+  - MINOS_SNAPSHOT_HOST=postgres
+  - MINOS_SAGA_QUEUE_HOST=postgres
+  - MINOS_SAGA_BROKER=kafka
+  - MINOS_DISCOVERY_HOST=discovery
+
+x-microservice-depends-on: &microservice-depends-on
+  - postgres
+  - kafka
+  - discovery
+
 services:
   zookeeper:
     restart: always
     image: wurstmeister/zookeeper:latest
+    logging:
+      driver: none
 
   kafka:
     restart: always
     image: wurstmeister/kafka:latest
     depends_on:
       - zookeeper
-    ports:
-      - 9092:9092
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    logging:
+      driver: none
 
   postgres:
     restart: always
-    image: postgres
+    build: external/postgres
     volumes:
       - postgres_volume:/var/lib/postgresql
-    ports:
-      - 5432:5432
     environment:
+      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
+    logging:
+      driver: none
 
   redis:
     image: redis:latest
-    ports:
-      - 6379:6379
+    command: "redis-server"
+    logging:
+      driver: none
+
+  tavern:
+    build: external/tavern
+    profiles:
+      - donotstart
     volumes:
-      - ./config/redis.conf:/redis.conf
-    command: ["redis-server", "/redis.conf"]
+      - ./external/tavern/:/tavern/:ro
 
   api-gateway:
     restart: always
     build: ./api_gateway
-    command: api_gateway start config.yml
     ports:
       - 5566:5566
     environment:
       - PYTHONPATH=/api_gateway
+      - DISCOVERY_SERVICE_HOST=discovery
+    depends_on:
+      - discovery
 
-  discovery-service:
+  discovery:
     restart: always
-    build: ./discovery
-    command: discovery start config.yml
+    build: ./external/discovery
     environment:
       - DISCOVERY_SERVICE_DB_HOST=redis
-
-    ports:
-      - 8090:8080
     depends_on:
       - redis
 
+  microservice-order:
+    restart: always
+    build: microservices/order
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-payment:
+    restart: always
+    build: microservices/payment
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
   microservice-product:
     restart: always
-    build:
-      context: ./microservices/product
-    command: bash -c 'PGPASSWORD=min0s psql -U minos -h postgres -tc "CREATE DATABASE product_db OWNER minos;"; python -m src start'
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
+    build: microservices/product
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
-    ports:
-      - 8081:8081
-    depends_on:
-      - postgres
-      - kafka
-
-  microservice-shipment:
+  microservice-ticket:
     restart: always
-    build:
-      context: ./microservices/shipment
-    command: bash -c 'PGPASSWORD=min0s psql -U minos -h postgres -tc "CREATE DATABASE shipment_db OWNER minos;"; python -m src start'
-    environment:
-      - PYTHONPATH=/microservice
-      - MINOS_EVENTS_QUEUE_HOST=postgres
-      - MINOS_EVENTS_BROKER=kafka
-      - MINOS_COMMANDS_QUEUE_HOST=postgres
-      - MINOS_COMMANDS_BROKER=kafka
-      - MINOS_REPOSITORY_HOST=postgres
-      - MINOS_SNAPSHOT_HOST=postgres
-      - MINOS_SAGA_QUEUE_HOST=postgres
-      - MINOS_SAGA_BROKER=kafka
-
-    ports:
-      - 8082:8082
-    depends_on:
-      - postgres
-      - kafka
+    build: microservices/ticket
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
 volumes:
   postgres_volume:
