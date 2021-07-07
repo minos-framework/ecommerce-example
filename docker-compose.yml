@@ -40,7 +40,7 @@ services:
     volumes:
       - postgres_volume:/var/lib/postgresql
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db
+      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db,cart_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
