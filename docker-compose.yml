@@ -102,5 +102,11 @@ services:
     environment: *microservice-environment
     depends_on: *microservice-depends-on
 
+  microservice-cart:
+    restart: always
+    build: microservices/cart
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
 volumes:
   postgres_volume:

@@ -1,0 +1,106 @@
+service:
+  name: cart
+  injections:
+    command_broker: minos.networks.CommandBroker
+    command_reply_broker: minos.networks.CommandReplyBroker
+    event_broker: minos.networks.EventBroker
+    repository: minos.common.PostgreSqlRepository
+    saga_manager: minos.saga.SagaManager
+    snapshot: minos.common.PostgreSqlSnapshot
+    discovery: minos.networks.DiscoveryConnector
+  services:
+    - minos.networks.CommandConsumerService
+    - minos.networks.CommandHandlerService
+    - minos.networks.CommandReplyConsumerService
+    - minos.networks.CommandReplyHandlerService
+    - minos.networks.EventConsumerService
+    - minos.networks.EventHandlerService
+    - minos.networks.RestService
+    - minos.networks.SnapshotService
+    - minos.networks.ProducerService
+rest:
+  host: 0.0.0.0
+  port: 8085
+  endpoints:
+    - route: /add
+      method: POST
+      controller: src.CartController
+      action: add_items
+      name: ""
+    #- route: /tickets
+    #  method: GET
+    #  controller: src.CartController
+    #  action: get_tickets
+    #  name: ""
+repository:
+  database: cart_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+snapshot:
+  database: cart_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+events:
+  broker: localhost
+  port: 9092
+  queue:
+    database: cart_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
+  items: []
+commands:
+  broker: localhost
+  port: 9092
+  items:
+    - name: CreateCart
+      controller: src.CartController
+      action: add_items
+    #- name: GetTickets
+    #  controller: src.CartController
+    #  action: get_cart
+  queue:
+    database: cart_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
+saga:
+  broker: localhost
+  port: 9092
+  storage:
+    path: "./cart.lmdb"
+  items:
+    - name: CreateCart
+      controller: src
+      action: _CREATE_CART
+  queue:
+    database: cart_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
+discovery:
+  host: localhost
+  port: 5567
+  endpoints:
+    subscribe:
+      path: subscribe
+      method: POST
+    unsubscribe:
+      path: unsubscribe
+      method: POST
+    discover:
+      path: discover
+      method: GET
