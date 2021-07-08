@@ -7,7 +7,7 @@ service:
     repository: minos.common.PostgreSqlRepository
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
-    discovery: minos.networks.DiscoveryConnector
+    #discovery: minos.networks.DiscoveryConnector
   services:
     - minos.networks.CommandConsumerService
     - minos.networks.CommandHandlerService
@@ -22,10 +22,15 @@ rest:
   host: 0.0.0.0
   port: 8086
   endpoints:
+    - route: /cart/new
+      method: POST
+      controller: src.CartController
+      action: create_cart
+      name: ""
     - route: /cart
       method: POST
       controller: src.CartController
-      action: add_items
+      action: add_item
       name: ""
 repository:
   database: cart_db

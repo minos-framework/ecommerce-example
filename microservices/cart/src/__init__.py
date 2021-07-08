@@ -7,6 +7,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from .aggregates import (
     Cart,
+    CartItem,
 )
 from .controllers import (
     CartController,
