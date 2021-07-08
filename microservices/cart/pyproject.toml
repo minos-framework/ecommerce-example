@@ -10,6 +10,7 @@ python = "^3.9"
 minos-microservice-common = "^0.1.2"
 minos-microservice-saga = "^0.0.6"
 typer = "^0.3.2"
+minos-microservice-networks = "^0.0.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

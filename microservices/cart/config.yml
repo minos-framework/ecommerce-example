@@ -20,18 +20,13 @@ service:
     - minos.networks.ProducerService
 rest:
   host: 0.0.0.0
-  port: 8085
+  port: 8086
   endpoints:
-    - route: /add
+    - route: /cart
       method: POST
       controller: src.CartController
       action: add_items
       name: ""
-    #- route: /tickets
-    #  method: GET
-    #  controller: src.CartController
-    #  action: get_tickets
-    #  name: ""
 repository:
   database: cart_db
   user: minos
@@ -63,9 +58,6 @@ commands:
     - name: CreateCart
       controller: src.CartController
       action: add_items
-    #- name: GetTickets
-    #  controller: src.CartController
-    #  action: get_cart
   queue:
     database: cart_db
     user: minos
@@ -82,7 +74,7 @@ saga:
   items:
     - name: CreateCart
       controller: src
-      action: _CREATE_CART
+      action: CREATE_CART
   queue:
     database: cart_db
     user: minos
