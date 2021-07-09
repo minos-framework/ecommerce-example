@@ -11,15 +11,23 @@ from typing import (
 
 from minos.common import (
     Aggregate,
-    DeclarativeModel,
+    SubAggregate,
+    ModelRef,
 )
+
+
+class Product(SubAggregate):
+    id: int
+    title: str
+    price: float
 
 
 class CartItem(DeclarativeModel):
     """Cart Aggregate class."""
 
     quantity: int
-    product: int
+    product: ModelRef[Product]
+    price: Union[float, int, None]
 
 
 class Cart(Aggregate):

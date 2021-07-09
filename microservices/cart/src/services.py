@@ -30,25 +30,25 @@ class CartService(Service):
         """
         Creates a cart
 
-        :param user_id: The user ID.
-        :param products: The list of product identifiers to be included in the ticket.
+        :param user: The user ID.
         """
         cart = await Cart.create(user=user, products=[])
-        # await self.saga_manager.run("CreateCart", context=SagaContext(cart=cart, product_ids=products))
 
         return cart
 
     @staticmethod
-    async def add_item(cart: int, product: CartItem, quantity: int) -> Cart:
+    async def add_item(cart: int, product: int, quantity: int) -> Cart:
         """
-        Creates a cart
+        Add products to the Cart
 
-        :param user_id: The user ID.
-        :param products: The list of product identifiers to be included in the ticket.
+        :param cart: Cart ID.
+        :param product: The product identifiers to be included in the cart.
+        :param quantity: Product quantity.
         """
         cart = await Cart.get_one(cart)
         cart_item = CartItem(product=product, quantity=quantity)
         cart.products.append(cart_item)
+        #await self.saga_manager.run("CreateCartItem", context=SagaContext(cart=cart, product_ids=products))
         await cart.save()
 
         return cart
