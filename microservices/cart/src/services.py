@@ -18,7 +18,7 @@ from minos.saga import (
 
 from .aggregates import (
     Cart,
-    CartItem
+    CartItem,
 )
 
 
@@ -34,7 +34,7 @@ class CartService(Service):
         :param products: The list of product identifiers to be included in the ticket.
         """
         cart = await Cart.create(user=user, products=[])
-        #await self.saga_manager.run("CreateCart", context=SagaContext(cart=cart, product_ids=products))
+        # await self.saga_manager.run("CreateCart", context=SagaContext(cart=cart, product_ids=products))
 
         return cart
 

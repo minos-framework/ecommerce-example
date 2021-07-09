@@ -11,7 +11,7 @@ from typing import (
 
 from minos.common import (
     Aggregate,
-    DeclarativeModel
+    DeclarativeModel,
 )
 
 
