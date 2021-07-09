@@ -11,9 +11,7 @@ from minos.common import (
     Response,
 )
 
-from .services import (
-    CartService,
-)
+from .services import CartService
 
 _Query = ModelType.build("Query", {"ids": list[int]})
 

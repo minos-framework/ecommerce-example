@@ -5,16 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from uuid import (
-    uuid4,
-)
+from uuid import uuid4
 
-from minos.common import (
-    Service,
-)
-from minos.saga import (
-    SagaContext,
-)
+from minos.common import Service
+from minos.saga import SagaContext
 
 from .aggregates import (
     Cart,
@@ -48,7 +42,7 @@ class CartService(Service):
         cart = await Cart.get_one(cart)
         cart_item = CartItem(product=product, quantity=quantity)
         cart.products.append(cart_item)
-        #await self.saga_manager.run("CreateCartItem", context=SagaContext(cart=cart, product_ids=products))
+        # await self.saga_manager.run("CreateCartItem", context=SagaContext(cart=cart, product_ids=products))
         await cart.save()
 
         return cart
