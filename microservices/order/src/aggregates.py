@@ -8,7 +8,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 from datetime import (
     datetime,
 )
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     Aggregate,
