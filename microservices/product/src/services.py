@@ -69,7 +69,7 @@ class ProductService(Service):
         :return: The updated product instance.
         """
         product = await Product.get_one(uuid)
-        product.inventory.amount = amount
+        product.inventory = Inventory(amount)
         await product.save()
         return product
 
@@ -82,7 +82,7 @@ class ProductService(Service):
         :return: The updated product instance.
         """
         product = await Product.get_one(uuid)
-        product.inventory.amount += amount_diff
+        product.inventory = Inventory(product.inventory.amount + amount_diff)
         await product.save()
         return product
 
@@ -96,9 +96,11 @@ class ProductService(Service):
         feasible = True
         async for product in Product.get(uuids=list(quantities.keys())):
             inventory = product.inventory
-            if feasible and inventory.amount < quantities[product.uuid]:
+            amount = inventory.amount
+            if feasible and amount < quantities[product.uuid]:
                 feasible = False
-            inventory.amount -= quantities[product.uuid]
+            amount -= quantities[product.uuid]
+            product.inventory = Inventory(amount)
             await product.save()
 
         if not feasible:
