@@ -15,7 +15,7 @@ from datetime import (
 from minos.common import (
     Aggregate,
     ModelRef,
-    SubAggregate,
+    AggregateRef,
 )
 
 
@@ -30,9 +30,9 @@ class Order(Aggregate):
     updated_at: datetime
 
 
-class Product(SubAggregate):
-    """Order SubAggregate class."""
+class Product(AggregateRef):
+    """Order AggregateRef class."""
 
 
-class Ticket(SubAggregate):
-    """Ticket SubAggregate class"""
+class Ticket(AggregateRef):
+    """Ticket AggregateRef class"""

@@ -206,28 +206,21 @@ cffi = ">=0.8"
 
 [[package]]
 name = "minos-microservice-common"
-version = "0.1.2"
+version = "0.1.3"
 description = "Python Package with common Classes and Utilities used in Minos Microservices."
 category = "main"
 optional = false
-python-versions = "^3.9"
-develop = false
+python-versions = ">=3.9,<4.0"
 
 [package.dependencies]
-aiomisc = "^14.0.3"
-aiopg = "^1.2.1"
-cached-property = "^1.5.2"
-dependency-injector = "^4.32.2"
-fastavro = "^1.4.0"
-lmdb = "^1.2.1"
-orjson = "^3.5.2"
-PyYAML = "^5.4.1"
-
-[package.source]
-type = "git"
-url = "https://github.com/Clariteia/minos_microservice_common.git"
-reference = "fa2716bff794b88c29ae464942e096a976ed7831"
-resolved_reference = "fa2716bff794b88c29ae464942e096a976ed7831"
+aiomisc = ">=14.0.3,<15.0.0"
+aiopg = ">=1.2.1,<2.0.0"
+cached-property = ">=1.5.2,<2.0.0"
+dependency-injector = ">=4.32.2,<5.0.0"
+fastavro = ">=1.4.0,<2.0.0"
+lmdb = ">=1.2.1,<2.0.0"
+orjson = ">=3.5.2,<4.0.0"
+PyYAML = ">=5.4.1,<6.0.0"
 
 [[package]]
 name = "minos-microservice-networks"
@@ -244,32 +237,25 @@ aiokafka = "^0.7.0"
 aiomisc = "^14.0.3"
 aiopg = "^1.2.1"
 dependency-injector = "^4.32.2"
-minos-microservice-common = {git = "https://github.com/Clariteia/minos_microservice_common.git", rev = "fa2716bff794b88c29ae464942e096a976ed7831"}
+minos-microservice-common = "^0.1.3"
 
 [package.source]
 type = "git"
 url = "https://github.com/Clariteia/minos_microservice_networks.git"
-reference = "87067486a31ba9524a367d8375b9aecfa161e3c2"
-resolved_reference = "87067486a31ba9524a367d8375b9aecfa161e3c2"
+reference = "bdefd357a233bc129d2d5a705471074bdb0d8293"
+resolved_reference = "bdefd357a233bc129d2d5a705471074bdb0d8293"
 
 [[package]]
 name = "minos-microservice-saga"
-version = "0.0.6"
+version = "0.0.7"
 description = "Saga Library for MinOS project."
 category = "main"
 optional = false
-python-versions = "^3.9"
-develop = false
+python-versions = ">=3.9,<4.0"
 
 [package.dependencies]
-dependency-injector = "^4.32.2"
-minos-microservice-common = {git = "https://github.com/Clariteia/minos_microservice_common.git", rev = "fa2716bff794b88c29ae464942e096a976ed7831"}
-
-[package.source]
-type = "git"
-url = "https://github.com/Clariteia/minos_microservice_saga.git"
-reference = "6e694e6829610f04e0f249e6339e12a50bd9a0b6"
-resolved_reference = "6e694e6829610f04e0f249e6339e12a50bd9a0b6"
+dependency-injector = ">=4.32.2,<5.0.0"
+minos-microservice-common = ">=0.1.3,<0.2.0"
 
 [[package]]
 name = "multidict"
@@ -359,7 +345,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "b10a130a35d9128c41fefc3299cc3a741f32f7e705b7eecd102dcb1c198d1bce"
+content-hash = "2767d5a107d85fc02e3d8da4d60f39f38fea46c461d04cb50ce51e9b3407ecb9"
 
 [metadata.files]
 aiohttp = [
@@ -621,9 +607,15 @@ lmdb = [
     {file = "lmdb-1.2.1-pp36-pypy36_pp73-win32.whl", hash = "sha256:6dc9c23f37c18db7ec9ea9fa2bb6c3b4e325aa8d3558797860f8c9fee9baf49e"},
     {file = "lmdb-1.2.1.tar.gz", hash = "sha256:5f76a90ebd08922acca11948779b5055f7a262687178e9e94f4e804b9f8465bc"},
 ]
-minos-microservice-common = []
+minos-microservice-common = [
+    {file = "minos_microservice_common-0.1.3-py3-none-any.whl", hash = "sha256:94d1115070703bb8223afb96a05ea370e0c2d10e2ba2c250e498353ae61a4ce3"},
+    {file = "minos_microservice_common-0.1.3.tar.gz", hash = "sha256:646427c785fc0e301dd59419a623a7f078e4e491a9d15b05d2e406b382c02690"},
+]
 minos-microservice-networks = []
-minos-microservice-saga = []
+minos-microservice-saga = [
+    {file = "minos_microservice_saga-0.0.7-py3-none-any.whl", hash = "sha256:aa31a2a13c19da98c68d571d4bbb8426fed490ed48319763fcbaa9a8abea8b4b"},
+    {file = "minos_microservice_saga-0.0.7.tar.gz", hash = "sha256:d4e744616ee7f51a5ce5e0163900115d6249f501f354a7d987db96228545db70"},
+]
 multidict = [
     {file = "multidict-5.1.0-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:b7993704f1a4b204e71debe6095150d43b2ee6150fa4f44d6d966ec356a8d61f"},
     {file = "multidict-5.1.0-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:9dd6e9b1a913d096ac95d0399bd737e00f2af1e1594a787e00f7975778c8b2bf"},
