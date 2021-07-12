@@ -10,16 +10,10 @@ from uuid import (
     uuid4,
 )
 
-from minos.common import (
-    Service,
-)
-from minos.saga import (
-    SagaContext,
-)
+from minos.common import Service
+from minos.saga import SagaContext
 
-from .aggregates import (
-    Ticket,
-)
+from .aggregates import Ticket
 
 
 class TicketService(Service):
