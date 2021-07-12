@@ -13,9 +13,7 @@ from minos.common import (
     Response,
 )
 
-from .services import (
-    PaymentService,
-)
+from .services import PaymentService
 
 _Query = ModelType.build("Query", {"uuids": list[UUID]})
 

@@ -13,9 +13,7 @@ from minos.common import (
     Response,
 )
 
-from .services import (
-    TicketService,
-)
+from .services import TicketService
 
 _Query = ModelType.build("Query", {"uuids": list[UUID]})
 

@@ -14,9 +14,7 @@ from minos.common import (
     ResponseException,
 )
 
-from .services import (
-    OrderService,
-)
+from .services import OrderService
 
 _Query = ModelType.build("Query", {"uuids": list[UUID]})
 

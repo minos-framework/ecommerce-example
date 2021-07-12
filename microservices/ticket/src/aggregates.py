@@ -7,9 +7,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from uuid import UUID
 
-from minos.common import (
-    Aggregate,
-)
+from minos.common import Aggregate
 
 
 class Ticket(Aggregate):
