@@ -5,6 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
 from datetime import (
     datetime,
 )
@@ -16,14 +19,6 @@ from minos.common import (
 )
 
 
-class Product(SubAggregate):
-    """Order SubAggregate class."""
-
-
-class Ticket(SubAggregate):
-    """Ticket SubAggregate class"""
-
-
 class Order(Aggregate):
     """Order Aggregate class."""
 
@@ -33,3 +28,11 @@ class Order(Aggregate):
 
     created_at: datetime
     updated_at: datetime
+
+
+class Product(SubAggregate):
+    """Order SubAggregate class."""
+
+
+class Ticket(SubAggregate):
+    """Ticket SubAggregate class"""
