@@ -30,6 +30,7 @@ class ProductQueryService(Service):
         :return: TODO
         """
 
+    # @subscribe("ProductAdded")
     def product_added(self, diff: AggregateDiff):
         """TODO
 
@@ -37,6 +38,7 @@ class ProductQueryService(Service):
         :return: TODO
         """
 
+    # @subscribe("ProductUpdated")
     def product_updated(self, diff: AggregateDiff):
         """TODO
 
@@ -44,6 +46,7 @@ class ProductQueryService(Service):
         :return: TODO
         """
 
+    # @subscribe("ProductDeleted")
     def product_deleted(self, diff: AggregateDiff):
         """TODO
 
