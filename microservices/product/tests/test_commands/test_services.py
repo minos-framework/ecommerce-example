@@ -55,7 +55,7 @@ class _FakeSagaManager(MinosSagaManager):
 
 
 class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
