@@ -16,7 +16,7 @@ from minos.saga import (
     Saga,
     SagaContext,
 )
-from .aggregates import (
+from src.aggregates import (
     Cart, CartItem,
 )
 
@@ -24,38 +24,35 @@ _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": 
 
 
 def _reserve_products_callback(context: SagaContext) -> Model:
-    product_ids = [context["product_id"]]
+    product = context["product"]
     quantities = defaultdict(int)
-    for product_id in product_ids:
-        quantities[str(product_id)] += 1
+    quantities[str(product.id)] += product.quantity
 
     return _ReserveProductsQuery(quantities=quantities)
 
 
 def _release_products_callback(context: SagaContext) -> Model:
-    product_ids = [context["product_id"]]
+    product = context["product"]
     quantities = defaultdict(int)
-    for product_id in product_ids:
-        quantities[str(product_id)] -= 1
+    quantities[str(product.id)] -= product.quantity
 
     return _ReserveProductsQuery(quantities=quantities)
 
 
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
-    product_id = context["product_id"]
-    quantity = context["quantity"]
+    idx = context["product_id"]
     cart = await Cart.get_one(cart_id)
-    cart_item = CartItem(product=product_id, quantity=quantity)
-    cart.products.append(cart_item)
+    cart.products.pop(idx)
+
     await cart.save()
     return SagaContext(cart=cart)
 
 
-ADD_CART_ITEM = (
-    Saga("AddCartItem")
+REMOVE_CART_ITEM = (
+    Saga("RemoveCartItem")
     .step()
-    .invoke_participant("ReserveProducts", _reserve_products_callback)
-    .with_compensation("ReserveProducts", _release_products_callback)
+    .invoke_participant("ReserveProducts", _release_products_callback)
+    .with_compensation("ReserveProducts", _reserve_products_callback)
     .commit(_create_commit_callback)
 )
