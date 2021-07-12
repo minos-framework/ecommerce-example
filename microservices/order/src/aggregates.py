@@ -8,6 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 from datetime import (
     datetime,
 )
+from uuid import UUID
 
 from minos.common import (
     Aggregate,
@@ -17,8 +18,8 @@ from minos.common import (
 class Order(Aggregate):
     """Order Aggregate class."""
 
-    products: list[int]
-    ticket: int
+    products: list[UUID]
+    ticket: UUID
     status: str
 
     created_at: datetime

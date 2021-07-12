@@ -5,6 +5,8 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     MinosSnapshotAggregateNotFoundException,
@@ -19,7 +21,7 @@ from .services import (
     ProductService,
 )
 
-_Query = ModelType.build("Query", {"ids": list[int]})
+_Query = ModelType.build("Query", {"uuids": list[UUID]})
 
 
 class ProductController:
@@ -78,7 +80,7 @@ class ProductController:
         return Response(products)
 
     @staticmethod
-    async def delete_product(request: Request) -> Response:
+    async def delete_product(request: Request) -> NoReturn:
         """TODO
 
         :param request: TODO
@@ -86,19 +88,20 @@ class ProductController:
         """
         content = await request.content()
 
-        await ProductService().delete_product(**content)
-
-        return Response([])
+        try:
+            await ProductService().delete_product(**content)
+        except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
+            raise ResponseException(f"The product does not exist.")
 
     @staticmethod
-    async def reserve_products(request: Request) -> Response:
+    async def reserve_products(request: Request) -> NoReturn:
         """Reserve the requested quantities of products.
 
         :param: request: The ``Request`` instance that contains the quantities dictionary.
         :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
         """
         content = await request.content()
-        quantities = {int(k): v for k, v in content.quantities.items()}
+        quantities = {UUID(k): v for k, v in content.quantities.items()}
 
         try:
             await ProductService().reserve_products(quantities)
@@ -106,5 +109,3 @@ class ProductController:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")
-
-        return Response([])

@@ -24,20 +24,20 @@ from .aggregates import (
 class OrderService(Service):
     """Ticket Service class"""
 
-    async def create_order(self, products: list[int]) -> UUID:
+    async def create_order(self, product_uuids: list[UUID]) -> UUID:
         """
         Creates a fake_payment_service
 
-        :param products: List of `orders`
+        :param product_uuids: List of `orders`
         """
-        return await self.saga_manager.run("CreateOrder", context=SagaContext(product_ids=products))
+        return await self.saga_manager.run("CreateOrder", context=SagaContext(product_uuids=product_uuids))
 
     @staticmethod
-    async def get_orders(ids: list[int]) -> list[Order]:
+    async def get_orders(uuids: list[UUID]) -> list[Order]:
         """Get a list of tickets.
 
-        :param ids: List of ticket identifiers.
+        :param uuids: List of ticket identifiers.
         :return: A list of ``Ticket`` instances.
         """
-        values = {v.id: v async for v in Order.get(ids=ids)}
-        return [values[id] for id in ids]
+        values = {v.uuid: v async for v in Order.get(uuids=uuids)}
+        return [values[uuid] for uuid in uuids]

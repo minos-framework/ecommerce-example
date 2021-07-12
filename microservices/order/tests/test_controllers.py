@@ -120,17 +120,18 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
             self.assertIsInstance(response, Response)
 
             observed = await response.content()
-            self.assertEqual([str(uuid)], observed)
+            self.assertEqual(uuid, observed)
             self.assertEqual(call(products=[1, 2, 3]), mock.call_args)
 
     async def test_get_orders(self):
         now = datetime.now(tz=timezone.utc)
 
         expected = await gather(
-            Order.create([1, 2, 3], 1, "created", now, now), Order.create([1, 1, 1], 2, "cancelled", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "created", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "cancelled", now, now),
         )
 
-        request = _FakeRequest({"ids": [v.id for v in expected]})
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
         response = await self.controller.get_orders(request)
         observed = await response.content()

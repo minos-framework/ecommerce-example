@@ -96,17 +96,18 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         observed = await self.service.create_order([1, 2, 3])
 
         self.assertEqual(expected, observed)
-        self.assertEqual(call("CreateOrder", context=SagaContext(product_ids=[1, 2, 3])), mock.call_args)
+        self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3])), mock.call_args)
 
     async def test_get_orders(self):
         now = datetime.now(tz=timezone.utc)
 
         expected = await gather(
-            Order.create([1, 2, 3], 1, "created", now, now), Order.create([1, 1, 1], 2, "cancelled", now, now),
+            Order.create([uuid4(), uuid4(), uuid4()], uuid4(), "created", now, now),
+            Order.create([uuid4()], uuid4(), "cancelled", now, now),
         )
-        ids = [v.id for v in expected]
+        uuids = [v.uuid for v in expected]
 
-        observed = await self.service.get_orders(ids)
+        observed = await self.service.get_orders(uuids)
         self.assertEqual(expected, observed)
 
 

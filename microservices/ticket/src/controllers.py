@@ -5,6 +5,8 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from uuid import UUID
+
 from minos.common import (
     ModelType,
     Request,
@@ -15,7 +17,7 @@ from .services import (
     TicketService,
 )
 
-_Query = ModelType.build("Query", {"ids": list[int]})
+_Query = ModelType.build("Query", {"uuids": list[UUID]})
 
 
 class TicketController:
@@ -34,7 +36,7 @@ class TicketController:
 
     @staticmethod
     async def get_tickets(request: Request) -> Response:
-        """Get a list of tickets by id.
+        """Get a list of tickets by uuid.
 
         :param request: A ``Request`` instance containing the list of ticket identifiers.
         :return: A ``Response`` containing the list of requested tickets.

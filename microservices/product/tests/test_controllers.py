@@ -104,9 +104,8 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = [
-            Product(observed[0].code, "Cacao", "1KG", 3, Inventory(0), id=observed[0].id, version=observed[0].version)
-        ]
+        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), uuid=observed.uuid, version=observed.version)
+
         self.assertEqual(expected, observed)
 
     async def test_get_products(self):
@@ -115,7 +114,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
             Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
             Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
         )
-        request = _FakeRequest({"ids": [v.id for v in expected]})
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
         response = await self.controller.get_products(request)
         observed = await response.content()
@@ -123,18 +122,18 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
 
     async def test_update_inventory(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(56), id=product.id, version=2)]
+        expected = Product("abc", "Cacao", "1KG", 3, Inventory(56), uuid=product.uuid, version=2)
 
-        request = _FakeRequest({"product_id": product.id, "amount": 56})
+        request = _FakeRequest({"uuid": product.uuid, "amount": 56})
         response = await self.controller.update_inventory(request)
         observed = await response.content()
         self.assertEqual(expected, observed)
 
     async def test_update_inventory_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(24), id=product.id, version=2)]
+        expected = Product("abc", "Cacao", "1KG", 3, Inventory(24), uuid=product.uuid, version=2)
 
-        request = _FakeRequest({"product_id": product.id, "amount_diff": 12})
+        request = _FakeRequest({"uuid": product.uuid, "amount_diff": 12})
         response = await self.controller.update_inventory_diff(request)
         observed = await response.content()
         self.assertEqual(expected, observed)
