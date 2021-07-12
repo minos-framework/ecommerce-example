@@ -11,10 +11,13 @@ from collections import (
 from datetime import (
     datetime,
 )
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
-    Aggregate, Model,
+    Aggregate,
+    Model,
     ModelType,
 )
 from minos.saga import (

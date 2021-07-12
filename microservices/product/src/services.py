@@ -9,7 +9,8 @@ from typing import (
     NoReturn,
 )
 from uuid import (
-    UUID, uuid4,
+    UUID,
+    uuid4,
 )
 
 from minos.common import (
