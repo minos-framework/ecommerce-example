@@ -6,7 +6,7 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from uuid import (
-    uuid4,
+    UUID,
 )
 
 from minos.common import (
@@ -36,8 +36,7 @@ class CartService(Service):
 
         return cart
 
-    @staticmethod
-    async def add_item(cart: int, product: int, quantity: int) -> Cart:
+    async def add_item(self, cart: int, product: int, quantity: int) -> UUID:
         """
         Add products to the Cart
 
@@ -45,13 +44,8 @@ class CartService(Service):
         :param product: The product identifiers to be included in the cart.
         :param quantity: Product quantity.
         """
-        cart = await Cart.get_one(cart)
-        cart_item = CartItem(product=product, quantity=quantity)
-        cart.products.append(cart_item)
-        # await self.saga_manager.run("CreateCartItem", context=SagaContext(cart=cart, product_ids=products))
-        await cart.save()
-
-        return cart
+        return await self.saga_manager.run("AddCartItem", context=SagaContext(cart_id=cart, product_id=product,
+                                                                              quantity_id=quantity))
 
     @staticmethod
     async def delete_item(user_id: int, product: CartItem) -> Cart:

@@ -13,6 +13,7 @@ from minos.common import (
     Aggregate,
     ModelRef,
     SubAggregate,
+    DeclarativeModel,
 )
 
 
