@@ -15,8 +15,8 @@ from datetime import (
 
 from minos.common import (
     Aggregate,
-    ModelRef,
     AggregateRef,
+    ModelRef,
 )
 
 
