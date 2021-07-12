@@ -8,7 +8,6 @@ Minos framework can not be copied and/or distributed without the express permiss
 from .add_cart_item import (
     ADD_CART_ITEM,
 )
-
 from .remove_cart_item import (
     REMOVE_CART_ITEM,
 )
