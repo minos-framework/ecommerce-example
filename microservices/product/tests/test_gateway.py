@@ -39,7 +39,7 @@ from minos.common import (
 from src import (
     Inventory,
     Product,
-    ProductController,
+    ProductGateway,
 )
 
 
@@ -78,7 +78,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductController(unittest.IsolatedAsyncioTestCase):
+class TestProductGateway(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -92,7 +92,7 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.controller = ProductController()
+        self.controller = ProductGateway()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()

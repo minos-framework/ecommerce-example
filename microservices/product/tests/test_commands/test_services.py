@@ -33,7 +33,7 @@ from minos.common import (
 from src import (
     Inventory,
     Product,
-    ProductService,
+    ProductCommandService,
 )
 
 
@@ -54,7 +54,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductService(unittest.IsolatedAsyncioTestCase):
+class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -68,7 +68,7 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = ProductService()
+        self.service = ProductCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()

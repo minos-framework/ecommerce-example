@@ -17,13 +17,13 @@ from minos.common import (
     Service,
 )
 
-from .aggregates import (
+from ..aggregates import (
     Inventory,
     Product,
 )
 
 
-class ProductService(Service):
+class ProductCommandService(Service):
     """Product Service class"""
 
     @staticmethod

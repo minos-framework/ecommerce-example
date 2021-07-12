@@ -86,7 +86,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductController(unittest.IsolatedAsyncioTestCase):
+class TestProductGateway(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
 
     async def asyncSetUp(self) -> None:

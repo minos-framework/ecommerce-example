@@ -21,14 +21,14 @@ from minos.common import (
     ResponseException,
 )
 
-from .services import (
-    ProductService,
+from .commands import (
+    ProductCommandService,
 )
 
 _Query = ModelType.build("Query", {"uuids": list[UUID]})
 
 
-class ProductController:
+class ProductGateway:
     """Product Controller class"""
 
     @staticmethod
@@ -39,7 +39,7 @@ class ProductController:
         :return: A ``Response`` containing the already created product.
         """
         content = await request.content()
-        product = await ProductService().create_product(**content)
+        product = await ProductCommandService().create_product(**content)
         return Response(product)
 
     @staticmethod
@@ -50,7 +50,7 @@ class ProductController:
         :return: ``Response`` containing the updated product.
         """
         content = await request.content()
-        product = await ProductService().update_inventory(**content)
+        product = await ProductCommandService().update_inventory(**content)
         return Response(product)
 
     @staticmethod
@@ -61,7 +61,7 @@ class ProductController:
         :return: ``Response`` containing the updated product.
         """
         content = await request.content()
-        product = await ProductService().update_inventory_diff(**content)
+        product = await ProductCommandService().update_inventory_diff(**content)
         return Response(product)
 
     @staticmethod
@@ -77,7 +77,7 @@ class ProductController:
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            products = await ProductService().get_products(**content)
+            products = await ProductCommandService().get_products(**content)
         except Exception as exc:
             raise ResponseException(f"There was a problem while getting products: {exc!r}")
 
@@ -93,7 +93,7 @@ class ProductController:
         content = await request.content()
 
         try:
-            await ProductService().delete_product(**content)
+            await ProductCommandService().delete_product(**content)
         except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
             raise ResponseException(f"The product does not exist.")
 
@@ -108,7 +108,7 @@ class ProductController:
         quantities = {UUID(k): v for k, v in content.quantities.items()}
 
         try:
-            await ProductService().reserve_products(quantities)
+            await ProductCommandService().reserve_products(quantities)
         except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
