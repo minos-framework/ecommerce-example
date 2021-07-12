@@ -8,14 +8,15 @@ Minos framework can not be copied and/or distributed without the express permiss
 from __future__ import (
     annotations,
 )
+
 from datetime import (
     datetime,
 )
 
 from minos.common import (
     Aggregate,
+    AggregateRef,
     ModelRef,
-    SubAggregate,
 )
 
 
@@ -30,9 +31,9 @@ class Order(Aggregate):
     updated_at: datetime
 
 
-class Product(SubAggregate):
-    """Order SubAggregate class."""
+class Product(AggregateRef):
+    """Order AggregateRef class."""
 
 
-class Ticket(SubAggregate):
-    """Ticket SubAggregate class"""
+class Ticket(AggregateRef):
+    """Ticket AggregateRef class"""
