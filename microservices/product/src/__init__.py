@@ -9,8 +9,8 @@ from .aggregates import (
     Inventory,
     Product,
 )
-from .gateway import (
-    ProductGateway,
+from .controllers import (
+    ProductController,
 )
 from .commands import (
     ProductCommandService,

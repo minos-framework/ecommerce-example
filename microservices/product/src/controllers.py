@@ -28,7 +28,7 @@ from .commands import (
 _Query = ModelType.build("Query", {"uuids": list[UUID]})
 
 
-class ProductGateway:
+class ProductController:
     """Product Controller class"""
 
     @staticmethod
