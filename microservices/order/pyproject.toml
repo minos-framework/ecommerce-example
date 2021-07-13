@@ -8,7 +8,7 @@ packages = [{ include = "src" }]
 [tool.poetry.dependencies]
 python = "^3.9"
 minos-microservice-common = "^0.1.3"
-minos-microservice-networks = { git = "https://github.com/Clariteia/minos_microservice_networks.git", rev="bdefd357a233bc129d2d5a705471074bdb0d8293" }
+minos-microservice-networks = "^0.0"
 minos-microservice-saga = "^0.0"
 typer = "^0.3.2"
 
