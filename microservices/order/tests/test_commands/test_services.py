@@ -5,24 +5,16 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
+from asyncio import gather
 from datetime import (
     datetime,
     timezone,
 )
-from pathlib import (
-    Path,
-)
-from typing import (
-    NoReturn,
-)
+from pathlib import Path
+from typing import NoReturn
 from unittest.mock import (
     MagicMock,
     call,
@@ -40,11 +32,11 @@ from minos.common import (
     MinosBroker,
     MinosConfig,
     MinosSagaManager,
-    Model, Request, Response,
+    Model,
+    Request,
+    Response,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 from src import (
     Order,
     OrderCommandService,

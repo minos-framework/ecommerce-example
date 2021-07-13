@@ -11,15 +11,14 @@ from uuid import (
 )
 
 from minos.common import (
-    ModelType, Request, Response, Service,
+    ModelType,
+    Request,
+    Response,
+    Service,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 
-from ..aggregates import (
-    Ticket,
-)
+from ..aggregates import Ticket
 
 
 class TicketCommandService(Service):
