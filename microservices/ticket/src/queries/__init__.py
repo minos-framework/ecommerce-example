@@ -5,16 +5,6 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from .aggregates import (
-    Ticket,
-)
-from .controllers import (
-    TicketController,
-)
-from .commands import (
-    TicketService,
-    _CREATE_TICKET,
-)
-from .queries import (
+from .services import (
     TicketQueryService,
 )

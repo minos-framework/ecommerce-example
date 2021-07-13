@@ -13,12 +13,12 @@ from minos.common import (
     Service,
 )
 
-from .aggregates import (
+from ..aggregates import (
     Payment,
 )
 
 
-class PaymentService(Service):
+class PaymentCommandService(Service):
     """Ticket Service class"""
 
     @staticmethod

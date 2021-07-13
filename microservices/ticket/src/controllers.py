@@ -15,7 +15,7 @@ from minos.common import (
     Response,
 )
 
-from .services import (
+from .commands import (
     TicketService,
 )
 

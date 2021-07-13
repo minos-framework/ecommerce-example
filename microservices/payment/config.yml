@@ -55,7 +55,16 @@ events:
     port: 5432
     records: 10
     retry: 2
-  items: []
+  items:
+    - name: PaymentCreated
+      controller: src.PaymentQueryService
+      action: payment_created
+    - name: PaymentUpdated
+      controller: src.PaymentQueryService
+      action: payment_updated
+    - name: PaymentDeleted
+      controller: src.PaymentQueryService
+      action: payment_deleted
 commands:
   broker: localhost
   port: 9092

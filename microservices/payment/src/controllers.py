@@ -15,8 +15,8 @@ from minos.common import (
     Response,
 )
 
-from .services import (
-    PaymentService,
+from .commands import (
+    PaymentCommandService,
 )
 
 _Query = ModelType.build("Query", {"uuids": list[UUID]})
@@ -33,7 +33,7 @@ class PaymentController:
         :return: TODO
         """
         content = await request.content()
-        payment = await PaymentService().create_payment(**content)
+        payment = await PaymentCommandService().create_payment(**content)
         return Response(payment)
 
     @staticmethod
@@ -44,5 +44,5 @@ class PaymentController:
         :return: TODO
         """
         content = await request.content(model_type=_Query)
-        payments = await PaymentService().get_payments(**content)
+        payments = await PaymentCommandService().get_payments(**content)
         return Response(payments)
