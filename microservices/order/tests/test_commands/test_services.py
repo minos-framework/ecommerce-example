@@ -8,6 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 from __future__ import (
     annotations,
 )
+
 import sys
 import unittest
 from asyncio import (
@@ -40,7 +41,9 @@ from minos.common import (
     MinosBroker,
     MinosConfig,
     MinosSagaManager,
-    Model, Request, Response,
+    Model,
+    Request,
+    Response,
 )
 from minos.saga import (
     SagaContext,

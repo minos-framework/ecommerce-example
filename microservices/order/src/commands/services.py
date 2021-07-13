@@ -10,7 +10,11 @@ from uuid import (
 )
 
 from minos.common import (
-    ModelType, Request, Response, ResponseException, Service,
+    ModelType,
+    Request,
+    Response,
+    ResponseException,
+    Service,
 )
 from minos.saga import (
     SagaContext,
