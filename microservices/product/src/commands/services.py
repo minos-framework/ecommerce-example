@@ -16,8 +16,10 @@ from uuid import (
 from minos.common import (
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
-    ModelType, Request,
-    Response, ResponseException,
+    ModelType,
+    Request,
+    Response,
+    ResponseException,
     Service,
 )
 
