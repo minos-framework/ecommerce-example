@@ -8,9 +8,6 @@ Minos framework can not be copied and/or distributed without the express permiss
 from .aggregates import (
     Payment,
 )
-from .controllers import (
-    PaymentController,
-)
 from .commands import (
     PaymentCommandService,
 )
