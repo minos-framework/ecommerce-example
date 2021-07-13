@@ -34,6 +34,8 @@ class Order(Aggregate):
 class Product(AggregateRef):
     """Order AggregateRef class."""
 
+    price: float
+
 
 class Ticket(AggregateRef):
     """Ticket AggregateRef class"""
