@@ -9,5 +9,9 @@ from .aggregates import (
     Inventory,
     Product,
 )
-from .commands import ProductCommandService
-from .queries import ProductQueryService
+from .commands import (
+    ProductCommandService,
+)
+from .queries import (
+    ProductQueryService,
+)
