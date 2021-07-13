@@ -16,7 +16,7 @@ from minos.common import (
 )
 
 from .commands import (
-    TicketService,
+    TicketCommandService,
 )
 
 _Query = ModelType.build("Query", {"uuids": list[UUID]})
@@ -33,7 +33,7 @@ class TicketController:
         :return: A ``Response`` containing the created ticket.
         """
         content = await request.content()
-        ticket = await TicketService().create_ticket(**content)
+        ticket = await TicketCommandService().create_ticket(**content)
         return Response(ticket)
 
     @staticmethod
@@ -44,5 +44,5 @@ class TicketController:
         :return: A ``Response`` containing the list of requested tickets.
         """
         content = await request.content(model_type=_Query)
-        tickets = await TicketService().get_tickets(**content)
+        tickets = await TicketCommandService().get_tickets(**content)
         return Response(tickets)

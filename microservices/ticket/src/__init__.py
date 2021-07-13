@@ -12,7 +12,7 @@ from .controllers import (
     TicketController,
 )
 from .commands import (
-    TicketService,
+    TicketCommandService,
     _CREATE_TICKET,
 )
 from .queries import (

@@ -22,7 +22,7 @@ from ..aggregates import (
 )
 
 
-class TicketService(Service):
+class TicketCommandService(Service):
     """Ticket Service class"""
 
     async def create_ticket(self, product_uuids: list[UUID]) -> Ticket:
