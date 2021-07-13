@@ -5,6 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from uuid import (
+    UUID,
+)
+
 from minos.common import (
     Service,
 )
@@ -29,11 +33,11 @@ class PaymentService(Service):
         return await Payment.create(credit_number, amount, status)
 
     @staticmethod
-    async def get_payments(ids: list[int]) -> list[Payment]:
+    async def get_payments(uuids: list[UUID]) -> list[Payment]:
         """Get a list of tickets.
 
-        :param ids: List of ticket identifiers.
+        :param uuids: List of ticket identifiers.
         :return: A list of ``Ticket`` instances.
         """
-        values = {v.id: v async for v in Payment.get(ids=ids)}
-        return [values[id] for id in ids]
+        values = {v.uuid: v async for v in Payment.get(uuids=uuids)}
+        return [values[uuid] for uuid in uuids]

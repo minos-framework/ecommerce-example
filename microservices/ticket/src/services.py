@@ -6,6 +6,7 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from uuid import (
+    UUID,
     uuid4,
 )
 
@@ -24,25 +25,25 @@ from .aggregates import (
 class TicketService(Service):
     """Ticket Service class"""
 
-    async def create_ticket(self, product_ids: list[int]) -> Ticket:
+    async def create_ticket(self, product_uuids: list[UUID]) -> Ticket:
         """
         Creates a ticket
 
-        :param product_ids: The list of product identifiers to be included in the ticket.
+        :param product_uuids: The list of product identifiers to be included in the ticket.
         """
         code = uuid4().hex.upper()[0:6]
         payments = list()
         ticket = await Ticket.create(code, payments, 0.0)
-        await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_ids=product_ids))
+        await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_uuids=product_uuids))
 
         return ticket
 
     @staticmethod
-    async def get_tickets(ids: list[int]) -> list[Ticket]:
+    async def get_tickets(uuids: list[UUID]) -> list[Ticket]:
         """Get a list of tickets.
 
-        :param ids: List of ticket identifiers.
+        :param uuids: List of ticket identifiers.
         :return: A list of ``Ticket`` instances.
         """
-        values = {v.id: v async for v in Ticket.get(ids=ids)}
-        return [values[id] for id in ids]
+        values = {v.uuid: v async for v in Ticket.get(uuids=uuids)}
+        return [values[uuid] for uuid in uuids]

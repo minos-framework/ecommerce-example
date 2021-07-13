@@ -9,6 +9,7 @@ from typing import (
     NoReturn,
 )
 from uuid import (
+    UUID,
     uuid4,
 )
 
@@ -41,52 +42,52 @@ class ProductService(Service):
         return product
 
     @staticmethod
-    async def get_products(ids: list[int]) -> list[Product]:
+    async def get_products(uuids: list[UUID]) -> list[Product]:
         """Get a list of products.
 
-        :param ids: List of product identifiers.
+        :param uuids: List of product identifiers.
         :return: A list of ``Product`` instances.
         """
-        values = {v.id: v async for v in Product.get(ids=ids)}
-        return [values[id] for id in ids]
+        values = {v.uuid: v async for v in Product.get(uuids=uuids)}
+        return [values[uuid] for uuid in uuids]
 
     @staticmethod
-    async def delete_product(id: int) -> NoReturn:
+    async def delete_product(uuid: UUID) -> NoReturn:
         """TODO
 
-        :param id: TODO
+        :param uuid: TODO
         :return: TODO
         """
-        product = await Product.get_one(id)
+        product = await Product.get_one(uuid)
         await product.delete()
 
     @staticmethod
-    async def update_inventory(product_id: int, amount: int) -> Product:
+    async def update_inventory(uuid: UUID, amount: int) -> Product:
         """Update inventory with a difference.
 
-        :param product_id: Identifier of the product.
+        :param uuid: Identifier of the product.
         :param amount: Amount to be set.
         :return: The updated product instance.
         """
-        product = await Product.get_one(product_id)
-        product.inventory.amount = amount
+        product = await Product.get_one(uuid)
+        product.inventory = Inventory(amount)
         await product.save()
         return product
 
     @staticmethod
-    async def update_inventory_diff(product_id: int, amount_diff: int) -> Product:
+    async def update_inventory_diff(uuid: UUID, amount_diff: int) -> Product:
         """Update inventory with a difference.
 
-        :param product_id: Identifier of the product.
+        :param uuid: Identifier of the product.
         :param amount_diff: Amount difference to be applied.
         :return: The updated product instance.
         """
-        product = await Product.get_one(product_id)
-        product.inventory.amount += amount_diff
+        product = await Product.get_one(uuid)
+        product.inventory = Inventory(product.inventory.amount + amount_diff)
         await product.save()
         return product
 
-    async def reserve_products(self, quantities: dict[int, int]):
+    async def reserve_products(self, quantities: dict[UUID, int]):
         """Reserve product quantities.
 
         :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are the number
@@ -94,11 +95,13 @@ class ProductService(Service):
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
-        async for product in Product.get(ids=list(quantities.keys())):
+        async for product in Product.get(uuids=list(quantities.keys())):
             inventory = product.inventory
-            if feasible and inventory.amount < quantities[product.id]:
+            amount = inventory.amount
+            if feasible and amount < quantities[product.uuid]:
                 feasible = False
-            inventory.amount -= quantities[product.id]
+            amount -= quantities[product.uuid]
+            product.inventory = Inventory(amount)
             await product.save()
 
         if not feasible:

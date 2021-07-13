@@ -28,13 +28,13 @@ rest:
             action: create_product
             name: ""
 
-        -   route: /products/{product_id}/inventory
+        -   route: /products/{uuid}/inventory
             method: PUT
             controller: src.ProductController
             action: update_inventory
             name: ""
 
-        -   route: /products/{product_id}/inventory
+        -   route: /products/{uuid}/inventory
             method: PATCH
             controller: src.ProductController
             action: update_inventory_diff
@@ -46,7 +46,7 @@ rest:
             action: get_products
             name: ""
 
-        -   route: /products/{id}
+        -   route: /products/{uuid}
             method: DELETE
             controller: src.ProductController
             action: delete_product

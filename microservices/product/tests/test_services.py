@@ -87,24 +87,24 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
             Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
             Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
         )
-        ids = [v.id for v in expected]
+        uuids = [v.uuid for v in expected]
 
-        observed = await self.service.get_products(ids)
+        observed = await self.service.get_products(uuids)
         self.assertEqual(expected, observed)
 
     async def test_update_inventory(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        await self.service.update_inventory(product.id, 56)
+        await self.service.update_inventory(product.uuid, 56)
         await product.refresh()
         self.assertEqual(Inventory(56), product.inventory)
 
     async def test_update_inventory_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        await self.service.update_inventory_diff(product.id, 12)
+        await self.service.update_inventory_diff(product.uuid, 12)
         await product.refresh()
         self.assertEqual(Inventory(24), product.inventory)
 
-        await self.service.update_inventory_diff(product.id, -10)
+        await self.service.update_inventory_diff(product.uuid, -10)
         await product.refresh()
         self.assertEqual(Inventory(14), product.inventory)
 
