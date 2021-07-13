@@ -5,52 +5,60 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from typing import NoReturn
+
 from minos.common import (
-    AggregateDiff,
-    DataTransferObject,
+    Event,
+    Request,
+    Response,
     Service,
 )
-
-# from minos.networks import (
-#     subscribe,
-# )
 
 
 class ProductQueryService(Service):
     """TODO"""
 
-    def get_products_without_stock(self) -> list[DataTransferObject]:
+    def get_products_without_stock(self, request: Request) -> Response:
         """TODO
 
         :return: TODO
         """
 
-    def get_most_sold_products(self, count: int) -> list[DataTransferObject]:
+    def get_most_sold_products(self, request: Request) -> Response:
         """TODO
 
         :return: TODO
         """
 
     # @subscribe("ProductAdded")
-    def product_added(self, diff: AggregateDiff):
+    async def product_created(self, topic: str, event: Event) -> NoReturn:
         """TODO
 
-        :param diff: TODO
+        :param topic: TODO
+        :param event: TODO
         :return: TODO
         """
+        diff = event.data
+        print(topic, diff)
 
     # @subscribe("ProductUpdated")
-    def product_updated(self, diff: AggregateDiff):
+    async def product_updated(self, topic: str, event: Event) -> NoReturn:
         """TODO
 
-        :param diff: TODO
+        :param topic: TODO
+        :param event: TODO
         :return: TODO
         """
+        diff = event.data
+        print(topic, diff)
 
     # @subscribe("ProductDeleted")
-    def product_deleted(self, diff: AggregateDiff):
+    async def product_deleted(self, topic: str, event: Event) -> NoReturn:
         """TODO
 
-        :param diff: TODO
+        :param topic: TODO
+        :param event: TODO
         :return: TODO
         """
+        diff = event.data
+        print(topic, diff)

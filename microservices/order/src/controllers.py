@@ -16,8 +16,8 @@ from minos.common import (
     ResponseException,
 )
 
-from .services import (
-    OrderService,
+from .commands import (
+    OrderCommandService,
 )
 
 _Query = ModelType.build("Query", {"uuids": list[UUID]})
@@ -34,7 +34,7 @@ class OrderController:
         :return: A ``Response`` containing the ``UUID`` that identifies the ``SagaExecution``.
         """
         content = await request.content()
-        uuid = await OrderService().create_order(**content)
+        uuid = await OrderCommandService().create_order(**content)
         return Response(uuid)
 
     @staticmethod
@@ -50,7 +50,7 @@ class OrderController:
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            orders = await OrderService().get_orders(**content)
+            orders = await OrderCommandService().get_orders(**content)
         except Exception as exc:
             raise ResponseException(f"There was a problem while getting orders: {exc!r}")
 

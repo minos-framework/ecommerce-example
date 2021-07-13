@@ -111,7 +111,7 @@ class TestProductGateway(unittest.IsolatedAsyncioTestCase):
         async def _fn(*args, **kwargs):
             return uuid
 
-        with patch("src.OrderService.create_order") as mock:
+        with patch("src.OrderCommandService.create_order") as mock:
             mock.side_effect = _fn
 
             request = _FakeRequest({"products": [1, 2, 3]})

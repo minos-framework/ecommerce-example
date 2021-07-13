@@ -16,12 +16,12 @@ from minos.saga import (
     SagaContext,
 )
 
-from .aggregates import (
+from ..aggregates import (
     Order,
 )
 
 
-class OrderService(Service):
+class OrderCommandService(Service):
     """Ticket Service class"""
 
     async def create_order(self, product_uuids: list[UUID]) -> UUID:
