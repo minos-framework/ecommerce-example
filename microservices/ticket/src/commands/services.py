@@ -36,7 +36,6 @@ class TicketCommandService(Service):
         """
         content = await request.content()
         product_uuids = content["product_uuids"]
-        raise Exception
         code = uuid4().hex.upper()[0:6]
         payments = list()
         ticket = await Ticket.create(code, payments, 0.0)
