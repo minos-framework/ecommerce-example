@@ -24,12 +24,12 @@ rest:
   endpoints:
     - route: /orders
       method: POST
-      controller: src.OrderController
+      controller: src.OrderCommandService
       action: create_order
       name: ""
     - route: /orders
       method: GET
-      controller: src.OrderController
+      controller: src.OrderCommandService
       action: get_orders
       name: ""
 repository:
@@ -70,7 +70,7 @@ commands:
   port: 9092
   items:
     - name: CreateOrder
-      controller: src.OrderController
+      controller: src.OrderCommandService
       action: create_order
   queue:
     database: order_db

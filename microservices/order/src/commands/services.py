@@ -10,7 +10,7 @@ from uuid import (
 )
 
 from minos.common import (
-    Service,
+    ModelType, Request, Response, ResponseException, Service,
 )
 from minos.saga import (
     SagaContext,
@@ -24,20 +24,36 @@ from ..aggregates import (
 class OrderCommandService(Service):
     """Ticket Service class"""
 
-    async def create_order(self, product_uuids: list[UUID]) -> UUID:
-        """
-        Creates a fake_payment_service
+    async def create_order(self, request: Request) -> Response:
+        """Create a new ``Order`` instance.
 
-        :param product_uuids: List of `orders`
+        :param request: The ``Request`` containing the list of product identifiers to be included in the ``Order``.
+        :return: A ``Response`` containing the ``UUID`` that identifies the ``SagaExecution``.
         """
-        return await self.saga_manager.run("CreateOrder", context=SagaContext(product_uuids=product_uuids))
+        content = await request.content()
+        product_uuids = content["product_uuids"]
+        uuid = await self.saga_manager.run("CreateOrder", context=SagaContext(product_uuids=product_uuids))
+        return Response(uuid)
 
     @staticmethod
-    async def get_orders(uuids: list[UUID]) -> list[Order]:
-        """Get a list of tickets.
+    async def get_orders(request: Request) -> Response:
+        """Get a list of orders by uuid.
 
-        :param uuids: List of ticket identifiers.
-        :return: A list of ``Ticket`` instances.
+        :param request: The ``Request`` instance containing the list of ``Order`` identifiers.
+        :return: A ``Response`` containing the list of ``Order`` instances.
         """
-        values = {v.uuid: v async for v in Order.get(uuids=uuids)}
-        return [values[uuid] for uuid in uuids]
+        _Query = ModelType.build("Query", {"uuids": list[UUID]})
+        try:
+            content = await request.content(model_type=_Query)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        uuids = content["uuids"]
+
+        try:
+            values = {v.uuid: v async for v in Order.get(uuids=uuids)}
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting orders: {exc!r}")
+        orders = [values[uuid] for uuid in uuids]
+
+        return Response(orders)

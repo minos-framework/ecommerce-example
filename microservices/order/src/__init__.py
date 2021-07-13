@@ -12,9 +12,6 @@ from .commands import (
     CREATE_ORDER,
     OrderCommandService,
 )
-from .controllers import (
-    OrderController,
-)
 from .queries import (
     OrderQueryService,
 )
