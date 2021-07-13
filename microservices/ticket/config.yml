@@ -24,12 +24,12 @@ rest:
   endpoints:
     - route: /tickets
       method: POST
-      controller: src.TicketCommandController
+      controller: src.TicketCommandService
       action: create_ticket
       name: ""
     - route: /tickets
       method: GET
-      controller: src.TicketCommandController
+      controller: src.TicketCommandService
       action: get_tickets
       name: ""
 repository:
@@ -61,10 +61,10 @@ commands:
   port: 9092
   items:
     - name: CreateTicket
-      controller: src.TicketCommandController
+      controller: src.TicketCommandService
       action: create_ticket
     - name: GetTickets
-      controller: src.TicketCommandController
+      controller: src.TicketCommandService
       action: get_tickets
   queue:
     database: ticket_db
