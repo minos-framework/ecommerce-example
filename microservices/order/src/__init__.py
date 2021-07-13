@@ -8,12 +8,12 @@ Minos framework can not be copied and/or distributed without the express permiss
 from .aggregates import (
     Order,
 )
-from .controllers import (
-    OrderController,
-)
 from .commands import (
     CREATE_ORDER,
     OrderCommandService,
+)
+from .controllers import (
+    OrderController,
 )
 from .queries import (
     OrderQueryService,
