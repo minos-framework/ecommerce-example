@@ -8,7 +8,8 @@ Minos framework can not be copied and/or distributed without the express permiss
 from typing import NoReturn
 
 from minos.common import (
-    AggregateDiff, Event,
+    AggregateDiff,
+    Event,
     Service,
 )
 
@@ -80,4 +81,3 @@ class OrderQueryService(Service):
         """
         diff = event.data
         print(topic, diff)
-
