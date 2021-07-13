@@ -25,7 +25,7 @@ from minos.saga import (
     SagaContext,
 )
 
-from .aggregates import (
+from ..aggregates import (
     Order,
 )
 

@@ -13,27 +13,31 @@ from minos.common import (
     ModelType,
     Request,
     Response,
+    Service,
 )
 
-from .services import (
-    PaymentService,
+from ..aggregates import (
+    Payment,
 )
 
-_Query = ModelType.build("Query", {"uuids": list[UUID]})
 
-
-class PaymentController:
-    """Ticket Controller class"""
+class PaymentCommandService(Service):
+    """Ticket Service class"""
 
     @staticmethod
     async def create_payment(request: Request) -> Response:
-        """TODO
+        """Create a payment
 
-        :param request:TODO
+        :param request: TODO
         :return: TODO
         """
         content = await request.content()
-        payment = await PaymentService().create_payment(**content)
+        credit_number = content["credit_number"]
+        amount = content["amount"]
+        status = "created"
+
+        payment = await Payment.create(credit_number, amount, status)
+
         return Response(payment)
 
     @staticmethod
@@ -43,6 +47,11 @@ class PaymentController:
         :param request: TODO
         :return: TODO
         """
+        _Query = ModelType.build("Query", {"uuids": list[UUID]})
         content = await request.content(model_type=_Query)
-        payments = await PaymentService().get_payments(**content)
+        uuids = content["uuids"]
+
+        values = {v.uuid: v async for v in Payment.get(uuids=uuids)}
+        payments = [values[uuid] for uuid in uuids]
+
         return Response(payments)

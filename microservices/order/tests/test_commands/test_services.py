@@ -5,6 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
+
 import sys
 import unittest
 from asyncio import (
@@ -38,14 +42,34 @@ from minos.common import (
     MinosConfig,
     MinosSagaManager,
     Model,
+    Request,
+    Response,
 )
 from minos.saga import (
     SagaContext,
 )
 from src import (
     Order,
-    OrderService,
+    OrderCommandService,
 )
+
+
+class _FakeRequest(Request):
+    """For testing purposes"""
+
+    def __init__(self, content):
+        super().__init__()
+        self._content = content
+
+    async def content(self, **kwargs):
+        """For testing purposes"""
+        return self._content
+
+    def __eq__(self, other: _FakeRequest) -> bool:
+        return self._content == other._content
+
+    def __repr__(self) -> str:
+        return str()
 
 
 class _FakeBroker(MinosBroker):
@@ -65,8 +89,8 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductService(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
@@ -79,7 +103,7 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = OrderService()
+        self.service = OrderCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
@@ -93,7 +117,12 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         mock = MagicMock(side_effect=_fn)
         self.service.saga_manager._run_new = mock
 
-        observed = await self.service.create_order([1, 2, 3])
+        request = _FakeRequest({"product_uuids": [1, 2, 3]})
+        response = await self.service.create_order(request)
+        self.assertIsInstance(response, Response)
+
+        observed = await response.content()
+        self.assertEqual(expected, observed)
 
         self.assertEqual(expected, observed)
         self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3])), mock.call_args)
@@ -102,12 +131,15 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         now = datetime.now(tz=timezone.utc)
 
         expected = await gather(
-            Order.create([uuid4(), uuid4(), uuid4()], uuid4(), "created", now, now),
-            Order.create([uuid4()], uuid4(), "cancelled", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "created", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "cancelled", now, now),
         )
-        uuids = [v.uuid for v in expected]
 
-        observed = await self.service.get_orders(uuids)
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
+
+        response = await self.service.get_orders(request)
+        observed = await response.content()
+
         self.assertEqual(expected, observed)
 
 
