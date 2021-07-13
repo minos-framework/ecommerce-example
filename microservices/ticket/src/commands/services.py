@@ -11,7 +11,7 @@ from uuid import (
 )
 
 from minos.common import (
-    Service,
+    ModelType, Request, Response, Service,
 )
 from minos.saga import (
     SagaContext,
@@ -25,25 +25,34 @@ from ..aggregates import (
 class TicketCommandService(Service):
     """Ticket Service class"""
 
-    async def create_ticket(self, product_uuids: list[UUID]) -> Ticket:
-        """
-        Creates a ticket
+    async def create_ticket(self, request: Request) -> Response:
+        """Create a new ticket.
 
-        :param product_uuids: The list of product identifiers to be included in the ticket.
+        :param request: The ``Request`` instance to be use to compute the price.
+        :return: A ``Response`` containing the created ticket.
         """
+        content = await request.content()
+        product_uuids = content["product_uuids"]
+
         code = uuid4().hex.upper()[0:6]
         payments = list()
         ticket = await Ticket.create(code, payments, 0.0)
         await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_uuids=product_uuids))
 
-        return ticket
+        return Response(ticket)
 
     @staticmethod
-    async def get_tickets(uuids: list[UUID]) -> list[Ticket]:
-        """Get a list of tickets.
+    async def get_tickets(request: Request) -> Response:
+        """Get a list of tickets by uuid.
 
-        :param uuids: List of ticket identifiers.
-        :return: A list of ``Ticket`` instances.
+        :param request: A ``Request`` instance containing the list of ticket identifiers.
+        :return: A ``Response`` containing the list of requested tickets.
         """
+        _Query = ModelType.build("Query", {"uuids": list[UUID]})
+        content = await request.content(model_type=_Query)
+        uuids = content["uuids"]
+
         values = {v.uuid: v async for v in Ticket.get(uuids=uuids)}
-        return [values[uuid] for uuid in uuids]
+        tickets = [values[uuid] for uuid in uuids]
+
+        return Response(tickets)
