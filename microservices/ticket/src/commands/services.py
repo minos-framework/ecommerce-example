@@ -16,13 +16,9 @@ from minos.common import (
     Response,
     Service,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 
-from ..aggregates import (
-    Ticket,
-)
+from ..aggregates import Ticket
 
 
 class TicketCommandService(Service):
