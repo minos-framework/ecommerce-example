@@ -12,9 +12,6 @@ from .aggregates import (
 from .commands import (
     ProductCommandService,
 )
-from .controllers import (
-    ProductController,
-)
 from .queries import (
     ProductQueryService,
 )

@@ -14,6 +14,10 @@ from uuid import (
 )
 
 from minos.common import (
+    MinosSnapshotAggregateNotFoundException,
+    MinosSnapshotDeletedAggregateException,
+    ModelType, Request,
+    Response, ResponseException,
     Service,
 )
 
@@ -27,70 +31,117 @@ class ProductCommandService(Service):
     """Product Service class"""
 
     @staticmethod
-    async def create_product(title: str, description: str, price: float) -> Product:
-        """Create a product.
+    async def create_product(request: Request) -> Response:
+        """Create a new product instance.
 
-        :param title: Name of the product.
-        :param description: Description of the product.
-        :param price: Price of the product.
-        :return: A ``Product`` instance.
+        :param request: The ``Request`` that contains the needed information to create the product.
+        :return: A ``Response`` containing the already created product.
         """
+        content = await request.content()
+        title = content["title"]
+        description = content["description"]
+        price = content["price"]
+
         code = uuid4().hex.upper()[0:6]
         inventory = Inventory(amount=0)
         product = await Product.create(code, title, description, price, inventory)
-        # await self.saga_manager.run("_CreateProduct", context=SagaContext(product=product))
-        return product
+
+        return Response(product)
 
     @staticmethod
-    async def get_products(uuids: list[UUID]) -> list[Product]:
-        """Get a list of products.
+    async def update_inventory(request: Request) -> Response:
+        """Update inventory amount with a difference.
 
-        :param uuids: List of product identifiers.
-        :return: A list of ``Product`` instances.
+        :param request: ``Request`` that contains the needed information.
+        :return: ``Response`` containing the updated product.
         """
-        values = {v.uuid: v async for v in Product.get(uuids=uuids)}
-        return [values[uuid] for uuid in uuids]
+        content = await request.content()
+        uuid = content["uuid"]
+        amount = content["amount"]
 
-    @staticmethod
-    async def delete_product(uuid: UUID) -> NoReturn:
-        """TODO
-
-        :param uuid: TODO
-        :return: TODO
-        """
-        product = await Product.get_one(uuid)
-        await product.delete()
-
-    @staticmethod
-    async def update_inventory(uuid: UUID, amount: int) -> Product:
-        """Update inventory with a difference.
-
-        :param uuid: Identifier of the product.
-        :param amount: Amount to be set.
-        :return: The updated product instance.
-        """
         product = await Product.get_one(uuid)
         product.inventory = Inventory(amount)
         await product.save()
-        return product
+
+        return Response(product)
 
     @staticmethod
-    async def update_inventory_diff(uuid: UUID, amount_diff: int) -> Product:
-        """Update inventory with a difference.
+    async def update_inventory_diff(request: Request) -> Response:
+        """Update inventory amount with a difference.
 
-        :param uuid: Identifier of the product.
-        :param amount_diff: Amount difference to be applied.
-        :return: The updated product instance.
+        :param request: ``Request`` that contains the needed information.
+        :return: ``Response`` containing the updated product.
         """
+        content = await request.content()
+        uuid = content["uuid"]
+        amount_diff = content["amount_diff"]
+
         product = await Product.get_one(uuid)
         product.inventory = Inventory(product.inventory.amount + amount_diff)
         await product.save()
-        return product
 
-    async def reserve_products(self, quantities: dict[UUID, int]):
+        return Response(product)
+
+    @staticmethod
+    async def get_products(request: Request) -> Response:
+        """Get products.
+
+        :param request: The ``Request`` instance that contains the product identifiers.
+        :return: A ``Response`` instance containing the requested products.
+        """
+        _Query = ModelType.build("Query", {"uuids": list[UUID]})
+        try:
+            content = await request.content(model_type=_Query)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        uuids = content["uuids"]
+
+        try:
+            values = {v.uuid: v async for v in Product.get(uuids=uuids)}
+            products = [values[uuid] for uuid in uuids]
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting products: {exc!r}")
+
+        return Response(products)
+
+    @staticmethod
+    async def delete_product(request: Request) -> NoReturn:
+        """TODO
+
+        :param request: TODO
+        :return: TODO
+        """
+        content = await request.content()
+        uuid = content["uuid"]
+
+        try:
+            product = await Product.get_one(uuid)
+            await product.delete()
+        except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
+            raise ResponseException(f"The product does not exist.")
+
+    async def reserve_products(self, request: Request) -> NoReturn:
+        """Reserve the requested quantities of products.
+
+        :param: request: The ``Request`` instance that contains the quantities dictionary.
+        :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
+        """
+        content = await request.content()
+        quantities = {UUID(k): v for k, v in content.quantities.items()}
+
+        try:
+            await self._reserve_products(quantities)
+        except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
+            raise ResponseException(f"Some products do not exist: {exc!r}")
+        except Exception as exc:
+            raise ResponseException(f"There is not enough product amount: {exc!r}")
+
+    async def _reserve_products(self, quantities: dict[UUID, int]):
         """Reserve product quantities.
 
-        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are the number
+        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
+        the number
             of units to be reserved.
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
@@ -105,5 +156,5 @@ class ProductCommandService(Service):
             await product.save()
 
         if not feasible:
-            await self.reserve_products({k: -v for k, v in quantities.items()})
+            await self._reserve_products({k: -v for k, v in quantities.items()})
             raise ValueError("The reservation query could not be satisfied.")

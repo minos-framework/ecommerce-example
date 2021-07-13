@@ -24,31 +24,31 @@ rest:
     endpoints:
         -   route: /products
             method: POST
-            controller: src.ProductController
+            controller: src.ProductCommandService
             action: create_product
             name: ""
 
         -   route: /products/{uuid}/inventory
             method: PUT
-            controller: src.ProductController
+            controller: src.ProductCommandService
             action: update_inventory
             name: ""
 
         -   route: /products/{uuid}/inventory
             method: PATCH
-            controller: src.ProductController
+            controller: src.ProductCommandService
             action: update_inventory_diff
             name: ""
 
         -   route: /products
             method: GET
-            controller: src.ProductController
+            controller: src.ProductCommandService
             action: get_products
             name: ""
 
         -   route: /products/{uuid}
             method: DELETE
-            controller: src.ProductController
+            controller: src.ProductCommandService
             action: delete_product
             name: ""
 
@@ -90,13 +90,13 @@ commands:
     port: 9092
     items:
         -   name: CreateProduct
-            controller: src.ProductController
+            controller: src.ProductCommandService
             action: create_product
         -   name: GetProducts
-            controller: src.ProductController
+            controller: src.ProductCommandService
             action: get_products
         -   name: ReserveProducts
-            controller: src.ProductController
+            controller: src.ProductCommandService
             action: reserve_products
     queue:
         database: product_db
