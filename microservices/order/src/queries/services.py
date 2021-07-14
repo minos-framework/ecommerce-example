@@ -13,9 +13,9 @@ from uuid import UUID
 from minos.common import (
     AggregateDiff,
     Event,
-    MinosSagaManager,
+    FieldsDiff, MinosSagaManager,
     ModelType,
-    Service,
+    ModelRefExtractor, Service,
     import_module,
     Model,
     classname,
@@ -47,18 +47,15 @@ def _build_saga_execution(diff, fn):
     return execution
 
 
-def _get_missing(diff: AggregateDiff) -> dict[str, list[UUID]]:
-    return {
-        "Product": diff.fields_diff.products,
-        "Ticket": [diff.fields_diff.ticket]
-    }
+def _get_missing(diff: AggregateDiff) -> dict[str, set[UUID]]:
+    return ModelRefExtractor(diff.fields_diff).build()
 
 
-def _build_saga(missing: dict[str, list[UUID]]) -> Saga:
+def _build_saga(missing: dict[str, set[UUID]]) -> Saga:
     saga = Saga("ordersQuery")
 
     for name, uuids in missing.items():
-        saga = saga.step().invoke_participant(f"Get{name}s", _invoke_callback, uuids=uuids).on_reply(f"{name}s")
+        saga = saga.step().invoke_participant(f"Get{name}s", _invoke_callback, uuids=list(uuids)).on_reply(f"{name}s")
 
     saga = saga.commit(_build_commit_callback)
 
