@@ -14,7 +14,9 @@ from minos.common import (
     Request,
     Response,
     ResponseException,
-    Service,
+)
+from minos.cqrs import (
+    CommandService,
 )
 from minos.saga import (
     SagaContext,
@@ -25,7 +27,7 @@ from ..aggregates import (
 )
 
 
-class OrderCommandService(Service):
+class OrderCommandService(CommandService):
     """Ticket Service class"""
 
     async def create_order(self, request: Request) -> Response:

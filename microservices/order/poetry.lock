@@ -244,6 +244,24 @@ type = "directory"
 url = "../../../minos_microservice_common"
 
 [[package]]
+name = "minos-microservice-cqrs"
+version = "0.0.0"
+description = "Minos Microservice CQRS package"
+category = "main"
+optional = false
+python-versions = "^3.9"
+develop = false
+
+[package.dependencies]
+dependency-injector = "^4.34.0"
+minos-microservice-common = "^0.1.3"
+minos-microservice-saga = "^0.0.7"
+
+[package.source]
+type = "directory"
+url = "../../../minos_microservice_cqrs"
+
+[[package]]
 name = "minos-microservice-networks"
 version = "0.0.9"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
@@ -436,7 +454,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "579702590fef9e12bfbac390a6ac320bcf88eb60aa3e3fcd100aaa8b720fee54"
+content-hash = "ab710cd70b5163d4e7c5ff6c38f077feba14c676e266fa413d2d442b55d32f26"
 
 [metadata.files]
 aiohttp = [
@@ -707,6 +725,7 @@ lmdb = [
     {file = "lmdb-1.2.1.tar.gz", hash = "sha256:5f76a90ebd08922acca11948779b5055f7a262687178e9e94f4e804b9f8465bc"},
 ]
 minos-microservice-common = []
+minos-microservice-cqrs = []
 minos-microservice-networks = []
 minos-microservice-saga = []
 multidict = [
