@@ -11,9 +11,10 @@ from typing import (
 
 from minos.common import (
     AggregateDiff,
-    Event,
 )
-from minos.cqrs import QueryService
+from minos.cqrs import (
+    QueryService,
+)
 
 
 def subscribe(func: Callable):
@@ -31,7 +32,7 @@ class OrderQueryService(QueryService):
     """TODO"""
 
     @subscribe
-    async def order_created(self, diff: AggregateDiff) -> NoReturn:
+    async def order_created(self, diff: AggregateDiff):
         """TODO
 
         :param diff: TODO
@@ -40,7 +41,7 @@ class OrderQueryService(QueryService):
         print(diff)
 
     @subscribe
-    async def order_updated(self, diff: AggregateDiff) -> NoReturn:
+    async def order_updated(self, diff: AggregateDiff):
         """TODO
 
         :param diff: TODO
@@ -49,7 +50,7 @@ class OrderQueryService(QueryService):
         print(diff)
 
     @subscribe
-    async def order_deleted(self, diff: AggregateDiff) -> NoReturn:
+    async def order_deleted(self, diff: AggregateDiff):
         """TODO
 
         :param diff: TODO
