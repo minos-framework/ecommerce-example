@@ -39,24 +39,20 @@ class OrderQueryService(QueryService):
         """
         print(diff)
 
-    # @subscribe("OrderUpdated")
-    async def order_updated(self, topic: str, event: Event) -> NoReturn:
+    @subscribe
+    async def order_updated(self, diff: AggregateDiff) -> NoReturn:
         """TODO
 
-        :param topic: TODO
-        :param event: TODO
+        :param diff: TODO
         :return: TODO
         """
-        diff = event.data
-        print(topic, diff)
+        print(diff)
 
-    # @subscribe("OrderDeleted")
-    async def order_deleted(self, topic: str, event: Event) -> NoReturn:
+    @subscribe
+    async def order_deleted(self, diff: AggregateDiff) -> NoReturn:
         """TODO
 
-        :param topic: TODO
-        :param event: TODO
+        :param diff: TODO
         :return: TODO
         """
-        diff = event.data
-        print(topic, diff)
+        print(diff)
