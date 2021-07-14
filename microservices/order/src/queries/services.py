@@ -13,9 +13,11 @@ from uuid import UUID
 from minos.common import (
     AggregateDiff,
     Event,
-    FieldsDiff, MinosSagaManager,
+    MinosSagaManager,
+    ModelRefInjector,
     ModelType,
-    ModelRefExtractor, Service,
+    ModelRefExtractor,
+    Service,
     import_module,
     Model,
     classname,
@@ -90,9 +92,7 @@ def _build_recovered(context: SagaContext) -> dict[UUID, Model]:
 
 
 def _put_missing(diff: AggregateDiff, recovered: dict[UUID, Model]) -> AggregateDiff:
-    diff.fields_diff.products = [recovered[uuid] for uuid in diff.fields_diff.products]
-    diff.fields_diff.ticket = recovered[diff.fields_diff.ticket]
-    return diff
+    return ModelRefInjector(diff, recovered).build()
 
 
 class OrderQueryService(Service):
@@ -108,7 +108,7 @@ class OrderQueryService(Service):
         """
         await _handler(self.saga_manager, event.data, self._order_created)
 
-    async def _order_created(self, diff) -> NoReturn:
+    async def _order_created(self, diff: AggregateDiff) -> NoReturn:
         """TODO
 
         :param diff: TODO
