@@ -82,7 +82,7 @@ async def _build_commit_callback(context: SagaContext) -> SagaContext:
     return context
 
 
-def _build_recovered(context: SagaContext):
+def _build_recovered(context: SagaContext) -> dict[UUID, Model]:
     recovered = dict()
     for k in context.keys():
         if k in ("diff", "controller", "action"):
