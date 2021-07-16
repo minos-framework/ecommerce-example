@@ -33,7 +33,7 @@ snappy = ["python-snappy (>=0.5)"]
 
 [[package]]
 name = "aiomisc"
-version = "14.1.0"
+version = "14.1.8"
 description = "aiomisc - miscellaneous utils for asyncio"
 category = "main"
 optional = false
@@ -48,7 +48,7 @@ asgi = ["aiohttp-asgi"]
 carbon = ["aiocarbon (>=0.15,<1.0)"]
 contextvars = ["contextvars (>=2.4,<3.0)"]
 cron = ["croniter (>=0.3.34,<0.4.0)"]
-develop = ["aiocontextvars (==0.2.2)", "aiohttp (<4)", "aiohttp-asgi", "async-generator", "async-timeout", "coverage (==4.5.1)", "coveralls", "croniter (>=0.3.34,<0.4.0)", "fastapi", "freezegun (<1.1)", "mypy (>=0.782,<1.0)", "pylava", "pytest", "pytest-cov (>=2.5.1,<2.6.0)", "pytest-freezegun (>=0.4.2,<0.5.0)", "sphinx (>=3.5.1)", "sphinx-autobuild", "sphinx-intl", "timeout-decorator", "tox (>=2.4)"]
+develop = ["aiocontextvars (==0.2.2)", "aiohttp (<4)", "aiohttp-asgi", "async-generator", "async-timeout", "coverage (==4.5.1)", "coveralls", "croniter (>=0.3.34,<0.4.0)", "fastapi", "freezegun (<1.1)", "mypy (>=0.782,<1.0)", "pylava", "pytest", "pytest-cov (>=2.5.1,<2.6.0)", "pytest-freezegun (>=0.4.2,<0.5.0)", "sphinx (>=3.5.1)", "sphinx-autobuild", "sphinx-intl", "timeout-decorator", "types-croniter", "tox (>=2.4)"]
 raven = ["raven-aiohttp"]
 uvloop = ["uvloop (>=0.14,<1)"]
 
@@ -528,8 +528,8 @@ aiokafka = [
     {file = "aiokafka-0.7.1.tar.gz", hash = "sha256:b5a6fb1cfd77eac4b397ef5af3765d1d881c86b157137b12ca4f12aef1db433c"},
 ]
 aiomisc = [
-    {file = "aiomisc-14.1.0-py3-none-any.whl", hash = "sha256:886223a4cfb469224b27ef6a1503966ffbe2f22b322be1595874fe9e22ffc09d"},
-    {file = "aiomisc-14.1.0.tar.gz", hash = "sha256:6ad99346dbe98c995ba76e9c50dffe492c6dffd383653b20593b44601c89ea7a"},
+    {file = "aiomisc-14.1.8-py3-none-any.whl", hash = "sha256:727ba091761a07f9899e2ba6b60a800f11b3c61abf5dfc659c53a41c0b77f76f"},
+    {file = "aiomisc-14.1.8.tar.gz", hash = "sha256:7d3ef254ee29ceca44edee101414e40b78255e3ebf24636adafaf702d5e86241"},
 ]
 aiopg = [
     {file = "aiopg-1.3.1-py3-none-any.whl", hash = "sha256:7a3fb1eb399ab0bb0335ddca66b51de31f6bb2251b5af2a45e7fec20040e5eac"},

@@ -23,7 +23,7 @@ def subscribe(func: Callable):
             return await func(self, *args, **kwargs)
         else:
             event = args[1]
-            return await self._handle(event.data, func)
+            return await self._handle_event(event.data, func)
 
     return wrapper
 
