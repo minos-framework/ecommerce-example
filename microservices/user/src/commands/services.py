@@ -5,13 +5,23 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from datetime import datetime
+from datetime import (
+    datetime,
+)
+from uuid import (
+    UUID,
+    uuid4,
+)
 
-from uuid import uuid4, UUID
+from minos.common import (
+    Request,
+    Response,
+    Service,
+)
 
-from minos.common import Service, Request, Response
-
-from ..aggregates import User
+from ..aggregates import (
+    User,
+)
 
 
 class UserCommandService(Service):
