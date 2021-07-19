@@ -11,8 +11,12 @@ from __future__ import (
 
 import sys
 import unittest
-from asyncio import gather
-from datetime import datetime
+from asyncio import (
+    gather,
+)
+from datetime import (
+    datetime,
+)
 from pathlib import (
     Path,
 )
@@ -103,11 +107,7 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
 
         observed = await response.content()
         expected = User(
-            "john_coltrane",
-            "created",
-            created_at=observed.created_at,
-            uuid=observed.uuid,
-            version=observed.version
+            "john_coltrane", "created", created_at=observed.created_at, uuid=observed.uuid, version=observed.version
         )
 
         self.assertEqual(expected, observed)

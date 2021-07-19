@@ -11,7 +11,7 @@ from datetime import (
 
 from minos.common import (
     Aggregate,
-    DeclarativeModel
+    DeclarativeModel,
 )
 
 
