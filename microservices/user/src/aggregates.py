@@ -22,7 +22,7 @@ class User(Aggregate):
     status: str
 
     created_at: datetime
-    updated_at: datetime
+
 
 class Address(DeclarativeModel):
     street: str

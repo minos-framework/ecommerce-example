@@ -10,27 +10,17 @@ from __future__ import (
 )
 
 import sys
-import unittest.async_case
-from asyncio import (
-    gather,
-)
-from datetime import (
-    datetime,
-    timezone,
-)
+import unittest
+from asyncio import gather
+from datetime import datetime
 from pathlib import (
     Path,
 )
 from typing import (
     NoReturn,
 )
-from unittest.mock import (
-    call,
-    patch,
-)
 from uuid import (
     UUID,
-    uuid4,
 )
 
 from minos.common import (
@@ -47,7 +37,7 @@ from minos.common import (
 )
 from src import (
     User,
-    UserController,
+    UserCommandService,
 )
 
 
@@ -86,8 +76,8 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestUserController(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
@@ -100,40 +90,26 @@ class TestUserController(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.controller = UserController()
+        self.service = UserCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
     async def test_create_user(self):
-        uuid = uuid4()
+        request = _FakeRequest({"username": "john_coltrane", "status": "created"})
+        response = await self.service.create_user(request)
 
-        async def _fn(*args, **kwargs):
-            return uuid
+        self.assertIsInstance(response, Response)
 
-        with patch("src.UserCommandService.create_user") as mock:
-            mock.side_effect = _fn
-
-            request = _FakeRequest({"products": [1, 2, 3]})
-            response = await self.controller.create_user(request)
-
-            self.assertIsInstance(response, Response)
-
-            observed = await response.content()
-            self.assertEqual([str(uuid)], observed)
-            self.assertEqual(call(products=[1, 2, 3]), mock.call_args)
-
-    async def test_get_users(self):
-        now = datetime.now(tz=timezone.utc)
-
-        expected = await gather(
-            User.create([1, 2, 3], 1, "created", now, now), User.create([1, 1, 1], 2, "cancelled", now, now),
+        observed = await response.content()
+        expected = User(
+            "john_coltrane",
+            "created",
+            created_at=observed.created_at,
+            uuid=observed.uuid,
+            version=observed.version
         )
 
-        request = _FakeRequest({"ids": [v.id for v in expected]})
-
-        response = await self.controller.get_users(request)
-        observed = await response.content()
         self.assertEqual(expected, observed)
 
 

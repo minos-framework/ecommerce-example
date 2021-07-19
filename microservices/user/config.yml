@@ -24,12 +24,12 @@ rest:
   endpoints:
     - route: /users
       method: POST
-      controller: src.UserController
+      controller: src.UserCommandService
       action: create_user
       name: ""
     - route: /users
       method: GET
-      controller: src.UserController
+      controller: src.UserCommandService
       action: get_users
       name: ""
 repository:
@@ -61,7 +61,7 @@ commands:
   port: 9092
   items:
     - name: CreateUser
-      controller: src.UserController
+      controller: src.UserCommandService
       action: create_user
   queue:
     database: user_db
