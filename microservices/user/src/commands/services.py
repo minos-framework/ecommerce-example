@@ -20,6 +20,7 @@ from minos.common import (
 )
 
 from ..aggregates import (
+    Address,
     User,
 )
 
@@ -38,8 +39,9 @@ class UserCommandService(Service):
 
         username = content["username"]
         status = content["status"]
+        address = Address(**content["address"])
         created_at = datetime.now()
 
-        user = await User.create(username, status, created_at)
+        user = await User.create(username, status, address, created_at)
 
         return Response(user)

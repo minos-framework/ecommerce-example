@@ -11,8 +11,13 @@ from datetime import (
 
 from minos.common import (
     Aggregate,
-    DeclarativeModel,
+    ValueObject,
 )
+
+
+class Address(ValueObject):
+    street: str
+    street_no: int
 
 
 class User(Aggregate):
@@ -20,10 +25,5 @@ class User(Aggregate):
 
     username: str
     status: str
-
+    address: Address
     created_at: datetime
-
-
-class Address(DeclarativeModel):
-    street: str
-    street_no: int

@@ -40,6 +40,7 @@ from minos.common import (
     Response,
 )
 from src import (
+    Address,
     User,
     UserCommandService,
 )
@@ -100,14 +101,16 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_user(self):
-        request = _FakeRequest({"username": "john_coltrane", "status": "created"})
+        request = _FakeRequest({"username": "john_coltrane", "status": "created",
+                                "address": {"street": "Green Dolphin Street", "street_no": 42}})
         response = await self.service.create_user(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
         expected = User(
-            "john_coltrane", "created", created_at=observed.created_at, uuid=observed.uuid, version=observed.version
+            "john_coltrane", "created", Address(street="Green Dolphin Street", street_no=42),
+            created_at=observed.created_at, uuid=observed.uuid, version=observed.version
         )
 
         self.assertEqual(expected, observed)
