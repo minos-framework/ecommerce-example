@@ -10,7 +10,7 @@ from __future__ import (
 )
 
 import sys
-import unittest.async_case
+import unittest
 from asyncio import (
     gather,
 )
@@ -25,8 +25,8 @@ from typing import (
     NoReturn,
 )
 from unittest.mock import (
+    MagicMock,
     call,
-    patch,
 )
 from uuid import (
     UUID,
@@ -45,9 +45,12 @@ from minos.common import (
     Request,
     Response,
 )
+from minos.saga import (
+    SagaContext,
+)
 from src import (
     Order,
-    OrderController,
+    OrderCommandService,
 )
 
 
@@ -86,8 +89,8 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductController(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
@@ -100,40 +103,43 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.controller = OrderController()
+        self.service = OrderCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
     async def test_create_order(self):
-        uuid = uuid4()
+        expected = uuid4()
 
         async def _fn(*args, **kwargs):
-            return uuid
+            return expected
 
-        with patch("src.OrderService.create_order") as mock:
-            mock.side_effect = _fn
+        mock = MagicMock(side_effect=_fn)
+        self.service.saga_manager._run_new = mock
 
-            request = _FakeRequest({"products": [1, 2, 3]})
-            response = await self.controller.create_order(request)
+        request = _FakeRequest({"product_uuids": [1, 2, 3]})
+        response = await self.service.create_order(request)
+        self.assertIsInstance(response, Response)
 
-            self.assertIsInstance(response, Response)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
 
-            observed = await response.content()
-            self.assertEqual([str(uuid)], observed)
-            self.assertEqual(call(products=[1, 2, 3]), mock.call_args)
+        self.assertEqual(expected, observed)
+        self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3])), mock.call_args)
 
     async def test_get_orders(self):
         now = datetime.now(tz=timezone.utc)
 
         expected = await gather(
-            Order.create([1, 2, 3], 1, "created", now, now), Order.create([1, 1, 1], 2, "cancelled", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "created", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "cancelled", now, now),
         )
 
-        request = _FakeRequest({"ids": [v.id for v in expected]})
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
-        response = await self.controller.get_orders(request)
+        response = await self.service.get_orders(request)
         observed = await response.content()
+
         self.assertEqual(expected, observed)
 
 

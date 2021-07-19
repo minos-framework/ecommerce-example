@@ -15,18 +15,18 @@ stages:
     response:
       status_code: 200
       json:
-        - id: !anyint
-          version: 1
-          code: !anystr
-          title: Cacao 1kg
-          description: Desayuno y merienda
-          price: 2.0
-          inventory:
-            amount: 0
+        uuid: !anystr
+        version: 1
+        code: !anystr
+        title: Cacao 1kg
+        description: Desayuno y merienda
+        price: 2.0
+        inventory:
+          amount: 0
       save:
         json:
-          product_id: "[0].id"
-          product_code: "[0].code"
+          product_uuid: uuid
+          product_code: code
 
 
   - name: Get a Product
@@ -35,13 +35,13 @@ stages:
       url: "http://api-gateway:5566/products"
       method: GET
       json:
-        ids:
-          - !int "{product_id:d}"
+        uuids:
+          - "{product_uuid}"
 
     response:
       status_code: 200
       json:
-        - id: !int "{product_id:d}"
+        - uuid: "{product_uuid}"
           version: 1
           code: "{product_code}"
           title: Cacao 1kg
@@ -54,42 +54,40 @@ stages:
   - name: Update inventory amount
 
     request:
-      url: "http://api-gateway:5566/products/{product_id:d}/inventory"
+      url: "http://api-gateway:5566/products/{product_uuid}/inventory"
       method: PUT
       json:
-        product_id: !int "{product_id:d}"
         amount: 56
 
     response:
       status_code: 200
       json:
-        - id: !int "{product_id:d}"
-          version: 2
-          code: "{product_code}"
-          title: Cacao 1kg
-          description: Desayuno y merienda
-          price: 2.0
-          inventory:
-            amount: 56
+        uuid: "{product_uuid}"
+        version: 2
+        code: "{product_code}"
+        title: Cacao 1kg
+        description: Desayuno y merienda
+        price: 2.0
+        inventory:
+          amount: 56
 
 
   - name: Update inventory amount diff
 
     request:
-      url: "http://api-gateway:5566/products/{product_id:d}/inventory"
+      url: "http://api-gateway:5566/products/{product_uuid}/inventory"
       method: PATCH
       json:
-        product_id: !int "{product_id:d}"
         amount_diff: -12
 
     response:
       status_code: 200
       json:
-        - id: !int "{product_id:d}"
-          version: 3
-          code: "{product_code}"
-          title: Cacao 1kg
-          description: Desayuno y merienda
-          price: 2.0
-          inventory:
-            amount: 44
+        uuid: "{product_uuid}"
+        version: 3
+        code: "{product_code}"
+        title: Cacao 1kg
+        description: Desayuno y merienda
+        price: 2.0
+        inventory:
+          amount: 44

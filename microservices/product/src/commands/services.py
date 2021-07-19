@@ -5,6 +5,13 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from typing import (
+    NoReturn,
+)
+from uuid import (
+    UUID,
+    uuid4,
+)
 
 from minos.common import (
     MinosSnapshotAggregateNotFoundException,
@@ -13,17 +20,17 @@ from minos.common import (
     Request,
     Response,
     ResponseException,
+    Service,
 )
 
-from .services import (
-    ProductService,
+from ..aggregates import (
+    Inventory,
+    Product,
 )
 
-_Query = ModelType.build("Query", {"ids": list[int]})
 
-
-class ProductController:
-    """Product Controller class"""
+class ProductCommandService(Service):
+    """Product Service class"""
 
     @staticmethod
     async def create_product(request: Request) -> Response:
@@ -33,7 +40,14 @@ class ProductController:
         :return: A ``Response`` containing the already created product.
         """
         content = await request.content()
-        product = await ProductService().create_product(**content)
+        title = content["title"]
+        description = content["description"]
+        price = content["price"]
+
+        code = uuid4().hex.upper()[0:6]
+        inventory = Inventory(amount=0)
+        product = await Product.create(code, title, description, price, inventory)
+
         return Response(product)
 
     @staticmethod
@@ -44,7 +58,13 @@ class ProductController:
         :return: ``Response`` containing the updated product.
         """
         content = await request.content()
-        product = await ProductService().update_inventory(**content)
+        uuid = content["uuid"]
+        amount = content["amount"]
+
+        product = await Product.get_one(uuid)
+        product.inventory = Inventory(amount)
+        await product.save()
+
         return Response(product)
 
     @staticmethod
@@ -55,7 +75,13 @@ class ProductController:
         :return: ``Response`` containing the updated product.
         """
         content = await request.content()
-        product = await ProductService().update_inventory_diff(**content)
+        uuid = content["uuid"]
+        amount_diff = content["amount_diff"]
+
+        product = await Product.get_one(uuid)
+        product.inventory = Inventory(product.inventory.amount + amount_diff)
+        await product.save()
+
         return Response(product)
 
     @staticmethod
@@ -65,46 +91,72 @@ class ProductController:
         :param request: The ``Request`` instance that contains the product identifiers.
         :return: A ``Response`` instance containing the requested products.
         """
+        _Query = ModelType.build("Query", {"uuids": list[UUID]})
         try:
             content = await request.content(model_type=_Query)
         except Exception as exc:
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
+        uuids = content["uuids"]
+
         try:
-            products = await ProductService().get_products(**content)
+            values = {v.uuid: v async for v in Product.get(uuids=uuids)}
+            products = [values[uuid] for uuid in uuids]
         except Exception as exc:
             raise ResponseException(f"There was a problem while getting products: {exc!r}")
 
         return Response(products)
 
     @staticmethod
-    async def delete_product(request: Request) -> Response:
+    async def delete_product(request: Request) -> NoReturn:
         """TODO
 
         :param request: TODO
         :return: TODO
         """
         content = await request.content()
+        uuid = content["uuid"]
 
-        await ProductService().delete_product(**content)
+        try:
+            product = await Product.get_one(uuid)
+            await product.delete()
+        except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
+            raise ResponseException(f"The product does not exist.")
 
-        return Response([])
-
-    @staticmethod
-    async def reserve_products(request: Request) -> Response:
+    async def reserve_products(self, request: Request) -> NoReturn:
         """Reserve the requested quantities of products.
 
         :param: request: The ``Request`` instance that contains the quantities dictionary.
         :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
         """
         content = await request.content()
-        quantities = {int(k): v for k, v in content.quantities.items()}
+        quantities = {UUID(k): v for k, v in content.quantities.items()}
 
         try:
-            await ProductService().reserve_products(quantities)
+            await self._reserve_products(quantities)
         except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")
 
-        return Response([])
+    async def _reserve_products(self, quantities: dict[UUID, int]):
+        """Reserve product quantities.
+
+        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
+        the number
+            of units to be reserved.
+        :return: ``True`` if all products can be satisfied or ``False`` otherwise.
+        """
+        feasible = True
+        async for product in Product.get(uuids=list(quantities.keys())):
+            inventory = product.inventory
+            amount = inventory.amount
+            if feasible and amount < quantities[product.uuid]:
+                feasible = False
+            amount -= quantities[product.uuid]
+            product.inventory = Inventory(amount)
+            await product.save()
+
+        if not feasible:
+            await self._reserve_products({k: -v for k, v in quantities.items()})
+            raise ValueError("The reservation query could not be satisfied.")

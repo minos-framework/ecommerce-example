@@ -14,27 +14,30 @@ stages:
     response:
       status_code: 200
       json:
-        - id: !anyint
-          credit_number: 12345678123456768
-          amount: 30.0
+        uuid: !anystr
+        version: 1
+        status: "created"
+        credit_number: 12345678123456768
+        amount: 30.0
       save:
         json:
-          payment_id: "[0].id"
+          payment_uuid: "uuid"
 
 
-  - name: Get a Product
+  - name: Get a payment
 
     request:
       url: "http://api-gateway:5566/payments"
       method: GET
       json:
-        ids:
-          - !int "{payment_id:d}"
+        uuids:
+          - "{payment_uuid}"
 
     response:
       status_code: 200
       json:
-        - id: !int "{payment_id:d}"
+        - uuid: "{payment_uuid}"
           version: 1
           credit_number: 12345678123456768
+          status: "created"
           amount: 30.0

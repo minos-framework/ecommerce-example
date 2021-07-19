@@ -24,12 +24,12 @@ rest:
   endpoints:
     - route: /orders
       method: POST
-      controller: src.OrderController
+      controller: src.OrderCommandService
       action: create_order
       name: ""
     - route: /orders
       method: GET
-      controller: src.OrderController
+      controller: src.OrderCommandService
       action: get_orders
       name: ""
 repository:
@@ -55,13 +55,22 @@ events:
     port: 5432
     records: 10
     retry: 2
-  items: []
+  items:
+    - name: OrderCreated
+      controller: src.OrderQueryService
+      action: order_created
+    - name: OrderUpdated
+      controller: src.OrderQueryService
+      action: order_updated
+    - name: OrderDeleted
+      controller: src.OrderQueryService
+      action: order_deleted
 commands:
   broker: localhost
   port: 9092
   items:
     - name: CreateOrder
-      controller: src.OrderController
+      controller: src.OrderCommandService
       action: create_order
   queue:
     database: order_db

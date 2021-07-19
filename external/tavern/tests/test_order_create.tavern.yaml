@@ -8,12 +8,12 @@ stages:
       url: http://api-gateway:5566/orders
       method: POST
       json:
-        products: [1, 2, 3,4]
+        product_uuids: [1, 2, 3,4]
 
     response:
       status_code: 200
       json:
-        - !anystr
+        !anystr
       save:
         json:
-          uuid: "[0]"
+          saga_uuid: "@"
