@@ -9,4 +9,6 @@ from .aggregates import (
     Address,
     User,
 )
-from .commands import UserCommandService
+from .commands import (
+    UserCommandService,
+)
