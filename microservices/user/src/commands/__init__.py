@@ -1,3 +1,1 @@
-from .services import (
-    UserCommandService
-)
+from .services import UserCommandService

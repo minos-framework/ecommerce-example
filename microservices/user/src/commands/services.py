@@ -5,17 +5,11 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from datetime import (
-    datetime
-)
+from datetime import datetime
 
 from uuid import uuid4, UUID
 
-from minos.common import (
-    Service,
-    Request,
-    Response
-)
+from minos.common import Service, Request, Response
 
 from ..aggregates import User
 
@@ -32,15 +26,10 @@ class UserCommandService(Service):
         """
         content = await request.content()
 
-        username = content['username']
-        status = content['status']
+        username = content["username"]
+        status = content["status"]
         created_at = datetime.now()
 
-        user = await User.create(
-            username,
-            status,
-            created_at
-        )
+        user = await User.create(username, status, created_at)
 
         return Response(user)
-

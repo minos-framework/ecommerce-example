@@ -5,14 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from datetime import (
-    datetime,
-)
+from datetime import datetime
 
-from minos.common import (
-    Aggregate,
-    DeclarativeModel
-)
+from minos.common import Aggregate, DeclarativeModel
 
 
 class User(Aggregate):
