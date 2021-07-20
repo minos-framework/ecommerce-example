@@ -76,10 +76,7 @@ saga:
   port: 9092
   storage:
     path: "./user.lmdb"
-  items:
-    - name: CreateUser
-      controller: src
-      action: CREATE_ORDER
+  items: []
   queue:
     database: user_db
     user: minos
