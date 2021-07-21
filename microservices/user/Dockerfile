@@ -4,7 +4,7 @@ RUN poetry install --no-root
 COPY . .
 CMD ["python", "-m", "src", "start"]
 
-FROM dev as build
+FROM development as build
 RUN poetry export --without-hashes > req.txt && pip wheel -r req.txt --wheel-dir ./dist
 RUN poetry build --format wheel
 
@@ -12,4 +12,5 @@ FROM python:slim as production
 COPY --from=build /microservice/dist/ ./dist
 RUN pip install --no-deps ./dist/*
 COPY ./config.yml ./config.yml
-CMD ["microservice", "start"]
+ENTRYPOINT ["microservice"]
+CMD ["start"]
