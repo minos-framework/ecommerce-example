@@ -14,7 +14,7 @@ x-microservice-environment: &microservice-environment
 x-microservice-depends-on: &microservice-depends-on
   - postgres
   - kafka
-  - discovery
+  - api-gateway
 
 services:
   zookeeper:
