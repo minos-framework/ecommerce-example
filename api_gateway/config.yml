@@ -63,6 +63,12 @@ rest:
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
+    - name: CreateUser
+      route: /users
+      method: POST
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
 discovery:
   host: localhost
   port: 5567

@@ -27,11 +27,6 @@ rest:
       controller: src.UserCommandService
       action: create_user
       name: ""
-    - route: /users
-      method: GET
-      controller: src.UserCommandService
-      action: get_users
-      name: ""
 repository:
   database: user_db
   user: minos
