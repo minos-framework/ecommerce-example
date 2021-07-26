@@ -11,12 +11,15 @@ from uuid import (
 
 from minos.common import (
     ModelType,
-    Request,
-    Response,
-    ResponseException,
 )
 from minos.cqrs import (
     CommandService,
+)
+from minos.networks import (
+    enroute,
+    Request,
+    Response,
+    ResponseException,
 )
 from minos.saga import (
     SagaContext,
@@ -30,6 +33,8 @@ from ..aggregates import (
 class OrderCommandService(CommandService):
     """Ticket Service class"""
 
+    @enroute.rest.command("/orders", "POST")
+    @enroute.broker.command("CreateOrder")
     async def create_order(self, request: Request) -> Response:
         """Create a new ``Order`` instance.
 
@@ -42,6 +47,8 @@ class OrderCommandService(CommandService):
         return Response(uuid)
 
     @staticmethod
+    @enroute.rest.command("/orders", "GET")
+    @enroute.broker.command("GetOrders")
     async def get_orders(request: Request) -> Response:
         """Get a list of orders by uuid.
 

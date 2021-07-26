@@ -7,10 +7,10 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = { path = "../../../minos_microservice_common/", develop = false }
-minos-microservice-networks = { path = "../../../minos_microservice_networks/", develop = false }
-minos-microservice-saga = { path = "../../../minos_microservice_saga/", develop = false }
-minos-microservice-cqrs = { path = "../../../minos_microservice_cqrs/", develop = false }
+minos-microservice-common = "^0.1.6"
+minos-microservice-networks = ">=0.0.10<0.1"
+minos-microservice-saga = ">=0.0.9<0.1"
+minos-microservice-cqrs = ">=0.0.1<0.1"
 typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]

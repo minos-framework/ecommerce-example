@@ -5,55 +5,42 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    Callable, NoReturn,
-)
 
-from minos.common import (
-    AggregateDiff,
-)
 from minos.cqrs import (
     QueryService,
 )
-
-
-def subscribe(func: Callable):
-    async def wrapper(self, *args, **kwargs) -> NoReturn:
-        if isinstance(args[0], AggregateDiff):
-            return await func(self, *args, **kwargs)
-        else:
-            event = args[1]
-            return await self._handle_event(event.data, func)
-
-    return wrapper
+from minos.networks import (
+    enroute,
+    Request,
+)
 
 
 class OrderQueryService(QueryService):
     """TODO"""
 
-    @subscribe
-    async def order_created(self, diff: AggregateDiff):
+    @enroute.broker.event("OrderCreated")
+    async def order_created(self, request: Request):
         """TODO
 
-        :param diff: TODO
+        :param request: TODO
         :return: TODO
         """
-        print(diff)
+        print(await request.content())
 
-    @subscribe
-    async def order_updated(self, diff: AggregateDiff):
+    @enroute.broker.event("OrderUpdated")
+    async def order_updated(self, request: Request):
         """TODO
 
-        :param diff: TODO
+        :param request: TODO
         :return: TODO
         """
-        print(diff)
+        print(await request.content())
 
-    @subscribe
-    async def order_deleted(self, diff: AggregateDiff):
+    @enroute.broker.event("OrderDeleted")
+    async def order_deleted(self, request: Request):
         """TODO
 
-        :param diff: TODO
+        :param request: TODO
         :return: TODO
         """
-        print(diff)
+        print(await request.content())
