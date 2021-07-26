@@ -5,19 +5,29 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
-from minos.common import ModelType
-from minos.cqrs import CommandService
+from minos.common import (
+    ModelType,
+)
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
-    enroute,
     Request,
     Response,
     ResponseException,
+    enroute,
 )
-from minos.saga import SagaContext
+from minos.saga import (
+    SagaContext,
+)
 
-from ..aggregates import Order
+from ..aggregates import (
+    Order,
+)
 
 
 class OrderCommandService(CommandService):
