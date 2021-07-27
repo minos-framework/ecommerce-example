@@ -73,6 +73,8 @@ services:
   discovery:
     restart: always
     build: ./external/discovery
+    ports:
+    - 5567:5567
     environment:
       - DISCOVERY_SERVICE_DB_HOST=redis
     depends_on:
