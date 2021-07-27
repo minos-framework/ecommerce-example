@@ -5,48 +5,44 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    NoReturn,
+from minos.cqrs import (
+    QueryService,
+)
+from minos.networks import (
+    Request,
+    enroute,
 )
 
-from minos.common import (
-    Event,
-    Service,
-)
 
+class TicketQueryService(QueryService):
+    """Ticket Query Service class."""
 
-class TicketQueryService(Service):
-    """TODO"""
-
-    # @subscribe("TicketAdded")
-    async def ticket_created(self, topic: str, event: Event) -> NoReturn:
+    @enroute.broker.event("TicketAdded")
+    async def ticket_created(self, request: Request):
         """TODO
 
         :param topic: TODO
         :param event: TODO
         :return: TODO
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("TicketUpdated")
-    async def ticket_updated(self, topic: str, event: Event) -> NoReturn:
+    @enroute.broker.event("TicketUpdated")
+    async def ticket_updated(self, request: Request):
         """TODO
 
         :param topic: TODO
         :param event: TODO
         :return: TODO
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("TicketDeleted")
-    async def ticket_deleted(self, topic: str, event: Event) -> NoReturn:
+    @enroute.broker.event("TicketDeleted")
+    async def ticket_deleted(self, request: Request):
         """TODO
 
         :param topic: TODO
         :param event: TODO
         :return: TODO
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
