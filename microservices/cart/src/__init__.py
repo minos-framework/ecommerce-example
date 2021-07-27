@@ -9,13 +9,9 @@ from .aggregates import (
     Cart,
     CartItem,
 )
-from .controllers import (
-    CartController,
-)
+from .controllers import CartController
 from .sagas import (
     ADD_CART_ITEM,
     REMOVE_CART_ITEM,
 )
-from .services import (
-    CartService,
-)
+from .services import CartService
