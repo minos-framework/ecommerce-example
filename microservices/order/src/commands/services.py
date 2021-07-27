@@ -16,10 +16,10 @@ from minos.cqrs import (
     CommandService,
 )
 from minos.networks import (
-    enroute,
     Request,
     Response,
     ResponseException,
+    enroute,
 )
 from minos.saga import (
     SagaContext,

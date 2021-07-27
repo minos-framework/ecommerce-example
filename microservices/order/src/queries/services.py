@@ -10,8 +10,8 @@ from minos.cqrs import (
     QueryService,
 )
 from minos.networks import (
-    enroute,
     Request,
+    enroute,
 )
 
 
