@@ -44,8 +44,9 @@ class CartService(Service):
         :param product: The product identifiers to be included in the cart.
         :param quantity: Product quantity.
         """
-        return await self.saga_manager.run("AddCartItem", context=SagaContext(cart_id=cart, product_id=product,
-                                                                              quantity=quantity))
+        return await self.saga_manager.run(
+            "AddCartItem", context=SagaContext(cart_id=cart, product_id=product, quantity=quantity)
+        )
 
     async def delete_item(self, cart: int, product: int) -> UUID:
         """
@@ -57,8 +58,9 @@ class CartService(Service):
 
         idx, product = self._get_cart_item(cart, product)
 
-        return await self.saga_manager.run("RemoveCartItem", context=SagaContext(cart_id=cart, product_id=product,
-                                                                                 idx=idx, product=product))
+        return await self.saga_manager.run(
+            "RemoveCartItem", context=SagaContext(cart_id=cart, product_id=product, idx=idx, product=product)
+        )
 
     @staticmethod
     async def update_item(user_id: int, product: CartItem) -> CartItem:
