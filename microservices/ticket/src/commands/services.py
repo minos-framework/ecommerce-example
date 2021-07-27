@@ -9,15 +9,25 @@ from uuid import (
     UUID,
     uuid4,
 )
+
+from minos.common import (
+    ModelType,
+)
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
-from minos.common import ModelType
-from minos.saga import SagaContext
-from minos.cqrs import CommandService
-from ..aggregates import Ticket
+from minos.saga import (
+    SagaContext,
+)
+
+from ..aggregates import (
+    Ticket,
+)
 
 
 class TicketCommandService(CommandService):
