@@ -14,18 +14,10 @@ from minos.networks import (
     Response,
     enroute,
 )
-from minos.common import (
-    ModelType,
-)
-from minos.saga import (
-    SagaContext,
-)
-from minos.cqrs import (
-    CommandService,
-)
-from ..aggregates import (
-    Ticket,
-)
+from minos.common import ModelType
+from minos.saga import SagaContext
+from minos.cqrs import CommandService
+from ..aggregates import Ticket
 
 
 class TicketCommandService(CommandService):
