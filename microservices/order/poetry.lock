@@ -33,7 +33,7 @@ snappy = ["python-snappy (>=0.5)"]
 
 [[package]]
 name = "aiomisc"
-version = "14.2.0"
+version = "14.3.2"
 description = "aiomisc - miscellaneous utils for asyncio"
 category = "main"
 optional = false
@@ -222,7 +222,7 @@ cffi = ">=0.8"
 
 [[package]]
 name = "minos-microservice-common"
-version = "0.1.6"
+version = "0.1.7"
 description = "Python Package with common Classes and Utilities used in Minos Microservices."
 category = "main"
 optional = false
@@ -254,7 +254,7 @@ minos-microservice-saga = ">=0.0.9"
 
 [[package]]
 name = "minos-microservice-networks"
-version = "0.0.10"
+version = "0.0.11"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
 category = "main"
 optional = false
@@ -266,7 +266,7 @@ aiokafka = ">=0.7.0,<0.8.0"
 aiomisc = ">=14.0.3,<15.0.0"
 aiopg = ">=1.2.1,<2.0.0"
 dependency-injector = ">=4.32.2,<5.0.0"
-minos-microservice-common = ">=0.1.6,<0.2.0"
+minos-microservice-common = "0.1.7"
 
 [[package]]
 name = "minos-microservice-saga"
@@ -435,7 +435,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ff55aa245eb058dff5c7113c6c75e2fb0b7ef0487b8b1ea6cb71c13a643cd321"
+content-hash = "1773caa787893bb0296b0b54fdb7535277ee7eaf377b3e322dd319fec73a8543"
 
 [metadata.files]
 aiohttp = [
@@ -509,8 +509,8 @@ aiokafka = [
     {file = "aiokafka-0.7.1.tar.gz", hash = "sha256:b5a6fb1cfd77eac4b397ef5af3765d1d881c86b157137b12ca4f12aef1db433c"},
 ]
 aiomisc = [
-    {file = "aiomisc-14.2.0-py3-none-any.whl", hash = "sha256:74662cbbd1c5087281b1c9cd7bec130be5b598994a1777dc182349ea9a39da08"},
-    {file = "aiomisc-14.2.0.tar.gz", hash = "sha256:5b554039c0b42c8773025b47cec1c8345c028c27c4e52f7bbf1f34319737aeb5"},
+    {file = "aiomisc-14.3.2-py3-none-any.whl", hash = "sha256:186699fe0fdebf06b1dedbeb765599790e7688b14d8cda573d69e38529772e44"},
+    {file = "aiomisc-14.3.2.tar.gz", hash = "sha256:cdfcca5cd6351afe227e4386972706c66625125d6856a6dbc47c075ac7a0f7bb"},
 ]
 aiopg = [
     {file = "aiopg-1.3.1-py3-none-any.whl", hash = "sha256:7a3fb1eb399ab0bb0335ddca66b51de31f6bb2251b5af2a45e7fec20040e5eac"},
@@ -540,6 +540,11 @@ cffi = [
     {file = "cffi-1.14.6-cp27-cp27m-win_amd64.whl", hash = "sha256:7bcac9a2b4fdbed2c16fa5681356d7121ecabf041f18d97ed5b8e0dd38a80224"},
     {file = "cffi-1.14.6-cp27-cp27mu-manylinux1_i686.whl", hash = "sha256:ed38b924ce794e505647f7c331b22a693bee1538fdf46b0222c4717b42f744e7"},
     {file = "cffi-1.14.6-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:e22dcb48709fc51a7b58a927391b23ab37eb3737a98ac4338e2448bef8559b33"},
+    {file = "cffi-1.14.6-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:aedb15f0a5a5949ecb129a82b72b19df97bbbca024081ed2ef88bd5c0a610534"},
+    {file = "cffi-1.14.6-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:48916e459c54c4a70e52745639f1db524542140433599e13911b2f329834276a"},
+    {file = "cffi-1.14.6-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:f627688813d0a4140153ff532537fbe4afea5a3dffce1f9deb7f91f848a832b5"},
+    {file = "cffi-1.14.6-cp35-cp35m-win32.whl", hash = "sha256:f0010c6f9d1a4011e429109fda55a225921e3206e7f62a0c22a35344bfd13cca"},
+    {file = "cffi-1.14.6-cp35-cp35m-win_amd64.whl", hash = "sha256:57e555a9feb4a8460415f1aac331a2dc833b1115284f7ded7278b54afc5bd218"},
     {file = "cffi-1.14.6-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:e8c6a99be100371dbb046880e7a282152aa5d6127ae01783e37662ef73850d8f"},
     {file = "cffi-1.14.6-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:19ca0dbdeda3b2615421d54bef8985f72af6e0c47082a8d26122adac81a95872"},
     {file = "cffi-1.14.6-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:d950695ae4381ecd856bcaf2b1e866720e4ab9a1498cba61c602e56630ca7195"},
@@ -710,16 +715,16 @@ lmdb = [
     {file = "lmdb-1.2.1.tar.gz", hash = "sha256:5f76a90ebd08922acca11948779b5055f7a262687178e9e94f4e804b9f8465bc"},
 ]
 minos-microservice-common = [
-    {file = "minos_microservice_common-0.1.6-py3-none-any.whl", hash = "sha256:b46517f607106aab43195419cf4db7a449b4a35265764827b698e64c5f291c45"},
-    {file = "minos_microservice_common-0.1.6.tar.gz", hash = "sha256:7de582cc150de5d5a989cbffd0febdd564394b1d9374c70f4fe02746c578d4cf"},
+    {file = "minos_microservice_common-0.1.7-py3-none-any.whl", hash = "sha256:dcef5c9958eee97166c4d5bdf93ace0775e0a83b2330bc02ae5742533836fc45"},
+    {file = "minos_microservice_common-0.1.7.tar.gz", hash = "sha256:1092e921017b186b5e90f51485e4f20627a0a4053ff8545674f006c8d3cd996c"},
 ]
 minos-microservice-cqrs = [
     {file = "minos_microservice_cqrs-0.0.1-py3-none-any.whl", hash = "sha256:be738f960fb4a8f4611fc5f5933eb1d2196079bde204e778f460758d903d0a2c"},
     {file = "minos_microservice_cqrs-0.0.1.tar.gz", hash = "sha256:1c9927871fdc70cc72410d77b6a714cf7808d29e21635a816c483c4776031d3a"},
 ]
 minos-microservice-networks = [
-    {file = "minos_microservice_networks-0.0.10-py3-none-any.whl", hash = "sha256:033a2a3138b73aadf3a8b3d2173cea7673bbbee315a079df79b110593df37952"},
-    {file = "minos_microservice_networks-0.0.10.tar.gz", hash = "sha256:43963cc50af345f468eaf4f87715924f91a043a95950bfabb30b71a35cd4942d"},
+    {file = "minos_microservice_networks-0.0.11-py3-none-any.whl", hash = "sha256:800716f1f045bac43367debef1afa91a6db7dcf74658388b5ccb22c5336e0297"},
+    {file = "minos_microservice_networks-0.0.11.tar.gz", hash = "sha256:9ab428d67d87089e06bcf40554f29ee989d818d20e6ec25e38f94c9a7dd7bd01"},
 ]
 minos-microservice-saga = [
     {file = "minos_microservice_saga-0.0.9-py3-none-any.whl", hash = "sha256:911cc561d074968d01cf6ca11e96c88645df009bc199f0e4d40acd157c523681"},
@@ -765,18 +770,29 @@ multidict = [
     {file = "multidict-5.1.0.tar.gz", hash = "sha256:25b4e5f22d3a37ddf3effc0710ba692cfc792c2b9edfb9c05aefe823256e84d5"},
 ]
 orjson = [
+    {file = "orjson-3.6.0-cp310-cp310-manylinux_2_24_aarch64.whl", hash = "sha256:53ef160ac1b27d0417005e865ec1478044db4289b25beadff2ab4ce2c74a0f22"},
     {file = "orjson-3.6.0-cp310-cp310-manylinux_2_24_x86_64.whl", hash = "sha256:baf8e883b88ada0825a6d5f0c23e356f0f0188d0737664a5767feec82b40576b"},
+    {file = "orjson-3.6.0-cp36-cp36m-macosx_10_7_x86_64.whl", hash = "sha256:d02cc480dfabc941b3ad6af333ea579dc5606646d808e1fed9010d1960c29d65"},
+    {file = "orjson-3.6.0-cp36-cp36m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:a58559c684f1b1ead7b2dd6ec95645f1fa5bd98a784b20d0e83a4be95dbc956f"},
+    {file = "orjson-3.6.0-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8becded36abd1363b604b4decae77c54b79086f397b7ceec134627119aac4214"},
     {file = "orjson-3.6.0-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e06746591c3ed0549bc6860cb537e39cf14009f5fe31a1becc3b3cf2abc5f202"},
     {file = "orjson-3.6.0-cp36-none-win_amd64.whl", hash = "sha256:922c9d3d7438ee14f103511cc005c1e470dbc01e42b22d8754e6477cebd02959"},
+    {file = "orjson-3.6.0-cp37-cp37m-macosx_10_7_x86_64.whl", hash = "sha256:7eff58fa9e4fdf08034017ae5ec8ff90396502fd9f9d28ee2481dd4c6132a40d"},
+    {file = "orjson-3.6.0-cp37-cp37m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:aca079cab25f7d2001af309a661e66473e4610dbb77ccbc245c05669dc03f639"},
+    {file = "orjson-3.6.0-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:63314d2f0602cdb570c548b19f94f7a158bdb8a10359eb707a40d19e577edc81"},
     {file = "orjson-3.6.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f71c05553a0a3e5d32574bc4edcdd31dfbdcf981ad980988d0488a1e5a368451"},
+    {file = "orjson-3.6.0-cp37-none-win_amd64.whl", hash = "sha256:0d1a4b5b796ad55f2b87e6177e833e972a4da5804765fc45a11be40421768589"},
     {file = "orjson-3.6.0-cp38-cp38-macosx_10_7_x86_64.whl", hash = "sha256:a83c2aacb3a5bc08ee6289ac5fb07eae7d5232e2c6e492dbf20289ba78475dd2"},
     {file = "orjson-3.6.0-cp38-cp38-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:dd3e0e841d699290b28bf452e099c1d77f3571a059ef0e61622bd18cef1b86ad"},
+    {file = "orjson-3.6.0-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e23f46b58f51e14efd18bb570f3fb07cbf2de0c71189bcf4c52f9c212eb54ac7"},
     {file = "orjson-3.6.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:55816d7f553f8d30a4584299a114d15821ee475586f59726e53666e031f24fc9"},
     {file = "orjson-3.6.0-cp38-none-win_amd64.whl", hash = "sha256:eb226b0fbf5a39d359ac1cc78a3869ff8c24cdb4e766e5b2d50ee89d47042eb1"},
     {file = "orjson-3.6.0-cp39-cp39-macosx_10_7_x86_64.whl", hash = "sha256:d61334b8a3d0a6f4e70fab887d504d75f89014d731e7a5edc57ef00bbb27b5fc"},
     {file = "orjson-3.6.0-cp39-cp39-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:e59ffe5442ce523b785df54b8bcb2aead0779e2d78d4dc3a3d3a8ecfbc6e3afb"},
+    {file = "orjson-3.6.0-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2ffca90b561290d7d3ce87ac91d2da970b590bd01b00617e601e4e420d29a51f"},
     {file = "orjson-3.6.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1064ec32586c90e2191d2b917479686cfb0a6be352f2fc4d07ad2481c2186849"},
     {file = "orjson-3.6.0-cp39-cp39-manylinux_2_24_x86_64.whl", hash = "sha256:6313c294059dbc0dffc629baf1c5144bdc407c9705c9f47e779fa97e65f846c0"},
+    {file = "orjson-3.6.0-cp39-none-win_amd64.whl", hash = "sha256:8538e18d07f12b534a289fcac0ccab443e0b2ade7069fc702ef96375ad44a0cb"},
     {file = "orjson-3.6.0.tar.gz", hash = "sha256:367bf36a5f9c461c4f8f5f679ac6a36d31fa73aa11bf8ea82d3ceec3121a2abe"},
 ]
 packaging = [
