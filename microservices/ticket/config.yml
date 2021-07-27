@@ -22,7 +22,17 @@ service:
 rest:
   host: 0.0.0.0
   port: 8085
-  endpoints: []
+broker:
+  host: localhost
+  port: 9092
+  queue:
+    database: order_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
 repository:
   database: ticket_db
   user: minos
@@ -36,48 +46,18 @@ snapshot:
   host: localhost
   port: 5432
 events:
-  broker: localhost
-  port: 9092
   service: src.TicketQueryService
-  queue:
-    database: ticket_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
 queries:
   service: src.TicketQueryService
 commands:
-  broker: localhost
-  port: 9092
   service: src.TicketCommandService
-  queue:
-    database: ticket_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
 saga:
-  broker: localhost
-  port: 9092
   storage:
     path: "./ticket.lmdb"
   items:
     - name: _CreateTicket
       controller: src
       action: _CREATE_TICKET
-  queue:
-    database: ticket_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
 discovery:
   host: localhost
   port: 5567

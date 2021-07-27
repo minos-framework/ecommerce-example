@@ -1,10 +1,12 @@
 version: "3.9"
 
 x-microservice-environment: &microservice-environment
-  - MINOS_EVENTS_QUEUE_HOST=postgres
-  - MINOS_EVENTS_BROKER=kafka
-  - MINOS_COMMANDS_QUEUE_HOST=postgres
-  - MINOS_COMMANDS_BROKER=kafka
+  - MINOS_BROKER_QUEUE_HOST=postgres
+  - MINOS_BROKER_HOST=kafka
+  - MINOS_EVENTS_QUEUE_HOST=postgres  # TODO: Remove
+  - MINOS_EVENTS_BROKER=kafka  # TODO: Remove
+  - MINOS_COMMANDS_QUEUE_HOST=postgres  # TODO: Remove
+  - MINOS_COMMANDS_BROKER=kafka  # TODO: Remove
   - MINOS_REPOSITORY_HOST=postgres
   - MINOS_SNAPSHOT_HOST=postgres
   - MINOS_SAGA_QUEUE_HOST=postgres

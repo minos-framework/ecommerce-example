@@ -206,7 +206,7 @@ cffi = ">=0.8"
 
 [[package]]
 name = "minos-microservice-common"
-version = "0.1.6"
+version = "0.1.7"
 description = "Python Package with common Classes and Utilities used in Minos Microservices."
 category = "main"
 optional = false
@@ -238,7 +238,7 @@ minos-microservice-saga = ">=0.0.9"
 
 [[package]]
 name = "minos-microservice-networks"
-version = "0.0.10"
+version = "0.0.11"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
 category = "main"
 optional = false
@@ -250,7 +250,7 @@ aiokafka = ">=0.7.0,<0.8.0"
 aiomisc = ">=14.0.3,<15.0.0"
 aiopg = ">=1.2.1,<2.0.0"
 dependency-injector = ">=4.32.2,<5.0.0"
-minos-microservice-common = ">=0.1.6,<0.2.0"
+minos-microservice-common = "0.1.7"
 
 [[package]]
 name = "minos-microservice-saga"
@@ -352,7 +352,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "07f0addf1e08cac63f106e72268065a4d02fcbac9e65752674c1f857416b4037"
+content-hash = "23e9ee20225dcd38146aa5206b8b16bbf44953f653f278c27ce76de869ce5088"
 
 [metadata.files]
 aiohttp = [
@@ -620,16 +620,16 @@ lmdb = [
     {file = "lmdb-1.2.1.tar.gz", hash = "sha256:5f76a90ebd08922acca11948779b5055f7a262687178e9e94f4e804b9f8465bc"},
 ]
 minos-microservice-common = [
-    {file = "minos_microservice_common-0.1.6-py3-none-any.whl", hash = "sha256:b46517f607106aab43195419cf4db7a449b4a35265764827b698e64c5f291c45"},
-    {file = "minos_microservice_common-0.1.6.tar.gz", hash = "sha256:7de582cc150de5d5a989cbffd0febdd564394b1d9374c70f4fe02746c578d4cf"},
+    {file = "minos_microservice_common-0.1.7-py3-none-any.whl", hash = "sha256:dcef5c9958eee97166c4d5bdf93ace0775e0a83b2330bc02ae5742533836fc45"},
+    {file = "minos_microservice_common-0.1.7.tar.gz", hash = "sha256:1092e921017b186b5e90f51485e4f20627a0a4053ff8545674f006c8d3cd996c"},
 ]
 minos-microservice-cqrs = [
     {file = "minos_microservice_cqrs-0.0.1-py3-none-any.whl", hash = "sha256:be738f960fb4a8f4611fc5f5933eb1d2196079bde204e778f460758d903d0a2c"},
     {file = "minos_microservice_cqrs-0.0.1.tar.gz", hash = "sha256:1c9927871fdc70cc72410d77b6a714cf7808d29e21635a816c483c4776031d3a"},
 ]
 minos-microservice-networks = [
-    {file = "minos_microservice_networks-0.0.10-py3-none-any.whl", hash = "sha256:033a2a3138b73aadf3a8b3d2173cea7673bbbee315a079df79b110593df37952"},
-    {file = "minos_microservice_networks-0.0.10.tar.gz", hash = "sha256:43963cc50af345f468eaf4f87715924f91a043a95950bfabb30b71a35cd4942d"},
+    {file = "minos_microservice_networks-0.0.11-py3-none-any.whl", hash = "sha256:800716f1f045bac43367debef1afa91a6db7dcf74658388b5ccb22c5336e0297"},
+    {file = "minos_microservice_networks-0.0.11.tar.gz", hash = "sha256:9ab428d67d87089e06bcf40554f29ee989d818d20e6ec25e38f94c9a7dd7bd01"},
 ]
 minos-microservice-saga = [
     {file = "minos_microservice_saga-0.0.9-py3-none-any.whl", hash = "sha256:911cc561d074968d01cf6ca11e96c88645df009bc199f0e4d40acd157c523681"},
