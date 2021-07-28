@@ -121,10 +121,10 @@ class ProductCommandService(CommandService):
     @staticmethod
     @enroute.rest.command("/products/{uuid}", "DELETE")
     async def delete_product(request: Request) -> NoReturn:
-        """TODO
+        """Delete a product by identifier.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request containing the product identifier.
+        :return: This method does not return anything.
         """
         content = await request.content()
         uuid = content["uuid"]

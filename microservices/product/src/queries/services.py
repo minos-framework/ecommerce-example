@@ -24,46 +24,46 @@ class ProductQueryService(QueryService):
 
     @enroute.broker.query("GetProductsWithoutStock")
     def get_products_without_stock(self, request: Request) -> Response:
-        """TODO
+        """Get the products without stock.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request without any content.
+        :return: A response containing the products without stock.
         """
 
     @enroute.broker.query("GetMostSoldProducts")
     def get_most_sold_products(self, request: Request) -> Response:
-        """TODO
+        """Get the most sold products.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request containing the maximum number of products to be retrieved.
+        :return: A response containing the most sold products.
         """
 
     @staticmethod
     @enroute.broker.event("ProductAdded")
     async def product_created(request: Request) -> NoReturn:
-        """TODO
+        """Handle the product create events.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
         print(await request.content())
 
     @staticmethod
     @enroute.broker.event("ProductUpdated")
     async def product_updated(request: Request) -> NoReturn:
-        """TODO
+        """Handle the product update events.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
         print(await request.content())
 
     @staticmethod
     @enroute.broker.event("ProductDeleted")
     async def product_deleted(request: Request) -> NoReturn:
-        """TODO
+        """Handle the product delete events.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
         print(await request.content())
