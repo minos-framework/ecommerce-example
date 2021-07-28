@@ -8,15 +8,13 @@ Minos framework can not be copied and/or distributed without the express permiss
 from datetime import (
     datetime,
 )
-from uuid import (
-    UUID,
-    uuid4,
+from minos.cqrs import (
+    CommandService,
 )
-
-from minos.common import (
+from minos.networks import (
     Request,
     Response,
-    Service,
+    enroute,
 )
 
 from ..aggregates import (
@@ -25,10 +23,12 @@ from ..aggregates import (
 )
 
 
-class UserCommandService(Service):
+class UserCommandService(CommandService):
     """User Service class"""
 
     @staticmethod
+    @enroute.rest.command("/users", "POST")
+    @enroute.broker.command("CreateUser")
     async def create_user(request: Request) -> Response:
         """Create a new User instance.
 
