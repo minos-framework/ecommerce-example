@@ -5,6 +5,7 @@ service:
     command_reply_broker: minos.networks.CommandReplyBroker
     event_broker: minos.networks.EventBroker
     repository: minos.common.PostgreSqlRepository
+    reply_pool: minos.networks.ReplyHandlerPool
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
@@ -21,17 +22,17 @@ service:
 rest:
   host: 0.0.0.0
   port: 8083
-  endpoints:
-    - route: /payments
-      method: POST
-      controller: src.PaymentCommandService
-      action: create_payment
-      name: ""
-    - route: /payments
-      method: GET
-      controller: src.PaymentCommandService
-      action: get_payments
-      name: ""
+broker:
+  host: localhost
+  port: 9092
+  queue:
+    database: payment_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
 repository:
   database: payment_db
   user: minos
@@ -44,69 +45,16 @@ snapshot:
   password: min0s
   host: localhost
   port: 5432
-events:
-  broker: localhost
-  port: 9092
-  queue:
-    database: payment_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
-  items:
-    - name: PaymentCreated
-      controller: src.PaymentQueryService
-      action: payment_created
-    - name: PaymentUpdated
-      controller: src.PaymentQueryService
-      action: payment_updated
-    - name: PaymentDeleted
-      controller: src.PaymentQueryService
-      action: payment_deleted
 commands:
-  broker: localhost
-  port: 9092
-  items:
-    - name: CreatePayment
-      controller: src.PaymentCommandService
-      action: create_payment
-    - name: GetPayments
-      controller: src.PaymentCommandService
-      action: get_payments
-  queue:
-    database: payment_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
+  service: src.PaymentCommandService
+queries:
+  service: src.PaymentQueryService
+events:
+  service: src.PaymentQueryService
 saga:
-  broker: localhost
-  port: 9092
   storage:
     path: "./payment.lmdb"
-  items: []
-  queue:
-    database: payment_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
+  items: [ ]
 discovery:
   host: localhost
   port: 5567
-  endpoints:
-    subscribe:
-      path: subscribe
-      method: POST
-    unsubscribe:
-      path: unsubscribe
-      method: POST
-    discover:
-      path: discover
-      method: GET
