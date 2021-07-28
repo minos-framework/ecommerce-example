@@ -69,6 +69,12 @@ rest:
       controller: src.LoginController
       action: login
 
+    - name: Test Endpoint
+      route: /test
+      method: GET
+      controller: src.LoginController
+      action: test_endpoint
+
 discovery:
   host: localhost
   port: 5567
