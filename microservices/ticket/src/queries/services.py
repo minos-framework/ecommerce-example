@@ -12,37 +12,34 @@ from minos.networks import (
     Request,
     enroute,
 )
+from typing import (
+    NoReturn,
+)
 
 
 class TicketQueryService(QueryService):
     """Ticket Query Service class."""
 
     @enroute.broker.event("TicketAdded")
-    async def ticket_created(self, request: Request):
-        """TODO
-
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+    async def ticket_created(self, request: Request) -> NoReturn:
+        """Handle the ticket creation events.
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
         print(await request.content())
 
     @enroute.broker.event("TicketUpdated")
-    async def ticket_updated(self, request: Request):
-        """TODO
-
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+    async def ticket_updated(self, request: Request) -> NoReturn:
+        """Handle the ticket update events.
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
         print(await request.content())
 
     @enroute.broker.event("TicketDeleted")
-    async def ticket_deleted(self, request: Request):
-        """TODO
-
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+    async def ticket_deleted(self, request: Request) -> NoReturn:
+        """Handle the ticket delete events.
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
         print(await request.content())
