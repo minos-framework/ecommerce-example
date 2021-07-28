@@ -37,10 +37,12 @@ services:
   postgres:
     restart: always
     build: external/postgres
+    ports:
+    - 5432:5432
     volumes:
       - postgres_volume:/var/lib/postgresql
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db
+      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db,user_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
@@ -99,6 +101,12 @@ services:
   microservice-ticket:
     restart: always
     build: microservices/ticket
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-user:
+    restart: always
+    build: microservices/user
     environment: *microservice-environment
     depends_on: *microservice-depends-on
 
