@@ -5,9 +5,13 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import NoReturn
+from typing import (
+    NoReturn,
+)
 
-from minos.cqrs import QueryService
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     enroute,

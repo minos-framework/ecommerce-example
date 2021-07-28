@@ -5,14 +5,24 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import sys
 import unittest
-from asyncio import gather
-from pathlib import Path
-from typing import NoReturn
-from uuid import UUID
+from asyncio import (
+    gather,
+)
+from pathlib import (
+    Path,
+)
+from typing import (
+    NoReturn,
+)
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     CommandReply,
