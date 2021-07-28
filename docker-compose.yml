@@ -16,7 +16,7 @@ x-microservice-environment: &microservice-environment
 x-microservice-depends-on: &microservice-depends-on
   - postgres
   - kafka
-  - discovery
+  - api-gateway
 
 services:
   zookeeper:
@@ -39,10 +39,12 @@ services:
   postgres:
     restart: always
     build: external/postgres
+    ports:
+    - 5432:5432
     volumes:
       - postgres_volume:/var/lib/postgresql
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db
+      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db,user_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
@@ -82,25 +84,41 @@ services:
 
   microservice-order:
     restart: always
-    build: microservices/order
+    build:
+      context: microservices/order
+      target: production
     environment: *microservice-environment
     depends_on: *microservice-depends-on
 
   microservice-payment:
     restart: always
-    build: microservices/payment
+    build:
+      context: microservices/payment
+      target: production
     environment: *microservice-environment
     depends_on: *microservice-depends-on
 
   microservice-product:
     restart: always
-    build: microservices/product
+    build:
+      context: microservices/product
+      target: production
     environment: *microservice-environment
     depends_on: *microservice-depends-on
 
   microservice-ticket:
     restart: always
-    build: microservices/ticket
+    build:
+      context: microservices/ticket
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-user:
+    restart: always
+    build:
+      context: microservices/user
+      target: production
     environment: *microservice-environment
     depends_on: *microservice-depends-on
 

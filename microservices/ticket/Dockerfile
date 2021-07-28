@@ -1,11 +1,17 @@
-FROM ghcr.io/clariteia/minos:0.1.0 as build
+FROM ghcr.io/clariteia/minos:0.1.0 as development
+
 COPY ./pyproject.toml ./poetry.lock ./
-RUN poetry export --without-hashes > req.txt && pip wheel -r req.txt --wheel-dir ./dist
+RUN poetry install --no-root
 COPY . .
-RUN poetry build  --format wheel
+CMD ["python", "-m", "src", "start"]
+
+FROM development as build
+RUN poetry export --without-hashes > req.txt && pip wheel -r req.txt --wheel-dir ./dist
+RUN poetry build --format wheel
 
 FROM python:slim as production
 COPY --from=build /microservice/dist/ ./dist
 RUN pip install --no-deps ./dist/*
 COPY ./config.yml ./config.yml
-CMD ["microservice", "start"]
+ENTRYPOINT ["microservice"]
+CMD ["start"]
