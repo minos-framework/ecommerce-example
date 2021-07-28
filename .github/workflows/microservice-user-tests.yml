@@ -35,13 +35,10 @@ jobs:
         working-directory: ./microservices/user
 
     env:
-      MINOS_EVENTS_QUEUE_HOST: postgres
-      MINOS_EVENTS_BROKER: kafka
-      MINOS_COMMANDS_QUEUE_HOST: postgres
-      MINOS_COMMANDS_BROKER: kafka
       MINOS_REPOSITORY_HOST: postgres
       MINOS_SNAPSHOT_HOST: postgres
-      MINOS_SAGA_QUEUE_HOST: postgres
+      MINOS_BROKER_QUEUE_HOST: postgres
+      MINOS_BROKER_HOST: kafka
 
     steps:
       - name: Check out repository code
