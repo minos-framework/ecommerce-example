@@ -20,7 +20,7 @@ service:
     - minos.networks.ProducerService
 rest:
   host: 0.0.0.0
-  port: 8082
+  port: 8086
   endpoints:
     - route: /users
       method: POST
