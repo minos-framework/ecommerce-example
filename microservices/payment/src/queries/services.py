@@ -19,7 +19,7 @@ from minos.networks import (
 
 
 class PaymentQueryService(QueryService):
-    """TODO"""
+    """Payment Query Service class"""
 
     @staticmethod
     @enroute.broker.event("PaymentCreated")

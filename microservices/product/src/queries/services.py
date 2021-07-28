@@ -9,58 +9,61 @@ from typing import (
     NoReturn,
 )
 
-from minos.common import (
-    Event,
+from minos.cqrs import (
+    QueryService,
+)
+from minos.networks import (
     Request,
     Response,
-    Service,
+    enroute,
 )
 
 
-class ProductQueryService(Service):
-    """TODO"""
+class ProductQueryService(QueryService):
+    """Product Query Service class."""
 
+    @enroute.broker.query("GetProductsWithoutStock")
     def get_products_without_stock(self, request: Request) -> Response:
-        """TODO
+        """Get the products without stock.
 
-        :return: TODO
+        :param request: A request without any content.
+        :return: A response containing the products without stock.
         """
 
+    @enroute.broker.query("GetMostSoldProducts")
     def get_most_sold_products(self, request: Request) -> Response:
-        """TODO
+        """Get the most sold products.
 
-        :return: TODO
+        :param request: A request containing the maximum number of products to be retrieved.
+        :return: A response containing the most sold products.
         """
 
-    # @subscribe("ProductAdded")
-    async def product_created(self, topic: str, event: Event) -> NoReturn:
-        """TODO
+    @staticmethod
+    @enroute.broker.event("ProductAdded")
+    async def product_created(request: Request) -> NoReturn:
+        """Handle the product create events.
 
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("ProductUpdated")
-    async def product_updated(self, topic: str, event: Event) -> NoReturn:
-        """TODO
+    @staticmethod
+    @enroute.broker.event("ProductUpdated")
+    async def product_updated(request: Request) -> NoReturn:
+        """Handle the product update events.
 
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("ProductDeleted")
-    async def product_deleted(self, topic: str, event: Event) -> NoReturn:
-        """TODO
+    @staticmethod
+    @enroute.broker.event("ProductDeleted")
+    async def product_deleted(request: Request) -> NoReturn:
+        """Handle the product delete events.
 
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
