@@ -5,6 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
+
 import sys
 import unittest
 from asyncio import (
@@ -30,11 +34,33 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
+from minos.networks import (
+    Request,
+    Response,
+)
 from src import (
     Inventory,
     Product,
-    ProductService,
+    ProductCommandService,
 )
+
+
+class _FakeRequest(Request):
+    """For testing purposes"""
+
+    def __init__(self, content):
+        super().__init__()
+        self._content = content
+
+    async def content(self, **kwargs):
+        """For testing purposes"""
+        return self._content
+
+    def __eq__(self, other: _FakeRequest) -> bool:
+        return self._content == other._content
+
+    def __repr__(self) -> str:
+        return str()
 
 
 class _FakeBroker(MinosBroker):
@@ -54,8 +80,8 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductService(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
@@ -68,18 +94,21 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = ProductService()
+        self.service = ProductCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
     async def test_create_product(self):
-        product = await self.service.create_product("Cacao", "1KG", 3)
-        self.assertIsInstance(product, Product)
-        self.assertIsInstance(product.code, str)
-        self.assertEqual(6, len(product.code))
-        self.assertEqual("Cacao", product.title)
-        self.assertEqual(3, product.price)
+        request = _FakeRequest({"title": "Cacao", "description": "1KG", "price": 3})
+        response = await self.service.create_product(request)
+
+        self.assertIsInstance(response, Response)
+
+        observed = await response.content()
+        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), uuid=observed.uuid, version=observed.version)
+
+        self.assertEqual(expected, observed)
 
     async def test_get_products(self):
         expected = await gather(
@@ -87,26 +116,29 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
             Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
             Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
         )
-        ids = [v.id for v in expected]
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
-        observed = await self.service.get_products(ids)
+        response = await self.service.get_products(request)
+        observed = await response.content()
         self.assertEqual(expected, observed)
 
     async def test_update_inventory(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        await self.service.update_inventory(product.id, 56)
-        await product.refresh()
-        self.assertEqual(Inventory(56), product.inventory)
+        expected = Product("abc", "Cacao", "1KG", 3, Inventory(56), uuid=product.uuid, version=2)
+
+        request = _FakeRequest({"uuid": product.uuid, "amount": 56})
+        response = await self.service.update_inventory(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
 
     async def test_update_inventory_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        await self.service.update_inventory_diff(product.id, 12)
-        await product.refresh()
-        self.assertEqual(Inventory(24), product.inventory)
+        expected = Product("abc", "Cacao", "1KG", 3, Inventory(24), uuid=product.uuid, version=2)
 
-        await self.service.update_inventory_diff(product.id, -10)
-        await product.refresh()
-        self.assertEqual(Inventory(14), product.inventory)
+        request = _FakeRequest({"uuid": product.uuid, "amount_diff": 12})
+        response = await self.service.update_inventory_diff(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
 
 
 if __name__ == "__main__":

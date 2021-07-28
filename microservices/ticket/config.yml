@@ -4,6 +4,7 @@ service:
     command_broker: minos.networks.CommandBroker
     command_reply_broker: minos.networks.CommandReplyBroker
     event_broker: minos.networks.EventBroker
+    reply_pool: minos.networks.ReplyHandlerPool
     repository: minos.common.PostgreSqlRepository
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
@@ -21,17 +22,17 @@ service:
 rest:
   host: 0.0.0.0
   port: 8085
-  endpoints:
-    - route: /tickets
-      method: POST
-      controller: src.TicketController
-      action: create_ticket
-      name: ""
-    - route: /tickets
-      method: GET
-      controller: src.TicketController
-      action: get_tickets
-      name: ""
+broker:
+  host: localhost
+  port: 9092
+  queue:
+    database: ticket_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
 repository:
   database: ticket_db
   user: minos
@@ -45,52 +46,18 @@ snapshot:
   host: localhost
   port: 5432
 events:
-  broker: localhost
-  port: 9092
-  queue:
-    database: ticket_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
-  items: []
+  service: src.TicketQueryService
+queries:
+  service: src.TicketQueryService
 commands:
-  broker: localhost
-  port: 9092
-  items:
-    - name: CreateTicket
-      controller: src.TicketController
-      action: create_ticket
-    - name: GetTickets
-      controller: src.TicketController
-      action: get_tickets
-  queue:
-    database: ticket_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
+  service: src.TicketCommandService
 saga:
-  broker: localhost
-  port: 9092
   storage:
     path: "./ticket.lmdb"
   items:
     - name: _CreateTicket
       controller: src
       action: _CREATE_TICKET
-  queue:
-    database: ticket_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
 discovery:
   host: localhost
   port: 5567

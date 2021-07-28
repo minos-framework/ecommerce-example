@@ -10,13 +10,9 @@ from __future__ import (
 )
 
 import sys
-import unittest.async_case
+import unittest
 from asyncio import (
     gather,
-)
-from datetime import (
-    datetime,
-    timezone,
 )
 from pathlib import (
     Path,
@@ -24,13 +20,8 @@ from pathlib import (
 from typing import (
     NoReturn,
 )
-from unittest.mock import (
-    call,
-    patch,
-)
 from uuid import (
     UUID,
-    uuid4,
 )
 
 from minos.common import (
@@ -42,12 +33,14 @@ from minos.common import (
     MinosConfig,
     MinosSagaManager,
     Model,
+)
+from minos.networks import (
     Request,
     Response,
 )
 from src import (
-    Order,
-    OrderController,
+    Payment,
+    PaymentCommandService,
 )
 
 
@@ -86,8 +79,8 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductController(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
@@ -100,40 +93,30 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.controller = OrderController()
+        self.service = PaymentCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_order(self):
-        uuid = uuid4()
+    async def test_create_payment(self):
+        request = _FakeRequest({"credit_number": 1234, "amount": 3.4})
+        response = await self.service.create_payment(request)
 
-        async def _fn(*args, **kwargs):
-            return uuid
+        self.assertIsInstance(response, Response)
 
-        with patch("src.OrderService.create_order") as mock:
-            mock.side_effect = _fn
-
-            request = _FakeRequest({"products": [1, 2, 3]})
-            response = await self.controller.create_order(request)
-
-            self.assertIsInstance(response, Response)
-
-            observed = await response.content()
-            self.assertEqual([str(uuid)], observed)
-            self.assertEqual(call(products=[1, 2, 3]), mock.call_args)
-
-    async def test_get_orders(self):
-        now = datetime.now(tz=timezone.utc)
-
-        expected = await gather(
-            Order.create([1, 2, 3], 1, "created", now, now), Order.create([1, 1, 1], 2, "cancelled", now, now),
-        )
-
-        request = _FakeRequest({"ids": [v.id for v in expected]})
-
-        response = await self.controller.get_orders(request)
         observed = await response.content()
+        expected = Payment(1234, 3.4, "created", uuid=observed.uuid, version=observed.version)
+
+        self.assertEqual(expected, observed)
+
+    async def test_get_payments(self):
+        expected = await gather(Payment.create(1234, 3.4, "created"), Payment.create(5678, 3.4, "cancelled"))
+
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
+
+        response = await self.service.get_payments(request)
+        observed = await response.content()
+
         self.assertEqual(expected, observed)
 
 

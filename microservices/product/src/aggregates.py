@@ -7,11 +7,11 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from minos.common import (
     Aggregate,
-    DeclarativeModel,
+    ValueObject,
 )
 
 
-class Inventory(DeclarativeModel):
+class Inventory(ValueObject):
     """Inventory Object Value class."""
 
     amount: int

@@ -5,28 +5,20 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
+
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
-from datetime import (
-    datetime,
-    timezone,
-)
 from pathlib import (
     Path,
 )
 from typing import (
     NoReturn,
 )
-from unittest.mock import (
-    MagicMock,
-    call,
-)
 from uuid import (
     UUID,
-    uuid4,
 )
 
 from minos.common import (
@@ -39,13 +31,33 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from minos.saga import (
-    SagaContext,
+from minos.networks import (
+    Request,
+    Response,
 )
 from src import (
-    Order,
-    OrderService,
+    Address,
+    User,
+    UserCommandService,
 )
+
+
+class _FakeRequest(Request):
+    """For testing purposes"""
+
+    def __init__(self, content):
+        super().__init__()
+        self._content = content
+
+    async def content(self, **kwargs):
+        """For testing purposes"""
+        return self._content
+
+    def __eq__(self, other: _FakeRequest) -> bool:
+        return self._content == other._content
+
+    def __repr__(self) -> str:
+        return str()
 
 
 class _FakeBroker(MinosBroker):
@@ -65,8 +77,8 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductService(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
@@ -79,34 +91,33 @@ class TestProductService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = OrderService()
+        self.service = UserCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_order(self):
-        expected = uuid4()
-
-        async def _fn(*args, **kwargs):
-            return expected
-
-        mock = MagicMock(side_effect=_fn)
-        self.service.saga_manager._run_new = mock
-
-        observed = await self.service.create_order([1, 2, 3])
-
-        self.assertEqual(expected, observed)
-        self.assertEqual(call("CreateOrder", context=SagaContext(product_ids=[1, 2, 3])), mock.call_args)
-
-    async def test_get_orders(self):
-        now = datetime.now(tz=timezone.utc)
-
-        expected = await gather(
-            Order.create([1, 2, 3], 1, "created", now, now), Order.create([1, 1, 1], 2, "cancelled", now, now),
+    async def test_create_user(self):
+        request = _FakeRequest(
+            {
+                "username": "john_coltrane",
+                "status": "created",
+                "address": {"street": "Green Dolphin Street", "street_no": 42},
+            }
         )
-        ids = [v.id for v in expected]
+        response = await self.service.create_user(request)
 
-        observed = await self.service.get_orders(ids)
+        self.assertIsInstance(response, Response)
+
+        observed = await response.content()
+        expected = User(
+            "john_coltrane",
+            "created",
+            Address(street="Green Dolphin Street", street_no=42),
+            created_at=observed.created_at,
+            uuid=observed.uuid,
+            version=observed.version,
+        )
+
         self.assertEqual(expected, observed)
 
 

@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  microservice-order:
+    build:
+      context: microservices/order
+      target: development
+    volumes:
+      - ./microservices/order:/microservice
+
+  microservice-payment:
+    build:
+      context: microservices/payment
+      target: development
+    volumes:
+      - ./microservices/payment:/microservice
+
+  microservice-product:
+    build:
+      context: microservices/product
+      target: development
+    volumes:
+      - ./microservices/product:/microservice
+
+  microservice-ticket:
+    build:
+      context: microservices/ticket
+      target: development
+    volumes:
+      - ./microservices/ticket:/microservice
+
+  microservice-user:
+    build:
+      context: microservices/user
+      target: development
+    volumes:
+      - ./microservices/user:/microservice
