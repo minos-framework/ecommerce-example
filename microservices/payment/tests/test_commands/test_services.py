@@ -110,10 +110,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_get_payments(self):
-        expected = await gather(
-            Payment.create(1234, 3.4, "created"),
-            Payment.create(5678, 3.4, "cancelled"),
-        )
+        expected = await gather(Payment.create(1234, 3.4, "created"), Payment.create(5678, 3.4, "cancelled"))
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
