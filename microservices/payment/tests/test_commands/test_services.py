@@ -79,7 +79,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
+class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -98,7 +98,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_order(self):
+    async def test_create_payment(self):
         request = _FakeRequest({"credit_number": 1234, "amount": 3.4})
         response = await self.service.create_payment(request)
 
