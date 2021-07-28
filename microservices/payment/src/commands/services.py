@@ -27,7 +27,7 @@ from ..aggregates import (
 
 
 class PaymentCommandService(CommandService):
-    """Ticket Service class"""
+    """Payment Command Service class"""
 
     @staticmethod
     @enroute.rest.command("/payments", "POST")
