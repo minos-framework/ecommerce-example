@@ -9,15 +9,17 @@ from typing import (
     NoReturn,
 )
 
-from minos.common import (
-    Event,
+from minos.cqrs import (
+    QueryService,
+)
+from minos.networks import (
     Request,
     Response,
-    Service,
+    enroute,
 )
 
 
-class ProductQueryService(Service):
+class ProductQueryService(QueryService):
     """TODO"""
 
     def get_products_without_stock(self, request: Request) -> Response:
@@ -32,35 +34,32 @@ class ProductQueryService(Service):
         :return: TODO
         """
 
-    # @subscribe("ProductAdded")
-    async def product_created(self, topic: str, event: Event) -> NoReturn:
+    @staticmethod
+    @enroute.broker.event("ProductAdded")
+    async def product_created(request: Request) -> NoReturn:
         """TODO
 
-        :param topic: TODO
-        :param event: TODO
+        :param request: TODO
         :return: TODO
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("ProductUpdated")
-    async def product_updated(self, topic: str, event: Event) -> NoReturn:
+    @staticmethod
+    @enroute.broker.event("ProductUpdated")
+    async def product_updated(request: Request) -> NoReturn:
         """TODO
 
-        :param topic: TODO
-        :param event: TODO
+        :param request: TODO
         :return: TODO
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("ProductDeleted")
-    async def product_deleted(self, topic: str, event: Event) -> NoReturn:
+    @staticmethod
+    @enroute.broker.event("ProductDeleted")
+    async def product_deleted(request: Request) -> NoReturn:
         """TODO
 
-        :param topic: TODO
-        :param event: TODO
+        :param request: TODO
         :return: TODO
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())

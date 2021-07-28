@@ -33,6 +33,8 @@ from minos.common import (
     MinosConfig,
     MinosSagaManager,
     Model,
+)
+from minos.networks import (
     Request,
     Response,
 )
