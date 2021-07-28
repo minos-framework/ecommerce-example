@@ -11,7 +11,7 @@ from minos.common import (
 
 
 class Payment(Aggregate):
-    """TODO"""
+    """Payment Aggregate class."""
 
     credit_number: int
     amount: float
