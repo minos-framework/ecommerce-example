@@ -22,7 +22,17 @@ service:
 rest:
   host: 0.0.0.0
   port: 8082
-  endpoints: []
+broker:
+  host: localhost
+  port: 9092
+  queue:
+    database: order_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
 repository:
   database: order_db
   user: minos
@@ -36,58 +46,18 @@ snapshot:
   host: localhost
   port: 5432
 events:
-  broker: localhost
-  port: 9092
-  queue:
-    database: order_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
   service: src.OrderQueryService
 queries:
   service: src.OrderQueryService
 commands:
-  broker: localhost
-  port: 9092
   service: src.OrderCommandService
-  queue:
-    database: order_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
 saga:
-  broker: localhost
-  port: 9092
   storage:
     path: "./order.lmdb"
   items:
     - name: CreateOrder
       controller: src
       action: CREATE_ORDER
-  queue:
-    database: order_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 10
-    retry: 2
 discovery:
   host: localhost
   port: 5567
-  endpoints:
-    subscribe:
-      path: subscribe
-      method: POST
-    unsubscribe:
-      path: unsubscribe
-      method: POST
-    discover:
-      path: discover
-      method: GET

@@ -9,44 +9,44 @@ from typing import (
     NoReturn,
 )
 
-from minos.common import (
-    Event,
-    Service,
+from minos.cqrs import (
+    QueryService,
+)
+from minos.networks import (
+    Request,
+    enroute,
 )
 
 
-class PaymentQueryService(Service):
+class PaymentQueryService(QueryService):
     """TODO"""
 
-    # @subscribe("PaymentAdded")
-    async def payment_created(self, topic: str, event: Event) -> NoReturn:
-        """TODO
+    @staticmethod
+    @enroute.broker.event("PaymentCreated")
+    async def payment_created(request: Request) -> NoReturn:
+        """Handle the payment create events.
 
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("PaymentUpdated")
-    async def payment_updated(self, topic: str, event: Event) -> NoReturn:
-        """TODO
+    @staticmethod
+    @enroute.broker.event("PaymentUpdated")
+    async def payment_updated(request: Request) -> NoReturn:
+        """Handle the payment update events.
 
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("PaymentDeleted")
-    async def payment_deleted(self, topic: str, event: Event) -> NoReturn:
-        """TODO
+    @staticmethod
+    @enroute.broker.event("PaymentDeleted")
+    async def payment_deleted(request: Request) -> NoReturn:
+        """Handle the payment delete events.
 
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())

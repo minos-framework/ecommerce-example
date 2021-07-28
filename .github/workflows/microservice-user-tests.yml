@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - 'microservices/order/**'
+      - 'microservices/user/**'
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: order_db
+          POSTGRES_DB: user_db
           POSTGRES_USER: minos
           POSTGRES_PASSWORD: min0s
         ports:
@@ -32,13 +32,16 @@ jobs:
           KAFKA_ADVERTISED_HOST_NAME: kafka
     defaults:
       run:
-        working-directory: ./microservices/order
+        working-directory: ./microservices/user
 
     env:
+      MINOS_EVENTS_QUEUE_HOST: postgres
+      MINOS_EVENTS_BROKER: kafka
+      MINOS_COMMANDS_QUEUE_HOST: postgres
+      MINOS_COMMANDS_BROKER: kafka
       MINOS_REPOSITORY_HOST: postgres
       MINOS_SNAPSHOT_HOST: postgres
-      MINOS_BROKER_QUEUE_HOST: postgres
-      MINOS_BROKER_HOST: kafka
+      MINOS_SAGA_QUEUE_HOST: postgres
 
     steps:
       - name: Check out repository code

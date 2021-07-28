@@ -11,9 +11,14 @@ from uuid import (
 
 from minos.common import (
     ModelType,
+)
+from minos.cqrs import (
+    CommandService,
+)
+from minos.networks import (
     Request,
     Response,
-    Service,
+    enroute,
 )
 
 from ..aggregates import (
@@ -21,15 +26,17 @@ from ..aggregates import (
 )
 
 
-class PaymentCommandService(Service):
+class PaymentCommandService(CommandService):
     """Ticket Service class"""
 
     @staticmethod
+    @enroute.rest.command("/payments", "POST")
+    @enroute.broker.command("CreatePayment")
     async def create_payment(request: Request) -> Response:
-        """Create a payment
+        """Create a payment.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request instance containing the information to build a payment instance.
+        :return: A response containing the newly created payment instance.
         """
         content = await request.content()
         credit_number = content["credit_number"]
@@ -41,11 +48,13 @@ class PaymentCommandService(Service):
         return Response(payment)
 
     @staticmethod
+    @enroute.rest.command("/payments", "GET")
+    @enroute.broker.command("GetPayments")
     async def get_payments(request: Request) -> Response:
-        """TODO
+        """Get payments.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request instance containing the payment identifiers.
+        :return: A response containing the queried payment instances.
         """
         _Query = ModelType.build("Query", {"uuids": list[UUID]})
         content = await request.content(model_type=_Query)
