@@ -65,14 +65,14 @@ rest:
 
     - name: Login
       route: /login
-      method: POST
-      controller: src.LoginController
+      method: GET
+      controller: src.AuthController
       action: login
 
     - name: Test Endpoint
       route: /test
       method: GET
-      controller: src.LoginController
+      controller: src.AuthController
       action: test_endpoint
 
 discovery:
