@@ -19,7 +19,8 @@ from typing import (
     NoReturn,
 )
 from uuid import (
-    UUID, uuid4,
+    UUID,
+    uuid4,
 )
 
 from minos.common import (
@@ -109,8 +110,10 @@ class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_get_payments(self):
-        expected = await gather(Ticket.create("kokrte3432", [uuid4(), uuid4(), uuid4()], 34),
-                                Ticket.create("343j4k3j4", [uuid4(), uuid4(), uuid4()], 132))
+        expected = await gather(
+            Ticket.create("kokrte3432", [uuid4(), uuid4(), uuid4()], 34),
+            Ticket.create("343j4k3j4", [uuid4(), uuid4(), uuid4()], 132),
+        )
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
