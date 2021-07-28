@@ -20,17 +20,21 @@ from minos.networks import (
 
 
 class ProductQueryService(QueryService):
-    """TODO"""
+    """Product Query Service class."""
 
+    @enroute.broker.query("GetProductsWithoutStock")
     def get_products_without_stock(self, request: Request) -> Response:
         """TODO
 
+        :param request: TODO
         :return: TODO
         """
 
+    @enroute.broker.query("GetMostSoldProducts")
     def get_most_sold_products(self, request: Request) -> Response:
         """TODO
 
+        :param request: TODO
         :return: TODO
         """
 
