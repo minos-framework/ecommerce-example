@@ -1,11 +1,16 @@
-from aiohttp import web
-
-from minos.api_gateway.common import MinosConfig
-import jwt
-from jwt.exceptions import InvalidSignatureError
-
 import base64
 import time
+
+import jwt
+from aiohttp import (
+    web,
+)
+from jwt.exceptions import (
+    InvalidSignatureError,
+)
+from minos.api_gateway.common import (
+    MinosConfig,
+)
 
 JWT_ALGORITHM = "HS256"
 SECRET = "secret"
