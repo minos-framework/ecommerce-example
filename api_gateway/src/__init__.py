@@ -1,2 +1,3 @@
-from .login_controller import AuthController
-
+from .login_controller import (
+    AuthController,
+)
