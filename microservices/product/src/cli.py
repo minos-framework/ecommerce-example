@@ -25,9 +25,9 @@ app = typer.Typer()
 
 
 class _MyEntrypointLauncher(EntrypointLauncher):
-
     async def _setup(self):
         import src
+
         await self.injector.wire(modules=[src] + self._internal_modules)
 
 
