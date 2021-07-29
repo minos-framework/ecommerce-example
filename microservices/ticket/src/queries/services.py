@@ -5,17 +5,24 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import NoReturn
+from typing import (
+    NoReturn,
+)
 
 import aiopg
-from minos.common import AggregateDiff
-from minos.cqrs import QueryService
+from minos.common import (
+    AggregateDiff,
+)
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     enroute,
 )
-
-from src.queries.repositories import TicketAmountRepository
+from src.queries.repositories import (
+    TicketAmountRepository,
+)
 
 
 class TicketQueryService(QueryService):
