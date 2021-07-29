@@ -1,8 +1,6 @@
 """
 Copyright (C) 2021 Clariteia SL
-
 This file is part of minos framework.
-
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from __future__ import (
@@ -11,6 +9,9 @@ from __future__ import (
 
 import sys
 import unittest
+from asyncio import (
+    gather,
+)
 from pathlib import (
     Path,
 )
@@ -19,6 +20,7 @@ from typing import (
 )
 from uuid import (
     UUID,
+    uuid4,
 )
 
 from minos.common import (
@@ -36,9 +38,8 @@ from minos.networks import (
     Response,
 )
 from src import (
-    Address,
-    User,
-    UserCommandService,
+    Ticket,
+    TicketCommandService,
 )
 
 
@@ -77,7 +78,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
+class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -91,32 +92,33 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = UserCommandService()
+        self.service = TicketCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_user(self):
-        request = _FakeRequest(
-            {
-                "username": "john_coltrane",
-                "status": "created",
-                "address": {"street": "Green Dolphin Street", "street_no": 42},
-            }
-        )
-        response = await self.service.create_user(request)
+    async def test_create_ticket(self):
+        gen_uuid = [uuid4(), uuid4(), uuid4()]
+        request = _FakeRequest({"product_uuids": gen_uuid})
+        response = await self.service.create_ticket(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = User(
-            "john_coltrane",
-            "created",
-            Address(street="Green Dolphin Street", street_no=42),
-            created_at=observed.created_at,
-            uuid=observed.uuid,
-            version=observed.version,
+        expected = Ticket(observed.code, [], 0.0, uuid=observed.uuid, version=observed.version)
+
+        self.assertEqual(expected, observed)
+
+    async def test_get_payments(self):
+        expected = await gather(
+            Ticket.create("kokrte3432", [uuid4(), uuid4(), uuid4()], 34),
+            Ticket.create("343j4k3j4", [uuid4(), uuid4(), uuid4()], 132),
         )
+
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
+
+        response = await self.service.get_tickets(request)
+        observed = await response.content()
 
         self.assertEqual(expected, observed)
 

@@ -12,9 +12,14 @@ from uuid import (
 
 from minos.common import (
     ModelType,
+)
+from minos.cqrs import (
+    CommandService,
+)
+from minos.networks import (
     Request,
     Response,
-    Service,
+    enroute,
 )
 from minos.saga import (
     SagaContext,
@@ -25,9 +30,11 @@ from ..aggregates import (
 )
 
 
-class TicketCommandService(Service):
+class TicketCommandService(CommandService):
     """Ticket Service class"""
 
+    @enroute.rest.command("/tickets", "POST")
+    @enroute.broker.command("CreateTicket")
     async def create_ticket(self, request: Request) -> Response:
         """Create a new ticket.
 
@@ -44,6 +51,8 @@ class TicketCommandService(Service):
         return Response(ticket)
 
     @staticmethod
+    @enroute.rest.command("/tickets", "GET")
+    @enroute.broker.command("GetTicket")
     async def get_tickets(request: Request) -> Response:
         """Get a list of tickets by uuid.
 
