@@ -43,7 +43,7 @@ class PaymentAmountRepository(PostgreSqlMinosDatabase):
         :param uuid: UUID
         :return: Nothing
         """
-        await self.submit_query(_INSERT_PAYMENT_QUERY, {"uuid": uuid})
+        await self.submit_query(_DELETE_PAYMENT_QUERY, {"uuid": uuid})
 
 
 _CREATE_TABLE = """
