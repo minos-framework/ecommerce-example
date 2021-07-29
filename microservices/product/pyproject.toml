@@ -7,13 +7,16 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = "^0.1.2"
-minos-microservice-networks = "^0.0"
-minos-microservice-saga = "^0.0"
+minos-microservice-common = "^0.1.7"
+minos-microservice-networks = ">=0.0.11<0.1"
+minos-microservice-saga = ">=0.0.9<0.1"
+minos-microservice-cqrs = ">=0.0.1<0.1"
 typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
+black = "^19.10b"
+isort = "^5.8.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

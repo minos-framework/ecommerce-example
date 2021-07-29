@@ -10,9 +10,13 @@ from __future__ import (
 )
 
 import sys
-import unittest.async_case
+import unittest
 from asyncio import (
     gather,
+)
+from datetime import (
+    datetime,
+    timezone,
 )
 from pathlib import (
     Path,
@@ -20,8 +24,13 @@ from pathlib import (
 from typing import (
     NoReturn,
 )
+from unittest.mock import (
+    MagicMock,
+    call,
+)
 from uuid import (
     UUID,
+    uuid4,
 )
 
 from minos.common import (
@@ -33,13 +42,17 @@ from minos.common import (
     MinosConfig,
     MinosSagaManager,
     Model,
+)
+from minos.networks import (
     Request,
     Response,
 )
+from minos.saga import (
+    SagaContext,
+)
 from src import (
-    Inventory,
-    Product,
-    ProductController,
+    Order,
+    OrderCommandService,
 )
 
 
@@ -78,8 +91,8 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductController(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"
+class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
+    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
         self.config = MinosConfig(self.CONFIG_FILE_PATH)
@@ -92,51 +105,43 @@ class TestProductController(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.controller = ProductController()
+        self.service = OrderCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_product(self):
-        request = _FakeRequest({"title": "Cacao", "description": "1KG", "price": 3})
-        response = await self.controller.create_product(request)
+    async def test_create_order(self):
+        expected = uuid4()
 
+        async def _fn(*args, **kwargs):
+            return expected
+
+        mock = MagicMock(side_effect=_fn)
+        self.service.saga_manager._run_new = mock
+
+        request = _FakeRequest({"product_uuids": [1, 2, 3]})
+        response = await self.service.create_order(request)
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = [
-            Product(observed[0].code, "Cacao", "1KG", 3, Inventory(0), id=observed[0].id, version=observed[0].version)
-        ]
         self.assertEqual(expected, observed)
 
-    async def test_get_products(self):
+        self.assertEqual(expected, observed)
+        self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3])), mock.call_args)
+
+    async def test_get_orders(self):
+        now = datetime.now(tz=timezone.utc)
+
         expected = await gather(
-            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
-            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
-            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
+            Order.create([uuid4(), uuid4()], uuid4(), "created", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "cancelled", now, now),
         )
-        request = _FakeRequest({"ids": [v.id for v in expected]})
 
-        response = await self.controller.get_products(request)
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
+
+        response = await self.service.get_orders(request)
         observed = await response.content()
-        self.assertEqual(expected, observed)
 
-    async def test_update_inventory(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(56), id=product.id, version=2)]
-
-        request = _FakeRequest({"product_id": product.id, "amount": 56})
-        response = await self.controller.update_inventory(request)
-        observed = await response.content()
-        self.assertEqual(expected, observed)
-
-    async def test_update_inventory_diff(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        expected = [Product("abc", "Cacao", "1KG", 3, Inventory(24), id=product.id, version=2)]
-
-        request = _FakeRequest({"product_id": product.id, "amount_diff": 12})
-        response = await self.controller.update_inventory_diff(request)
-        observed = await response.content()
         self.assertEqual(expected, observed)
 
 

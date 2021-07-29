@@ -5,6 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from uuid import (
+    UUID,
+)
+
 from minos.common import (
     Model,
     ModelType,
@@ -14,12 +18,12 @@ from minos.saga import (
     SagaContext,
 )
 
-_ProductsQuery = ModelType.build("ProductsQuery", {"ids": list[int]})
+_ProductsQuery = ModelType.build("ProductsQuery", {"uuids": list[UUID]})
 
 
 def _get_products_callback(context: SagaContext) -> Model:
-    product_ids = context["product_ids"]
-    model = _ProductsQuery(ids=product_ids)
+    product_uuids = context["product_uuids"]
+    model = _ProductsQuery(uuids=product_uuids)
     return model
 
 

@@ -1,0 +1,70 @@
+service:
+  name: users
+  injections:
+    command_broker: minos.networks.CommandBroker
+    command_reply_broker: minos.networks.CommandReplyBroker
+    event_broker: minos.networks.EventBroker
+    reply_pool: minos.networks.ReplyHandlerPool
+    repository: minos.common.PostgreSqlRepository
+    saga_manager: minos.saga.SagaManager
+    snapshot: minos.common.PostgreSqlSnapshot
+    discovery: minos.networks.DiscoveryConnector
+  services:
+    - minos.networks.CommandConsumerService
+    - minos.networks.CommandHandlerService
+    - minos.networks.CommandReplyConsumerService
+    - minos.networks.CommandReplyHandlerService
+    - minos.networks.EventConsumerService
+    - minos.networks.EventHandlerService
+    - minos.networks.RestService
+    - minos.networks.SnapshotService
+    - minos.networks.ProducerService
+rest:
+  host: 0.0.0.0
+  port: 8086
+broker:
+  host: localhost
+  port: 9092
+  queue:
+    database: user_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
+repository:
+  database: user_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+snapshot:
+  database: user_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+events:
+  service:
+queries:
+  service:
+commands:
+  service: src.UserCommandService
+saga:
+  storage:
+    path: "./user.lmdb"
+  items: []
+discovery:
+  host: localhost
+  port: 5567
+  endpoints:
+    subscribe:
+      path: subscribe
+      method: POST
+    unsubscribe:
+      path: unsubscribe
+      method: POST
+    discover:
+      path: discover
+      method: GET

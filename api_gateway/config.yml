@@ -46,13 +46,13 @@ rest:
       action: default
 
     - name: UpdateInventory
-      route: /products/{product_id}/inventory
+      route: /products/{uuid}/inventory
       method: PUT
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
     - name: UpdateInventoryDiff
-      route: /products/{product_id}/inventory
+      route: /products/{uuid}/inventory
       method: PATCH
       controller: minos.api_gateway.rest.DefaultController
       action: default
@@ -60,6 +60,12 @@ rest:
     - name: GetTickets
       route: /tickets
       method: GET
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: CreateUser
+      route: /users
+      method: POST
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
