@@ -9,6 +9,8 @@ from typing import (
     NoReturn,
 )
 
+import aiopg
+from minos.common import AggregateDiff
 from minos.cqrs import (
     QueryService,
 )
@@ -38,32 +40,68 @@ class ProductQueryService(QueryService):
         :return: A response containing the most sold products.
         """
 
-    @staticmethod
-    @enroute.broker.event("ProductAdded")
-    async def product_created(request: Request) -> NoReturn:
-        """Handle the product create events.
-
-        :param request: A request instance containing the aggregate difference.
-        :return: This method does not return anything.
-        """
-        print(await request.content())
-
-    @staticmethod
+    @enroute.broker.event("ProductCreated")
     @enroute.broker.event("ProductUpdated")
-    async def product_updated(request: Request) -> NoReturn:
-        """Handle the product update events.
+    async def product_created_or_updated(self, request: Request) -> NoReturn:
+        """Handle the product create and update events.
 
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        print(await request.content())
+        diff: AggregateDiff = await request.content()
+        uuid = diff.uuid
+        inventory_amount = diff.fields_diff["inventory"].amount
 
-    @staticmethod
+        async with await self._get_connection() as connection:
+            await self._create_table(connection)
+            async with connection.cursor() as cursor:
+                await cursor.execute(_INSERT_PRODUCT_QUERY, {"uuid": uuid, "inventory_amount": inventory_amount})
+
     @enroute.broker.event("ProductDeleted")
-    async def product_deleted(request: Request) -> NoReturn:
+    async def product_deleted(self, request: Request) -> NoReturn:
         """Handle the product delete events.
 
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        print(await request.content())
+        diff: AggregateDiff = await request.content()
+
+        async with await self._get_connection() as connection:
+            await self._create_table(connection)
+            async with connection.cursor() as cursor:
+                await cursor.execute(_DELETE_PRODUCT_QUERY, {"uuid": diff.uuid})
+
+    @staticmethod
+    async def _get_connection():
+        return await aiopg.connect(
+            database='product_query_db',
+            user='minos',
+            password='min0s',
+            host='localhost'
+        )
+
+    async def _create_table(self, connection):
+        async with connection.cursor() as cursor:
+            await cursor.execute(_CREATE_TABLE)
+
+
+_CREATE_TABLE = """
+CREATE TABLE IF NOT EXISTS product (
+    uuid UUID NOT NULL PRIMARY KEY,
+    inventory_amount INT NOT NULL
+);
+""".strip()
+
+_INSERT_PRODUCT_QUERY = """
+INSERT INTO product (uuid, inventory_amount)
+VALUES (%(uuid)s,  %(inventory_amount)s)
+ON CONFLICT (uuid)
+DO
+   UPDATE SET inventory_amount = %(inventory_amount)s
+;
+""".strip()
+
+_DELETE_PRODUCT_QUERY = """
+DELETE FROM product
+WHERE uuid = %(uuid)s;
+""".strip()
