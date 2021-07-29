@@ -122,10 +122,10 @@ class ProductCommandService(CommandService):
     @enroute.broker.command("GetProduct")
     @enroute.rest.command("/products/{uuid}", "GET")
     async def get_product(request: Request) -> Response:
-        """Get products.
+        """Get product.
 
-        :param request: The ``Request`` instance that contains the product identifiers.
-        :return: A ``Response`` instance containing the requested products.
+        :param request: The ``Request`` instance that contains the product identifier.
+        :return: A ``Response`` instance containing the requested product.
         """
         _Query = ModelType.build("Query", {"uuid": UUID})
         try:
@@ -138,7 +138,7 @@ class ProductCommandService(CommandService):
         try:
             product = await Product.get_one(uuid)
         except Exception as exc:
-            raise ResponseException(f"There was a problem while getting products: {exc!r}")
+            raise ResponseException(f"There was a problem while getting the product: {exc!r}")
 
         return Response(product)
 
