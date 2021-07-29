@@ -8,6 +8,8 @@ Minos framework can not be copied and/or distributed without the express permiss
 from typing import (
     NoReturn,
 )
+
+import aiopg
 from minos.common import (
     AggregateDiff,
 )
@@ -18,7 +20,6 @@ from minos.networks import (
     Request,
     enroute,
 )
-import aiopg
 
 
 class PaymentQueryService(QueryService):
