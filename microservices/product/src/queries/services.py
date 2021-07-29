@@ -10,7 +10,9 @@ from typing import (
 )
 
 import aiopg
-from minos.common import AggregateDiff
+from minos.common import (
+    AggregateDiff,
+)
 from minos.cqrs import (
     QueryService,
 )
@@ -73,12 +75,7 @@ class ProductQueryService(QueryService):
 
     @staticmethod
     async def _get_connection():
-        return await aiopg.connect(
-            database='product_query_db',
-            user='minos',
-            password='min0s',
-            host='localhost'
-        )
+        return await aiopg.connect(database="product_query_db", user="minos", password="min0s", host="localhost")
 
     async def _create_table(self, connection):
         async with connection.cursor() as cursor:
