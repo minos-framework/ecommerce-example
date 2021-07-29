@@ -26,13 +26,23 @@ from minos.networks import (
 class ProductQueryService(QueryService):
     """Product Query Service class."""
 
+    # noinspection PyUnusedLocal
+    @enroute.rest.query("/products/without-stock", "GET")
     @enroute.broker.query("GetProductsWithoutStock")
-    def get_products_without_stock(self, request: Request) -> Response:
+    async def get_products_without_stock(self, request: Request) -> Response:
         """Get the products without stock.
 
         :param request: A request without any content.
         :return: A response containing the products without stock.
         """
+        async with await self._get_connection() as connection:
+            await self._create_table(connection)
+            async with connection.cursor() as cursor:
+                await cursor.execute(_GET_PRODUCTS_WITHOUT_STOCK)
+                entries = await cursor.fetchall()
+
+        uuids = [entry[0] for entry in entries]
+        return Response(uuids)
 
     @enroute.broker.query("GetMostSoldProducts")
     def get_most_sold_products(self, request: Request) -> Response:
@@ -101,4 +111,10 @@ DO
 _DELETE_PRODUCT_QUERY = """
 DELETE FROM product
 WHERE uuid = %(uuid)s;
+""".strip()
+
+_GET_PRODUCTS_WITHOUT_STOCK = """
+SELECT uuid 
+FROM product
+WHERE inventory_amount = 0;
 """.strip()

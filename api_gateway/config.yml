@@ -57,6 +57,12 @@ rest:
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
+    - name: GetProductsWithoutStock
+      route: /products/without-stock
+      method: GET
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
     - name: GetTickets
       route: /tickets
       method: GET
