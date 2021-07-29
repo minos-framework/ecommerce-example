@@ -39,8 +39,14 @@ rest:
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
+    - name: GetProduct
+      route: /products/{uuid}
+      method: GET
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
     - name: DeleteProduct
-      route: /products/{id}
+      route: /products/{uuid}
       method: DELETE
       controller: minos.api_gateway.rest.DefaultController
       action: default

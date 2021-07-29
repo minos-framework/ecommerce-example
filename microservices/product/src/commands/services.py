@@ -119,6 +119,30 @@ class ProductCommandService(CommandService):
         return Response(products)
 
     @staticmethod
+    @enroute.broker.command("GetProduct")
+    @enroute.rest.command("/products/{uuid}", "GET")
+    async def get_product(request: Request) -> Response:
+        """Get products.
+
+        :param request: The ``Request`` instance that contains the product identifiers.
+        :return: A ``Response`` instance containing the requested products.
+        """
+        _Query = ModelType.build("Query", {"uuid": UUID})
+        try:
+            content = await request.content(model_type=_Query)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        uuid = content["uuid"]
+
+        try:
+            product = await Product.get_one(uuid)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting products: {exc!r}")
+
+        return Response(product)
+
+    @staticmethod
     @enroute.rest.command("/products/{uuid}", "DELETE")
     async def delete_product(request: Request) -> NoReturn:
         """Delete a product by identifier.
