@@ -120,7 +120,7 @@ class ProductCommandService(CommandService):
 
     @staticmethod
     @enroute.broker.command("GetProduct")
-    @enroute.rest.command("/products/{uuid}", "GET")
+    # @enroute.rest.command("/products/{uuid}", "GET")
     async def get_product(request: Request) -> Response:
         """Get product.
 

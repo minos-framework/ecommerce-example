@@ -9,7 +9,6 @@ from typing import (
     NoReturn,
 )
 
-import aiopg
 from minos.common import (
     AggregateDiff,
 )
@@ -19,7 +18,12 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
+    ResponseException,
     enroute,
+)
+
+from .repositories import (
+    ProductInventoryRepository,
 )
 
 
@@ -35,13 +39,8 @@ class ProductQueryService(QueryService):
         :param request: A request without any content.
         :return: A response containing the products without stock.
         """
-        async with await self._get_connection() as connection:
-            await self._create_table(connection)
-            async with connection.cursor() as cursor:
-                await cursor.execute(_GET_PRODUCTS_WITHOUT_STOCK)
-                entries = await cursor.fetchall()
-
-        uuids = [entry[0] for entry in entries]
+        async with ProductInventoryRepository.from_config(config=self.config) as repository:
+            uuids = await repository.get_without_stock()
         return Response(uuids)
 
     @enroute.broker.query("GetMostSoldProducts")
@@ -51,6 +50,7 @@ class ProductQueryService(QueryService):
         :param request: A request containing the maximum number of products to be retrieved.
         :return: A response containing the most sold products.
         """
+        raise ResponseException("Not Implemented yet!")
 
     @enroute.broker.event("ProductCreated")
     @enroute.broker.event("ProductUpdated")
@@ -61,13 +61,12 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
+
         uuid = diff.uuid
         inventory_amount = diff.fields_diff["inventory"].amount
 
-        async with await self._get_connection() as connection:
-            await self._create_table(connection)
-            async with connection.cursor() as cursor:
-                await cursor.execute(_INSERT_PRODUCT_QUERY, {"uuid": uuid, "inventory_amount": inventory_amount})
+        async with ProductInventoryRepository.from_config(config=self.config) as repository:
+            await repository.insert_inventory_amount(uuid, inventory_amount)
 
     @enroute.broker.event("ProductDeleted")
     async def product_deleted(self, request: Request) -> NoReturn:
@@ -77,44 +76,5 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-
-        async with await self._get_connection() as connection:
-            await self._create_table(connection)
-            async with connection.cursor() as cursor:
-                await cursor.execute(_DELETE_PRODUCT_QUERY, {"uuid": diff.uuid})
-
-    @staticmethod
-    async def _get_connection():
-        return await aiopg.connect(database="product_query_db", user="minos", password="min0s", host="localhost")
-
-    async def _create_table(self, connection):
-        async with connection.cursor() as cursor:
-            await cursor.execute(_CREATE_TABLE)
-
-
-_CREATE_TABLE = """
-CREATE TABLE IF NOT EXISTS product (
-    uuid UUID NOT NULL PRIMARY KEY,
-    inventory_amount INT NOT NULL
-);
-""".strip()
-
-_INSERT_PRODUCT_QUERY = """
-INSERT INTO product (uuid, inventory_amount)
-VALUES (%(uuid)s,  %(inventory_amount)s)
-ON CONFLICT (uuid)
-DO
-   UPDATE SET inventory_amount = %(inventory_amount)s
-;
-""".strip()
-
-_DELETE_PRODUCT_QUERY = """
-DELETE FROM product
-WHERE uuid = %(uuid)s;
-""".strip()
-
-_GET_PRODUCTS_WITHOUT_STOCK = """
-SELECT uuid 
-FROM product
-WHERE inventory_amount = 0;
-""".strip()
+        async with ProductInventoryRepository.from_config(config=self.config) as repository:
+            await repository.delete(diff.uuid)
