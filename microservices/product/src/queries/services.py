@@ -9,6 +9,9 @@ from typing import (
     NoReturn,
 )
 
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     AggregateDiff,
 )
@@ -30,6 +33,8 @@ from .repositories import (
 class ProductQueryService(QueryService):
     """Product Query Service class."""
 
+    repository: ProductInventoryRepository = Provide["product_inventory_repository"]
+
     # noinspection PyUnusedLocal
     @enroute.rest.query("/products/without-stock", "GET")
     @enroute.broker.query("GetProductsWithoutStock")
@@ -39,8 +44,7 @@ class ProductQueryService(QueryService):
         :param request: A request without any content.
         :return: A response containing the products without stock.
         """
-        async with ProductInventoryRepository.from_config(config=self.config) as repository:
-            uuids = await repository.get_without_stock()
+        uuids = await self.repository.get_without_stock()
         return Response(uuids)
 
     @enroute.broker.query("GetMostSoldProducts")
@@ -65,8 +69,7 @@ class ProductQueryService(QueryService):
         uuid = diff.uuid
         inventory_amount = diff.fields_diff["inventory"].amount
 
-        async with ProductInventoryRepository.from_config(config=self.config) as repository:
-            await repository.insert_inventory_amount(uuid, inventory_amount)
+        await self.repository.insert_inventory_amount(uuid, inventory_amount)
 
     @enroute.broker.event("ProductDeleted")
     async def product_deleted(self, request: Request) -> NoReturn:
@@ -76,5 +79,5 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        async with ProductInventoryRepository.from_config(config=self.config) as repository:
-            await repository.delete(diff.uuid)
+
+        await self.repository.delete(diff.uuid)

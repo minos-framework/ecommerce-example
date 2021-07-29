@@ -8,3 +8,6 @@ Minos framework can not be copied and/or distributed without the express permiss
 from .services import (
     ProductQueryService,
 )
+from .repositories import (
+    ProductInventoryRepository,
+)
