@@ -8,6 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 from typing import (
     NoReturn,
 )
+
 from minos.common import (
     AggregateDiff,
 )
@@ -18,8 +19,9 @@ from minos.networks import (
     Request,
     enroute,
 )
-
-from src.queries.repositories import PaymentAmountRepository
+from src.queries.repositories import (
+    PaymentAmountRepository,
+)
 
 
 class PaymentQueryService(QueryService):
@@ -51,5 +53,3 @@ class PaymentQueryService(QueryService):
 
         async with PaymentAmountRepository.from_config(config=self.config) as repository:
             await repository.delete(diff.uuid)
-
-
