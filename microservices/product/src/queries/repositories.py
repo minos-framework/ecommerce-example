@@ -23,7 +23,7 @@ from minos.common import (
 
 
 class ProductInventoryRepository(PostgreSqlMinosDatabase):
-    """TODO"""
+    """ProductInventory Repository class."""
 
     async def _setup(self) -> NoReturn:
         await self.submit_query(_CREATE_TABLE)
@@ -33,28 +33,28 @@ class ProductInventoryRepository(PostgreSqlMinosDatabase):
         return cls(database="product_query_db", port=5432, user="minos", password="min0s", host="localhost")
 
     async def get_without_stock(self) -> list[UUID]:
-        """TODO
+        """Get product identifiers that do not have stock.
 
-        :return: TODO
+        :return: A list of UUID values.
         """
         entries = [entry async for entry in self.submit_query_and_iter(_GET_PRODUCTS_WITHOUT_STOCK)]
         uuids = [entry[0] for entry in entries]
         return uuids
 
     async def insert_inventory_amount(self, uuid: UUID, inventory_amount: int) -> NoReturn:
-        """TODO
+        """Insert inventory values on the database.
 
-        :param uuid: TODO
-        :param inventory_amount: TODO
-        :return: TODO
+        :param uuid: The product identifier.
+        :param inventory_amount: The amount.
+        :return: This method does not return anything.
         """
         await self.submit_query(_INSERT_PRODUCT_QUERY, {"uuid": uuid, "inventory_amount": inventory_amount})
 
     async def delete(self, uuid: UUID) -> NoReturn:
-        """TODO
+        """Delete an entry from the database.
 
-        :param uuid: TODO
-        :return: TODO
+        :param uuid: The product identifier.
+        :return: This method does not return anything.
         """
         await self.submit_query(_DELETE_PRODUCT_QUERY, {"uuid": uuid})
 
