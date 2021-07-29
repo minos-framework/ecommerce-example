@@ -20,8 +20,9 @@ from minos.networks import (
     Request,
     enroute,
 )
-
-from src.queries.repositories import TicketAmountRepository
+from src.queries.repositories import (
+    TicketAmountRepository,
+)
 
 
 class TicketQueryService(QueryService):
@@ -51,7 +52,3 @@ class TicketQueryService(QueryService):
 
         async with TicketAmountRepository.from_config(config=self.config) as repository:
             await repository.delete(diff.uuid)
-
-
-
-
