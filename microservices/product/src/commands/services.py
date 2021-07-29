@@ -17,10 +17,15 @@ from minos.common import (
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
     ModelType,
+)
+from minos.cqrs import (
+    CommandService,
+)
+from minos.networks import (
     Request,
     Response,
     ResponseException,
-    Service,
+    enroute,
 )
 
 from ..aggregates import (
@@ -29,10 +34,12 @@ from ..aggregates import (
 )
 
 
-class ProductCommandService(Service):
+class ProductCommandService(CommandService):
     """Product Service class"""
 
     @staticmethod
+    @enroute.broker.command("CreateProduct")
+    @enroute.rest.command("/products", "POST")
     async def create_product(request: Request) -> Response:
         """Create a new product instance.
 
@@ -51,6 +58,7 @@ class ProductCommandService(Service):
         return Response(product)
 
     @staticmethod
+    @enroute.rest.command("/products/{uuid}/inventory", "PUT")
     async def update_inventory(request: Request) -> Response:
         """Update inventory amount with a difference.
 
@@ -68,6 +76,7 @@ class ProductCommandService(Service):
         return Response(product)
 
     @staticmethod
+    @enroute.rest.command("/products/{uuid}/inventory", "PATCH")
     async def update_inventory_diff(request: Request) -> Response:
         """Update inventory amount with a difference.
 
@@ -85,6 +94,8 @@ class ProductCommandService(Service):
         return Response(product)
 
     @staticmethod
+    @enroute.broker.command("GetProducts")
+    @enroute.rest.command("/products", "GET")
     async def get_products(request: Request) -> Response:
         """Get products.
 
@@ -108,11 +119,12 @@ class ProductCommandService(Service):
         return Response(products)
 
     @staticmethod
+    @enroute.rest.command("/products/{uuid}", "DELETE")
     async def delete_product(request: Request) -> NoReturn:
-        """TODO
+        """Delete a product by identifier.
 
-        :param request: TODO
-        :return: TODO
+        :param request: A request containing the product identifier.
+        :return: This method does not return anything.
         """
         content = await request.content()
         uuid = content["uuid"]
@@ -123,6 +135,7 @@ class ProductCommandService(Service):
         except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
             raise ResponseException(f"The product does not exist.")
 
+    @enroute.broker.command("ReserveProducts")
     async def reserve_products(self, request: Request) -> NoReturn:
         """Reserve the requested quantities of products.
 
@@ -148,7 +161,7 @@ class ProductCommandService(Service):
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
-        async for product in Product.get(uuids=list(quantities.keys())):
+        async for product in Product.get(uuids=set(quantities.keys())):
             inventory = product.inventory
             amount = inventory.amount
             if feasible and amount < quantities[product.uuid]:

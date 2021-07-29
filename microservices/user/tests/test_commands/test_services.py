@@ -11,12 +11,6 @@ from __future__ import (
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
-from datetime import (
-    datetime,
-)
 from pathlib import (
     Path,
 )
@@ -36,6 +30,8 @@ from minos.common import (
     MinosConfig,
     MinosSagaManager,
     Model,
+)
+from minos.networks import (
     Request,
     Response,
 )

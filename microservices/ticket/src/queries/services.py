@@ -9,44 +9,38 @@ from typing import (
     NoReturn,
 )
 
-from minos.common import (
-    Event,
-    Service,
+from minos.cqrs import (
+    QueryService,
+)
+from minos.networks import (
+    Request,
+    enroute,
 )
 
 
-class TicketQueryService(Service):
-    """TODO"""
+class TicketQueryService(QueryService):
+    """Ticket Query Service class."""
 
-    # @subscribe("TicketAdded")
-    async def ticket_created(self, topic: str, event: Event) -> NoReturn:
-        """TODO
-
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+    @enroute.broker.event("TicketCreated")
+    async def ticket_created(self, request: Request) -> NoReturn:
+        """Handle the ticket creation events.
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("TicketUpdated")
-    async def ticket_updated(self, topic: str, event: Event) -> NoReturn:
-        """TODO
-
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+    @enroute.broker.event("TicketUpdated")
+    async def ticket_updated(self, request: Request) -> NoReturn:
+        """Handle the ticket update events.
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
 
-    # @subscribe("TicketDeleted")
-    async def ticket_deleted(self, topic: str, event: Event) -> NoReturn:
-        """TODO
-
-        :param topic: TODO
-        :param event: TODO
-        :return: TODO
+    @enroute.broker.event("TicketDeleted")
+    async def ticket_deleted(self, request: Request) -> NoReturn:
+        """Handle the ticket delete events.
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
         """
-        diff = event.data
-        print(topic, diff)
+        print(await request.content())
