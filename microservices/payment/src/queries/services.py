@@ -8,8 +8,6 @@ Minos framework can not be copied and/or distributed without the express permiss
 from typing import (
     NoReturn,
 )
-
-import aiopg
 from minos.common import (
     AggregateDiff,
 )
@@ -20,6 +18,8 @@ from minos.networks import (
     Request,
     enroute,
 )
+
+from src.queries.repositories import PaymentAmountRepository
 
 
 class PaymentQueryService(QueryService):
@@ -37,10 +37,8 @@ class PaymentQueryService(QueryService):
         uuid = diff.uuid
         amount = diff.fields_diff["amount"]
 
-        async with await self._get_connection() as connection:
-            await self._create_table(connection)
-            async with connection.cursor() as cursor:
-                await cursor.execute(_INSERT_PAYMENT_QUERY, {"uuid": uuid, "amount": amount})
+        async with PaymentAmountRepository.from_config(config=self.config) as repository:
+            await repository.insert_payment_amount(uuid, amount)
 
     @enroute.broker.event("PaymentDeleted")
     async def payment_deleted(self, request: Request) -> NoReturn:
@@ -51,37 +49,7 @@ class PaymentQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        async with await self._get_connection() as connection:
-            await self._create_table(connection)
-            async with connection.cursor() as cursor:
-                await cursor.execute(_DELETE_PAYMENT_QUERY, {"uuid": diff.uuid})
-
-    @staticmethod
-    async def _get_connection():
-        return await aiopg.connect(database="payment_query_db", user="minos", password="min0s", host="localhost")
-
-    async def _create_table(self, connection):
-        async with connection.cursor() as cursor:
-            await cursor.execute(_CREATE_TABLE)
+        async with PaymentAmountRepository.from_config(config=self.config) as repository:
+            await repository.delete(diff.uuid)
 
 
-_CREATE_TABLE = """
-CREATE TABLE IF NOT EXISTS payment (
-    uuid UUID NOT NULL PRIMARY KEY,
-    amount FLOAT NOT NULL
-);
-""".strip()
-
-_INSERT_PAYMENT_QUERY = """
-INSERT INTO payment (uuid, amount)
-VALUES (%(uuid)s,  %(amount)s)
-ON CONFLICT (uuid)
-DO
-   UPDATE SET amount = %(amount)s
-;
-""".strip()
-
-_DELETE_PAYMENT_QUERY = """
-DELETE FROM payment
-WHERE uuid = %(uuid)s;
-""".strip()
