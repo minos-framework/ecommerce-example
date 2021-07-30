@@ -13,6 +13,10 @@ logs:
 	echo "Showing logs..."
 	docker-compose logs --follow
 
+export-logs:
+	echo "Showing logs..."
+	docker-compose logs --no-color > logs.txt
+
 integration-tests:
 	echo "Running Integration Tests..."
 	docker-compose run tavern
