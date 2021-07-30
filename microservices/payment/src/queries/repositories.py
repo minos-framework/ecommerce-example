@@ -28,7 +28,7 @@ class PaymentAmountRepository(PostgreSqlMinosDatabase):
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> PaymentAmountRepository:
-        return cls(database="payment_query_db", port=5432, user="minos", password="min0s", host="localhost")
+        return cls(*args, **(config.repository._asdict() | {"database": "payment_query_db"}) | kwargs)
 
     async def insert_payment_amount(self, uuid: UUID, amount: int) -> NoReturn:
         """ Insert Payment amount
