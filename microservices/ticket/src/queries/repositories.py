@@ -28,7 +28,7 @@ class TicketAmountRepository(PostgreSqlMinosDatabase):
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> TicketAmountRepository:
-        return cls(database="ticket_query_db", port=5432, user="minos", password="min0s", host="localhost")
+        return cls(*args, **(config.repository._asdict() | {"database": "ticket_query_db"}) | kwargs)
 
     async def insert_ticket_amount(self, uuid: UUID, total_price: int) -> NoReturn:
         """ Insert Payment amount
