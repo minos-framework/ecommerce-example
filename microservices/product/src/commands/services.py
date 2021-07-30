@@ -5,6 +5,7 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+import re
 from typing import (
     NoReturn,
 )
@@ -33,6 +34,8 @@ from ..aggregates import (
     Product,
 )
 
+_UUID_PATTERN = re.compile(r"\w{8}-\w{4}-\w{4}-\w{4}-\w{12}")
+
 
 class ProductCommandService(CommandService):
     """Product Service class"""
@@ -58,7 +61,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.rest.command("/products/{uuid}/inventory", "PUT")
+    @enroute.rest.command(f"/products/{{uuid:{_UUID_PATTERN.pattern}}}/inventory", "PUT")
     async def update_inventory(request: Request) -> Response:
         """Update inventory amount with a difference.
 
@@ -76,7 +79,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.rest.command("/products/{uuid}/inventory", "PATCH")
+    @enroute.rest.command(f"/products/{{uuid:{_UUID_PATTERN.pattern}}}/inventory", "PATCH")
     async def update_inventory_diff(request: Request) -> Response:
         """Update inventory amount with a difference.
 
@@ -120,7 +123,7 @@ class ProductCommandService(CommandService):
 
     @staticmethod
     @enroute.broker.command("GetProduct")
-    # @enroute.rest.command("/products/{uuid}", "GET")
+    @enroute.rest.command(f"/products/{{uuid:{_UUID_PATTERN.pattern}}}", "GET")
     async def get_product(request: Request) -> Response:
         """Get product.
 
@@ -143,7 +146,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.rest.command("/products/{uuid}", "DELETE")
+    @enroute.rest.command(f"/products/{{uuid:{_UUID_PATTERN.pattern}}}", "DELETE")
     async def delete_product(request: Request) -> NoReturn:
         """Delete a product by identifier.
 
