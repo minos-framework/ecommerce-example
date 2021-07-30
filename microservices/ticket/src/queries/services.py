@@ -8,8 +8,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 from typing import (
     NoReturn,
 )
-
-import aiopg
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     AggregateDiff,
 )
@@ -28,6 +29,8 @@ from src.queries.repositories import (
 class TicketQueryService(QueryService):
     """Ticket Query Service class."""
 
+    repository: TicketAmountRepository = Provide["ticket_amount_repository"]
+
     @enroute.broker.event("TicketCreated")
     @enroute.broker.event("TicketUpdated")
     async def ticket_created_or_updated(self, request: Request) -> NoReturn:
@@ -39,8 +42,7 @@ class TicketQueryService(QueryService):
         uuid = diff.uuid
         total_price = diff.fields_diff["total_price"]
 
-        async with TicketAmountRepository.from_config(config=self.config) as repository:
-            await repository.insert_ticket_amount(uuid, total_price)
+        await self.repository.insert_ticket_amount(uuid, total_price)
 
     @enroute.broker.event("TicketDeleted")
     async def ticket_deleted(self, request: Request) -> NoReturn:
@@ -50,5 +52,4 @@ class TicketQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        async with TicketAmountRepository.from_config(config=self.config) as repository:
-            await repository.delete(diff.uuid)
+        await self.repository.delete(diff.uuid)
