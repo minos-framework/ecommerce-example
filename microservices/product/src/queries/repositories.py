@@ -30,7 +30,7 @@ class ProductInventoryRepository(PostgreSqlMinosDatabase):
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductInventoryRepository:
-        return cls(database="product_query_db", port=5432, user="minos", password="min0s", host="localhost")
+        return cls(*args, **(config.repository._asdict() | {"database": "product_query_db"}) | kwargs)
 
     async def get_without_stock(self) -> list[UUID]:
         """Get product identifiers that do not have stock.
