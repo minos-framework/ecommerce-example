@@ -13,4 +13,5 @@ FROM python:slim as production
 COPY --from=build /microservice/dist/ ./dist
 RUN pip install --no-deps ./dist/*
 COPY ./config.yml ./config.yml
-CMD ["microservice", "start"]
+ENTRYPOINT ["microservice"]
+CMD ["start"]
