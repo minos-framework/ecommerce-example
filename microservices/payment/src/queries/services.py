@@ -9,6 +9,9 @@ from typing import (
     NoReturn,
 )
 
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     AggregateDiff,
 )
@@ -21,9 +24,6 @@ from minos.networks import (
 )
 from src.queries.repositories import (
     PaymentAmountRepository,
-)
-from dependency_injector.wiring import (
-    Provide,
 )
 
 

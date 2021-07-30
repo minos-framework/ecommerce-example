@@ -12,6 +12,6 @@ from .commands import (
     PaymentCommandService,
 )
 from .queries import (
-    PaymentQueryService,
     PaymentAmountRepository,
+    PaymentQueryService,
 )
