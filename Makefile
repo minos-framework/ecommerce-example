@@ -1,5 +1,5 @@
 build:
-	docker-compose build --parallel
+	docker-compose build  --progres plain
 
 up: build
 	echo "Starting containers..."
@@ -12,6 +12,10 @@ down:
 logs:
 	echo "Showing logs..."
 	docker-compose logs --follow
+
+export-logs:
+	echo "Showing logs..."
+	docker-compose logs --no-color > logs.txt
 
 integration-tests:
 	echo "Running Integration Tests..."

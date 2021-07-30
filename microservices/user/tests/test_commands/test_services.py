@@ -100,6 +100,7 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
         request = _FakeRequest(
             {
                 "username": "john_coltrane",
+                "password": "john_pass",
                 "status": "created",
                 "address": {"street": "Green Dolphin Street", "street_no": 42},
             }
@@ -111,6 +112,7 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
         observed = await response.content()
         expected = User(
             "john_coltrane",
+            "john_pass",
             "created",
             Address(street="Green Dolphin Street", street_no=42),
             created_at=observed.created_at,
