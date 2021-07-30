@@ -22,10 +22,15 @@ from minos.networks import (
 from src.queries.repositories import (
     PaymentAmountRepository,
 )
+from dependency_injector.wiring import (
+    Provide,
+)
 
 
 class PaymentQueryService(QueryService):
     """Payment Query Service class"""
+
+    repository: PaymentAmountRepository = Provide["payment_amount_repository"]
 
     @enroute.broker.event("PaymentCreated")
     @enroute.broker.event("PaymentUpdated")
@@ -39,8 +44,7 @@ class PaymentQueryService(QueryService):
         uuid = diff.uuid
         amount = diff.fields_diff["amount"]
 
-        async with PaymentAmountRepository.from_config(config=self.config) as repository:
-            await repository.insert_payment_amount(uuid, amount)
+        await self.repository.insert_payment_amount(uuid, amount)
 
     @enroute.broker.event("PaymentDeleted")
     async def payment_deleted(self, request: Request) -> NoReturn:
@@ -51,5 +55,4 @@ class PaymentQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        async with PaymentAmountRepository.from_config(config=self.config) as repository:
-            await repository.delete(diff.uuid)
+        await self.repository.delete(diff.uuid)
