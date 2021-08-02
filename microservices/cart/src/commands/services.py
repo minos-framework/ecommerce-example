@@ -28,7 +28,6 @@ from ..aggregates import (
 )
 
 
-
 class CartCommandService(CommandService):
     """Cart Command Service class"""
 

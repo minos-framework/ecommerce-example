@@ -11,6 +11,7 @@ from typing import (
 from uuid import (
     UUID,
 )
+
 from minos.common import (
     Aggregate,
     DeclarativeModel,
