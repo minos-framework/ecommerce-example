@@ -10,11 +10,11 @@ from .aggregates import (
     CartItem,
 )
 from .commands import (
-    CartCommandService,
     ADD_CART_ITEM,
     REMOVE_CART_ITEM,
+    CartCommandService,
 )
 from .queries import (
-    CartRepository,
     CartQueryService,
+    CartRepository,
 )

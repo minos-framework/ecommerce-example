@@ -18,15 +18,15 @@ from minos.networks import (
     Response,
     enroute,
 )
+from minos.saga import (
+    SagaContext,
+)
 
 from ..aggregates import (
     Cart,
     CartItem,
 )
 
-from minos.saga import (
-    SagaContext,
-)
 
 
 class CartCommandService(CommandService):

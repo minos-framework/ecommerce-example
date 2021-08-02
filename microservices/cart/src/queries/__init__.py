@@ -1,6 +1,6 @@
 from .repositories import (
     CartRepository,
 )
-from .services import  (
+from .services import (
     CartQueryService,
 )
