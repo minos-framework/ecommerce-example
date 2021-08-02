@@ -8,7 +8,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 from typing import (
     Union,
 )
-
+from uuid import (
+    UUID,
+)
 from minos.common import (
     Aggregate,
     DeclarativeModel,
@@ -19,7 +21,7 @@ class CartItem(DeclarativeModel):
     """Cart Aggregate class."""
 
     quantity: int
-    product: int
+    product: UUID
     price: Union[float, int, None]
 
 

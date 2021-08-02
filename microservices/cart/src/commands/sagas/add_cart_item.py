@@ -26,18 +26,18 @@ _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": 
 
 
 def _reserve_products_callback(context: SagaContext) -> Model:
-    product_ids = [context["product_id"]]
+    product_uuids = [context["product_uuid"]]
     quantities = defaultdict(int)
-    for product_id in product_ids:
+    for product_id in product_uuids:
         quantities[str(product_id)] += 1
 
     return _ReserveProductsQuery(quantities=quantities)
 
 
 def _release_products_callback(context: SagaContext) -> Model:
-    product_ids = [context["product_id"]]
+    product_uuids = [context["product_uuid"]]
     quantities = defaultdict(int)
-    for product_id in product_ids:
+    for product_id in product_uuids:
         quantities[str(product_id)] -= 1
 
     return _ReserveProductsQuery(quantities=quantities)
@@ -45,10 +45,10 @@ def _release_products_callback(context: SagaContext) -> Model:
 
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
-    product_id = context["product_id"]
+    product_uuid = context["product_uuid"]
     quantity = context["quantity"]
     cart = await Cart.get_one(cart_id)
-    cart_item = CartItem(product=product_id, quantity=quantity)
+    cart_item = CartItem(product=product_uuid, quantity=quantity)
     cart.products.append(cart_item)
     await cart.save()
     return SagaContext(cart=cart)

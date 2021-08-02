@@ -28,6 +28,7 @@ from ..aggregates import (
 )
 
 
+
 class CartCommandService(CommandService):
     """Cart Command Service class"""
 
@@ -54,10 +55,10 @@ class CartCommandService(CommandService):
         """
         content = await request.content()
         cart = content["uuid"]
-        product = content["product"]
+        product_uuid = content["product_uuid"]
         quantity = content["quantity"]
         await self.saga_manager.run(
-            "AddCartItem", context=SagaContext(cart_id=cart, product_id=product, quantity=quantity)
+            "AddCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
         )
 
         return Response({})
@@ -66,17 +67,18 @@ class CartCommandService(CommandService):
     @enroute.broker.command("RemoveCartItem")
     async def remove_cart_item(self, request: Request) -> Response:
         """Create cart item.
+        TODO: Correctly remove Cart Item
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
         content = await request.content()
         cart = content["uuid"]
-        product = content["product"]
+        product = content["product_uuid"]
 
-        idx, product = self._get_cart_item(cart, product)
+        idx, product = await self._get_cart_item(cart, product)
 
         await self.saga_manager.run(
-            "RemoveCartItem", context=SagaContext(cart_id=cart, product_id=product, idx=idx, product=product)
+            "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product, idx=idx, product=product)
         )
 
         return Response({})
@@ -102,18 +104,15 @@ class CartCommandService(CommandService):
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
-        _Query = ModelType.build("Query", {"uuids": list[UUID]})
-        content = await request.content(model_type=_Query)
-        uuids = content["uuids"]
+        content = await request.content()
+        cart = await Cart.get_one(content["uuid"])
+        result = await cart.delete()
 
-        values = {v.uuid: v async for v in Cart.get(uuids=uuids)}
-        payments = [values[uuid] for uuid in uuids]
-
-        return Response(payments)
+        return Response(result)
 
     @staticmethod
-    async def _get_cart_item(cart_id: UUID, product_id: int):
+    async def _get_cart_item(cart_id: UUID, product_uuid: UUID):
         cart = await Cart.get_one(cart_id)
         for idx, product in enumerate(cart.products):
-            if product.id == product_id:
+            if str(product.product) == product_uuid:
                 return idx, product
