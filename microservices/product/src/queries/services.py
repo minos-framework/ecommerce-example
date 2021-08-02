@@ -67,6 +67,10 @@ class ProductQueryService(QueryService):
         diff: AggregateDiff = await request.content()
 
         uuid = diff.uuid
+
+        if "inventory" not in diff.fields_diff:
+            return
+
         inventory_amount = diff.fields_diff["inventory"].amount
 
         await self.repository.insert_inventory_amount(uuid, inventory_amount)
