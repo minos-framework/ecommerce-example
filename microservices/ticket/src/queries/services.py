@@ -21,7 +21,7 @@ from minos.networks import (
 class TicketQueryService(QueryService):
     """Ticket Query Service class."""
 
-    @enroute.broker.event("TicketAdded")
+    @enroute.broker.event("TicketCreated")
     async def ticket_created(self, request: Request) -> NoReturn:
         """Handle the ticket creation events.
         :param request: A request instance containing the aggregate difference.

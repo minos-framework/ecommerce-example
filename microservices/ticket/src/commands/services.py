@@ -52,7 +52,7 @@ class TicketCommandService(CommandService):
 
     @staticmethod
     @enroute.rest.command("/tickets", "GET")
-    @enroute.broker.command("GetTicket")
+    @enroute.broker.command("GetTickets")
     async def get_tickets(request: Request) -> Response:
         """Get a list of tickets by uuid.
 

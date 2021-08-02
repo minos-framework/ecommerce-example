@@ -39,10 +39,11 @@ class UserCommandService(CommandService):
         content = await request.content()
 
         username = content["username"]
+        password = content["password"]
         status = content["status"]
         address = Address(**content["address"])
         created_at = datetime.now()
 
-        user = await User.create(username, status, address, created_at)
+        user = await User.create(username, password, status, address, created_at)
 
         return Response(user)

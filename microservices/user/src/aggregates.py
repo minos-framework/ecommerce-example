@@ -24,6 +24,7 @@ class User(Aggregate):
     """User Aggregate class."""
 
     username: str
+    password: str
     status: str
     address: Address
     created_at: datetime

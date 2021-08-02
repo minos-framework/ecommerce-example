@@ -39,7 +39,7 @@ class ProductQueryService(QueryService):
         """
 
     @staticmethod
-    @enroute.broker.event("ProductAdded")
+    @enroute.broker.event("ProductCreated")
     async def product_created(request: Request) -> NoReturn:
         """Handle the product create events.
 
