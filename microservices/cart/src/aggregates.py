@@ -5,50 +5,29 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    Union,
-)
-from uuid import (
-    UUID,
-)
-
 from minos.common import (
     Aggregate,
     DeclarativeModel,
+    ModelRef,
+    AggregateRef,
 )
 
 
-class CartItem(DeclarativeModel):
-    """Cart Aggregate class."""
-
-    quantity: int
-    product: UUID
-    price: Union[float, int, None]
-
-
-class Cart(Aggregate):
-    """Cart Aggregate class."""
-
-    user: int
-    products: list[Union[CartItem, None]]
-
-
-"""
-class Product(SubAggregate):
-    id: int
+class Product(AggregateRef):
+    """Product AggregateRef class."""
     title: str
+    description: str
     price: float
 
 
 class CartItem(DeclarativeModel):
-
+    """Cart Item DeclarativeModel class."""
     quantity: int
     product: ModelRef[Product]
-    price: Union[float, int, None]
 
 
 class Cart(Aggregate):
-
+    """Cart Aggregate class."""
     user: int
-    products: list[Union[CartItem, None]]
-"""
+    products: list[CartItem]
+

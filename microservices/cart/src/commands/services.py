@@ -22,19 +22,24 @@ from minos.saga import (
     SagaContext,
 )
 
+from ..queries import CartRepository
 from ..aggregates import (
     Cart,
     CartItem,
+)
+from dependency_injector.wiring import (
+    Provide,
 )
 
 
 class CartCommandService(CommandService):
     """Cart Command Service class"""
 
-    @staticmethod
+    repository: CartRepository = Provide["cart_repository"]
+
     @enroute.rest.command("/carts", "POST")
     @enroute.broker.command("CreateCart")
-    async def create_cart(request: Request) -> Response:
+    async def create_cart(self, request: Request) -> Response:
         """Create a new cart.
         :param request: A request instance containing the information to build a payment instance.
         :return: A response containing the newly created payment instance.
@@ -42,7 +47,7 @@ class CartCommandService(CommandService):
         content = await request.content()
         user = content["user"]
         cart = await Cart.create(user=user, products=[])
-
+        await self.repository.create_cart(cart.uuid, user)
         return Response(cart)
 
     @enroute.rest.command("/carts/{uuid}/items", "POST")
@@ -56,11 +61,11 @@ class CartCommandService(CommandService):
         cart = content["uuid"]
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
-        await self.saga_manager.run(
+        uuid = await self.saga_manager.run(
             "AddCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
         )
 
-        return Response({})
+        return Response(uuid)
 
     @enroute.rest.command("/carts/{uuid}/items", "DELETE")
     @enroute.broker.command("RemoveCartItem")
@@ -82,18 +87,18 @@ class CartCommandService(CommandService):
 
         return Response({})
 
-    @staticmethod
     @enroute.rest.command("/carts/{uuid}", "GET")
     @enroute.broker.command("GetCart")
-    async def get_cart(request: Request) -> Response:
+    async def get_cart_items(self, request: Request) -> Response:
         """Get cart items.
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
         content = await request.content()
-        cart = await Cart.get_one(content["uuid"])
 
-        return Response(cart)
+        res = await self.repository.get_cart_items(content["uuid"])
+
+        return Response(str(res))
 
     @staticmethod
     @enroute.rest.command("/carts/{uuid}", "DELETE")
