@@ -15,10 +15,10 @@ from uuid import (
 )
 
 from minos.common import (
+    UUID_REGEX,
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
     ModelType,
-    UUID_REGEX,
 )
 from minos.cqrs import (
     CommandService,
