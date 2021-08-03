@@ -5,6 +5,7 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+import re
 from typing import (
     NoReturn,
 )
@@ -14,6 +15,7 @@ from uuid import (
 )
 
 from minos.common import (
+    UUID_REGEX,
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
     ModelType,
@@ -58,7 +60,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.rest.command("/products/{uuid}/inventory", "PUT")
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/inventory", "PUT")
     async def update_inventory(request: Request) -> Response:
         """Update inventory amount with a difference.
 
@@ -76,7 +78,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.rest.command("/products/{uuid}/inventory", "PATCH")
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/inventory", "PATCH")
     async def update_inventory_diff(request: Request) -> Response:
         """Update inventory amount with a difference.
 
@@ -119,7 +121,31 @@ class ProductCommandService(CommandService):
         return Response(products)
 
     @staticmethod
-    @enroute.rest.command("/products/{uuid}", "DELETE")
+    @enroute.broker.command("GetProduct")
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
+    async def get_product(request: Request) -> Response:
+        """Get product.
+
+        :param request: The ``Request`` instance that contains the product identifier.
+        :return: A ``Response`` instance containing the requested product.
+        """
+        _Query = ModelType.build("Query", {"uuid": UUID})
+        try:
+            content = await request.content(model_type=_Query)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        uuid = content["uuid"]
+
+        try:
+            product = await Product.get_one(uuid)
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting the product: {exc!r}")
+
+        return Response(product)
+
+    @staticmethod
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
     async def delete_product(request: Request) -> NoReturn:
         """Delete a product by identifier.
 

@@ -13,5 +13,6 @@ from .commands import (
     TicketCommandService,
 )
 from .queries import (
+    TicketAmountRepository,
     TicketQueryService,
 )

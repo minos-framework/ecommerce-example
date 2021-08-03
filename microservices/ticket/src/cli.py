@@ -6,6 +6,7 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 import logging
+import sys
 from pathlib import (
     Path,
 )
@@ -32,7 +33,7 @@ def start(
 ):
     """Start the microservice."""
     config = MinosConfig(file_path)
-    launcher = EntrypointLauncher.from_config(config=config)
+    launcher = EntrypointLauncher.from_config(config=config, external_modules=[sys.modules["src"]])
     launcher.launch()
 
 
