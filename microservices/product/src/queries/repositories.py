@@ -22,14 +22,14 @@ from minos.common import (
 )
 
 
-class ProductInventoryRepository(PostgreSqlMinosDatabase):
+class ProductRepository(PostgreSqlMinosDatabase):
     """ProductInventory Repository class."""
 
     async def _setup(self) -> NoReturn:
         await self.submit_query(_CREATE_TABLE)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductInventoryRepository:
+    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "product_query_db"}) | kwargs)
 
     async def get_without_stock(self) -> list[UUID]:

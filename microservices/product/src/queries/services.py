@@ -26,14 +26,14 @@ from minos.networks import (
 )
 
 from .repositories import (
-    ProductInventoryRepository,
+    ProductRepository,
 )
 
 
 class ProductQueryService(QueryService):
     """Product Query Service class."""
 
-    repository: ProductInventoryRepository = Provide["product_inventory_repository"]
+    repository: ProductRepository = Provide["product_repository"]
 
     # noinspection PyUnusedLocal
     @enroute.rest.query("/products/without-stock", "GET")
