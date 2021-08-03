@@ -18,37 +18,107 @@ from uuid import (
 
 from minos.common import (
     MinosConfig,
-    PostgreSqlMinosDatabase,
+    MinosSetup,
+)
+from sqlalchemy import (
+    Column,
+    Integer,
+    Numeric,
+    Text,
+    create_engine,
+)
+from sqlalchemy.orm import (
+    declarative_base,
+    sessionmaker,
 )
 
+Base = declarative_base()
 
-class ProductRepository(PostgreSqlMinosDatabase):
+
+class Product(Base):
+    """TODO"""
+
+    __tablename__ = "product"
+
+    uuid = Column(Text, primary_key=True)
+    version = Column("version", Integer, nullable=False)
+    code = Column("code", Text, nullable=False)
+    title = Column("title", Text, nullable=False)
+    description = Column("description", Text, nullable=False)
+    price = Column("price", Numeric, nullable=False)
+    inventory_amount = Column("inventory_amount", Integer, nullable=False)
+
+
+class ProductRepository(MinosSetup):
     """ProductInventory Repository class."""
 
+    def __init__(self, database, host, port, user, password, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.db_engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}")
+
+        Session = sessionmaker(self.db_engine)
+        session = Session()
+        self.session = session
+
     async def _setup(self) -> NoReturn:
-        await self.submit_query(_CREATE_TABLE)
+        Base.metadata.create_all(self.db_engine, Base.metadata.tables.values(), checkfirst=True)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "product_query_db"}) | kwargs)
 
-    async def get_without_stock(self) -> list[UUID]:
+    async def get_without_stock(self) -> list[dict]:
         """Get product identifiers that do not have stock.
 
-        :return: A list of UUID values.
+        :return: TODO.
         """
-        entries = [entry async for entry in self.submit_query_and_iter(_GET_PRODUCTS_WITHOUT_STOCK)]
-        uuids = [entry[0] for entry in entries]
-        return uuids
+        return [row2dict(product) for product in self.session.query(Product).filter(Product.inventory_amount == 0)]
 
-    async def insert_inventory_amount(self, uuid: UUID, inventory_amount: int) -> NoReturn:
-        """Insert inventory values on the database.
+    async def get(self, uuid):
+        """TODO
 
-        :param uuid: The product identifier.
-        :param inventory_amount: The amount.
-        :return: This method does not return anything.
+        :return: TODO
         """
-        await self.submit_query(_INSERT_PRODUCT_QUERY, {"uuid": uuid, "inventory_amount": inventory_amount})
+
+        return self.session.query(Product).get(uuid)
+
+    async def create(self, uuid: UUID, version: int, inventory=None, **kwargs):
+        """TODO
+
+        :param uuid: TODO
+        :param version: TODO
+        :param inventory: TODO
+        :param kwargs: TODO
+        :return: TODO
+        """
+        if isinstance(uuid, UUID):
+            uuid = str(uuid)
+        if inventory is not None:
+            kwargs["inventory_amount"] = inventory["amount"]
+
+        product = Product(uuid=uuid, version=version, **kwargs)
+        self.session.add(product)
+        self.session.commit()
+
+    async def update(self, uuid: UUID, version: int, inventory=None, **kwargs):
+        """TODO
+
+        :param uuid: TODO
+        :param version: TODO
+        :param inventory: TODO
+        :param kwargs: TODO
+        :return: TODO
+        """
+        if isinstance(uuid, UUID):
+            uuid = str(uuid)
+        if inventory is not None:
+            kwargs["inventory_amount"] = inventory["amount"]
+
+        product = self.session.query(Product).get(uuid)
+        for k, v in (kwargs | {"version": version}).items():
+            setattr(product, k, v)
+        self.session.commit()
 
     async def delete(self, uuid: UUID) -> NoReturn:
         """Delete an entry from the database.
@@ -56,32 +126,19 @@ class ProductRepository(PostgreSqlMinosDatabase):
         :param uuid: The product identifier.
         :return: This method does not return anything.
         """
-        await self.submit_query(_DELETE_PRODUCT_QUERY, {"uuid": uuid})
+        product = self.session.query(Product).get(uuid)
+        self.session.delete(product)
+        self.session.commit()
 
 
-_CREATE_TABLE = """
-CREATE TABLE IF NOT EXISTS product (
-    uuid UUID NOT NULL PRIMARY KEY,
-    inventory_amount INT NOT NULL
-);
-""".strip()
+def row2dict(row):
+    """TODO
 
-_INSERT_PRODUCT_QUERY = """
-INSERT INTO product (uuid, inventory_amount)
-VALUES (%(uuid)s,  %(inventory_amount)s)
-ON CONFLICT (uuid)
-DO
-   UPDATE SET inventory_amount = %(inventory_amount)s
-;
-""".strip()
+    :param row: TODO
+    :return: TODO
+    """
+    d = {}
+    for column in row.__table__.columns:
+        d[column.name] = str(getattr(row, column.name))
 
-_DELETE_PRODUCT_QUERY = """
-DELETE FROM product
-WHERE uuid = %(uuid)s;
-""".strip()
-
-_GET_PRODUCTS_WITHOUT_STOCK = """
-SELECT uuid 
-FROM product
-WHERE inventory_amount = 0;
-""".strip()
+    return d

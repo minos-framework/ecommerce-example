@@ -57,23 +57,24 @@ class ProductQueryService(QueryService):
         raise ResponseException("Not Implemented yet!")
 
     @enroute.broker.event("ProductCreated")
-    @enroute.broker.event("ProductUpdated")
-    async def product_created_or_updated(self, request: Request) -> NoReturn:
+    async def product_created(self, request: Request) -> NoReturn:
         """Handle the product create and update events.
 
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
+        await self.repository.create(diff.uuid, diff.version, **diff.fields_diff.avro_data)
 
-        uuid = diff.uuid
+    @enroute.broker.event("ProductUpdated")
+    async def product_updated(self, request: Request) -> NoReturn:
+        """Handle the product create and update events.
 
-        if "inventory" not in diff.fields_diff.keys():
-            return
-
-        inventory_amount = diff.fields_diff["inventory"].amount
-
-        await self.repository.insert_inventory_amount(uuid, inventory_amount)
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
+        """
+        diff: AggregateDiff = await request.content()
+        await self.repository.update(diff.uuid, diff.version, **diff.fields_diff.avro_data)
 
     @enroute.broker.event("ProductDeleted")
     async def product_deleted(self, request: Request) -> NoReturn:
@@ -83,5 +84,4 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-
         await self.repository.delete(diff.uuid)
