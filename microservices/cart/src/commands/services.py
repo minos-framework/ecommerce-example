@@ -81,11 +81,11 @@ class CartCommandService(CommandService):
 
         idx, product = await self._get_cart_item(cart, product)
 
-        await self.saga_manager.run(
+        saga_id = await self.saga_manager.run(
             "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product, idx=idx, product=product)
         )
 
-        return Response({})
+        return Response(saga_id)
 
     @enroute.rest.command("/carts/{uuid}", "GET")
     @enroute.broker.command("GetCart")
