@@ -68,7 +68,7 @@ class ProductQueryService(QueryService):
 
         uuid = diff.uuid
 
-        if "inventory" not in diff.fields_diff:
+        if "inventory" not in diff.fields_diff.keys():
             return
 
         inventory_amount = diff.fields_diff["inventory"].amount
