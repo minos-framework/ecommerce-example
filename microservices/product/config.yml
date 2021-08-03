@@ -1,6 +1,7 @@
 service:
     name: products
     injections:
+        postgresql_pool: minos.common.PostgreSqlPool
         command_broker: minos.networks.CommandBroker
         command_reply_broker: minos.networks.CommandReplyBroker
         event_broker: minos.networks.EventBroker

@@ -18,6 +18,7 @@ from minos.common import (
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
     ModelType,
+    UUID_REGEX,
 )
 from minos.cqrs import (
     CommandService,
@@ -33,8 +34,6 @@ from ..aggregates import (
     Inventory,
     Product,
 )
-
-_UUID_PATTERN = re.compile(r"\w{8}-\w{4}-\w{4}-\w{4}-\w{12}")
 
 
 class ProductCommandService(CommandService):
@@ -61,7 +60,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.rest.command(f"/products/{{uuid:{_UUID_PATTERN.pattern}}}/inventory", "PUT")
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/inventory", "PUT")
     async def update_inventory(request: Request) -> Response:
         """Update inventory amount with a difference.
 
@@ -79,7 +78,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.rest.command(f"/products/{{uuid:{_UUID_PATTERN.pattern}}}/inventory", "PATCH")
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/inventory", "PATCH")
     async def update_inventory_diff(request: Request) -> Response:
         """Update inventory amount with a difference.
 
@@ -123,7 +122,7 @@ class ProductCommandService(CommandService):
 
     @staticmethod
     @enroute.broker.command("GetProduct")
-    @enroute.rest.command(f"/products/{{uuid:{_UUID_PATTERN.pattern}}}", "GET")
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
     async def get_product(request: Request) -> Response:
         """Get product.
 
@@ -146,7 +145,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.rest.command(f"/products/{{uuid:{_UUID_PATTERN.pattern}}}", "DELETE")
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
     async def delete_product(request: Request) -> NoReturn:
         """Delete a product by identifier.
 
