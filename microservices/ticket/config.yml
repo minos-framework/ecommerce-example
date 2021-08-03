@@ -1,6 +1,7 @@
 service:
   name: tickets
   injections:
+    postgresql_pool: minos.common.PostgreSqlPool
     command_broker: minos.networks.CommandBroker
     command_reply_broker: minos.networks.CommandReplyBroker
     event_broker: minos.networks.EventBroker
@@ -9,6 +10,7 @@ service:
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
+    ticket_amount_repository: src.TicketAmountRepository
   services:
     - minos.networks.CommandConsumerService
     - minos.networks.CommandHandlerService
