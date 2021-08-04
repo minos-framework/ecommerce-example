@@ -13,6 +13,6 @@ from .commands import (
     ProductCommandService,
 )
 from .queries import (
-    ProductQueryService,
     ProductQueryRepository,
+    ProductQueryService,
 )
