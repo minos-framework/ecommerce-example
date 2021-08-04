@@ -27,7 +27,7 @@ _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": 
 
 def _reserve_products_callback(context: SagaContext) -> Model:
     cart = context["cart"]
-    #products = [item.product for item in cart.products]
+    # products = [item.product for item in cart.products]
     quantities = defaultdict(int)
     for item in cart.products:
         quantities[str(item.product)] += item.quantity

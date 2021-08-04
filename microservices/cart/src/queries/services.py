@@ -147,4 +147,3 @@ class CartQueryService(QueryService):
             await self.repository.delete_cart_item(cart_uuid, product_uuid)
         else:
             """Cart Item Creation or update"""
-
