@@ -73,7 +73,8 @@ class ProductQueryRepository(PostgreSqlMinosDatabase):
         :param kwargs: The parameters to be updated.
         :return: This method does not return anything.
         """
-        kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
+        if "inventory" in kwargs:
+            kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
 
         query = PRODUCT_TABLE.update().where(PRODUCT_TABLE.columns.uuid == uuid).values(**kwargs)
         self._execute(query)
