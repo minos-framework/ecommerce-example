@@ -32,11 +32,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
-metadata = MetaData()
-
 PRODUCT_TABLE = Table(
     "product",
-    metadata,
+    MetaData(),
     Column("uuid", UUID_PG(as_uuid=True), primary_key=True),
     Column("version", Integer, nullable=False),
     Column("code", Text, nullable=False),
@@ -45,6 +43,7 @@ PRODUCT_TABLE = Table(
     Column("price", Numeric, nullable=False),
     Column("inventory_amount", Integer, nullable=False),
 )
+
 ProductDTO = ModelType.build(
     "ProductDTO", {"uuid": UUID, "code": str, "title": str, "description": str, "price": float}
 )
