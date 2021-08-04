@@ -5,28 +5,16 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from uuid import (
-    UUID,
-)
-
-from minos.common import (
-    ModelType,
-)
 from minos.cqrs import (
     CommandService,
 )
 from minos.networks import (
     Request,
     Response,
-    ResponseException,
     enroute,
 )
 from minos.saga import (
     SagaContext,
-)
-
-from ..aggregates import (
-    Order,
 )
 
 
@@ -45,28 +33,3 @@ class OrderCommandService(CommandService):
         product_uuids = content["product_uuids"]
         uuid = await self.saga_manager.run("CreateOrder", context=SagaContext(product_uuids=product_uuids))
         return Response(uuid)
-
-    @staticmethod
-    @enroute.rest.command("/orders", "GET")
-    @enroute.broker.command("GetOrders")
-    async def get_orders(request: Request) -> Response:
-        """Get a list of orders by uuid.
-
-        :param request: The ``Request`` instance containing the list of ``Order`` identifiers.
-        :return: A ``Response`` containing the list of ``Order`` instances.
-        """
-        _Query = ModelType.build("Query", {"uuids": list[UUID]})
-        try:
-            content = await request.content(model_type=_Query)
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
-
-        uuids = content["uuids"]
-
-        try:
-            values = {v.uuid: v async for v in Order.get(uuids=uuids)}
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting orders: {exc!r}")
-        orders = [values[uuid] for uuid in uuids]
-
-        return Response(orders)

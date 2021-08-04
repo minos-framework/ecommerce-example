@@ -11,18 +11,12 @@ from __future__ import (
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
-from datetime import (
-    datetime,
-    timezone,
-)
 from pathlib import (
     Path,
 )
 from typing import (
     NoReturn,
+    Optional,
 )
 from unittest.mock import (
     MagicMock,
@@ -33,6 +27,9 @@ from uuid import (
     uuid4,
 )
 
+from cached_property import (
+    cached_property,
+)
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -63,12 +60,17 @@ class _FakeRequest(Request):
         super().__init__()
         self._content = content
 
+    @cached_property
+    def user(self) -> Optional[UUID]:
+        """For testing purposes"""
+        return uuid4()
+
     async def content(self, **kwargs):
         """For testing purposes"""
         return self._content
 
     def __eq__(self, other: _FakeRequest) -> bool:
-        return self._content == other._content
+        return self._content == other._content and self.user == other.user
 
     def __repr__(self) -> str:
         return str()
@@ -128,21 +130,6 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(expected, observed)
         self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3])), mock.call_args)
-
-    async def test_get_orders(self):
-        now = datetime.now(tz=timezone.utc)
-
-        expected = await gather(
-            Order.create([uuid4(), uuid4()], uuid4(), "created", now, now),
-            Order.create([uuid4(), uuid4()], uuid4(), "cancelled", now, now),
-        )
-
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
-
-        response = await self.service.get_orders(request)
-        observed = await response.content()
-
-        self.assertEqual(expected, observed)
 
 
 if __name__ == "__main__":
