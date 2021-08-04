@@ -3,27 +3,17 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    NoReturn,
-)
+from typing import NoReturn
 
-from dependency_injector.wiring import (
-    Provide,
-)
-from minos.common import (
-    AggregateDiff,
-)
-from minos.cqrs import (
-    QueryService,
-)
+from dependency_injector.wiring import Provide
+from minos.common import AggregateDiff
+from minos.cqrs import QueryService
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
-from src.queries.repositories import (
-    CartRepository,
-)
+from src.queries.repositories import CartRepository
 
 
 class CartQueryService(QueryService):
@@ -147,4 +137,3 @@ class CartQueryService(QueryService):
             await self.repository.delete_cart_item(cart_uuid, product_uuid)
         else:
             """Cart Item Creation or update"""
-
