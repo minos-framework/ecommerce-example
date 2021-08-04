@@ -45,7 +45,9 @@ PRODUCT_TABLE = Table(
     Column("price", Numeric, nullable=False),
     Column("inventory_amount", Integer, nullable=False),
 )
-ProductDTO = ModelType.build("Product", {"uuid": UUID, "code": str, "title": str, "description": str, "price": float})
+ProductDTO = ModelType.build(
+    "ProductDTO", {"uuid": UUID, "code": str, "title": str, "description": str, "price": float}
+)
 
 
 class ProductQueryRepository(MinosSetup):
