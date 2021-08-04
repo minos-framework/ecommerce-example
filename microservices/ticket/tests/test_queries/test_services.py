@@ -9,6 +9,9 @@ from __future__ import (
 
 import sys
 import unittest
+from asyncio import (
+    gather,
+)
 from pathlib import (
     Path,
 )
@@ -36,11 +39,10 @@ from minos.common import (
 )
 from minos.networks import (
     Request,
-    Response,
 )
 from src import (
     Ticket,
-    TicketCommandService,
+    TicketQueryService,
 )
 
 
@@ -98,20 +100,21 @@ class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = TicketCommandService()
+        self.service = TicketQueryService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_ticket(self):
-        gen_uuid = [uuid4(), uuid4(), uuid4()]
-        request = _FakeRequest({"product_uuids": gen_uuid})
-        response = await self.service.create_ticket(request)
+    async def test_get_payments(self):
+        expected = await gather(
+            Ticket.create("kokrte3432", [uuid4(), uuid4(), uuid4()], 34),
+            Ticket.create("343j4k3j4", [uuid4(), uuid4(), uuid4()], 132),
+        )
 
-        self.assertIsInstance(response, Response)
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
+        response = await self.service.get_tickets(request)
         observed = await response.content()
-        expected = Ticket(observed.code, [], 0.0, uuid=observed.uuid, version=observed.version)
 
         self.assertEqual(expected, observed)
 
