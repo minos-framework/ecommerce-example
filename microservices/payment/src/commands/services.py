@@ -6,18 +6,14 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 
-from minos.cqrs import (
-    CommandService,
-)
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
 
-from ..aggregates import (
-    Payment,
-)
+from ..aggregates import Payment
 
 
 class PaymentCommandService(CommandService):
