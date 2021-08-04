@@ -47,7 +47,6 @@ class CartCommandService(CommandService):
         content = await request.content()
         user = content["user"]
         cart = await Cart.create(user=user, products=[])
-        await self.repository.create_cart(cart.uuid, user)
         return Response(cart)
 
     @enroute.rest.command("/carts/{uuid}/items", "POST")

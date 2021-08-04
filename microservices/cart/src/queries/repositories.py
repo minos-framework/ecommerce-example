@@ -101,7 +101,7 @@ VALUES (%(uuid)s,  %(user_id)s)
 ON CONFLICT (uuid)
 DO
    UPDATE SET user_id = %(user_id)s
-;   º
+;
 """.strip()
 
 _INSERT_CART_ITEM_QUERY = """
