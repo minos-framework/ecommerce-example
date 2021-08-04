@@ -23,7 +23,9 @@ from minos.common import (
 from sqlalchemy import (
     Column,
     Integer,
+    MetaData,
     Numeric,
+    Table,
     Text,
     create_engine,
 )
@@ -32,21 +34,20 @@ from sqlalchemy.orm import (
     sessionmaker,
 )
 
-Base = declarative_base()
+metadata = MetaData()
 
 
-class Product(Base):
-    """TODO"""
-
-    __tablename__ = "product"
-
-    uuid = Column(Text, primary_key=True)
-    version = Column("version", Integer, nullable=False)
-    code = Column("code", Text, nullable=False)
-    title = Column("title", Text, nullable=False)
-    description = Column("description", Text, nullable=False)
-    price = Column("price", Numeric, nullable=False)
-    inventory_amount = Column("inventory_amount", Integer, nullable=False)
+product_table = Table(
+    'product',
+    metadata,
+    Column("uuid", Text, primary_key=True),
+    Column("version", Integer, nullable=False),
+    Column("code", Text, nullable=False),
+    Column("title", Text, nullable=False),
+    Column("description", Text, nullable=False),
+    Column("price", Numeric, nullable=False),
+    Column("inventory_amount", Integer, nullable=False),
+)
 
 
 class ProductRepository(MinosSetup):
@@ -62,7 +63,7 @@ class ProductRepository(MinosSetup):
         self.session = session
 
     async def _setup(self) -> NoReturn:
-        Base.metadata.create_all(self.db_engine, Base.metadata.tables.values(), checkfirst=True)
+        product_table.create(self.db_engine, checkfirst=True)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductRepository:
@@ -80,8 +81,7 @@ class ProductRepository(MinosSetup):
 
         :return: TODO
         """
-
-        return self.session.query(Product).get(uuid)
+        return product_table.select().where(product_table.c.uuid == uuid)
 
     async def create(self, uuid: UUID, version: int, inventory=None, **kwargs):
         """TODO
@@ -97,9 +97,8 @@ class ProductRepository(MinosSetup):
         if inventory is not None:
             kwargs["inventory_amount"] = inventory["amount"]
 
-        product = Product(uuid=uuid, version=version, **kwargs)
-        self.session.add(product)
-        self.session.commit()
+        op = product_table.insert(uuid=uuid, version=version, **kwargs)
+        self.session.execute(op)
 
     async def update(self, uuid: UUID, version: int, inventory=None, **kwargs):
         """TODO
@@ -115,10 +114,8 @@ class ProductRepository(MinosSetup):
         if inventory is not None:
             kwargs["inventory_amount"] = inventory["amount"]
 
-        product = self.session.query(Product).get(uuid)
-        for k, v in (kwargs | {"version": version}).items():
-            setattr(product, k, v)
-        self.session.commit()
+        op = product_table.update().where(product_table.c.uuid == uuid).values((kwargs | {"version": version}))
+        self.session.execute(op)
 
     async def delete(self, uuid: UUID) -> NoReturn:
         """Delete an entry from the database.
@@ -126,9 +123,8 @@ class ProductRepository(MinosSetup):
         :param uuid: The product identifier.
         :return: This method does not return anything.
         """
-        product = self.session.query(Product).get(uuid)
-        self.session.delete(product)
-        self.session.commit()
+        op = product_table.delete().where(product_table.c.uuid == uuid)
+        self.session.execute(op)
 
 
 def row2dict(row):
