@@ -18,6 +18,7 @@ from minos.cqrs import (
 )
 from minos.networks import (
     Request,
+    Response,
     enroute,
 )
 from src.queries.repositories import (
@@ -29,6 +30,19 @@ class CartQueryService(QueryService):
     """Cart Query Service class"""
 
     repository: CartRepository = Provide["cart_repository"]
+
+    @enroute.rest.query("/carts/{uuid}", "GET")
+    @enroute.broker.query("GetCart")
+    async def get_cart_items(self, request: Request) -> Response:
+        """Get cart items.
+        :param request: A request instance containing the payment identifiers.
+        :return: A response containing the queried payment instances.
+        """
+        content = await request.content()
+
+        res = await self.repository.get_cart_items(content["uuid"])
+
+        return Response(str(res))
 
     @enroute.broker.event("CartCreated")
     async def cart_or_cart_item_created(self, request: Request) -> NoReturn:

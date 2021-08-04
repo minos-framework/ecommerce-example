@@ -86,19 +86,6 @@ class CartCommandService(CommandService):
 
         return Response(saga_id)
 
-    @enroute.rest.command("/carts/{uuid}", "GET")
-    @enroute.broker.command("GetCart")
-    async def get_cart_items(self, request: Request) -> Response:
-        """Get cart items.
-        :param request: A request instance containing the payment identifiers.
-        :return: A response containing the queried payment instances.
-        """
-        content = await request.content()
-
-        res = await self.repository.get_cart_items(content["uuid"])
-
-        return Response(str(res))
-
     @staticmethod
     @enroute.rest.command("/carts/{uuid}", "DELETE")
     @enroute.broker.command("DeleteCart")
