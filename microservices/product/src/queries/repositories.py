@@ -18,35 +18,16 @@ from uuid import (
 
 from minos.common import (
     MinosConfig,
-    ModelType,
     PostgreSqlMinosDatabase,
 )
 from sqlalchemy import (
-    Column,
-    Integer,
-    MetaData,
-    Numeric,
-    Table,
-    Text,
     create_engine,
 )
-from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
-META = MetaData()
-PRODUCT_TABLE = Table(
-    "product",
+from .models import (
     META,
-    Column("uuid", UUID_PG(as_uuid=True), primary_key=True),
-    Column("version", Integer, nullable=False),
-    Column("code", Text, nullable=False),
-    Column("title", Text, nullable=False),
-    Column("description", Text, nullable=False),
-    Column("price", Numeric, nullable=False),
-    Column("inventory_amount", Integer, nullable=False),
-)
-
-ProductDTO = ModelType.build(
-    "ProductDTO", {"uuid": UUID, "code": str, "title": str, "description": str, "price": float}
+    PRODUCT_TABLE,
+    ProductDTO,
 )
 
 
