@@ -11,14 +11,22 @@ from __future__ import (
 
 from typing import (
     NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
 )
 
+from aiopg.sa import (
+    SAConnection,
+)
+from aiopg.sa.engine import (
+    get_dialect,
+)
 from minos.common import (
     MinosConfig,
     PostgreSqlMinosDatabase,
+    PostgreSqlPool,
 )
 from sqlalchemy import (
     create_engine,
@@ -34,13 +42,15 @@ from .models import (
 class ProductQueryRepository(PostgreSqlMinosDatabase):
     """ProductInventory Repository class."""
 
+    _pool: Optional[PostgreSqlPool] = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
 
     async def _setup(self) -> NoReturn:
         await super()._setup()
-        META.create_all(self.engine)
+        url = f"postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
+        META.create_all(create_engine(url))
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductQueryRepository:
@@ -52,8 +62,8 @@ class ProductQueryRepository(PostgreSqlMinosDatabase):
         :return: a list of dto instances.
         """
         query = PRODUCT_TABLE.select().where(PRODUCT_TABLE.columns.inventory_amount == 0)
-        result = self._execute(query)
-        return [ProductDTO(**row) for row in result]
+        result = await self._execute(query)
+        return [ProductDTO(**row) async for row in result]
 
     async def create(self, **kwargs) -> NoReturn:
         """Create a new row.
@@ -64,7 +74,7 @@ class ProductQueryRepository(PostgreSqlMinosDatabase):
         kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
 
         query = PRODUCT_TABLE.insert().values(**kwargs)
-        self._execute(query)
+        await self._execute(query)
 
     async def update(self, uuid: UUID, **kwargs) -> NoReturn:
         """Update an existing row.
@@ -77,7 +87,7 @@ class ProductQueryRepository(PostgreSqlMinosDatabase):
             kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
 
         query = PRODUCT_TABLE.update().where(PRODUCT_TABLE.columns.uuid == uuid).values(**kwargs)
-        self._execute(query)
+        await self._execute(query)
 
     async def delete(self, uuid: UUID) -> NoReturn:
         """Delete an entry from the database.
@@ -85,7 +95,19 @@ class ProductQueryRepository(PostgreSqlMinosDatabase):
         :param uuid: The product identifier.
         :return: This method does not return anything.
         """
-        self._execute(PRODUCT_TABLE.delete().where(PRODUCT_TABLE.columns.uuid == uuid))
+        query = PRODUCT_TABLE.delete().where(PRODUCT_TABLE.columns.uuid == uuid)
+        await self._execute(query)
 
-    def _execute(self, op):
-        return self.engine.execute(op)
+    async def _execute(self, query):
+        async with self.pool.acquire() as conn:
+            return await SAConnection(conn, _ENGINE).execute(query)
+
+
+class _Engine:
+    dialect = get_dialect()
+
+    async def release(self, *args, **kwargs):
+        """TODO"""
+
+
+_ENGINE = _Engine()
