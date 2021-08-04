@@ -18,8 +18,8 @@ from uuid import (
 
 from minos.common import (
     MinosConfig,
-    MinosSetup,
     ModelType,
+    PostgreSqlMinosDatabase,
 )
 from sqlalchemy import (
     Column,
@@ -49,14 +49,15 @@ ProductDTO = ModelType.build(
 )
 
 
-class ProductQueryRepository(MinosSetup):
+class ProductQueryRepository(PostgreSqlMinosDatabase):
     """ProductInventory Repository class."""
 
-    def __init__(self, database: str, host: str, port: int, user: str, password: str, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}")
+        self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
 
     async def _setup(self) -> NoReturn:
+        await super()._setup()
         PRODUCT_TABLE.create(self.engine, checkfirst=True)
 
     @classmethod
