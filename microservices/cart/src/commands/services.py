@@ -7,6 +7,9 @@ from uuid import (
     UUID,
 )
 
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     ModelType,
 )
@@ -22,13 +25,12 @@ from minos.saga import (
     SagaContext,
 )
 
-from ..queries import CartRepository
 from ..aggregates import (
     Cart,
     CartItem,
 )
-from dependency_injector.wiring import (
-    Provide,
+from ..queries import (
+    CartRepository,
 )
 
 

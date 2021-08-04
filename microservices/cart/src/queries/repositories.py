@@ -47,8 +47,9 @@ class CartRepository(PostgreSqlMinosDatabase):
         items = [v async for v in self.submit_query_and_iter(_SELECT_CART_ITEMS_QUERY, {"cart_id": cart_id})]
         return items
 
-    async def insert_or_update_cart_item(self, cart_uuid, item_uuid, quantity, item_title, item_description,
-                                                         item_price):
+    async def insert_or_update_cart_item(
+        self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price
+    ):
         """ Insert or Update Cart Item
         :param cart_uuid: UUID
         :param item_uuid: User ID
@@ -59,10 +60,17 @@ class CartRepository(PostgreSqlMinosDatabase):
         :return: Nothing
         """
 
-        await self.submit_query(_INSERT_CART_ITEM_QUERY, {"cart_id": cart_uuid, "product_id": item_uuid,
-                                                          "quantity": quantity, "title": item_title,
-                                                          "description": item_description,
-                                                          "price": item_price})
+        await self.submit_query(
+            _INSERT_CART_ITEM_QUERY,
+            {
+                "cart_id": cart_uuid,
+                "product_id": item_uuid,
+                "quantity": quantity,
+                "title": item_title,
+                "description": item_description,
+                "price": item_price,
+            },
+        )
 
     async def delete_cart(self, uuid: UUID) -> NoReturn:
         """ Delete Payment

@@ -7,14 +7,15 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from minos.common import (
     Aggregate,
+    AggregateRef,
     DeclarativeModel,
     ModelRef,
-    AggregateRef,
 )
 
 
 class Product(AggregateRef):
     """Product AggregateRef class."""
+
     title: str
     description: str
     price: float
@@ -22,12 +23,13 @@ class Product(AggregateRef):
 
 class CartItem(DeclarativeModel):
     """Cart Item DeclarativeModel class."""
+
     quantity: int
     product: ModelRef[Product]
 
 
 class Cart(Aggregate):
     """Cart Aggregate class."""
+
     user: int
     products: list[CartItem]
-
