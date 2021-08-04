@@ -15,7 +15,8 @@ from pathlib import (
     Path,
 )
 from typing import (
-    NoReturn, Optional,
+    NoReturn,
+    Optional,
 )
 from unittest.mock import (
     MagicMock,
@@ -26,7 +27,9 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 from minos.common import (
     CommandReply,
     DependencyInjector,

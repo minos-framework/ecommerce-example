@@ -22,14 +22,17 @@ from pathlib import (
     Path,
 )
 from typing import (
-    NoReturn, Optional,
+    NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
     uuid4,
 )
 
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 from minos.common import (
     CommandReply,
     DependencyInjector,
