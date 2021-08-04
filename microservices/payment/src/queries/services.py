@@ -76,10 +76,6 @@ class PaymentQueryService(QueryService):
         :param request: The ``Request`` instance that contains the payment identifier.
         :return: A ``Response`` instance containing the requested payment.
         """
-        from minos.common import (
-            ModelType,
-        )
-
         try:
             content = await request.content(model_type=ModelType.build("Query", {"uuid": UUID}))
         except Exception as exc:
