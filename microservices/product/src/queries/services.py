@@ -18,6 +18,7 @@ from dependency_injector.wiring import (
 from minos.common import (
     UUID_REGEX,
     AggregateDiff,
+    ModelType,
 )
 from minos.cqrs import (
     QueryService,
@@ -48,14 +49,6 @@ class ProductQueryService(QueryService):
         :param request: The ``Request`` instance that contains the product identifiers.
         :return: A ``Response`` instance containing the requested products.
         """
-        from uuid import (
-            UUID,
-        )
-
-        from minos.common import (
-            ModelType,
-        )
-
         try:
             content = await request.content(model_type=ModelType.build("Query", {"uuids": list[UUID]}))
         except Exception as exc:
@@ -83,10 +76,6 @@ class ProductQueryService(QueryService):
         :param request: The ``Request`` instance that contains the product identifier.
         :return: A ``Response`` instance containing the requested product.
         """
-        from minos.common import (
-            ModelType,
-        )
-
         try:
             content = await request.content(model_type=ModelType.build("Query", {"uuid": UUID}))
         except Exception as exc:
