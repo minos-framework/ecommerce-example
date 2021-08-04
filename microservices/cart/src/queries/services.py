@@ -3,27 +3,17 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    NoReturn,
-)
+from typing import NoReturn
 
-from dependency_injector.wiring import (
-    Provide,
-)
-from minos.common import (
-    AggregateDiff,
-)
-from minos.cqrs import (
-    QueryService,
-)
+from dependency_injector.wiring import Provide
+from minos.common import AggregateDiff
+from minos.cqrs import QueryService
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
-from src.queries.repositories import (
-    CartRepository,
-)
+from src.queries.repositories import CartRepository
 
 
 class CartQueryService(QueryService):
@@ -56,19 +46,20 @@ class CartQueryService(QueryService):
 
         if len(diff.fields_diff.fields["products"].value) > 0:
             """CartItem Creation"""
-            quantity = diff.fields_diff.fields["products"].value[-1].fields['quantity'].value
-            product = diff.fields_diff.fields["products"].value[-1].fields['product']
+            quantity = diff.fields_diff.fields["products"].value[-1].fields["quantity"].value
+            product = diff.fields_diff.fields["products"].value[-1].fields["product"]
 
             item_uuid = str(product.value.fields["uuid"].value)
             item_title = product.value.fields["title"].value
             item_description = product.value.fields["description"].value
             item_price = product.value.fields["price"].value
 
-            await self.repository.insert_or_update_cart_item(cart_uuid, item_uuid, quantity, item_title,
-                                                             item_description, item_price)
+            await self.repository.insert_or_update_cart_item(
+                cart_uuid, item_uuid, quantity, item_title, item_description, item_price
+            )
         else:
             """Cart creation"""
-            user = diff.fields_diff.fields['user'].value
+            user = diff.fields_diff.fields["user"].value
             await self.repository.create_cart(cart_uuid, user)
 
     @enroute.broker.event("CartUpdated")
@@ -81,8 +72,8 @@ class CartQueryService(QueryService):
 
         if len(diff.fields_diff.fields["products"].value) > 0:
             """Cart or CartItem update"""
-            quantity = diff.fields_diff.fields["products"].value[-1].fields['quantity'].value
-            product = diff.fields_diff.fields["products"].value[-1].fields['product']
+            quantity = diff.fields_diff.fields["products"].value[-1].fields["quantity"].value
+            product = diff.fields_diff.fields["products"].value[-1].fields["product"]
             cart_uuid = str(diff.uuid)
 
             item_uuid = str(product.value.fields["uuid"].value)
@@ -90,8 +81,9 @@ class CartQueryService(QueryService):
             item_description = product.value.fields["description"].value
             item_price = product.value.fields["price"].value
 
-            await self.repository.insert_or_update_cart_item(cart_uuid, item_uuid, quantity, item_title,
-                                                             item_description, item_price)
+            await self.repository.insert_or_update_cart_item(
+                cart_uuid, item_uuid, quantity, item_title, item_description, item_price
+            )
         else:
             """Cart creation or update"""
             pass
@@ -124,7 +116,7 @@ class CartQueryService(QueryService):
 
         if len(diff.fields_diff.fields["products"].value) == 0:
             """Cart creation or update"""
-            product = diff.fields_diff.fields["products"].value[-1].fields['product']
+            product = diff.fields_diff.fields["products"].value[-1].fields["product"]
             cart_uuid = str(diff.uuid)
 
             item_uuid = str(product.value.fields["uuid"].value)

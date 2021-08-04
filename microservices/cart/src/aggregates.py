@@ -15,6 +15,7 @@ from minos.common import (
 
 class Product(AggregateRef):
     """Product AggregateRef class."""
+
     title: str
     description: str
     price: float
@@ -22,12 +23,13 @@ class Product(AggregateRef):
 
 class CartItem(DeclarativeModel):
     """Cart Item DeclarativeModel class."""
+
     quantity: int
     product: ModelRef[Product]
 
 
 class Cart(Aggregate):
     """Cart Aggregate class."""
+
     user: int
     products: list[CartItem]
-

@@ -3,33 +3,23 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
-from minos.common import (
-    ModelType,
-)
-from minos.cqrs import (
-    CommandService,
-)
+from minos.common import ModelType
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 
 from ..queries import CartRepository
 from ..aggregates import (
     Cart,
     CartItem,
 )
-from dependency_injector.wiring import (
-    Provide,
-)
+from dependency_injector.wiring import Provide
 
 
 class CartCommandService(CommandService):
