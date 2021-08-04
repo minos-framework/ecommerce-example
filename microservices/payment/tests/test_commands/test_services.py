@@ -19,11 +19,16 @@ from pathlib import (
 )
 from typing import (
     NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
+    uuid4,
 )
 
+from cached_property import (
+    cached_property,
+)
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -51,12 +56,17 @@ class _FakeRequest(Request):
         super().__init__()
         self._content = content
 
+    @cached_property
+    def user(self) -> Optional[UUID]:
+        """For testing purposes"""
+        return uuid4()
+
     async def content(self, **kwargs):
         """For testing purposes"""
         return self._content
 
     def __eq__(self, other: _FakeRequest) -> bool:
-        return self._content == other._content
+        return self._content == other._content and self.user == other.user
 
     def __repr__(self) -> str:
         return str()

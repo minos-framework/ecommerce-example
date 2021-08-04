@@ -9,6 +9,12 @@ from typing import (
     NoReturn,
 )
 
+from dependency_injector.wiring import (
+    Provide,
+)
+from minos.common import (
+    AggregateDiff,
+)
 from minos.cqrs import (
     QueryService,
 )
@@ -16,26 +22,28 @@ from minos.networks import (
     Request,
     enroute,
 )
+from src.queries.repositories import (
+    TicketAmountRepository,
+)
 
 
 class TicketQueryService(QueryService):
     """Ticket Query Service class."""
 
+    repository: TicketAmountRepository = Provide["ticket_amount_repository"]
+
     @enroute.broker.event("TicketCreated")
-    async def ticket_created(self, request: Request) -> NoReturn:
+    @enroute.broker.event("TicketUpdated")
+    async def ticket_created_or_updated(self, request: Request) -> NoReturn:
         """Handle the ticket creation events.
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        print(await request.content())
+        diff: AggregateDiff = await request.content()
+        uuid = diff.uuid
+        total_price = diff.fields_diff["total_price"]
 
-    @enroute.broker.event("TicketUpdated")
-    async def ticket_updated(self, request: Request) -> NoReturn:
-        """Handle the ticket update events.
-        :param request: A request instance containing the aggregate difference.
-        :return: This method does not return anything.
-        """
-        print(await request.content())
+        await self.repository.insert_ticket_amount(uuid, total_price)
 
     @enroute.broker.event("TicketDeleted")
     async def ticket_deleted(self, request: Request) -> NoReturn:
@@ -43,4 +51,6 @@ class TicketQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        print(await request.content())
+        diff: AggregateDiff = await request.content()
+
+        await self.repository.delete(diff.uuid)
