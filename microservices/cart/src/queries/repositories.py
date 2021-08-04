@@ -72,12 +72,20 @@ class CartRepository(PostgreSqlMinosDatabase):
             },
         )
 
-    async def delete_cart(self, uuid: UUID) -> NoReturn:
+    async def delete_cart(self, cart_uuid: UUID) -> NoReturn:
         """ Delete Payment
-        :param uuid: UUID
+        :param cart_uuid: UUID
         :return: Nothing
         """
-        await self.submit_query(_DELETE_CART_QUERY, {"uuid": uuid})
+        await self.submit_query(_DELETE_CART_QUERY, {"cart_uuid": cart_uuid})
+
+    async def delete_cart_item(self, cart_uuid: UUID, product_uuid: UUID) -> NoReturn:
+        """ Delete Payment
+        :param cart_uuid: Cart UUID
+        :param product_uuid: Item UUID
+        :return: Nothing
+        """
+        await self.submit_query(_DELETE_CART_ITEM_QUERY, {"cart_id": cart_uuid, "product_id": product_uuid})
 
 
 _CREATE_CART_TABLE = """
@@ -127,5 +135,10 @@ SELECT cart_id, product_id, quantity, title, description, price FROM items WHERE
 
 _DELETE_CART_QUERY = """
 DELETE FROM cart
-WHERE uuid = %(uuid)s;
+WHERE uuid = %(cart_uuid)s;
+""".strip()
+
+_DELETE_CART_ITEM_QUERY = """
+DELETE FROM cart
+WHERE product_id = %(product_id)s and cart_id = %(cart_id)s;
 """.strip()

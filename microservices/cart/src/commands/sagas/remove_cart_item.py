@@ -26,17 +26,19 @@ _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": 
 
 
 def _reserve_products_callback(context: SagaContext) -> Model:
-    product = context["product_uuid"]
+    product_uuids = [context["product_uuid"]]
     quantities = defaultdict(int)
-    quantities[str(product.product)] += product.quantity
+    for product_id in product_uuids:
+        quantities[str(product_id)] += 1
 
     return _ReserveProductsQuery(quantities=quantities)
 
 
 def _release_products_callback(context: SagaContext) -> Model:
-    product = context["product_uuid"]
+    product_uuids = [context["product_uuid"]]
     quantities = defaultdict(int)
-    quantities[str(product.product)] -= product.quantity
+    for product_id in product_uuids:
+        quantities[str(product_id)] -= 1
 
     return _ReserveProductsQuery(quantities=quantities)
 

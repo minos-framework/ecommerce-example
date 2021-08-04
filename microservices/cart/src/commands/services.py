@@ -39,9 +39,10 @@ class CartCommandService(CommandService):
 
     repository: CartRepository = Provide["cart_repository"]
 
+    @staticmethod
     @enroute.rest.command("/carts", "POST")
     @enroute.broker.command("CreateCart")
-    async def create_cart(self, request: Request) -> Response:
+    async def create_cart(request: Request) -> Response:
         """Create a new cart.
         :param request: A request instance containing the information to build a payment instance.
         :return: A response containing the newly created payment instance.
@@ -78,12 +79,12 @@ class CartCommandService(CommandService):
         """
         content = await request.content()
         cart = content["uuid"]
-        product = content["product_uuid"]
+        product_uuid = content["product_uuid"]
 
-        idx, product = await self._get_cart_item(cart, product)
+        idx, product = await self._get_cart_item(cart, product_uuid)
 
         saga_id = await self.saga_manager.run(
-            "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product, idx=idx, product=product)
+            "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, idx=idx, product=product)
         )
 
         return Response(saga_id)
@@ -93,6 +94,7 @@ class CartCommandService(CommandService):
     @enroute.broker.command("DeleteCart")
     async def delete_cart(request: Request) -> Response:
         """Delete cart.
+        TODO: Correctly remove Cart and release reserved product quantity
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
