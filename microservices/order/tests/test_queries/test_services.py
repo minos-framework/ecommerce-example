@@ -11,15 +11,18 @@ from __future__ import (
 
 import sys
 import unittest
+from asyncio import (
+    gather,
+)
+from datetime import (
+    datetime,
+    timezone,
+)
 from pathlib import (
     Path,
 )
 from typing import (
     NoReturn, Optional,
-)
-from unittest.mock import (
-    MagicMock,
-    call,
 )
 from uuid import (
     UUID,
@@ -39,14 +42,10 @@ from minos.common import (
 )
 from minos.networks import (
     Request,
-    Response,
-)
-from minos.saga import (
-    SagaContext,
 )
 from src import (
     Order,
-    OrderCommandService,
+    OrderQueryService,
 )
 
 
@@ -104,29 +103,25 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = OrderCommandService()
+        self.service = OrderQueryService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_order(self):
-        expected = uuid4()
+    async def test_get_orders(self):
+        now = datetime.now(tz=timezone.utc)
 
-        async def _fn(*args, **kwargs):
-            return expected
+        expected = await gather(
+            Order.create([uuid4(), uuid4()], uuid4(), "created", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "cancelled", now, now),
+        )
 
-        mock = MagicMock(side_effect=_fn)
-        self.service.saga_manager._run_new = mock
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
-        request = _FakeRequest({"product_uuids": [1, 2, 3]})
-        response = await self.service.create_order(request)
-        self.assertIsInstance(response, Response)
-
+        response = await self.service.get_orders(request)
         observed = await response.content()
-        self.assertEqual(expected, observed)
 
         self.assertEqual(expected, observed)
-        self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3])), mock.call_args)
 
 
 if __name__ == "__main__":
