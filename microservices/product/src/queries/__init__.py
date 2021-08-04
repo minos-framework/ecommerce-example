@@ -5,5 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from .repositories import ProductQueryRepository
-from .services import ProductQueryService
+from .repositories import (
+    ProductQueryRepository,
+)
+from .services import (
+    ProductQueryService,
+)
