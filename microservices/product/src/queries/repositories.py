@@ -19,6 +19,7 @@ from uuid import (
 from minos.common import (
     MinosConfig,
     MinosSetup,
+    ModelType,
 )
 from sqlalchemy import (
     Column,
@@ -29,18 +30,14 @@ from sqlalchemy import (
     Text,
     create_engine,
 )
-from sqlalchemy.orm import (
-    declarative_base,
-    sessionmaker,
-)
+from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
 metadata = MetaData()
 
-
-product_table = Table(
-    'product',
+PRODUCT_TABLE = Table(
+    "product",
     metadata,
-    Column("uuid", Text, primary_key=True),
+    Column("uuid", UUID_PG(as_uuid=True), primary_key=True),
     Column("version", Integer, nullable=False),
     Column("code", Text, nullable=False),
     Column("title", Text, nullable=False),
@@ -48,74 +45,54 @@ product_table = Table(
     Column("price", Numeric, nullable=False),
     Column("inventory_amount", Integer, nullable=False),
 )
+ProductDTO = ModelType.build("Product", {"uuid": UUID, "code": str, "title": str, "description": str, "price": float})
 
 
-class ProductRepository(MinosSetup):
+class ProductQueryRepository(MinosSetup):
     """ProductInventory Repository class."""
 
-    def __init__(self, database, host, port, user, password, *args, **kwargs):
+    def __init__(self, database: str, host: str, port: int, user: str, password: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.db_engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}")
-
-        Session = sessionmaker(self.db_engine)
-        session = Session()
-        self.session = session
+        self.engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}")
 
     async def _setup(self) -> NoReturn:
-        product_table.create(self.db_engine, checkfirst=True)
+        PRODUCT_TABLE.create(self.engine, checkfirst=True)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductRepository:
+    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "product_query_db"}) | kwargs)
 
-    async def get_without_stock(self) -> list[dict]:
+    async def get_without_stock(self) -> list[ProductDTO]:
         """Get product identifiers that do not have stock.
 
-        :return: TODO.
+        :return: a list of dto instances.
         """
-        return [row2dict(product) for product in self.session.query(Product).filter(Product.inventory_amount == 0)]
+        query = PRODUCT_TABLE.select().where(PRODUCT_TABLE.columns.inventory_amount == 0)
+        result = self._execute(query)
+        return [ProductDTO(**row) for row in result]
 
-    async def get(self, uuid):
-        """TODO
+    async def create(self, **kwargs) -> NoReturn:
+        """Create a new row.
 
-        :return: TODO
+        :param kwargs: The parameters of the creation query.
+        :return: This method does not return anything.
         """
-        return product_table.select().where(product_table.c.uuid == uuid)
+        kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
 
-    async def create(self, uuid: UUID, version: int, inventory=None, **kwargs):
-        """TODO
+        query = PRODUCT_TABLE.insert().values(**kwargs)
+        self._execute(query)
 
-        :param uuid: TODO
-        :param version: TODO
-        :param inventory: TODO
-        :param kwargs: TODO
-        :return: TODO
+    async def update(self, uuid: UUID, **kwargs) -> NoReturn:
+        """Update an existing row.
+
+        :param uuid: The identifier of the row.
+        :param kwargs: The parameters to be updated.
+        :return: This method does not return anything.
         """
-        if isinstance(uuid, UUID):
-            uuid = str(uuid)
-        if inventory is not None:
-            kwargs["inventory_amount"] = inventory["amount"]
+        kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
 
-        op = product_table.insert(uuid=uuid, version=version, **kwargs)
-        self.session.execute(op)
-
-    async def update(self, uuid: UUID, version: int, inventory=None, **kwargs):
-        """TODO
-
-        :param uuid: TODO
-        :param version: TODO
-        :param inventory: TODO
-        :param kwargs: TODO
-        :return: TODO
-        """
-        if isinstance(uuid, UUID):
-            uuid = str(uuid)
-        if inventory is not None:
-            kwargs["inventory_amount"] = inventory["amount"]
-
-        op = product_table.update().where(product_table.c.uuid == uuid).values((kwargs | {"version": version}))
-        self.session.execute(op)
+        query = PRODUCT_TABLE.update().where(PRODUCT_TABLE.columns.uuid == uuid).values(**kwargs)
+        self._execute(query)
 
     async def delete(self, uuid: UUID) -> NoReturn:
         """Delete an entry from the database.
@@ -123,18 +100,7 @@ class ProductRepository(MinosSetup):
         :param uuid: The product identifier.
         :return: This method does not return anything.
         """
-        op = product_table.delete().where(product_table.c.uuid == uuid)
-        self.session.execute(op)
+        self._execute(PRODUCT_TABLE.delete().where(PRODUCT_TABLE.columns.uuid == uuid))
 
-
-def row2dict(row):
-    """TODO
-
-    :param row: TODO
-    :return: TODO
-    """
-    d = {}
-    for column in row.__table__.columns:
-        d[column.name] = str(getattr(row, column.name))
-
-    return d
+    def _execute(self, op):
+        return self.engine.execute(op)

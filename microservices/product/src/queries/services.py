@@ -31,14 +31,14 @@ from minos.networks import (
 )
 
 from .repositories import (
-    ProductRepository,
+    ProductQueryRepository,
 )
 
 
 class ProductQueryService(QueryService):
     """Product Query Service class."""
 
-    repository: ProductRepository = Provide["product_repository"]
+    repository: ProductQueryRepository = Provide["product_repository"]
 
     @staticmethod
     @enroute.broker.query("GetProducts")
@@ -121,7 +121,7 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        await self.repository.create(diff.uuid, diff.version, **diff.fields_diff.avro_data)
+        await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff.avro_data)
 
     @enroute.broker.event("ProductUpdated")
     async def product_updated(self, request: Request) -> NoReturn:
@@ -131,7 +131,7 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        await self.repository.update(diff.uuid, diff.version, **diff.fields_diff.avro_data)
+        await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff.avro_data)
 
     @enroute.broker.event("ProductDeleted")
     async def product_deleted(self, request: Request) -> NoReturn:

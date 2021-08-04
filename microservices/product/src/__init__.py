@@ -14,5 +14,5 @@ from .commands import (
 )
 from .queries import (
     ProductQueryService,
-    ProductRepository,
+    ProductQueryRepository,
 )
