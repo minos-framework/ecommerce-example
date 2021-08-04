@@ -5,12 +5,18 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import sys
 import unittest
-from asyncio import gather
-from pathlib import Path
+from asyncio import (
+    gather,
+)
+from pathlib import (
+    Path,
+)
 from typing import (
     NoReturn,
     Optional,
@@ -20,7 +26,9 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -31,7 +39,9 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from minos.networks import Request
+from minos.networks import (
+    Request,
+)
 from src import (
     Payment,
     PaymentQueryService,
