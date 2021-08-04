@@ -32,9 +32,10 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
+META = MetaData()
 PRODUCT_TABLE = Table(
     "product",
-    MetaData(),
+    META,
     Column("uuid", UUID_PG(as_uuid=True), primary_key=True),
     Column("version", Integer, nullable=False),
     Column("code", Text, nullable=False),
@@ -58,7 +59,7 @@ class ProductQueryRepository(PostgreSqlMinosDatabase):
 
     async def _setup(self) -> NoReturn:
         await super()._setup()
-        PRODUCT_TABLE.create(self.engine, checkfirst=True)
+        META.create_all(self.engine)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductQueryRepository:
