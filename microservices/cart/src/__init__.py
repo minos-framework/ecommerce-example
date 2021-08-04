@@ -12,6 +12,7 @@ from .aggregates import (
 from .commands import (
     ADD_CART_ITEM,
     REMOVE_CART_ITEM,
+    DELETE_CART,
     CartCommandService,
 )
 from .queries import (

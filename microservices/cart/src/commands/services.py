@@ -89,20 +89,21 @@ class CartCommandService(CommandService):
 
         return Response(saga_id)
 
-    @staticmethod
     @enroute.rest.command("/carts/{uuid}", "DELETE")
     @enroute.broker.command("DeleteCart")
-    async def delete_cart(request: Request) -> Response:
+    async def delete_cart(self, request: Request) -> Response:
         """Delete cart.
-        TODO: Correctly remove Cart and release reserved product quantity
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
         content = await request.content()
-        cart = await Cart.get_one(content["uuid"])
-        result = await cart.delete()
 
-        return Response(result)
+        cart_id = content["uuid"]
+        cart = await Cart.get_one(cart_id)
+
+        uuid = await self.saga_manager.run("DeleteCart", context=SagaContext(cart=cart))
+
+        return Response(uuid)
 
     @staticmethod
     async def _get_cart_item(cart_id: UUID, product_uuid: UUID):

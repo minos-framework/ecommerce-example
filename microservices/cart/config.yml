@@ -62,6 +62,9 @@ saga:
     - name: RemoveCartItem
       controller: src
       action: REMOVE_CART_ITEM
+    - name: DeleteCart
+      controller: src
+      action: DELETE_CART
 discovery:
   host: localhost
   port: 5567

@@ -11,3 +11,6 @@ from .add_cart_item import (
 from .remove_cart_item import (
     REMOVE_CART_ITEM,
 )
+from .delete_cart import (
+    DELETE_CART
+)
