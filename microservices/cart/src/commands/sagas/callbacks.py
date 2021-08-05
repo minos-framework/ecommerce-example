@@ -8,6 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 from collections import (
     defaultdict,
 )
+
 from minos.common import (
     Model,
     ModelType,
@@ -15,7 +16,6 @@ from minos.common import (
 from minos.saga import (
     SagaContext,
 )
-
 
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 

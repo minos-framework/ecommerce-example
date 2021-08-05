@@ -8,15 +8,17 @@ Minos framework can not be copied and/or distributed without the express permiss
 from collections import (
     defaultdict,
 )
-from .callbacks import (
-    _ReserveProductsQuery,
-)
+
 from minos.common import (
     Model,
 )
 from minos.saga import (
     Saga,
     SagaContext,
+)
+
+from .callbacks import (
+    _ReserveProductsQuery,
 )
 
 

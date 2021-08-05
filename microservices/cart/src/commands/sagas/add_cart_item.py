@@ -5,10 +5,6 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from .callbacks import (
-    _release_products_callback,
-    _reserve_products_callback,
-)
 from minos.saga import (
     Saga,
     SagaContext,
@@ -16,6 +12,11 @@ from minos.saga import (
 from src.aggregates import (
     Cart,
     CartItem,
+)
+
+from .callbacks import (
+    _release_products_callback,
+    _reserve_products_callback,
 )
 
 
