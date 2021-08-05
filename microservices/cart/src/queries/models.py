@@ -50,7 +50,7 @@ CART_ITEM_TABLE = Table(
     )
 )
 CartItemDTO = ModelType.build(
-    "CartItemDTO", {"product_id": UUID, "cart_id": UUID, "quantity": int, "code": str, "title": str, "description": str,
+    "CartItemDTO", {"product_id": UUID, "cart_id": UUID, "quantity": int, "title": str, "description": str,
                    "price": float}
 )
 CartDTO = ModelType.build(
