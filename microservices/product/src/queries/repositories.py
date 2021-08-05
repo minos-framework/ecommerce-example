@@ -18,37 +18,65 @@ from uuid import (
 
 from minos.common import (
     MinosConfig,
-    PostgreSqlMinosDatabase,
+    MinosSetup,
+)
+from sqlalchemy import (
+    create_engine,
+)
+
+from .models import (
+    META,
+    PRODUCT_TABLE,
+    ProductDTO,
 )
 
 
-class ProductInventoryRepository(PostgreSqlMinosDatabase):
+class ProductQueryRepository(MinosSetup):
     """ProductInventory Repository class."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
+
     async def _setup(self) -> NoReturn:
-        await self.submit_query(_CREATE_TABLE)
+        META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductInventoryRepository:
+    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "product_query_db"}) | kwargs)
 
-    async def get_without_stock(self) -> list[UUID]:
+    async def get_without_stock(self) -> list[ProductDTO]:
         """Get product identifiers that do not have stock.
 
-        :return: A list of UUID values.
+        :return: a list of dto instances.
         """
-        entries = [entry async for entry in self.submit_query_and_iter(_GET_PRODUCTS_WITHOUT_STOCK)]
-        uuids = [entry[0] for entry in entries]
-        return uuids
+        query = PRODUCT_TABLE.select().where(PRODUCT_TABLE.columns.inventory_amount == 0)
+        result = self.engine.execute(query)
+        return [ProductDTO(**row) for row in result]
 
-    async def insert_inventory_amount(self, uuid: UUID, inventory_amount: int) -> NoReturn:
-        """Insert inventory values on the database.
+    async def create(self, **kwargs) -> NoReturn:
+        """Create a new row.
 
-        :param uuid: The product identifier.
-        :param inventory_amount: The amount.
+        :param kwargs: The parameters of the creation query.
         :return: This method does not return anything.
         """
-        await self.submit_query(_INSERT_PRODUCT_QUERY, {"uuid": uuid, "inventory_amount": inventory_amount})
+        kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
+
+        query = PRODUCT_TABLE.insert().values(**kwargs)
+        self.engine.execute(query)
+
+    async def update(self, uuid: UUID, **kwargs) -> NoReturn:
+        """Update an existing row.
+
+        :param uuid: The identifier of the row.
+        :param kwargs: The parameters to be updated.
+        :return: This method does not return anything.
+        """
+        if "inventory" in kwargs:
+            kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
+
+        query = PRODUCT_TABLE.update().where(PRODUCT_TABLE.columns.uuid == uuid).values(**kwargs)
+        self.engine.execute(query)
 
     async def delete(self, uuid: UUID) -> NoReturn:
         """Delete an entry from the database.
@@ -56,32 +84,5 @@ class ProductInventoryRepository(PostgreSqlMinosDatabase):
         :param uuid: The product identifier.
         :return: This method does not return anything.
         """
-        await self.submit_query(_DELETE_PRODUCT_QUERY, {"uuid": uuid})
-
-
-_CREATE_TABLE = """
-CREATE TABLE IF NOT EXISTS product (
-    uuid UUID NOT NULL PRIMARY KEY,
-    inventory_amount INT NOT NULL
-);
-""".strip()
-
-_INSERT_PRODUCT_QUERY = """
-INSERT INTO product (uuid, inventory_amount)
-VALUES (%(uuid)s,  %(inventory_amount)s)
-ON CONFLICT (uuid)
-DO
-   UPDATE SET inventory_amount = %(inventory_amount)s
-;
-""".strip()
-
-_DELETE_PRODUCT_QUERY = """
-DELETE FROM product
-WHERE uuid = %(uuid)s;
-""".strip()
-
-_GET_PRODUCTS_WITHOUT_STOCK = """
-SELECT uuid 
-FROM product
-WHERE inventory_amount = 0;
-""".strip()
+        query = PRODUCT_TABLE.delete().where(PRODUCT_TABLE.columns.uuid == uuid)
+        self.engine.execute(query)

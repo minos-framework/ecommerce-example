@@ -31,14 +31,66 @@ from minos.networks import (
 )
 
 from .repositories import (
-    ProductInventoryRepository,
+    ProductQueryRepository,
 )
 
 
 class ProductQueryService(QueryService):
     """Product Query Service class."""
 
-    repository: ProductInventoryRepository = Provide["product_inventory_repository"]
+    repository: ProductQueryRepository = Provide["product_repository"]
+
+    @staticmethod
+    @enroute.broker.query("GetProducts")
+    @enroute.rest.query("/products", "GET")
+    async def get_products(request: Request) -> Response:
+        """Get products.
+
+        :param request: The ``Request`` instance that contains the product identifiers.
+        :return: A ``Response`` instance containing the requested products.
+        """
+        try:
+            content = await request.content(model_type=ModelType.build("Query", {"uuids": list[UUID]}))
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        try:
+            from ..aggregates import (
+                Product,
+            )
+
+            iterable = Product.get(uuids=content["uuids"])
+            values = {v.uuid: v async for v in iterable}
+            products = [values[uuid] for uuid in content["uuids"]]
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting products: {exc!r}")
+
+        return Response(products)
+
+    @staticmethod
+    @enroute.broker.query("GetProduct")
+    @enroute.rest.query(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
+    async def get_product(request: Request) -> Response:
+        """Get product.
+
+        :param request: The ``Request`` instance that contains the product identifier.
+        :return: A ``Response`` instance containing the requested product.
+        """
+        try:
+            content = await request.content(model_type=ModelType.build("Query", {"uuid": UUID}))
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        try:
+            from ..aggregates import (
+                Product,
+            )
+
+            product = await Product.get_one(content["uuid"])
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting the product: {exc!r}")
+
+        return Response(product)
 
     @staticmethod
     @enroute.broker.query("GetProducts")
@@ -112,23 +164,24 @@ class ProductQueryService(QueryService):
         raise ResponseException("Not Implemented yet!")
 
     @enroute.broker.event("ProductCreated")
-    @enroute.broker.event("ProductUpdated")
-    async def product_created_or_updated(self, request: Request) -> NoReturn:
+    async def product_created(self, request: Request) -> NoReturn:
         """Handle the product create and update events.
 
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
+        await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff.avro_data)
 
-        uuid = diff.uuid
+    @enroute.broker.event("ProductUpdated")
+    async def product_updated(self, request: Request) -> NoReturn:
+        """Handle the product create and update events.
 
-        if "inventory" not in diff.fields_diff.keys():
-            return
-
-        inventory_amount = diff.fields_diff["inventory"].amount
-
-        await self.repository.insert_inventory_amount(uuid, inventory_amount)
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
+        """
+        diff: AggregateDiff = await request.content()
+        await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff.avro_data)
 
     @enroute.broker.event("ProductDeleted")
     async def product_deleted(self, request: Request) -> NoReturn:
@@ -138,5 +191,4 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-
         await self.repository.delete(diff.uuid)
