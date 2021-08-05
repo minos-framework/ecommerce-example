@@ -11,9 +11,6 @@ from __future__ import (
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
 from pathlib import (
     Path,
 )
@@ -116,16 +113,6 @@ class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
 
         observed = await response.content()
         expected = Payment(1234, 3.4, "created", uuid=observed.uuid, version=observed.version)
-
-        self.assertEqual(expected, observed)
-
-    async def test_get_payments(self):
-        expected = await gather(Payment.create(1234, 3.4, "created"), Payment.create(5678, 3.4, "cancelled"))
-
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
-
-        response = await self.service.get_payments(request)
-        observed = await response.content()
 
         self.assertEqual(expected, observed)
 

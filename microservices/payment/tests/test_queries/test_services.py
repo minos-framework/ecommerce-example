@@ -11,6 +11,9 @@ from __future__ import (
 
 import sys
 import unittest
+from asyncio import (
+    gather,
+)
 from pathlib import (
     Path,
 )
@@ -38,12 +41,10 @@ from minos.common import (
 )
 from minos.networks import (
     Request,
-    Response,
 )
 from src import (
-    Inventory,
-    Product,
-    ProductCommandService,
+    Payment,
+    PaymentQueryService,
 )
 
 
@@ -87,7 +88,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
+class TestPaymentQueryService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -101,38 +102,19 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = ProductCommandService()
+        self.service = PaymentQueryService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_product(self):
-        request = _FakeRequest({"title": "Cacao", "description": "1KG", "price": 3})
-        response = await self.service.create_product(request)
+    async def test_get_payments(self):
+        expected = await gather(Payment.create(1234, 3.4, "created"), Payment.create(5678, 3.4, "cancelled"))
 
-        self.assertIsInstance(response, Response)
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
+        response = await self.service.get_payments(request)
         observed = await response.content()
-        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), uuid=observed.uuid, version=observed.version)
 
-        self.assertEqual(expected, observed)
-
-    async def test_update_inventory(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        expected = Product("abc", "Cacao", "1KG", 3, Inventory(56), uuid=product.uuid, version=2)
-
-        request = _FakeRequest({"uuid": product.uuid, "amount": 56})
-        response = await self.service.update_inventory(request)
-        observed = await response.content()
-        self.assertEqual(expected, observed)
-
-    async def test_update_inventory_diff(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
-        expected = Product("abc", "Cacao", "1KG", 3, Inventory(24), uuid=product.uuid, version=2)
-
-        request = _FakeRequest({"uuid": product.uuid, "amount_diff": 12})
-        response = await self.service.update_inventory_diff(request)
-        observed = await response.content()
         self.assertEqual(expected, observed)
 
 
