@@ -3,24 +3,33 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import NoReturn
-from uuid import UUID
+from typing import (
+    NoReturn,
+)
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     MinosConfig,
     MinosSetup,
 )
 from sqlalchemy import (
-    create_engine,
     and_,
+    create_engine,
 )
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import (
+    sessionmaker,
+)
+
 from .models import (
-    META,
-    CART_TABLE,
     CART_ITEM_TABLE,
+    CART_TABLE,
+    META,
     CartDTO,
     CartItemDTO,
 )

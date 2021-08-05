@@ -9,7 +9,9 @@ from minos.saga import (
     Saga,
     SagaContext,
 )
-from src.aggregates import Cart
+from src.aggregates import (
+    Cart,
+)
 
 from .callbacks import (
     _release_products_callback,
