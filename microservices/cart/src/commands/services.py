@@ -73,7 +73,6 @@ class CartCommandService(CommandService):
     @enroute.broker.command("RemoveCartItem")
     async def remove_cart_item(self, request: Request) -> Response:
         """Create cart item.
-        TODO: Correctly remove Cart Item
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """

@@ -5,13 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from collections import (
-    defaultdict,
-)
-
-from minos.common import (
-    Model,
-    ModelType,
+from .callbacks import (
+    _release_products_callback,
+    _reserve_products_callback,
 )
 from minos.saga import (
     Saga,
@@ -21,26 +17,6 @@ from src.aggregates import (
     Cart,
     CartItem,
 )
-
-_ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
-
-
-def _reserve_products_callback(context: SagaContext) -> Model:
-    product_uuids = [context["product_uuid"]]
-    quantities = defaultdict(int)
-    for product_id in product_uuids:
-        quantities[str(product_id)] += 1
-
-    return _ReserveProductsQuery(quantities=quantities)
-
-
-def _release_products_callback(context: SagaContext) -> Model:
-    product_uuids = [context["product_uuid"]]
-    quantities = defaultdict(int)
-    for product_id in product_uuids:
-        quantities[str(product_id)] -= 1
-
-    return _ReserveProductsQuery(quantities=quantities)
 
 
 async def _create_commit_callback(context: SagaContext) -> SagaContext:

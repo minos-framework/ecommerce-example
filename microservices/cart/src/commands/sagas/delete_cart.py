@@ -8,26 +8,20 @@ Minos framework can not be copied and/or distributed without the express permiss
 from collections import (
     defaultdict,
 )
-
+from .callbacks import (
+    _ReserveProductsQuery,
+)
 from minos.common import (
     Model,
-    ModelType,
 )
 from minos.saga import (
     Saga,
     SagaContext,
 )
-from src.aggregates import (
-    Cart,
-    CartItem,
-)
-
-_ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 
 
 def _reserve_products_callback(context: SagaContext) -> Model:
     cart = context["cart"]
-    # products = [item.product for item in cart.products]
     quantities = defaultdict(int)
     for item in cart.products:
         quantities[str(item.product)] += item.quantity
