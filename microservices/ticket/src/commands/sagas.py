@@ -18,12 +18,12 @@ from minos.saga import (
     SagaContext,
 )
 
-_ProductsQuery = ModelType.build("ProductsQuery", {"uuids": list[UUID]})
+ProductsQuery = ModelType.build("ProductsQuery", {"uuids": list[UUID]})
 
 
 def _get_products_callback(context: SagaContext) -> Model:
     product_uuids = context["product_uuids"]
-    model = _ProductsQuery(uuids=product_uuids)
+    model = ProductsQuery(uuids=product_uuids)
     return model
 
 
