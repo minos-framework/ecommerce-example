@@ -16,36 +16,79 @@ from uuid import (
 
 from minos.common import (
     MinosConfig,
-    PostgreSqlMinosDatabase,
+    MinosSetup,
+)
+from sqlalchemy import (
+    create_engine,
+    and_,
+)
+from sqlalchemy.orm import (
+    sessionmaker,
+)
+from .models import (
+    META,
+    CART_TABLE,
+    CART_ITEM_TABLE,
+    CartDTO,
+    CartItemDTO,
 )
 
 
-class CartRepository(PostgreSqlMinosDatabase):
+class CartRepository(MinosSetup):
     """Cart inventory repository"""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
+        self.session = sessionmaker(bind=self.engine)()
+
     async def _setup(self) -> NoReturn:
-        await self.submit_query(_CREATE_CART_TABLE)
-        await self.submit_query(_CREATE_CART_ITEM_TABLE)
+        META.create_all(self.engine)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> CartRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "cart_query_db"}) | kwargs)
 
-    async def create_cart(self, uuid: UUID, user_id: int) -> NoReturn:
+    async def create_cart(self, uuid: UUID, version: int, user_id: int) -> NoReturn:
         """ Insert Payment amount
         :param uuid: UUID
         :param user_id: User ID
+        :param version: Version ID
         :return: Nothing
         """
-        await self.submit_query(_INSERT_CART_QUERY, {"uuid": uuid, "user_id": user_id})
+        query = CART_TABLE.insert().values(uuid=uuid, version=version, user_id=user_id)
+        self.engine.execute(query)
 
     async def get_cart_items(self, cart_id):
         """ Insert Payment amount
         :param cart_id: UUID
         :return: Nothing
         """
-        items = [v async for v in self.submit_query_and_iter(_SELECT_CART_ITEMS_QUERY, {"cart_id": cart_id})]
-        return items
+        result = {}
+
+        try:
+            # Get Cart information
+            cart_query = self.session.query(CART_TABLE).filter(CART_TABLE.columns.uuid == cart_id).one()
+        except:
+            return {"error": "Invalid Cart UUID"}
+
+        try:
+            # Get Cart Item information
+            cart_items_query = CART_ITEM_TABLE.select().where(CART_ITEM_TABLE.columns.product_id == cart_id)
+            cart_item_results = self.engine.execute(cart_items_query)
+        except:
+            return {"error": "An error occurred while obtaining Cart Items."}
+
+        try:
+            # Format CartItems to DTO
+            cart_items = [CartItemDTO(**row) for row in cart_item_results]
+
+            # Format Cart DTO with Cart and CartItems attributes
+            result = CartDTO(**cart_query, products=cart_items)
+        except:
+            result = {"error": "An error occurred on result formatting."}
+
+        return result
 
     async def insert_or_update_cart_item(
         self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price
@@ -60,24 +103,17 @@ class CartRepository(PostgreSqlMinosDatabase):
         :return: Nothing
         """
 
-        await self.submit_query(
-            _INSERT_CART_ITEM_QUERY,
-            {
-                "cart_id": cart_uuid,
-                "product_id": item_uuid,
-                "quantity": quantity,
-                "title": item_title,
-                "description": item_description,
-                "price": item_price,
-            },
-        )
+        query = CART_ITEM_TABLE.insert().values(product_id=item_uuid, cart_id=cart_uuid, quantity=quantity,
+                                                price=item_price, title=item_title, description=item_description)
+        self.engine.execute(query)
 
     async def delete_cart(self, cart_uuid: UUID) -> NoReturn:
         """ Delete Payment
         :param cart_uuid: UUID
         :return: Nothing
         """
-        await self.submit_query(_DELETE_CART_QUERY, {"cart_uuid": cart_uuid})
+        cart_delete_query = CART_TABLE.select().where(CART_TABLE.columns.uuid == cart_uuid)
+        self.engine.execute(cart_delete_query)
 
     async def delete_cart_item(self, cart_uuid: UUID, product_uuid: UUID) -> NoReturn:
         """ Delete Payment
@@ -85,60 +121,6 @@ class CartRepository(PostgreSqlMinosDatabase):
         :param product_uuid: Item UUID
         :return: Nothing
         """
-        await self.submit_query(_DELETE_CART_ITEM_QUERY, {"cart_id": cart_uuid, "product_id": product_uuid})
-
-
-_CREATE_CART_TABLE = """
-CREATE TABLE IF NOT EXISTS cart (
-    uuid UUID NOT NULL PRIMARY KEY,
-    user_id INT NOT NULL
-);
-""".strip()
-
-_CREATE_CART_ITEM_TABLE = """
-CREATE TABLE IF NOT EXISTS items (
-    product_id UUID NOT NULL,
-    cart_id UUID NOT NULL,
-    quantity INT NOT NULL,
-    title VARCHAR(255),
-    description VARCHAR(255),
-    price FLOAT,
-    primary key(cart_id, product_id),
-    CONSTRAINT fk_cart
-      FOREIGN KEY(cart_id)
-	    REFERENCES cart(uuid)
-	    ON DELETE CASCADE
-);
-""".strip()
-
-_INSERT_CART_QUERY = """
-INSERT INTO cart (uuid, user_id)
-VALUES (%(uuid)s,  %(user_id)s)
-ON CONFLICT (uuid)
-DO
-   UPDATE SET user_id = %(user_id)s
-;
-""".strip()
-
-_INSERT_CART_ITEM_QUERY = """
-INSERT INTO items (cart_id, product_id, quantity, title, description, price)
-VALUES (%(cart_id)s, %(product_id)s,  %(quantity)s,  %(title)s,  %(description)s,  %(price)s)
-ON CONFLICT (product_id, cart_id)
-DO
-   UPDATE SET quantity = %(quantity)s
-;
-""".strip()
-
-_SELECT_CART_ITEMS_QUERY = """
-SELECT cart_id, product_id, quantity, title, description, price FROM items WHERE cart_id=%(cart_id)s;
-""".strip()
-
-_DELETE_CART_QUERY = """
-DELETE FROM cart
-WHERE uuid = %(cart_uuid)s;
-""".strip()
-
-_DELETE_CART_ITEM_QUERY = """
-DELETE FROM cart
-WHERE product_id = %(product_id)s and cart_id = %(cart_id)s;
-""".strip()
+        delete_cart_item_query = CART_ITEM_TABLE.select().where(and_(CART_ITEM_TABLE.columns.product_id == product_uuid,
+                                                                     CART_ITEM_TABLE.columns.cart_id == cart_uuid))
+        self.engine.execute(delete_cart_item_query)

@@ -42,7 +42,7 @@ class CartQueryService(QueryService):
 
         res = await self.repository.get_cart_items(content["uuid"])
 
-        return Response(str(res))
+        return Response(res)
 
     @enroute.broker.event("CartCreated")
     async def cart_or_cart_item_created(self, request: Request) -> NoReturn:
@@ -53,6 +53,7 @@ class CartQueryService(QueryService):
         diff: AggregateDiff = await request.content()
 
         cart_uuid = diff.uuid
+        version = diff.version
 
         if len(diff.fields_diff.fields["products"].value) > 0:
             """CartItem Creation"""
@@ -71,7 +72,7 @@ class CartQueryService(QueryService):
         else:
             """Cart creation"""
             user = diff.fields_diff.fields["user"].value
-            await self.repository.create_cart(cart_uuid, user)
+            await self.repository.create_cart(cart_uuid, version, user)
 
     @enroute.broker.event("CartUpdated")
     async def cart_or_cart_item_updated(self, request: Request) -> NoReturn:
