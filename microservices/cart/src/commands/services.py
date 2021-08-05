@@ -7,12 +7,6 @@ from uuid import (
     UUID,
 )
 
-from dependency_injector.wiring import (
-    Provide,
-)
-from minos.common import (
-    ModelType,
-)
 from minos.cqrs import (
     CommandService,
 )
@@ -27,17 +21,11 @@ from minos.saga import (
 
 from ..aggregates import (
     Cart,
-    CartItem,
-)
-from ..queries import (
-    CartRepository,
 )
 
 
 class CartCommandService(CommandService):
     """Cart Command Service class"""
-
-    repository: CartRepository = Provide["cart_repository"]
 
     @staticmethod
     @enroute.rest.command("/carts", "POST")
