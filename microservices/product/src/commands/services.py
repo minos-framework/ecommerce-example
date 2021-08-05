@@ -5,7 +5,6 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-import re
 from typing import (
     NoReturn,
 )
@@ -18,7 +17,6 @@ from minos.common import (
     UUID_REGEX,
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
-    ModelType,
 )
 from minos.cqrs import (
     CommandService,
@@ -92,55 +90,6 @@ class ProductCommandService(CommandService):
         product = await Product.get_one(uuid)
         product.inventory = Inventory(product.inventory.amount + amount_diff)
         await product.save()
-
-        return Response(product)
-
-    @staticmethod
-    @enroute.broker.command("GetProducts")
-    @enroute.rest.command("/products", "GET")
-    async def get_products(request: Request) -> Response:
-        """Get products.
-
-        :param request: The ``Request`` instance that contains the product identifiers.
-        :return: A ``Response`` instance containing the requested products.
-        """
-        _Query = ModelType.build("Query", {"uuids": list[UUID]})
-        try:
-            content = await request.content(model_type=_Query)
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
-
-        uuids = content["uuids"]
-
-        try:
-            values = {v.uuid: v async for v in Product.get(uuids=uuids)}
-            products = [values[uuid] for uuid in uuids]
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting products: {exc!r}")
-
-        return Response(products)
-
-    @staticmethod
-    @enroute.broker.command("GetProduct")
-    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
-    async def get_product(request: Request) -> Response:
-        """Get product.
-
-        :param request: The ``Request`` instance that contains the product identifier.
-        :return: A ``Response`` instance containing the requested product.
-        """
-        _Query = ModelType.build("Query", {"uuid": UUID})
-        try:
-            content = await request.content(model_type=_Query)
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
-
-        uuid = content["uuid"]
-
-        try:
-            product = await Product.get_one(uuid)
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting the product: {exc!r}")
 
         return Response(product)
 
