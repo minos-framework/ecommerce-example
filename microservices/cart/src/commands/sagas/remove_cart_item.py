@@ -13,9 +13,7 @@ from minos.saga import (
     Saga,
     SagaContext,
 )
-from src.aggregates import (
-    Cart,
-)
+from src.aggregates import Cart
 
 
 async def _create_commit_callback(context: SagaContext) -> SagaContext:

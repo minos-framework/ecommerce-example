@@ -5,15 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from collections import (
-    defaultdict,
-)
-from .callbacks import (
-    _ReserveProductsQuery,
-)
-from minos.common import (
-    Model,
-)
+from collections import defaultdict
+from .callbacks import _ReserveProductsQuery
+from minos.common import Model
 from minos.saga import (
     Saga,
     SagaContext,
