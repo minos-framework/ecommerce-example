@@ -3,16 +3,10 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     MinosConfig,
@@ -22,9 +16,7 @@ from sqlalchemy import (
     create_engine,
     and_,
 )
-from sqlalchemy.orm import (
-    sessionmaker,
-)
+from sqlalchemy.orm import sessionmaker
 from .models import (
     META,
     CART_TABLE,
@@ -91,7 +83,7 @@ class CartRepository(MinosSetup):
         return result
 
     async def insert_or_update_cart_item(
-            self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price
+        self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price
     ):
         """ Insert or Update Cart Item
         :param cart_uuid: UUID
@@ -104,9 +96,13 @@ class CartRepository(MinosSetup):
         """
         try:
             # Get CartItem information
-            cart_query = self.session.query(CART_ITEM_TABLE).filter(
-                and_(CART_ITEM_TABLE.columns.product_id == item_uuid,
-                     CART_ITEM_TABLE.columns.cart_id == cart_uuid)).one()
+            cart_query = (
+                self.session.query(CART_ITEM_TABLE)
+                .filter(
+                    and_(CART_ITEM_TABLE.columns.product_id == item_uuid, CART_ITEM_TABLE.columns.cart_id == cart_uuid)
+                )
+                .one()
+            )
 
         except:
             cart_query = ()
@@ -114,18 +110,30 @@ class CartRepository(MinosSetup):
         if len(cart_query) > 0:
             # Perform update
             try:
-                cart_item_update_query = CART_ITEM_TABLE.update().values(quantity=quantity).where(
-                    and_(CART_ITEM_TABLE.columns.product_id == item_uuid,
-                         CART_ITEM_TABLE.columns.cart_id == cart_uuid))
+                cart_item_update_query = (
+                    CART_ITEM_TABLE.update()
+                    .values(quantity=quantity)
+                    .where(
+                        and_(
+                            CART_ITEM_TABLE.columns.product_id == item_uuid,
+                            CART_ITEM_TABLE.columns.cart_id == cart_uuid,
+                        )
+                    )
+                )
                 self.engine.execute(cart_item_update_query)
             except:
                 return {"error": "Error updating Cart Item."}
         else:
             try:
                 # Insert new Cart Item Record
-                query = CART_ITEM_TABLE.insert().values(product_id=item_uuid, cart_id=cart_uuid, quantity=quantity,
-                                                        price=item_price, title=item_title,
-                                                        description=item_description)
+                query = CART_ITEM_TABLE.insert().values(
+                    product_id=item_uuid,
+                    cart_id=cart_uuid,
+                    quantity=quantity,
+                    price=item_price,
+                    title=item_title,
+                    description=item_description,
+                )
                 self.engine.execute(query)
             except:
                 return {"error": "Error inserting Cart Item."}
@@ -144,6 +152,7 @@ class CartRepository(MinosSetup):
         :param product_uuid: Item UUID
         :return: Nothing
         """
-        delete_cart_item_query = CART_ITEM_TABLE.select().where(and_(CART_ITEM_TABLE.columns.product_id == product_uuid,
-                                                                     CART_ITEM_TABLE.columns.cart_id == cart_uuid))
+        delete_cart_item_query = CART_ITEM_TABLE.select().where(
+            and_(CART_ITEM_TABLE.columns.product_id == product_uuid, CART_ITEM_TABLE.columns.cart_id == cart_uuid)
+        )
         self.engine.execute(delete_cart_item_query)
