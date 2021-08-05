@@ -92,6 +92,56 @@ class ProductQueryService(QueryService):
 
         return Response(product)
 
+    @staticmethod
+    @enroute.broker.query("GetProducts")
+    @enroute.rest.query("/products", "GET")
+    async def get_products(request: Request) -> Response:
+        """Get products.
+        :param request: The ``Request`` instance that contains the product identifiers.
+        :return: A ``Response`` instance containing the requested products.
+        """
+        try:
+            content = await request.content(model_type=ModelType.build("Query", {"uuids": list[UUID]}))
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        try:
+            from ..aggregates import (
+                Product,
+            )
+
+            iterable = Product.get(uuids=content["uuids"])
+            values = {v.uuid: v async for v in iterable}
+            products = [values[uuid] for uuid in content["uuids"]]
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting products: {exc!r}")
+
+        return Response(products)
+
+    @staticmethod
+    @enroute.broker.query("GetProduct")
+    @enroute.rest.query(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
+    async def get_product(request: Request) -> Response:
+        """Get product.
+        :param request: The ``Request`` instance that contains the product identifier.
+        :return: A ``Response`` instance containing the requested product.
+        """
+        try:
+            content = await request.content(model_type=ModelType.build("Query", {"uuid": UUID}))
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+
+        try:
+            from ..aggregates import (
+                Product,
+            )
+
+            product = await Product.get_one(content["uuid"])
+        except Exception as exc:
+            raise ResponseException(f"There was a problem while getting the product: {exc!r}")
+
+        return Response(product)
+
     # noinspection PyUnusedLocal
     @enroute.rest.query("/products/without-stock", "GET")
     @enroute.broker.query("GetProductsWithoutStock")
