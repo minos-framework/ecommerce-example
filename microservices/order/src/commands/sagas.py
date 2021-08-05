@@ -29,7 +29,8 @@ from ..aggregates import (
     Order,
 )
 
-_ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
+ReserveProductsQuery = ModelType.build("ReserveProductsQuery", {"quantities": dict[str, int]})
+ProductsQuery = ModelType.build("ProductsQuery", {"product_uuids": list[UUID]})
 
 
 def _reserve_products_callback(context: SagaContext) -> Model:
@@ -38,7 +39,7 @@ def _reserve_products_callback(context: SagaContext) -> Model:
     for product_uuid in product_uuids:
         quantities[str(product_uuid)] += 1
 
-    return _ReserveProductsQuery(quantities=quantities)
+    return ReserveProductsQuery(quantities=quantities)
 
 
 def _release_products_callback(context: SagaContext) -> Model:
@@ -47,13 +48,12 @@ def _release_products_callback(context: SagaContext) -> Model:
     for product_uuid in product_uuids:
         quantities[str(product_uuid)] -= 1
 
-    return _ReserveProductsQuery(quantities=quantities)
+    return ReserveProductsQuery(quantities=quantities)
 
 
 def _create_ticket_callback(context: SagaContext) -> Model:
     product_uuids = context["product_uuids"]
-    _ProductsQ = ModelType.build("ProductsQuery", {"product_uuids": list[UUID]})
-    model = _ProductsQ(product_uuids=product_uuids)
+    model = ProductsQuery(product_uuids=product_uuids)
     return model
 
 
