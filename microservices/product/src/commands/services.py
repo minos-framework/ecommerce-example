@@ -94,6 +94,55 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "PUT")
+    async def update_product(request: Request) -> Response:
+        """Update product information.
+
+        :param request: ``Request`` that contains the needed information.
+        :return: ``Response`` containing the updated product.
+        """
+        content = await request.content()
+        uuid = content["uuid"]
+        title = content["title"]
+        description = content["description"]
+        price = content["price"]
+
+        product = await Product.get_one(uuid)
+        product.title = title
+        product.description = description
+        product.price = price
+
+        await product.save()
+
+        return Response(product)
+
+    @staticmethod
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "PATCH")
+    async def update_product_diff(request: Request) -> Response:
+        """Update product information with a difference.
+
+        :param request: ``Request`` that contains the needed information.
+        :return: ``Response`` containing the updated product.
+        """
+        content = await request.content()
+        uuid = content["uuid"]
+        product = await Product.get_one(uuid)
+
+        if "title" in content.fields:
+            title = content["title"]
+            product.title = title
+        if "description" in content.fields:
+            description = content["description"]
+            product.description = description
+        if "price" in content.fields:
+            price = content["price"]
+            product.price = price
+
+        await product.save()
+
+        return Response(product)
+
+    @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
     async def delete_product(request: Request) -> NoReturn:
         """Delete a product by identifier.
