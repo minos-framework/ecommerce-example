@@ -5,9 +5,7 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    NoReturn,
-)
+from typing import NoReturn
 from uuid import (
     UUID,
     uuid4,
@@ -18,9 +16,7 @@ from minos.common import (
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
 )
-from minos.cqrs import (
-    CommandService,
-)
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
@@ -128,13 +124,13 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
         product = await Product.get_one(uuid)
 
-        if "title" in content or hasattr(content, 'title'):
+        if "title" in content or hasattr(content, "title"):
             title = content["title"]
             product.title = title
-        if "description" in content or hasattr(content, 'description'):
+        if "description" in content or hasattr(content, "description"):
             description = content["description"]
             product.description = description
-        if "price" in content or hasattr(content, 'price'):
+        if "price" in content or hasattr(content, "price"):
             price = content["price"]
             product.price = price
 
