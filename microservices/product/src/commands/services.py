@@ -128,13 +128,13 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
         product = await Product.get_one(uuid)
 
-        if "title" in content or hasattr(content, "title"):
+        if "title" in content:
             title = content["title"]
             product.title = title
-        if "description" in content or hasattr(content, "description"):
+        if "description" in content:
             description = content["description"]
             product.description = description
-        if "price" in content or hasattr(content, "price"):
+        if "price" in content:
             price = content["price"]
             product.price = price
 
