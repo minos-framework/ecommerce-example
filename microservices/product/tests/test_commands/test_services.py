@@ -117,6 +117,24 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(expected, observed)
 
+    async def test_update_product(self):
+        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
+        expected = Product("abc", "Cola-Cao", "1.5KG", 4, Inventory(12), uuid=product.uuid, version=2)
+
+        request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao", "description": "1.5KG", "price": 4})
+        response = await self.service.update_product(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
+
+    async def test_update_product_diff(self):
+        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
+        expected = Product("abc", "Cola-Cao", "1KG", 3, Inventory(12), uuid=product.uuid, version=2)
+
+        request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao"})
+        response = await self.service.update_product_diff(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
+
     async def test_update_inventory(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
         expected = Product("abc", "Cacao", "1KG", 3, Inventory(56), uuid=product.uuid, version=2)
