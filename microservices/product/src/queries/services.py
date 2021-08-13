@@ -5,16 +5,24 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import NoReturn
-from uuid import UUID
+from typing import (
+    NoReturn,
+)
+from uuid import (
+    UUID,
+)
 
-from dependency_injector.wiring import Provide
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     UUID_REGEX,
     AggregateDiff,
     ModelType,
 )
-from minos.cqrs import QueryService
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     Response,
@@ -22,7 +30,9 @@ from minos.networks import (
     enroute,
 )
 
-from .repositories import ProductQueryRepository
+from .repositories import (
+    ProductQueryRepository,
+)
 
 
 class ProductQueryService(QueryService):
@@ -45,7 +55,9 @@ class ProductQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import Product
+            from ..aggregates import (
+                Product,
+            )
 
             iterable = Product.get(uuids=content["uuids"])
             values = {v.uuid: v async for v in iterable}
@@ -70,7 +82,9 @@ class ProductQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import Product
+            from ..aggregates import (
+                Product,
+            )
 
             product = await Product.get_one(content["uuid"])
         except Exception as exc:
@@ -92,7 +106,9 @@ class ProductQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import Product
+            from ..aggregates import (
+                Product,
+            )
 
             iterable = Product.get(uuids=content["uuids"])
             values = {v.uuid: v async for v in iterable}
@@ -116,7 +132,9 @@ class ProductQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import Product
+            from ..aggregates import (
+                Product,
+            )
 
             product = await Product.get_one(content["uuid"])
         except Exception as exc:

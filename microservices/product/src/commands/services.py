@@ -5,19 +5,23 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import NoReturn
+from typing import (
+    NoReturn,
+)
 from uuid import (
     UUID,
     uuid4,
 )
 
 from minos.common import (
-    EntitySet,
     UUID_REGEX,
+    EntitySet,
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
 )
-from minos.cqrs import CommandService
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
     Request,
     Response,
