@@ -111,9 +111,9 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def test_get_products(self):
         expected = await gather(
-            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
-            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
-            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
+            Product.create("abc", "Cacao", "1KG", 3, Inventory(0, 0, 0)),
+            Product.create("def", "Cafe", "2KG", 1, Inventory(0, 0, 0)),
+            Product.create("ghi", "Milk", "1L", 2, Inventory(0, 0, 0)),
         )
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
