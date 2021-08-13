@@ -286,8 +286,8 @@ PyYAML = "^5.4.1"
 [package.source]
 type = "git"
 url = "https://github.com/Clariteia/minos_microservice_common.git"
-reference = "d017cad9f2ca7b618ecd9fe6b2bed7c7d55df81f"
-resolved_reference = "d017cad9f2ca7b618ecd9fe6b2bed7c7d55df81f"
+reference = "624e9a35b3a0a464f819d2b1e1bfd053ec3942ca"
+resolved_reference = "624e9a35b3a0a464f819d2b1e1bfd053ec3942ca"
 
 [[package]]
 name = "minos-microservice-cqrs"
@@ -518,7 +518,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ed72bf43de617a070bfaff7c10f6e2baa195669ec37a89e21aa8420486022fdb"
+content-hash = "65b7e4a21faf0135c4d37d4deb4dc0a4745fb018a52655c98cff420e59cb980a"
 
 [metadata.files]
 aiohttp = [
