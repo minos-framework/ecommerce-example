@@ -88,7 +88,9 @@ class ProductCommandService(CommandService):
         amount_diff = content["amount_diff"]
 
         product = await Product.get_one(uuid)
-        product.inventory = Inventory(product.inventory.amount + amount_diff, product.inventory.reserved, product.inventory.sold)
+        product.inventory = Inventory(
+            product.inventory.amount + amount_diff, product.inventory.reserved, product.inventory.sold
+        )
         await product.save()
 
         return Response(product)
