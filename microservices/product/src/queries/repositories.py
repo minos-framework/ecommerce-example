@@ -60,7 +60,11 @@ class ProductQueryRepository(MinosSetup):
         :param kwargs: The parameters of the creation query.
         :return: This method does not return anything.
         """
-        kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
+        kwargs["inventory_amount"] = kwargs["inventory"]["amount"]
+        kwargs["inventory_reserved"] = kwargs["inventory"]["reserved"]
+        kwargs["inventory_sold"] = kwargs["inventory"]["sold"]
+
+        kwargs.pop("inventory")
 
         query = PRODUCT_TABLE.insert().values(**kwargs)
         self.engine.execute(query)
@@ -73,7 +77,11 @@ class ProductQueryRepository(MinosSetup):
         :return: This method does not return anything.
         """
         if "inventory" in kwargs:
-            kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
+            kwargs["inventory_amount"] = kwargs["inventory"]["amount"]
+            kwargs["inventory_reserved"] = kwargs["inventory"]["reserved"]
+            kwargs["inventory_sold"] = kwargs["inventory"]["sold"]
+
+            kwargs.pop("inventory")
 
         query = PRODUCT_TABLE.update().where(PRODUCT_TABLE.columns.uuid == uuid).values(**kwargs)
         self.engine.execute(query)

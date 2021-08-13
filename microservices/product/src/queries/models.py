@@ -33,6 +33,8 @@ PRODUCT_TABLE = Table(
     Column("description", Text, nullable=False),
     Column("price", Numeric, nullable=False),
     Column("inventory_amount", Integer, nullable=False),
+    Column("inventory_reserved", Integer, nullable=False),
+    Column("inventory_sold", Integer, nullable=False),
 )
 
 ProductDTO = ModelType.build(

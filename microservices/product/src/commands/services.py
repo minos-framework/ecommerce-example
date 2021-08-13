@@ -52,7 +52,7 @@ class ProductCommandService(CommandService):
         price = content["price"]
 
         code = uuid4().hex.upper()[0:6]
-        inventory = Inventory(amount=0)
+        inventory = Inventory(amount=0, reserved=0, sold=0)
         product = await Product.create(code, title, description, price, inventory)
 
         return Response(product)
@@ -70,7 +70,7 @@ class ProductCommandService(CommandService):
         amount = content["amount"]
 
         product = await Product.get_one(uuid)
-        product.inventory = Inventory(amount)
+        product.inventory = Inventory(amount, product.inventory.reserved, product.inventory.sold)
         await product.save()
 
         return Response(product)
@@ -88,7 +88,7 @@ class ProductCommandService(CommandService):
         amount_diff = content["amount_diff"]
 
         product = await Product.get_one(uuid)
-        product.inventory = Inventory(product.inventory.amount + amount_diff)
+        product.inventory = Inventory(product.inventory.amount + amount_diff, product.inventory.reserved, product.inventory.sold)
         await product.save()
 
         return Response(product)
@@ -167,7 +167,14 @@ class ProductCommandService(CommandService):
         :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
         """
         content = await request.content()
-        quantities = {UUID(k): v for k, v in content.quantities.items()}
+
+        # TODO: Temporary fix
+        if "quantities" in content:
+            items = content["quantities"].items()
+        if hasattr(content, "quantities"):
+            items = content.quantities.items()
+
+        quantities = {UUID(k): v for k, v in items}
 
         try:
             await self._reserve_products(quantities)
@@ -187,13 +194,62 @@ class ProductCommandService(CommandService):
         feasible = True
         async for product in Product.get(uuids=set(quantities.keys())):
             inventory = product.inventory
-            amount = inventory.amount
-            if feasible and amount < quantities[product.uuid]:
+            reserved = inventory.reserved
+            if feasible and (inventory.amount - reserved) < quantities[product.uuid]:
                 feasible = False
-            amount -= quantities[product.uuid]
-            product.inventory = Inventory(amount)
+            reserved += quantities[product.uuid]
+            product.inventory = Inventory(inventory.amount, reserved, inventory.sold)
             await product.save()
 
         if not feasible:
             await self._reserve_products({k: -v for k, v in quantities.items()})
             raise ValueError("The reservation query could not be satisfied.")
+
+    @enroute.broker.command("PurchaseProducts")
+    async def purchase_products(self, request: Request) -> NoReturn:
+        """Purchase the requested quantities of products.
+
+        :param: request: The ``Request`` instance that contains the quantities dictionary.
+        :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
+        """
+        content = await request.content()
+
+        # TODO: Temporary fix
+        if "quantities" in content:
+            items = content["quantities"].items()
+        if hasattr(content, "quantities"):
+            items = content.quantities.items()
+
+        quantities = {UUID(k): v for k, v in items}
+
+        try:
+            await self._purchase_products(quantities)
+        except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
+            raise ResponseException(f"Some products do not exist: {exc!r}")
+        except Exception as exc:
+            raise ResponseException(f"There is not enough product amount: {exc!r}")
+
+    async def _purchase_products(self, quantities: dict[UUID, int]):
+        """Purchase products.
+
+        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
+        the number
+            of units to be reserved.
+        :return: ``True`` if all products can be satisfied or ``False`` otherwise.
+        """
+        feasible = True
+        async for product in Product.get(uuids=set(quantities.keys())):
+            inventory = product.inventory
+            reserved = inventory.reserved
+            sold = inventory.sold
+            amount = inventory.amount - quantities[product.uuid]
+            if feasible and amount <= quantities[product.uuid]:
+                feasible = False
+            reserved -= quantities[product.uuid]
+            sold += quantities[product.uuid]
+            product.inventory = Inventory(amount, reserved, sold)
+            await product.save()
+
+        if not feasible:
+            await self._reserve_products({k: -v for k, v in quantities.items()})
+            raise ValueError("The purchase products query could not be satisfied.")

@@ -15,6 +15,8 @@ class Inventory(ValueObject):
     """Inventory Object Value class."""
 
     amount: int
+    reserved: int
+    sold: int
 
 
 class Product(Aggregate):
