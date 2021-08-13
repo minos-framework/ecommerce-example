@@ -5,8 +5,16 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
+
 from minos.common import (
     Aggregate,
+    AggregateRef,
+    Entity,
+    EntitySet,
+    ModelRef,
     ValueObject,
 )
 
@@ -26,3 +34,18 @@ class Product(Aggregate):
     price: float
 
     inventory: Inventory
+
+    reviews: EntitySet[Review]
+
+
+class Review(Entity):
+    """TODO"""
+
+    message: str
+#     user: ModelRef[User]
+#
+#
+# class User(AggregateRef):
+#     """TODO"""
+#
+#     username: str

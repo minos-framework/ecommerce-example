@@ -5,6 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
 from datetime import (
     datetime,
 )
@@ -12,6 +15,7 @@ from datetime import (
 from minos.common import (
     Aggregate,
     ValueObject,
+    ValueObjectSet,
 )
 
 
@@ -28,3 +32,11 @@ class User(Aggregate):
     status: str
     address: Address
     created_at: datetime
+
+    credit_cards: ValueObjectSet[CreditCard]
+
+
+class CreditCard(ValueObject):
+    """TODO"""
+
+    name: str

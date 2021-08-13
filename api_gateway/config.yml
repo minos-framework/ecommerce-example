@@ -63,6 +63,18 @@ rest:
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
+    - name: UpdateProduct
+      route: /products/{uuid}
+      method: PATCH
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
+    - name: AddProductReview
+      route: /products/{uuid}/reviews
+      method: POST
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
     - name: GetProductsWithoutStock
       route: /products/without-stock
       method: GET

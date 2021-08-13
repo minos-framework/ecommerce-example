@@ -14,6 +14,7 @@ from uuid import (
 )
 
 from minos.common import (
+    EntitySet,
     UUID_REGEX,
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
@@ -31,6 +32,7 @@ from minos.networks import (
 from ..aggregates import (
     Inventory,
     Product,
+    Review,
 )
 
 
@@ -53,7 +55,23 @@ class ProductCommandService(CommandService):
 
         code = uuid4().hex.upper()[0:6]
         inventory = Inventory(amount=0)
-        product = await Product.create(code, title, description, price, inventory)
+        reviews = EntitySet()
+        product = await Product.create(code, title, description, price, inventory, reviews)
+
+        return Response(product)
+
+    @staticmethod
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/reviews", "POST")
+    async def add_review(request: Request) -> Response:
+        content = await request.content()
+        uuid = content["uuid"]
+        message = content["message"]
+
+        product = await Product.get_one(uuid)
+
+        review = Review(message)
+        product.reviews.add(review)
+        await product.save()
 
         return Response(product)
 
