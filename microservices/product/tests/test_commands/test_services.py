@@ -5,16 +5,12 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
 from collections import defaultdict
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
@@ -24,9 +20,7 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -69,6 +63,7 @@ class _FakeRequest(Request):
 
     def __repr__(self) -> str:
         return str()
+
 
 class _FakeBroker(MinosBroker):
     """For testing purposes."""
@@ -113,13 +108,23 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(amount=0, reserved=0, sold=0), uuid=observed.uuid, version=observed.version)
+        expected = Product(
+            observed.code,
+            "Cacao",
+            "1KG",
+            3,
+            Inventory(amount=0, reserved=0, sold=0),
+            uuid=observed.uuid,
+            version=observed.version,
+        )
 
         self.assertEqual(expected, observed)
 
     async def test_update_product(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
-        expected = Product("abc", "Cola-Cao", "1.5KG", 4, Inventory(amount=12, reserved=0, sold=0), uuid=product.uuid, version=2)
+        expected = Product(
+            "abc", "Cola-Cao", "1.5KG", 4, Inventory(amount=12, reserved=0, sold=0), uuid=product.uuid, version=2
+        )
 
         request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao", "description": "1.5KG", "price": 4})
         response = await self.service.update_product(request)
@@ -128,7 +133,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def test_update_product_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
-        expected = Product("abc", "Cola-Cao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0), uuid=product.uuid, version=2)
+        expected = Product(
+            "abc", "Cola-Cao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0), uuid=product.uuid, version=2
+        )
 
         request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao"})
         response = await self.service.update_product_diff(request)
@@ -137,7 +144,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def test_update_inventory(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
-        expected = Product("abc", "Cacao", "1KG", 3, Inventory(amount=56, reserved=0, sold=0), uuid=product.uuid, version=2)
+        expected = Product(
+            "abc", "Cacao", "1KG", 3, Inventory(amount=56, reserved=0, sold=0), uuid=product.uuid, version=2
+        )
 
         request = _FakeRequest({"uuid": product.uuid, "amount": 56})
         response = await self.service.update_inventory(request)
@@ -146,7 +155,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def test_update_inventory_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
-        expected = Product("abc", "Cacao", "1KG", 3, Inventory(amount=24, reserved=0, sold=0), uuid=product.uuid, version=2)
+        expected = Product(
+            "abc", "Cacao", "1KG", 3, Inventory(amount=24, reserved=0, sold=0), uuid=product.uuid, version=2
+        )
 
         request = _FakeRequest({"uuid": product.uuid, "amount_diff": 12})
         response = await self.service.update_inventory_diff(request)
@@ -155,7 +166,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def test_reserve_product(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
-        expected = Product("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=3, sold=0), uuid=product.uuid, version=2)
+        expected = Product(
+            "abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=3, sold=0), uuid=product.uuid, version=2
+        )
 
         quantities = defaultdict(int)
         quantities[str(product.uuid)] += 3
@@ -168,7 +181,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def test_purchase_product(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
-        expected = Product("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=3, sold=0), uuid=product.uuid, version=2)
+        expected = Product(
+            "abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=3, sold=0), uuid=product.uuid, version=2
+        )
 
         quantities = defaultdict(int)
         quantities[str(product.uuid)] += 3
@@ -181,11 +196,13 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         await self.service.purchase_products(request)
 
-        expected = Product("abc", "Cacao", "1KG", 3, Inventory(amount=9, reserved=0, sold=3), uuid=product.uuid,
-                           version=3)
+        expected = Product(
+            "abc", "Cacao", "1KG", 3, Inventory(amount=9, reserved=0, sold=3), uuid=product.uuid, version=3
+        )
         obtained = await Product.get_one(product.uuid)
 
         self.assertEqual(expected, obtained)
+
 
 if __name__ == "__main__":
     unittest.main()
