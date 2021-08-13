@@ -14,8 +14,8 @@ from uuid import (
 )
 
 from minos.common import (
-    EntitySet,
     UUID_REGEX,
+    EntitySet,
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
 )

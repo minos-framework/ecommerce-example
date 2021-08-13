@@ -42,6 +42,8 @@ class Review(Entity):
     """TODO"""
 
     message: str
+
+
 #     user: ModelRef[User]
 #
 #
