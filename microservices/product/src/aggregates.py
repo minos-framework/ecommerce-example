@@ -17,6 +17,9 @@ from minos.common import (
     ModelRef,
     ValueObject,
 )
+from typing import (
+    Optional,
+)
 
 
 class Inventory(ValueObject):
@@ -35,12 +38,12 @@ class Product(Aggregate):
 
     inventory: Inventory
 
-    reviews: EntitySet[Review]
+    reviews: Optional[EntitySet[Review]]
 
 
 class Review(Entity):
     """TODO"""
-
+    stars: float
     message: str
 
 

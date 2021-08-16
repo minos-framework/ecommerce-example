@@ -8,6 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 from .aggregates import (
     Inventory,
     Product,
+    Review,
 )
 from .commands import (
     ProductCommandService,

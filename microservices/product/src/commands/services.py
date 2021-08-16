@@ -65,11 +65,12 @@ class ProductCommandService(CommandService):
     async def add_review(request: Request) -> Response:
         content = await request.content()
         uuid = content["uuid"]
+        stars = content["stars"]
         message = content["message"]
 
         product = await Product.get_one(uuid)
 
-        review = Review(message)
+        review = Review(stars=stars, message=message)
         product.reviews.add(review)
         await product.save()
 

@@ -35,6 +35,7 @@ from minos.common import (
     MinosConfig,
     MinosSagaManager,
     Model,
+    EntitySet,
 )
 from minos.networks import (
     Request,
@@ -43,6 +44,7 @@ from minos.networks import (
 from src import (
     Inventory,
     Product,
+    Review,
     ProductCommandService,
 )
 
@@ -111,9 +113,8 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         response = await self.service.create_product(request)
 
         self.assertIsInstance(response, Response)
-
         observed = await response.content()
-        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), uuid=observed.uuid, version=observed.version)
+        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version)
 
         self.assertEqual(expected, observed)
 
