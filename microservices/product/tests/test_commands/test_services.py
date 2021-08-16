@@ -29,13 +29,13 @@ from cached_property import (
 from minos.common import (
     CommandReply,
     DependencyInjector,
+    EntitySet,
     InMemoryRepository,
     InMemorySnapshot,
     MinosBroker,
     MinosConfig,
     MinosSagaManager,
     Model,
-    EntitySet,
 )
 from minos.networks import (
     Request,
@@ -44,8 +44,8 @@ from minos.networks import (
 from src import (
     Inventory,
     Product,
-    Review,
     ProductCommandService,
+    Review,
 )
 
 
@@ -114,7 +114,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertIsInstance(response, Response)
         observed = await response.content()
-        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version)
+        expected = Product(
+            observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version
+        )
 
         self.assertEqual(expected, observed)
 
@@ -160,22 +162,28 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertIsInstance(response, Response)
         observed = await response.content()
-        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version)
+        expected = Product(
+            observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version
+        )
 
         self.assertEqual(expected, observed)
 
-        request = _FakeRequest({
-            "stars": 4.5,
-            "message": "Test",
-            "uuid": observed.uuid
-        })
+        request = _FakeRequest({"stars": 4.5, "message": "Test", "uuid": observed.uuid})
 
         response = await self.service.add_review(request)
 
         observed = await response.content()
         reviews = observed.reviews
-        expected = Product(code=observed.code, title="Cacao", description="1KG", price=3, inventory=Inventory(0), reviews=reviews, uuid=observed.uuid,
-                           version=observed.version)
+        expected = Product(
+            code=observed.code,
+            title="Cacao",
+            description="1KG",
+            price=3,
+            inventory=Inventory(0),
+            reviews=reviews,
+            uuid=observed.uuid,
+            version=observed.version,
+        )
 
         self.assertEqual(expected, observed)
 

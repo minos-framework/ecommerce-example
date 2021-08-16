@@ -9,6 +9,10 @@ from datetime import (
     datetime,
 )
 
+from minos.common import (
+    UUID_REGEX,
+    ValueObjectSet,
+)
 from minos.cqrs import (
     CommandService,
 )
@@ -17,13 +21,11 @@ from minos.networks import (
     Response,
     enroute,
 )
-from minos.common import (
-    UUID_REGEX, ValueObjectSet,
-)
+
 from ..aggregates import (
     Address,
-    User,
     CreditCard,
+    User,
 )
 
 

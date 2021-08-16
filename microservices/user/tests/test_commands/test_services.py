@@ -11,18 +11,23 @@ from __future__ import (
 
 import sys
 import unittest
+from datetime import (
+    datetime,
+)
 from pathlib import (
     Path,
 )
 from typing import (
-    NoReturn, Optional,
+    NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
     uuid4,
 )
-from datetime import (
-    datetime,
+
+from cached_property import (
+    cached_property,
 )
 from minos.common import (
     CommandReply,
@@ -32,10 +37,9 @@ from minos.common import (
     MinosBroker,
     MinosConfig,
     MinosSagaManager,
-    Model, ValueObjectSet, ValueObject,
-)
-from cached_property import (
-    cached_property,
+    Model,
+    ValueObject,
+    ValueObjectSet,
 )
 from minos.networks import (
     Request,
@@ -46,7 +50,9 @@ from src import (
     User,
     UserCommandService,
 )
-from src.aggregates import CreditCard
+from src.aggregates import (
+    CreditCard,
+)
 
 
 class _FakeRequest(Request):
@@ -166,12 +172,7 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(expected, observed)
 
-        request = _FakeRequest(
-            {
-                "name": "Example credit cart",
-                "uuid": observed.uuid
-            }
-        )
+        request = _FakeRequest({"name": "Example credit cart", "uuid": observed.uuid})
         response = await self.service.add_credit_card(request)
 
         self.assertIsInstance(response, Response)

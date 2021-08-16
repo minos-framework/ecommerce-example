@@ -32,12 +32,13 @@ from cached_property import (
 from minos.common import (
     CommandReply,
     DependencyInjector,
+    EntitySet,
     InMemoryRepository,
     InMemorySnapshot,
     MinosBroker,
     MinosConfig,
     MinosSagaManager,
-    Model, EntitySet,
+    Model,
 )
 from minos.networks import (
     Request,

@@ -9,6 +9,10 @@ from __future__ import (
     annotations,
 )
 
+from typing import (
+    Optional,
+)
+
 from minos.common import (
     Aggregate,
     AggregateRef,
@@ -16,9 +20,6 @@ from minos.common import (
     EntitySet,
     ModelRef,
     ValueObject,
-)
-from typing import (
-    Optional,
 )
 
 
@@ -43,6 +44,7 @@ class Product(Aggregate):
 
 class Review(Entity):
     """TODO"""
+
     stars: float
     message: str
 

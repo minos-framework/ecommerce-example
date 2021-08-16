@@ -12,15 +12,16 @@ from __future__ import (
 from datetime import (
     datetime,
 )
+from typing import (
+    Optional,
+)
 
 from minos.common import (
     Aggregate,
     ValueObject,
     ValueObjectSet,
 )
-from typing import (
-    Optional,
-)
+
 
 class Address(ValueObject):
     street: str
