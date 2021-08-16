@@ -18,7 +18,9 @@ from minos.common import (
     ValueObject,
     ValueObjectSet,
 )
-
+from typing import (
+    Optional,
+)
 
 class Address(ValueObject):
     street: str
