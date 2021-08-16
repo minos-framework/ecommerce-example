@@ -37,7 +37,7 @@ from minos.common import (
     MinosBroker,
     MinosConfig,
     MinosSagaManager,
-    Model,
+    Model, EntitySet,
 )
 from minos.networks import (
     Request,
@@ -111,9 +111,9 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def test_get_products(self):
         expected = await gather(
-            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
-            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
-            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
+            Product.create("abc", "Cacao", "1KG", 3, Inventory(0), EntitySet({})),
+            Product.create("def", "Cafe", "2KG", 1, Inventory(0), EntitySet({})),
+            Product.create("ghi", "Milk", "1L", 2, Inventory(0), EntitySet({})),
         )
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 

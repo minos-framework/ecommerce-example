@@ -38,7 +38,7 @@ class Product(Aggregate):
 
     inventory: Inventory
 
-    reviews: Optional[EntitySet[Review]]
+    reviews: EntitySet[Review]
 
 
 class Review(Entity):
