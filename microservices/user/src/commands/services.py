@@ -5,20 +5,17 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from datetime import (
-    datetime,
-)
+from datetime import datetime
 
-from minos.cqrs import (
-    CommandService,
-)
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
 from minos.common import (
-    UUID_REGEX, ValueObjectSet,
+    UUID_REGEX,
+    ValueObjectSet,
 )
 from ..aggregates import (
     Address,

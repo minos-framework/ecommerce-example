@@ -10,9 +10,7 @@ from .aggregates import (
     Product,
     Review,
 )
-from .commands import (
-    ProductCommandService,
-)
+from .commands import ProductCommandService
 from .queries import (
     ProductQueryRepository,
     ProductQueryService,

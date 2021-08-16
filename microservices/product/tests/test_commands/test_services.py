@@ -5,15 +5,11 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
@@ -23,9 +19,7 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -114,7 +108,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertIsInstance(response, Response)
         observed = await response.content()
-        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version)
+        expected = Product(
+            observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version
+        )
 
         self.assertEqual(expected, observed)
 
@@ -160,22 +156,28 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertIsInstance(response, Response)
         observed = await response.content()
-        expected = Product(observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version)
+        expected = Product(
+            observed.code, "Cacao", "1KG", 3, Inventory(0), EntitySet({}), uuid=observed.uuid, version=observed.version
+        )
 
         self.assertEqual(expected, observed)
 
-        request = _FakeRequest({
-            "stars": 4.5,
-            "message": "Test",
-            "uuid": observed.uuid
-        })
+        request = _FakeRequest({"stars": 4.5, "message": "Test", "uuid": observed.uuid})
 
         response = await self.service.add_review(request)
 
         observed = await response.content()
         reviews = observed.reviews
-        expected = Product(code=observed.code, title="Cacao", description="1KG", price=3, inventory=Inventory(0), reviews=reviews, uuid=observed.uuid,
-                           version=observed.version)
+        expected = Product(
+            code=observed.code,
+            title="Cacao",
+            description="1KG",
+            price=3,
+            inventory=Inventory(0),
+            reviews=reviews,
+            uuid=observed.uuid,
+            version=observed.version,
+        )
 
         self.assertEqual(expected, observed)
 
