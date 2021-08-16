@@ -25,7 +25,7 @@ stages:
           amount: 0
         reviews:
           data:
-            null
+            {}
       save:
         json:
           product_uuid: uuid
@@ -54,7 +54,7 @@ stages:
             amount: 0
           reviews:
             data:
-              null
+              {}
 
 
   - name: Update inventory amount
@@ -78,7 +78,7 @@ stages:
           amount: 56
         reviews:
           data:
-            null
+            {}
 
 
   - name: Update inventory amount diff
@@ -102,4 +102,4 @@ stages:
           amount: 44
         reviews:
           data:
-            null
+            {}
