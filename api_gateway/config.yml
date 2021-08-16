@@ -93,6 +93,12 @@ rest:
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
+    - name: AddUserCreditCart
+      route: /users/{uuid}/credit_card
+      method: POST
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
 discovery:
   host: localhost
   port: 5567
