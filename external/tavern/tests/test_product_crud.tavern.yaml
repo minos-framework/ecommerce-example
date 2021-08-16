@@ -24,8 +24,7 @@ stages:
         inventory:
           amount: 0
         reviews:
-          data:
-            {}
+          data: !anydict
       save:
         json:
           product_uuid: uuid
@@ -53,8 +52,7 @@ stages:
           inventory:
             amount: 0
           reviews:
-            data:
-              {}
+            data: !anydict
 
 
   - name: Update inventory amount
@@ -77,8 +75,7 @@ stages:
         inventory:
           amount: 56
         reviews:
-          data:
-            {}
+          data: !anydict
 
 
   - name: Update inventory amount diff
@@ -101,5 +98,4 @@ stages:
         inventory:
           amount: 44
         reviews:
-          data:
-            {}
+          data: !anydict
