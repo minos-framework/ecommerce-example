@@ -21,9 +21,9 @@ from .callbacks import (
 
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
-    idx = context["idx"]
+    product = context["product"]
     cart = await Cart.get_one(cart_id)
-    cart.products.pop(idx)
+    cart.products.discard(product)
 
     await cart.save()
     return SagaContext(cart=cart)

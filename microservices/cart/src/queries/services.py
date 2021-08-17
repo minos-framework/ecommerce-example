@@ -45,45 +45,25 @@ class CartQueryService(QueryService):
         return Response(res)
 
     @enroute.broker.event("CartCreated")
-    async def cart_or_cart_item_created(self, request: Request) -> NoReturn:
+    async def cart_created(self, request: Request) -> NoReturn:
         """Handle the payment create events.
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
 
-        cart_uuid = diff.uuid
-        version = diff.version
-
-        if len(diff.fields_diff.fields["products"].value) > 0:
-            """CartItem Creation"""
-            quantity = diff.fields_diff.fields["products"].value[-1].fields["quantity"].value
-            product = diff.fields_diff.fields["products"].value[-1].fields["product"]
-
-            item_uuid = str(product.value.fields["uuid"].value)
-            item_title = product.value.fields["title"].value
-            item_description = product.value.fields["description"].value
-            item_price = product.value.fields["price"].value
-
-            await self.repository.insert_or_update_cart_item(
-                cart_uuid, item_uuid, quantity, item_title, item_description, item_price
-            )
-
-        else:
-            """Cart creation"""
-            user = diff.fields_diff.fields["user"].value
-            await self.repository.create_cart(cart_uuid, version, user)
+        await self.repository.create_cart(diff.uuid, diff.version, diff.user)
 
     @enroute.broker.event("CartUpdated")
-    async def cart_or_cart_item_updated(self, request: Request) -> NoReturn:
+    async def cart_updated(self, request: Request) -> NoReturn:
         """Handle the payment create events.
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
 
+        """
         if len(diff.fields_diff.fields["products"].value) > 0:
-            """Cart or CartItem update"""
             quantity = diff.fields_diff.fields["products"].value[-1].fields["quantity"].value
             product = diff.fields_diff.fields["products"].value[-1].fields["product"]
             cart_uuid = str(diff.uuid)
@@ -97,12 +77,39 @@ class CartQueryService(QueryService):
                 cart_uuid, item_uuid, quantity, item_title, item_description, item_price
             )
         else:
-            """Cart creation or update"""
             pass
+        """
 
-    @enroute.broker.event("CartItemCreated")
-    @enroute.broker.event("CartItemUpdated")
-    async def cart_item_created_or_updated(self, request: Request) -> NoReturn:
+    @enroute.broker.event("CartUpdated.products.create")
+    async def cart_item_created(self, request: Request) -> NoReturn:
+        """Handle the payment create events.
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
+        """
+        diff: AggregateDiff = await request.content()
+
+        products = diff['products']
+
+        await self.repository.insert_cart_item(
+            diff.uuid, products.product.uuid, products.quantity, products.product.title, products.product.description, products.product.price
+        )
+
+    @enroute.broker.event("CartUpdated.products.delete")
+    async def cart_item_deleted(self, request: Request) -> NoReturn:
+        """Handle the payment create events.
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
+        """
+        diff: AggregateDiff = await request.content()
+
+        products = diff['products']
+
+        await self.repository.delete_cart_item(
+            diff.uuid, products.product.uuid
+        )
+
+    @enroute.broker.event("CartUpdated.products.update")
+    async def cart_item_updated(self, request: Request) -> NoReturn:
         """Handle the payment create events.
         TODO: Never invoked.
         :param request: A request instance containing the aggregate difference.
@@ -129,22 +136,3 @@ class CartQueryService(QueryService):
         cart_uuid = diff.uuid
 
         await self.repository.delete_cart(cart_uuid)
-
-    @enroute.broker.event("CartItemDeleted")
-    async def cart_or_cart_item_deleted(self, request: Request) -> NoReturn:
-        """Handle the payment delete events.
-        TODO: Never invoked.
-        :param request: A request instance containing the aggregate difference.
-        :return: This method does not return anything.
-        """
-        diff: AggregateDiff = await request.content()
-        if len(diff.fields_diff.fields["products"].value) == 0:
-            """Cart creation or update"""
-            product = diff.fields_diff.fields["products"].value[-1].fields["product"]
-            cart_uuid = diff.uuid
-
-            product_uuid = product.value.fields["uuid"].value
-
-            await self.repository.delete_cart_item(cart_uuid, product_uuid)
-        else:
-            """Cart Item Creation or update"""

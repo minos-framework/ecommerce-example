@@ -7,6 +7,9 @@ from uuid import (
     UUID,
 )
 
+from minos.common import (
+    EntitySet,
+)
 from minos.cqrs import (
     CommandService,
 )
@@ -37,7 +40,7 @@ class CartCommandService(CommandService):
         """
         content = await request.content()
         user = content["user"]
-        cart = await Cart.create(user=user, products=[])
+        cart = await Cart.create(user=user, products=EntitySet())
         return Response(cart)
 
     @enroute.rest.command("/carts/{uuid}/items", "POST")

@@ -10,6 +10,8 @@ from minos.common import (
     AggregateRef,
     DeclarativeModel,
     ModelRef,
+    EntitySet,
+    Entity,
 )
 
 
@@ -21,7 +23,7 @@ class Product(AggregateRef):
     price: float
 
 
-class CartItem(DeclarativeModel):
+class CartItem(Entity):
     """Cart Item DeclarativeModel class."""
 
     quantity: int
@@ -32,4 +34,4 @@ class Cart(Aggregate):
     """Cart Aggregate class."""
 
     user: int
-    products: list[CartItem]
+    products: EntitySet[CartItem]

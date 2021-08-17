@@ -26,7 +26,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
     quantity = context["quantity"]
     cart = await Cart.get_one(cart_id)
     cart_item = CartItem(product=product_uuid, quantity=quantity)
-    cart.products.append(cart_item)
+    cart.products.add(cart_item)
     await cart.save()
     return SagaContext(cart=cart)
 
