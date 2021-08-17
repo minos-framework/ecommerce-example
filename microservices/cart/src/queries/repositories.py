@@ -188,7 +188,7 @@ class CartRepository(MinosSetup):
         :param product_uuid: Item UUID
         :return: Nothing
         """
-        delete_cart_item_query = CART_ITEM_TABLE.select().where(
+        delete_cart_item_query = CART_ITEM_TABLE.delete().where(
             and_(CART_ITEM_TABLE.columns.product_id == product_uuid, CART_ITEM_TABLE.columns.cart_id == cart_uuid)
         )
         self.engine.execute(delete_cart_item_query)

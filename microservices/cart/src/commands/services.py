@@ -60,6 +60,23 @@ class CartCommandService(CommandService):
 
         return Response(uuid)
 
+    @enroute.rest.command("/carts/{uuid}/items", "PUT")
+    @enroute.broker.command("UpdateCartItem")
+    async def update_cart_item(self, request: Request) -> Response:
+        """Create cart item.
+        :param request: A request instance containing the payment identifiers.
+        :return: A response containing the queried payment instances.
+        """
+        content = await request.content()
+        cart = content["uuid"]
+        product_uuid = content["product_uuid"]
+        quantity = content["quantity"]
+        uuid = await self.saga_manager.run(
+            "UpdateCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
+        )
+
+        return Response(uuid)
+
     @enroute.rest.command("/carts/{uuid}/items", "DELETE")
     @enroute.broker.command("RemoveCartItem")
     async def remove_cart_item(self, request: Request) -> Response:
