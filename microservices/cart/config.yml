@@ -10,6 +10,7 @@ service:
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
     cart_repository: src.CartRepository
+    postgresql_pool: minos.common.PostgreSqlPool
   services:
     - minos.networks.CommandConsumerService
     - minos.networks.CommandHandlerService
