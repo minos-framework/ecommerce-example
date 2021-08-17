@@ -24,7 +24,7 @@ def _reserve_products_callback(context: SagaContext) -> Model:
     product_uuids = [context["product_uuid"]]
     quantities = defaultdict(int)
     for product_id in product_uuids:
-        quantities[str(product_id)] += 1
+        quantities[str(product_id)] += context["quantity"]
 
     return _ReserveProductsQuery(quantities=quantities)
 
@@ -33,6 +33,6 @@ def _release_products_callback(context: SagaContext) -> Model:
     product_uuids = [context["product_uuid"]]
     quantities = defaultdict(int)
     for product_id in product_uuids:
-        quantities[str(product_id)] -= 1
+        quantities[str(product_id)] -= context["quantity"]
 
     return _ReserveProductsQuery(quantities=quantities)

@@ -91,7 +91,7 @@ class CartCommandService(CommandService):
         idx, product = await self._get_cart_item(cart, product_uuid)
 
         saga_id = await self.saga_manager.run(
-            "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, idx=idx, product=product)
+            "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, product=product)
         )
 
         return Response(saga_id)
