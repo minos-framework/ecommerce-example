@@ -54,11 +54,14 @@ class ReviewQueryRepository(MinosSetup):
         """
         kwargs = {k: v if not isinstance(v, FieldDiff) else v.value for k, v in kwargs.items()}
 
-        kwargs["inventory_amount"] = kwargs["inventory"]["amount"]
-        kwargs["inventory_reserved"] = kwargs["inventory"]["reserved"]
-        kwargs["inventory_sold"] = kwargs["inventory"]["sold"]
+        kwargs["product_uuid"] = kwargs["product"]["uuid"]
+        kwargs["product_title"] = kwargs["product"]["title"]
+        kwargs["user_uuid"] = kwargs["user"]["uuid"]
+        kwargs["username"] = kwargs["user"]["username"]
 
-        kwargs.pop("inventory")
+        kwargs.pop("uuid")
+        kwargs.pop("product")
+        kwargs.pop("user")
 
         query = REVIEW_TABLE.insert().values(**kwargs)
         self.engine.execute(query)

@@ -23,7 +23,7 @@ service:
         - minos.networks.ProducerService
 rest:
     host: 0.0.0.0
-    port: 8084
+    port: 8087
 broker:
     host: localhost
     port: 9092

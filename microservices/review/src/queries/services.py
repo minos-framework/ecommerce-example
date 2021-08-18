@@ -39,3 +39,13 @@ class ReviewQueryService(QueryService):
     """Product Query Service class."""
 
     repository: ReviewQueryRepository = Provide["review_repository"]
+
+    @enroute.broker.event("ReviewCreated")
+    async def review_created(self, request: Request) -> NoReturn:
+        """Handle the product create and update events.
+
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
+        """
+        diff: AggregateDiff = await request.content()
+        await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
