@@ -5,7 +5,6 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-import re
 from typing import (
     NoReturn,
 )
@@ -18,7 +17,6 @@ from minos.common import (
     UUID_REGEX,
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
-    ModelType,
 )
 from minos.cqrs import (
     CommandService,
@@ -96,51 +94,51 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @staticmethod
-    @enroute.broker.command("GetProducts")
-    @enroute.rest.command("/products", "GET")
-    async def get_products(request: Request) -> Response:
-        """Get products.
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "PUT")
+    async def update_product(request: Request) -> Response:
+        """Update product information.
 
-        :param request: The ``Request`` instance that contains the product identifiers.
-        :return: A ``Response`` instance containing the requested products.
+        :param request: ``Request`` that contains the needed information.
+        :return: ``Response`` containing the updated product.
         """
-        _Query = ModelType.build("Query", {"uuids": list[UUID]})
-        try:
-            content = await request.content(model_type=_Query)
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+        content = await request.content()
+        uuid = content["uuid"]
+        title = content["title"]
+        description = content["description"]
+        price = content["price"]
 
-        uuids = content["uuids"]
+        product = await Product.get_one(uuid)
+        product.title = title
+        product.description = description
+        product.price = price
 
-        try:
-            values = {v.uuid: v async for v in Product.get(uuids=uuids)}
-            products = [values[uuid] for uuid in uuids]
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting products: {exc!r}")
+        await product.save()
 
-        return Response(products)
+        return Response(product)
 
     @staticmethod
-    @enroute.broker.command("GetProduct")
-    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
-    async def get_product(request: Request) -> Response:
-        """Get product.
+    @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "PATCH")
+    async def update_product_diff(request: Request) -> Response:
+        """Update product information with a difference.
 
-        :param request: The ``Request`` instance that contains the product identifier.
-        :return: A ``Response`` instance containing the requested product.
+        :param request: ``Request`` that contains the needed information.
+        :return: ``Response`` containing the updated product.
         """
-        _Query = ModelType.build("Query", {"uuid": UUID})
-        try:
-            content = await request.content(model_type=_Query)
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
-
+        content = await request.content()
         uuid = content["uuid"]
+        product = await Product.get_one(uuid)
 
-        try:
-            product = await Product.get_one(uuid)
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting the product: {exc!r}")
+        if "title" in content or hasattr(content, "title"):
+            title = content["title"]
+            product.title = title
+        if "description" in content or hasattr(content, "description"):
+            description = content["description"]
+            product.description = description
+        if "price" in content or hasattr(content, "price"):
+            price = content["price"]
+            product.price = price
+
+        await product.save()
 
         return Response(product)
 

@@ -11,6 +11,9 @@ from __future__ import (
 
 import sys
 import unittest
+from asyncio import (
+    gather,
+)
 from pathlib import (
     Path,
 )
@@ -41,8 +44,9 @@ from minos.networks import (
     Response,
 )
 from src import (
-    Payment,
-    PaymentCommandService,
+    Inventory,
+    Product,
+    ProductQueryService,
 )
 
 
@@ -86,7 +90,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
+class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -100,20 +104,21 @@ class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = PaymentCommandService()
+        self.service = ProductQueryService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_payment(self):
-        request = _FakeRequest({"credit_number": 1234, "amount": 3.4})
-        response = await self.service.create_payment(request)
+    async def test_get_products(self):
+        expected = await gather(
+            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
+            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
+            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
+        )
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
-        self.assertIsInstance(response, Response)
-
+        response = await self.service.get_products(request)
         observed = await response.content()
-        expected = Payment(1234, 3.4, "created", uuid=observed.uuid, version=observed.version)
-
         self.assertEqual(expected, observed)
 
 

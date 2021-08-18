@@ -10,7 +10,7 @@ service:
         saga_manager: minos.saga.SagaManager
         snapshot: minos.common.PostgreSqlSnapshot
         discovery: minos.networks.DiscoveryConnector
-        product_inventory_repository: src.ProductInventoryRepository
+        product_repository: src.ProductQueryRepository
     services:
         - minos.networks.CommandConsumerService
         - minos.networks.CommandHandlerService

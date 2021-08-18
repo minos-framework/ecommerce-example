@@ -11,9 +11,6 @@ from __future__ import (
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
 from pathlib import (
     Path,
 )
@@ -120,15 +117,21 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(expected, observed)
 
-    async def test_get_products(self):
-        expected = await gather(
-            Product.create("abc", "Cacao", "1KG", 3, Inventory(0)),
-            Product.create("def", "Cafe", "2KG", 1, Inventory(0)),
-            Product.create("ghi", "Milk", "1L", 2, Inventory(0)),
-        )
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
+    async def test_update_product(self):
+        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
+        expected = Product("abc", "Cola-Cao", "1.5KG", 4, Inventory(12), uuid=product.uuid, version=2)
 
-        response = await self.service.get_products(request)
+        request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao", "description": "1.5KG", "price": 4})
+        response = await self.service.update_product(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
+
+    async def test_update_product_diff(self):
+        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(12))
+        expected = Product("abc", "Cola-Cao", "1KG", 3, Inventory(12), uuid=product.uuid, version=2)
+
+        request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao"})
+        response = await self.service.update_product_diff(request)
         observed = await response.content()
         self.assertEqual(expected, observed)
 

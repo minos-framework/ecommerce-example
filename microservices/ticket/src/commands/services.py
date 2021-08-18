@@ -6,13 +6,9 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from uuid import (
-    UUID,
     uuid4,
 )
 
-from minos.common import (
-    ModelType,
-)
 from minos.cqrs import (
     CommandService,
 )
@@ -49,21 +45,3 @@ class TicketCommandService(CommandService):
         await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_uuids=product_uuids))
 
         return Response(ticket)
-
-    @staticmethod
-    @enroute.rest.command("/tickets", "GET")
-    @enroute.broker.command("GetTickets")
-    async def get_tickets(request: Request) -> Response:
-        """Get a list of tickets by uuid.
-
-        :param request: A ``Request`` instance containing the list of ticket identifiers.
-        :return: A ``Response`` containing the list of requested tickets.
-        """
-        _Query = ModelType.build("Query", {"uuids": list[UUID]})
-        content = await request.content(model_type=_Query)
-        uuids = content["uuids"]
-
-        values = {v.uuid: v async for v in Ticket.get(uuids=uuids)}
-        tickets = [values[uuid] for uuid in uuids]
-
-        return Response(tickets)
