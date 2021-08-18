@@ -1,6 +1,7 @@
 service:
   name: carts
   injections:
+    postgresql_pool: minos.common.PostgreSqlPool
     command_broker: minos.networks.CommandBroker
     command_reply_broker: minos.networks.CommandReplyBroker
     event_broker: minos.networks.EventBroker
@@ -10,7 +11,6 @@ service:
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
     cart_repository: src.CartRepository
-    postgresql_pool: minos.common.PostgreSqlPool
   services:
     - minos.networks.CommandConsumerService
     - minos.networks.CommandHandlerService
