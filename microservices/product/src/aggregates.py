@@ -35,10 +35,8 @@ class Product(Aggregate):
     inventory: Inventory
 
     def __init__(self, *args, code: Optional[str] = None, inventory: Optional[Inventory] = None, **kwargs):
-
         if code is None:
             code = uuid4().hex.upper()[0:6]
-
         if inventory is None:
             inventory = Inventory.empty()
 
