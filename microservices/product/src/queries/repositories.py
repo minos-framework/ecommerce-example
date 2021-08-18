@@ -17,6 +17,7 @@ from uuid import (
 )
 
 from minos.common import (
+    FieldDiff,
     MinosConfig,
     MinosSetup,
 )
@@ -60,6 +61,7 @@ class ProductQueryRepository(MinosSetup):
         :param kwargs: The parameters of the creation query.
         :return: This method does not return anything.
         """
+        kwargs = {k: v if not isinstance(v, FieldDiff) else v.value for k, v in kwargs.items()}
         kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
 
         query = PRODUCT_TABLE.insert().values(**kwargs)
@@ -72,6 +74,8 @@ class ProductQueryRepository(MinosSetup):
         :param kwargs: The parameters to be updated.
         :return: This method does not return anything.
         """
+        kwargs = {k: v if not isinstance(v, FieldDiff) else v.value for k, v in kwargs.items()}
+
         if "inventory" in kwargs:
             kwargs["inventory_amount"] = kwargs.pop("inventory")["amount"]
 
