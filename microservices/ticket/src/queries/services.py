@@ -101,7 +101,7 @@ class TicketQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
         uuid = diff.uuid
-        total_price = diff.fields_diff["total_price"]
+        total_price = diff["total_price"]
 
         await self.repository.insert_ticket_amount(uuid, total_price)
 
