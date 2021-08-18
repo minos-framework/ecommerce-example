@@ -3,16 +3,10 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     MinosConfig,
@@ -22,9 +16,7 @@ from sqlalchemy import (
     and_,
     create_engine,
 )
-from sqlalchemy.orm import (
-    sessionmaker,
-)
+from sqlalchemy.orm import sessionmaker
 
 from .models import (
     CART_ITEM_TABLE,
@@ -91,9 +83,7 @@ class CartRepository(MinosSetup):
 
         return result
 
-    async def insert_cart_item(
-        self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price
-    ):
+    async def insert_cart_item(self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price):
         """ Insert or Update Cart Item
         :param cart_uuid: UUID
         :param item_uuid: User ID
@@ -117,9 +107,7 @@ class CartRepository(MinosSetup):
         except:
             return {"error": "Error inserting Cart Item."}
 
-    async def update_cart_item(
-        self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price
-    ):
+    async def update_cart_item(self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price):
         """ Insert or Update Cart Item
         :param cart_uuid: UUID
         :param item_uuid: User ID
@@ -132,16 +120,9 @@ class CartRepository(MinosSetup):
         try:
             cart_item_update_query = (
                 CART_ITEM_TABLE.update()
-                    .values(quantity=quantity,
-                            price=item_price,
-                            title=item_title,
-                            description=item_description,
-                            )
-                    .where(
-                    and_(
-                        CART_ITEM_TABLE.columns.product_id == item_uuid,
-                        CART_ITEM_TABLE.columns.cart_id == cart_uuid,
-                    )
+                .values(quantity=quantity, price=item_price, title=item_title, description=item_description,)
+                .where(
+                    and_(CART_ITEM_TABLE.columns.product_id == item_uuid, CART_ITEM_TABLE.columns.cart_id == cart_uuid,)
                 )
             )
             self.engine.execute(cart_item_update_query)

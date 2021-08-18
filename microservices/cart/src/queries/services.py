@@ -3,27 +3,17 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    NoReturn,
-)
+from typing import NoReturn
 
-from dependency_injector.wiring import (
-    Provide,
-)
-from minos.common import (
-    AggregateDiff,
-)
-from minos.cqrs import (
-    QueryService,
-)
+from dependency_injector.wiring import Provide
+from minos.common import AggregateDiff
+from minos.cqrs import QueryService
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
-from src.queries.repositories import (
-    CartRepository,
-)
+from src.queries.repositories import CartRepository
 
 
 class CartQueryService(QueryService):
@@ -71,10 +61,15 @@ class CartQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        products = diff['products']
+        products = diff["products"]
 
         await self.repository.insert_cart_item(
-            diff.uuid, products.product.uuid, products.quantity, products.product.title, products.product.description, products.product.price
+            diff.uuid,
+            products.product.uuid,
+            products.quantity,
+            products.product.title,
+            products.product.description,
+            products.product.price,
         )
 
     @enroute.broker.event("CartUpdated.products.delete")
@@ -85,11 +80,9 @@ class CartQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        products = diff['products']
+        products = diff["products"]
 
-        await self.repository.delete_cart_item(
-            diff.uuid, products.product.uuid
-        )
+        await self.repository.delete_cart_item(diff.uuid, products.product.uuid)
 
     @enroute.broker.event("CartUpdated.products.update")
     async def cart_item_updated(self, request: Request) -> NoReturn:
@@ -98,11 +91,15 @@ class CartQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        products = diff['products']
+        products = diff["products"]
 
         await self.repository.update_cart_item(
-            diff.uuid, products.product.uuid, products.quantity, products.product.title, products.product.description,
-            products.product.price
+            diff.uuid,
+            products.product.uuid,
+            products.quantity,
+            products.product.title,
+            products.product.description,
+            products.product.price,
         )
 
     @enroute.broker.event("ProductUpdated")
