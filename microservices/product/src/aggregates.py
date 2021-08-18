@@ -12,6 +12,7 @@ from __future__ import (
 from typing import (
     NoReturn,
 )
+from uuid import UUID
 
 from minos.common import (
     Aggregate,
@@ -76,3 +77,52 @@ class Product(Aggregate):
         :return: This method does not return anything.
         """
         self.inventory = self.inventory.update_amount(amount_diff)
+
+    @classmethod
+    async def reserve(cls, quantities: dict[UUID, int]) -> NoReturn:
+        """Reserve product quantities.
+
+        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
+        the number
+            of units to be reserved.
+        :return: ``True`` if all products can be satisfied or ``False`` otherwise.
+        """
+        feasible = True
+        async for product in Product.get(uuids=set(quantities.keys())):
+            inventory = product.inventory
+            reserved = inventory.reserved
+            if feasible and (inventory.amount - reserved) < quantities[product.uuid]:
+                feasible = False
+            reserved += quantities[product.uuid]
+            product.inventory = Inventory(inventory.amount, reserved, inventory.sold)
+            await product.save()
+
+        if not feasible:
+            await cls.reserve({k: -v for k, v in quantities.items()})
+            raise ValueError("The reservation query could not be satisfied.")
+
+    @classmethod
+    async def purchase(cls, quantities: dict[UUID, int]) -> NoReturn:
+        """Purchase products.
+
+        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
+        the number
+            of units to be reserved.
+        :return: ``True`` if all products can be satisfied or ``False`` otherwise.
+        """
+        feasible = True
+        async for product in Product.get(uuids=set(quantities.keys())):
+            inventory = product.inventory
+            reserved = inventory.reserved
+            sold = inventory.sold
+            amount = inventory.amount - quantities[product.uuid]
+            if feasible and amount <= quantities[product.uuid]:
+                feasible = False
+            reserved -= quantities[product.uuid]
+            sold += quantities[product.uuid]
+            product.inventory = Inventory(amount, reserved, sold)
+            await product.save()
+
+        if not feasible:
+            await cls.purchase({k: -v for k, v in quantities.items()})
+            raise ValueError("The purchase products query could not be satisfied.")

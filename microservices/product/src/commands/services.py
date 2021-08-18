@@ -168,42 +168,14 @@ class ProductCommandService(CommandService):
         """
         content = await request.content()
 
-        # TODO: Temporary fix
-        if "quantities" in content:
-            items = content["quantities"].items()
-        if hasattr(content, "quantities"):
-            items = content.quantities.items()
-
-        quantities = {UUID(k): v for k, v in items}
+        quantities = {UUID(k): v for k, v in content["quantities"].items()}
 
         try:
-            await self._reserve_products(quantities)
+            await Product.reserve(quantities)
         except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")
-
-    async def _reserve_products(self, quantities: dict[UUID, int]):
-        """Reserve product quantities.
-
-        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
-        the number
-            of units to be reserved.
-        :return: ``True`` if all products can be satisfied or ``False`` otherwise.
-        """
-        feasible = True
-        async for product in Product.get(uuids=set(quantities.keys())):
-            inventory = product.inventory
-            reserved = inventory.reserved
-            if feasible and (inventory.amount - reserved) < quantities[product.uuid]:
-                feasible = False
-            reserved += quantities[product.uuid]
-            product.inventory = Inventory(inventory.amount, reserved, inventory.sold)
-            await product.save()
-
-        if not feasible:
-            await self._reserve_products({k: -v for k, v in quantities.items()})
-            raise ValueError("The reservation query could not be satisfied.")
 
     @enroute.broker.command("PurchaseProducts")
     async def purchase_products(self, request: Request) -> NoReturn:
@@ -214,42 +186,11 @@ class ProductCommandService(CommandService):
         """
         content = await request.content()
 
-        # TODO: Temporary fix
-        if "quantities" in content:
-            items = content["quantities"].items()
-        if hasattr(content, "quantities"):
-            items = content.quantities.items()
-
-        quantities = {UUID(k): v for k, v in items}
+        quantities = {UUID(k): v for k, v in content["quantities"].items()}
 
         try:
-            await self._purchase_products(quantities)
+            await Product.purchase(quantities)
         except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")
-
-    async def _purchase_products(self, quantities: dict[UUID, int]):
-        """Purchase products.
-
-        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
-        the number
-            of units to be reserved.
-        :return: ``True`` if all products can be satisfied or ``False`` otherwise.
-        """
-        feasible = True
-        async for product in Product.get(uuids=set(quantities.keys())):
-            inventory = product.inventory
-            reserved = inventory.reserved
-            sold = inventory.sold
-            amount = inventory.amount - quantities[product.uuid]
-            if feasible and amount <= quantities[product.uuid]:
-                feasible = False
-            reserved -= quantities[product.uuid]
-            sold += quantities[product.uuid]
-            product.inventory = Inventory(amount, reserved, sold)
-            await product.save()
-
-        if not feasible:
-            await self._reserve_products({k: -v for k, v in quantities.items()})
-            raise ValueError("The purchase products query could not be satisfied.")
