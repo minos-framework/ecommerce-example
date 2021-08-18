@@ -43,9 +43,9 @@ from minos.networks import (
     Response,
 )
 from src import (
-    Inventory,
-    Product,
-    ProductQueryService,
+    Cart,
+    CartItem,
+    CartQueryService,
 )
 
 
@@ -103,22 +103,10 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = ProductQueryService()
+        self.service = CartQueryService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
-
-    async def test_get_products(self):
-        expected = await gather(
-            Product.create("abc", "Cacao", "1KG", 3, Inventory(0), EntitySet({})),
-            Product.create("def", "Cafe", "2KG", 1, Inventory(0), EntitySet({})),
-            Product.create("ghi", "Milk", "1L", 2, Inventory(0), EntitySet({})),
-        )
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
-
-        response = await self.service.get_products(request)
-        observed = await response.content()
-        self.assertEqual(expected, observed)
 
 
 if __name__ == "__main__":
