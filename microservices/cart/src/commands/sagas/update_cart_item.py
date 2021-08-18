@@ -19,7 +19,6 @@ from minos.saga import (
 )
 from src.aggregates import (
     Cart,
-    CartItem,
 )
 
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
@@ -35,7 +34,7 @@ async def _release_or_reserve_products(context: SagaContext) -> Model:
         prev = await Cart.get_one(cart_id)
 
         prev_quantity = 0
-        for key, value in prev.products.data.items():
+        for key, value in prev.entries.data.items():
             if str(value.product) == product_id:
                 prev_quantity = value.quantity
 
@@ -45,9 +44,9 @@ async def _release_or_reserve_products(context: SagaContext) -> Model:
             quantities[str(product_id)] += 0
         else:
             if q > 0:
-                quantities[str(product_id)] -= q
+                quantities[str(product_id)] -= abs(q)
             else:
-                quantities[str(product_id)] += q
+                quantities[str(product_id)] += abs(q)
 
     return _ReserveProductsQuery(quantities=quantities)
 
@@ -62,7 +61,7 @@ async def _compensation(context: SagaContext) -> Model:
         prev = await Cart.get_one(cart_id)
 
         prev_quantity = 0
-        for key, value in prev.products.data.items():
+        for key, value in prev.entries.data.items():
             if str(value.product) == product_id:
                 prev_quantity = value.quantity
 
@@ -72,9 +71,9 @@ async def _compensation(context: SagaContext) -> Model:
             quantities[str(product_id)] += 0
         else:
             if q > 0:
-                quantities[str(product_id)] += q
+                quantities[str(product_id)] += abs(q)
             else:
-                quantities[str(product_id)] -= q
+                quantities[str(product_id)] -= abs(q)
 
     return _ReserveProductsQuery(quantities=quantities)
 
@@ -85,7 +84,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
     quantity = context["quantity"]
     cart = await Cart.get_one(cart_id)
 
-    for key, value in cart.products.data.items():
+    for key, value in cart.entries.data.items():
         if str(value.product) == product_uuid:
             value.quantity = quantity
 

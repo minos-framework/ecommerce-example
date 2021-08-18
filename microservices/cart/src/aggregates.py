@@ -22,7 +22,7 @@ class Product(AggregateRef):
     price: float
 
 
-class CartItem(Entity):
+class CartEntry(Entity):
     """Cart Item DeclarativeModel class."""
 
     quantity: int
@@ -33,4 +33,4 @@ class Cart(Aggregate):
     """Cart Aggregate class."""
 
     user: int
-    products: EntitySet[CartItem]
+    entries: EntitySet[CartEntry]

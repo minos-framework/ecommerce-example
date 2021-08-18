@@ -50,14 +50,14 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
     product = context["product"]
     cart = await Cart.get_one(cart_id)
-    cart.products.discard(product)
+    cart.entries.discard(product)
 
     await cart.save()
     return SagaContext(cart=cart)
 
 
 def get_product_quantity(cart: Cart, product: str):
-    for key, value in cart.products.data.items():
+    for key, value in cart.entries.data.items():
         if str(value.product) == product:
             return value.quantity
     return 0

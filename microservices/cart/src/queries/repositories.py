@@ -16,7 +16,7 @@ from uuid import (
 
 from minos.common import (
     MinosConfig,
-    MinosSetup,
+    MinosSetup, FieldDiff,
 )
 from sqlalchemy import (
     and_,
@@ -136,6 +136,18 @@ class CartRepository(MinosSetup):
             self.engine.execute(cart_item_update_query)
         except:
             return {"error": "Error updating Cart Item."}
+
+    async def update_cart_items(self, uuid: UUID, **kwargs) -> NoReturn:
+        """Update an existing row.
+
+        :param uuid: The identifier of the row.
+        :param kwargs: The parameters to be updated.
+        :return: This method does not return anything.
+        """
+        kwargs = {k: v if not isinstance(v, FieldDiff) else v.value for k, v in kwargs.items()}
+
+        query = CART_ITEM_TABLE.update().where(CART_ITEM_TABLE.columns.product_id == uuid).values(**kwargs)
+        self.engine.execute(query)
 
     async def delete_cart(self, cart_uuid: UUID) -> NoReturn:
         """ Delete Payment

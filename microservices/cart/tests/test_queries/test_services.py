@@ -44,7 +44,7 @@ from minos.networks import (
 )
 from src import (
     Cart,
-    CartItem,
+    CartEntry,
     CartQueryService,
 )
 

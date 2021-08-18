@@ -40,7 +40,7 @@ class CartCommandService(CommandService):
         """
         content = await request.content()
         user = content["user"]
-        cart = await Cart.create(user=user, products=EntitySet())
+        cart = await Cart.create(user=user, entries=EntitySet())
         return Response(cart)
 
     @enroute.rest.command("/carts/{uuid}/items", "POST")
@@ -115,6 +115,6 @@ class CartCommandService(CommandService):
     @staticmethod
     async def _get_cart_item(cart_id: UUID, product_uuid: UUID):
         cart = await Cart.get_one(cart_id)
-        for idx, product in enumerate(cart.products):
+        for idx, product in enumerate(cart.entries):
             if str(product.product) == product_uuid:
                 return idx, product

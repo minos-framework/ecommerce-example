@@ -25,7 +25,7 @@ from .callbacks import (
 def _reserve_products_callback(context: SagaContext) -> Model:
     cart = context["cart"]
     quantities = defaultdict(int)
-    for item in cart.products:
+    for item in cart.entries:
         quantities[str(item.product)] += item.quantity
 
     return _ReserveProductsQuery(quantities=quantities)
@@ -34,7 +34,7 @@ def _reserve_products_callback(context: SagaContext) -> Model:
 def _release_products_callback(context: SagaContext) -> Model:
     cart = context["cart"]
     quantities = defaultdict(int)
-    for item in cart.products:
+    for item in cart.entries:
         quantities[str(item.product)] -= item.quantity
 
     return _ReserveProductsQuery(quantities=quantities)

@@ -11,7 +11,7 @@ from minos.saga import (
 )
 from src.aggregates import (
     Cart,
-    CartItem,
+    CartEntry,
 )
 
 from .callbacks import (
@@ -25,8 +25,8 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
     product_uuid = context["product_uuid"]
     quantity = context["quantity"]
     cart = await Cart.get_one(cart_id)
-    cart_item = CartItem(product=product_uuid, quantity=quantity)
-    cart.products.add(cart_item)
+    cart_item = CartEntry(product=product_uuid, quantity=quantity)
+    cart.entries.add(cart_item)
     await cart.save()
     return SagaContext(cart=cart)
 

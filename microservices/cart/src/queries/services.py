@@ -63,7 +63,7 @@ class CartQueryService(QueryService):
         diff: AggregateDiff = await request.content()
         print(diff)
 
-    @enroute.broker.event("CartUpdated.products.create")
+    @enroute.broker.event("CartUpdated.entries.create")
     async def cart_item_created(self, request: Request) -> NoReturn:
         """Handle the payment create events.
         :param request: A request instance containing the aggregate difference.
@@ -71,7 +71,7 @@ class CartQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        products = diff["products"]
+        products = diff["entries"]
 
         await self.repository.insert_cart_item(
             diff.uuid,
@@ -82,7 +82,7 @@ class CartQueryService(QueryService):
             products.product.price,
         )
 
-    @enroute.broker.event("CartUpdated.products.delete")
+    @enroute.broker.event("CartUpdated.entries.delete")
     async def cart_item_deleted(self, request: Request) -> NoReturn:
         """Handle the payment create events.
         :param request: A request instance containing the aggregate difference.
@@ -90,18 +90,18 @@ class CartQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        products = diff["products"]
+        products = diff["entries"]
 
         await self.repository.delete_cart_item(diff.uuid, products.product.uuid)
 
-    @enroute.broker.event("CartUpdated.products.update")
+    @enroute.broker.event("CartUpdated.entries.update")
     async def cart_item_updated(self, request: Request) -> NoReturn:
         """Handle the payment create events.
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        products = diff["products"]
+        products = diff["entries"]
 
         await self.repository.update_cart_item(
             diff.uuid,
@@ -112,13 +112,16 @@ class CartQueryService(QueryService):
             products.product.price,
         )
 
-    @enroute.broker.event("ProductUpdated")
+    @enroute.broker.event("ProductUpdated.price")
+    @enroute.broker.event("ProductUpdated.title")
+    @enroute.broker.event("ProductUpdated.description")
     async def product_updated(self, request: Request) -> NoReturn:
         """Handle the payment create events.
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
+        await self.repository.update_cart_items(uuid=diff.uuid, **diff.fields_diff)
         print(diff)
 
     @enroute.broker.event("CartDeleted")
