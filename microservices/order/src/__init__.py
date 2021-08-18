@@ -13,4 +13,6 @@ from .commands import (
     CREATE_ORDER,
     OrderCommandService,
 )
-from .queries import OrderQueryService
+from .queries import (
+    OrderQueryService,
+)
