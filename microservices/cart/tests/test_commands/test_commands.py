@@ -41,8 +41,8 @@ from minos.networks import (
 )
 from src import (
     Cart,
-    CartItem,
     CartCommandService,
+    CartItem,
 )
 
 
@@ -111,9 +111,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertIsInstance(response, Response)
         observed = await response.content()
-        expected = Cart(
-            3, EntitySet({}), uuid=observed.uuid, version=observed.version
-        )
+        expected = Cart(3, EntitySet({}), uuid=observed.uuid, version=observed.version)
 
         self.assertEqual(expected, observed)
 

@@ -21,7 +21,6 @@ from src.aggregates import (
     Cart,
 )
 
-
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 
 

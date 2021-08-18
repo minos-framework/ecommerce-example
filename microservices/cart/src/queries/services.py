@@ -71,10 +71,15 @@ class CartQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        products = diff['products']
+        products = diff["products"]
 
         await self.repository.insert_cart_item(
-            diff.uuid, products.product.uuid, products.quantity, products.product.title, products.product.description, products.product.price
+            diff.uuid,
+            products.product.uuid,
+            products.quantity,
+            products.product.title,
+            products.product.description,
+            products.product.price,
         )
 
     @enroute.broker.event("CartUpdated.products.delete")
@@ -85,11 +90,9 @@ class CartQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        products = diff['products']
+        products = diff["products"]
 
-        await self.repository.delete_cart_item(
-            diff.uuid, products.product.uuid
-        )
+        await self.repository.delete_cart_item(diff.uuid, products.product.uuid)
 
     @enroute.broker.event("CartUpdated.products.update")
     async def cart_item_updated(self, request: Request) -> NoReturn:
@@ -98,11 +101,15 @@ class CartQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        products = diff['products']
+        products = diff["products"]
 
         await self.repository.update_cart_item(
-            diff.uuid, products.product.uuid, products.quantity, products.product.title, products.product.description,
-            products.product.price
+            diff.uuid,
+            products.product.uuid,
+            products.quantity,
+            products.product.title,
+            products.product.description,
+            products.product.price,
         )
 
     @enroute.broker.event("ProductUpdated")
