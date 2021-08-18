@@ -47,9 +47,9 @@ snapshot:
   host: localhost
   port: 5432
 events:
-  service:
+  service: src.UserQueryService
 queries:
-  service:
+  service: src.UserQueryService
 commands:
   service: src.UserCommandService
 saga:

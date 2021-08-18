@@ -12,3 +12,6 @@ from .aggregates import (
 from .commands import (
     UserCommandService,
 )
+from .queries import (
+    UserQueryService,
+)
