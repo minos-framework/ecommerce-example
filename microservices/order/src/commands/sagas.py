@@ -17,7 +17,8 @@ from uuid import (
 
 from minos.common import (
     Aggregate,
-    EntitySet, Model,
+    EntitySet,
+    Model,
     ModelType,
 )
 from minos.saga import (
@@ -26,7 +27,8 @@ from minos.saga import (
 )
 
 from ..aggregates import (
-    Order, OrderEntry,
+    Order,
+    OrderEntry,
 )
 
 PurchaseProductsQuery = ModelType.build("PurchaseProductsQuery", {"quantities": dict[str, int]})
