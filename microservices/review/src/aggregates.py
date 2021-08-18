@@ -34,6 +34,7 @@ class Review(Aggregate):
 
 class Product(AggregateRef):
     """Product AggregateRef class."""
+
     title: str
 
 

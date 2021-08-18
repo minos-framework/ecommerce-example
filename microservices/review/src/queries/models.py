@@ -37,6 +37,14 @@ REVIEW_TABLE = Table(
 )
 
 ProductDTO = ModelType.build(
-    "ProductDTO", {"product_uuid": UUID, "user_uuid": UUID, "title": str, "description": str, "score": int,
-                   "product_title": str, "username": str}
+    "ProductDTO",
+    {
+        "product_uuid": UUID,
+        "user_uuid": UUID,
+        "title": str,
+        "description": str,
+        "score": int,
+        "product_title": str,
+        "username": str,
+    },
 )

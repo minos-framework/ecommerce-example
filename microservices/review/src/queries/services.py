@@ -39,8 +39,3 @@ class ReviewQueryService(QueryService):
     """Product Query Service class."""
 
     repository: ReviewQueryRepository = Provide["review_repository"]
-
-
-
-
-

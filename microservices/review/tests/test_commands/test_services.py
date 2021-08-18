@@ -44,10 +44,10 @@ from minos.networks import (
     Response,
 )
 from src import (
-    Review,
     Product,
-    User,
+    Review,
     ReviewCommandService,
+    User,
 )
 
 
