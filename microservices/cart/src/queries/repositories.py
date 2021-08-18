@@ -117,8 +117,7 @@ class CartRepository(MinosSetup):
         except:
             return {"error": "Error inserting Cart Item."}
 
-
-    async def insert_or_update_cart_item(
+    async def update_cart_item(
         self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price
     ):
         """ Insert or Update Cart Item
@@ -131,48 +130,23 @@ class CartRepository(MinosSetup):
         :return: Nothing
         """
         try:
-            # Get CartItem information
-            cart_query = (
-                self.session.query(CART_ITEM_TABLE)
-                .filter(
-                    and_(CART_ITEM_TABLE.columns.product_id == item_uuid, CART_ITEM_TABLE.columns.cart_id == cart_uuid)
-                )
-                .one()
-            )
-
-        except:
-            cart_query = ()
-
-        if len(cart_query) > 0:
-            # Perform update
-            try:
-                cart_item_update_query = (
-                    CART_ITEM_TABLE.update()
-                    .values(quantity=quantity)
+            cart_item_update_query = (
+                CART_ITEM_TABLE.update()
+                    .values(quantity=quantity,
+                            price=item_price,
+                            title=item_title,
+                            description=item_description,
+                            )
                     .where(
-                        and_(
-                            CART_ITEM_TABLE.columns.product_id == item_uuid,
-                            CART_ITEM_TABLE.columns.cart_id == cart_uuid,
-                        )
+                    and_(
+                        CART_ITEM_TABLE.columns.product_id == item_uuid,
+                        CART_ITEM_TABLE.columns.cart_id == cart_uuid,
                     )
                 )
-                self.engine.execute(cart_item_update_query)
-            except:
-                return {"error": "Error updating Cart Item."}
-        else:
-            try:
-                # Insert new Cart Item Record
-                query = CART_ITEM_TABLE.insert().values(
-                    product_id=item_uuid,
-                    cart_id=cart_uuid,
-                    quantity=quantity,
-                    price=item_price,
-                    title=item_title,
-                    description=item_description,
-                )
-                self.engine.execute(query)
-            except:
-                return {"error": "Error inserting Cart Item."}
+            )
+            self.engine.execute(cart_item_update_query)
+        except:
+            return {"error": "Error updating Cart Item."}
 
     async def delete_cart(self, cart_uuid: UUID) -> NoReturn:
         """ Delete Payment

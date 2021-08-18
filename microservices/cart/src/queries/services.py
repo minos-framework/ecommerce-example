@@ -94,12 +94,16 @@ class CartQueryService(QueryService):
     @enroute.broker.event("CartUpdated.products.update")
     async def cart_item_updated(self, request: Request) -> NoReturn:
         """Handle the payment create events.
-        TODO: Never invoked.
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        print(diff)
+        products = diff['products']
+
+        await self.repository.update_cart_item(
+            diff.uuid, products.product.uuid, products.quantity, products.product.title, products.product.description,
+            products.product.price
+        )
 
     @enroute.broker.event("ProductUpdated")
     async def product_updated(self, request: Request) -> NoReturn:

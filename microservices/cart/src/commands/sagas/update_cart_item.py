@@ -84,8 +84,11 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
     product_uuid = context["product_uuid"]
     quantity = context["quantity"]
     cart = await Cart.get_one(cart_id)
-    cart_item = cart.products.get(entity_id)
-    cart_item.quantity = quantity
+
+    for key, value in cart.products.data.items():
+        if str(value.product) == product_uuid:
+            value.quantity = quantity
+
     await cart.save()
     return SagaContext(cart=cart)
 
