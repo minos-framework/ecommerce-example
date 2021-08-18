@@ -11,9 +11,11 @@ from __future__ import (
 
 from typing import (
     NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
+    uuid4,
 )
 
 from minos.common import (
@@ -31,6 +33,16 @@ class Product(Aggregate):
     price: float
 
     inventory: Inventory
+
+    def __init__(self, *args, code: Optional[str] = None, inventory: Optional[Inventory] = None, **kwargs):
+
+        if code is None:
+            code = uuid4().hex.upper()[0:6]
+
+        if inventory is None:
+            inventory = Inventory.empty()
+
+        super().__init__(code, *args, inventory=inventory, **kwargs)
 
     def set_inventory_amount(self, amount: int) -> NoReturn:
         """Update the inventory amount.

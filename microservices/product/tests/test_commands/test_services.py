@@ -117,11 +117,11 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         observed = await response.content()
         expected = Product(
-            observed.code,
             "Cacao",
             "1KG",
             3,
-            Inventory(amount=0, reserved=0, sold=0),
+            code=observed.code,
+            inventory=Inventory(amount=0, reserved=0, sold=0),
             uuid=observed.uuid,
             version=observed.version,
         )
@@ -129,9 +129,17 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_update_product(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
+        product = await Product.create(
+            "Cacao", "1KG", 3, code="abc", inventory=Inventory(amount=12, reserved=0, sold=0)
+        )
         expected = Product(
-            "abc", "Cola-Cao", "1.5KG", 4, Inventory(amount=12, reserved=0, sold=0), uuid=product.uuid, version=2
+            "Cola-Cao",
+            "1.5KG",
+            4,
+            code="abc",
+            inventory=Inventory(amount=12, reserved=0, sold=0),
+            uuid=product.uuid,
+            version=2,
         )
 
         request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao", "description": "1.5KG", "price": 4})
@@ -140,9 +148,17 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_update_product_diff(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
+        product = await Product.create(
+            "Cacao", "1KG", 3, code="abc", inventory=Inventory(amount=12, reserved=0, sold=0)
+        )
         expected = Product(
-            "abc", "Cola-Cao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0), uuid=product.uuid, version=2
+            "Cola-Cao",
+            "1KG",
+            3,
+            code="abc",
+            inventory=Inventory(amount=12, reserved=0, sold=0),
+            uuid=product.uuid,
+            version=2,
         )
 
         request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao"})
@@ -151,9 +167,17 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_update_inventory(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
+        product = await Product.create(
+            "Cacao", "1KG", 3, code="abc", inventory=Inventory(amount=12, reserved=0, sold=0)
+        )
         expected = Product(
-            "abc", "Cacao", "1KG", 3, Inventory(amount=56, reserved=0, sold=0), uuid=product.uuid, version=2
+            "Cacao",
+            "1KG",
+            3,
+            code="abc",
+            inventory=Inventory(amount=56, reserved=0, sold=0),
+            uuid=product.uuid,
+            version=2,
         )
 
         request = _FakeRequest({"uuid": product.uuid, "amount": 56})
@@ -162,9 +186,17 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_update_inventory_diff(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
+        product = await Product.create(
+            "Cacao", "1KG", 3, code="abc", inventory=Inventory(amount=12, reserved=0, sold=0)
+        )
         expected = Product(
-            "abc", "Cacao", "1KG", 3, Inventory(amount=24, reserved=0, sold=0), uuid=product.uuid, version=2
+            "Cacao",
+            "1KG",
+            3,
+            code="abc",
+            inventory=Inventory(amount=24, reserved=0, sold=0),
+            uuid=product.uuid,
+            version=2,
         )
 
         request = _FakeRequest({"uuid": product.uuid, "amount_diff": 12})
@@ -173,9 +205,17 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_reserve_product(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
+        product = await Product.create(
+            "Cacao", "1KG", 3, code="abc", inventory=Inventory(amount=12, reserved=0, sold=0)
+        )
         expected = Product(
-            "abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=3, sold=0), uuid=product.uuid, version=2
+            "Cacao",
+            "1KG",
+            3,
+            code="abc",
+            inventory=Inventory(amount=12, reserved=3, sold=0),
+            uuid=product.uuid,
+            version=2,
         )
 
         quantities = defaultdict(int)
@@ -188,9 +228,17 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, obtained)
 
     async def test_purchase_product(self):
-        product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
+        product = await Product.create(
+            "Cacao", "1KG", 3, code="abc", inventory=Inventory(amount=12, reserved=0, sold=0)
+        )
         expected = Product(
-            "abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=3, sold=0), uuid=product.uuid, version=2
+            "Cacao",
+            "1KG",
+            3,
+            code="abc",
+            inventory=Inventory(amount=12, reserved=3, sold=0),
+            uuid=product.uuid,
+            version=2,
         )
 
         quantities = defaultdict(int)
@@ -205,7 +253,13 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         await self.service.purchase_products(request)
 
         expected = Product(
-            "abc", "Cacao", "1KG", 3, Inventory(amount=9, reserved=0, sold=3), uuid=product.uuid, version=3
+            "Cacao",
+            "1KG",
+            3,
+            code="abc",
+            inventory=Inventory(amount=9, reserved=0, sold=3),
+            uuid=product.uuid,
+            version=3,
         )
         obtained = await Product.get_one(product.uuid)
 

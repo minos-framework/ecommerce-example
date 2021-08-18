@@ -29,7 +29,6 @@ from minos.networks import (
 )
 
 from ..aggregates import (
-    Inventory,
     Product,
 )
 
@@ -51,10 +50,7 @@ class ProductCommandService(CommandService):
         description = content["description"]
         price = content["price"]
 
-        code = uuid4().hex.upper()[0:6]
-        inventory = Inventory.empty()
-
-        product = await Product.create(code, title, description, price, inventory)
+        product = await Product.create(title, description, price)
 
         return Response(product)
 
