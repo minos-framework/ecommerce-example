@@ -15,6 +15,12 @@ rest:
       controller: minos.api_gateway.rest.DefaultController
       action: default
 
+    - name: GetOrder
+      route: /orders/{uuid}
+      method: GET
+      controller: minos.api_gateway.rest.DefaultController
+      action: default
+
     - name: AddPayment
       route: /payments
       method: POST
