@@ -52,7 +52,8 @@ class ProductCommandService(CommandService):
         price = content["price"]
 
         code = uuid4().hex.upper()[0:6]
-        inventory = Inventory(amount=0, reserved=0, sold=0)
+        inventory = Inventory.empty()
+
         product = await Product.create(code, title, description, price, inventory)
 
         return Response(product)
@@ -70,7 +71,7 @@ class ProductCommandService(CommandService):
         amount = content["amount"]
 
         product = await Product.get_one(uuid)
-        product.inventory = Inventory(amount, product.inventory.reserved, product.inventory.sold)
+        product.set_inventory_amount(amount)
         await product.save()
 
         return Response(product)
@@ -88,9 +89,7 @@ class ProductCommandService(CommandService):
         amount_diff = content["amount_diff"]
 
         product = await Product.get_one(uuid)
-        product.inventory = Inventory(
-            product.inventory.amount + amount_diff, product.inventory.reserved, product.inventory.sold
-        )
+        product.update_inventory_amount(amount_diff)
         await product.save()
 
         return Response(product)
@@ -130,15 +129,14 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
         product = await Product.get_one(uuid)
 
-        if "title" in content or hasattr(content, "title"):
-            title = content["title"]
-            product.title = title
-        if "description" in content or hasattr(content, "description"):
-            description = content["description"]
-            product.description = description
-        if "price" in content or hasattr(content, "price"):
-            price = content["price"]
-            product.price = price
+        if "title" in content:
+            product.title = content["title"]
+
+        if "description" in content:
+            product.description = content["description"]
+
+        if "price" in content:
+            product.price = content["price"]
 
         await product.save()
 
