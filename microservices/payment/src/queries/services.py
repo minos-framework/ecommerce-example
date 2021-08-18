@@ -102,7 +102,7 @@ class PaymentQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
         uuid = diff.uuid
-        amount = diff.fields_diff["amount"]
+        amount = diff["amount"]
 
         await self.repository.insert_payment_amount(uuid, amount)
 

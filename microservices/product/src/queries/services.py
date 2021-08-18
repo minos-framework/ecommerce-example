@@ -121,7 +121,7 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff.avro_data)
+        await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ProductUpdated")
     async def product_updated(self, request: Request) -> NoReturn:
@@ -131,7 +131,7 @@ class ProductQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff.avro_data)
+        await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ProductDeleted")
     async def product_deleted(self, request: Request) -> NoReturn:
