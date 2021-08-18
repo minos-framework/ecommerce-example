@@ -16,6 +16,8 @@ from datetime import (
 from minos.common import (
     Aggregate,
     AggregateRef,
+    Entity,
+    EntitySet,
     ModelRef,
 )
 
@@ -23,19 +25,37 @@ from minos.common import (
 class Order(Aggregate):
     """Order Aggregate class."""
 
-    products: list[ModelRef[Product]]
+    entries: EntitySet[OrderEntry]
     ticket: ModelRef[Ticket]
     status: str
 
     created_at: datetime
     updated_at: datetime
 
+    user: ModelRef[User]
+
+
+class OrderEntry(Entity):
+    """Order Item class"""
+
+    amount: int
+    product: ModelRef[Product]
+
 
 class Product(AggregateRef):
     """Order AggregateRef class."""
 
+    title: str
     price: float
 
 
 class Ticket(AggregateRef):
     """Ticket AggregateRef class"""
+
+    total_price: str
+
+
+class User(AggregateRef):
+    """User class"""
+
+    username: str

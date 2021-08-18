@@ -9,6 +9,7 @@ stages:
       method: POST
       json:
         product_uuids: [1, 2, 3,4]
+        user: [5]
 
     response:
       status_code: 200

@@ -31,5 +31,8 @@ class OrderCommandService(CommandService):
         """
         content = await request.content()
         product_uuids = content["product_uuids"]
-        uuid = await self.saga_manager.run("CreateOrder", context=SagaContext(product_uuids=product_uuids))
+        user_uuid = content["user"]
+        uuid = await self.saga_manager.run(
+            "CreateOrder", context=SagaContext(user_uuid=user_uuid, product_uuids=product_uuids)
+        )
         return Response(uuid)

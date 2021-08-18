@@ -17,7 +17,7 @@ from uuid import (
 
 from minos.common import (
     Aggregate,
-    Model,
+    EntitySet, Model,
     ModelType,
 )
 from minos.saga import (
@@ -26,7 +26,7 @@ from minos.saga import (
 )
 
 from ..aggregates import (
-    Order,
+    Order, OrderEntry,
 )
 
 PurchaseProductsQuery = ModelType.build("PurchaseProductsQuery", {"quantities": dict[str, int]})
@@ -62,11 +62,24 @@ def _create_ticket_reply(value: Aggregate) -> UUID:
 
 
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
-    product_uuids = context["product_uuids"]
     ticket_uuid = context["ticket_uuid"]
+    user_uuid = context["user_uuid"]
+
     now = datetime.now()
     status = "created"
-    order = await Order.create(product_uuids, ticket_uuid, status, created_at=now, updated_at=now)
+
+    order = await Order.create(EntitySet(), ticket_uuid, status, created_at=now, updated_at=now, user=user_uuid)
+
+    product_uuids = context["product_uuids"]
+    quantities = defaultdict(int)
+    for product_uuid in product_uuids:
+        quantities[product_uuid] += 1
+
+    for product, amount in quantities.items():
+        order.entries.add(OrderEntry(amount, product))
+
+    await order.save()
+
     return SagaContext(order=order)
 
 

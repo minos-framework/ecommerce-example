@@ -121,7 +121,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         mock = MagicMock(side_effect=_fn)
         self.service.saga_manager._run_new = mock
 
-        request = _FakeRequest({"product_uuids": [1, 2, 3]})
+        request = _FakeRequest({"product_uuids": [1, 2, 3], "user": 4})
         response = await self.service.create_order(request)
         self.assertIsInstance(response, Response)
 
@@ -129,7 +129,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
         self.assertEqual(expected, observed)
-        self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3])), mock.call_args)
+        self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3], user_uuid=4)), mock.call_args)
 
 
 if __name__ == "__main__":
