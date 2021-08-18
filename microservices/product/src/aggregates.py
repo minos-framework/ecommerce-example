@@ -12,7 +12,9 @@ from __future__ import (
 from typing import (
     NoReturn,
 )
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     Aggregate,
