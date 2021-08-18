@@ -29,7 +29,6 @@ from minos.networks import (
 )
 
 from ..aggregates import (
-    Inventory,
     Product,
 )
 
@@ -51,9 +50,7 @@ class ProductCommandService(CommandService):
         description = content["description"]
         price = content["price"]
 
-        code = uuid4().hex.upper()[0:6]
-        inventory = Inventory(amount=0)
-        product = await Product.create(code, title, description, price, inventory)
+        product = await Product.create(title, description, price)
 
         return Response(product)
 
@@ -70,7 +67,7 @@ class ProductCommandService(CommandService):
         amount = content["amount"]
 
         product = await Product.get_one(uuid)
-        product.inventory = Inventory(amount)
+        product.set_inventory_amount(amount)
         await product.save()
 
         return Response(product)
@@ -88,7 +85,7 @@ class ProductCommandService(CommandService):
         amount_diff = content["amount_diff"]
 
         product = await Product.get_one(uuid)
-        product.inventory = Inventory(product.inventory.amount + amount_diff)
+        product.update_inventory_amount(amount_diff)
         await product.save()
 
         return Response(product)
@@ -128,15 +125,14 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
         product = await Product.get_one(uuid)
 
-        if "title" in content or hasattr(content, "title"):
-            title = content["title"]
-            product.title = title
-        if "description" in content or hasattr(content, "description"):
-            description = content["description"]
-            product.description = description
-        if "price" in content or hasattr(content, "price"):
-            price = content["price"]
-            product.price = price
+        if "title" in content:
+            product.title = content["title"]
+
+        if "description" in content:
+            product.description = content["description"]
+
+        if "price" in content:
+            product.price = content["price"]
 
         await product.save()
 
@@ -167,33 +163,30 @@ class ProductCommandService(CommandService):
         :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
         """
         content = await request.content()
-        quantities = {UUID(k): v for k, v in content.quantities.items()}
+
+        quantities = {UUID(k): v for k, v in content["quantities"].items()}
 
         try:
-            await self._reserve_products(quantities)
+            await Product.reserve(quantities)
         except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")
 
-    async def _reserve_products(self, quantities: dict[UUID, int]):
-        """Reserve product quantities.
+    @enroute.broker.command("PurchaseProducts")
+    async def purchase_products(self, request: Request) -> NoReturn:
+        """Purchase the requested quantities of products.
 
-        :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
-        the number
-            of units to be reserved.
-        :return: ``True`` if all products can be satisfied or ``False`` otherwise.
+        :param: request: The ``Request`` instance that contains the quantities dictionary.
+        :return: A ``Response containing a ``ValidProductInventoryList`` DTO.
         """
-        feasible = True
-        async for product in Product.get(uuids=set(quantities.keys())):
-            inventory = product.inventory
-            amount = inventory.amount
-            if feasible and amount < quantities[product.uuid]:
-                feasible = False
-            amount -= quantities[product.uuid]
-            product.inventory = Inventory(amount)
-            await product.save()
+        content = await request.content()
 
-        if not feasible:
-            await self._reserve_products({k: -v for k, v in quantities.items()})
-            raise ValueError("The reservation query could not be satisfied.")
+        quantities = {UUID(k): v for k, v in content["quantities"].items()}
+
+        try:
+            await Product.purchase(quantities)
+        except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
+            raise ResponseException(f"Some products do not exist: {exc!r}")
+        except Exception as exc:
+            raise ResponseException(f"There is not enough product amount: {exc!r}")
