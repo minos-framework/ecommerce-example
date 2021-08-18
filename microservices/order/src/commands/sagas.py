@@ -33,7 +33,7 @@ PurchaseProductsQuery = ModelType.build("PurchaseProductsQuery", {"quantities": 
 ProductsQuery = ModelType.build("ProductsQuery", {"product_uuids": list[UUID]})
 
 
-def _reserve_products_callback(context: SagaContext) -> Model:
+def _purchase_products(context: SagaContext) -> Model:
     product_uuids = context["product_uuids"]
     quantities = defaultdict(int)
     for product_uuid in product_uuids:
@@ -42,7 +42,7 @@ def _reserve_products_callback(context: SagaContext) -> Model:
     return PurchaseProductsQuery(quantities)
 
 
-def _release_products_callback(context: SagaContext) -> Model:
+def _revert_purchase_products(context: SagaContext) -> Model:
     product_uuids = context["product_uuids"]
     quantities = defaultdict(int)
     for product_uuid in product_uuids:
@@ -51,13 +51,13 @@ def _release_products_callback(context: SagaContext) -> Model:
     return PurchaseProductsQuery(quantities)
 
 
-def _create_ticket_callback(context: SagaContext) -> Model:
+def _create_ticket(context: SagaContext) -> Model:
     product_uuids = context["product_uuids"]
     model = ProductsQuery(product_uuids)
     return model
 
 
-def _create_ticket_reply_callback(value: Aggregate) -> UUID:
+def _create_ticket_reply(value: Aggregate) -> UUID:
     return value.uuid
 
 
@@ -73,10 +73,10 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 CREATE_ORDER = (
     Saga("CreateOrder")
     .step()
-    .invoke_participant("PurchaseProducts", _reserve_products_callback)
-    .with_compensation("PurchaseProducts", _release_products_callback)
+    .invoke_participant("PurchaseProducts", _purchase_products)
+    .with_compensation("PurchaseProducts", _revert_purchase_products)
     .step()
-    .invoke_participant("CreateTicket", _create_ticket_callback)
-    .on_reply("ticket_uuid", _create_ticket_reply_callback)
+    .invoke_participant("CreateTicket", _create_ticket)
+    .on_reply("ticket_uuid", _create_ticket_reply)
     .commit(_create_commit_callback)
 )
