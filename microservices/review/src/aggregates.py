@@ -8,10 +8,13 @@ Minos framework can not be copied and/or distributed without the express permiss
 from __future__ import (
     annotations,
 )
+
 from typing import (
     Optional,
 )
-from uuid import uuid4
+from uuid import (
+    uuid4,
+)
 
 from minos.common import (
     Aggregate,
