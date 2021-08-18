@@ -15,8 +15,9 @@ from uuid import (
 )
 
 from minos.common import (
+    FieldDiff,
     MinosConfig,
-    MinosSetup, FieldDiff,
+    MinosSetup,
 )
 from sqlalchemy import (
     and_,
