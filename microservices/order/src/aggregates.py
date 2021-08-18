@@ -52,7 +52,7 @@ class Product(AggregateRef):
 class Ticket(AggregateRef):
     """Ticket AggregateRef class"""
 
-    total_price: str
+    total_price: float
 
 
 class User(AggregateRef):

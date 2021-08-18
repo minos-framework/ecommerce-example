@@ -79,8 +79,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 
     for product, amount in quantities.items():
         order.entries.add(OrderEntry(amount, product))
-
-    await order.save()
+        await order.save()
 
     return SagaContext(order=order)
 
