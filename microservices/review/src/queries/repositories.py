@@ -5,21 +5,30 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import NoReturn
-from uuid import UUID
-from sqlalchemy.orm import sessionmaker
+from typing import (
+    NoReturn,
+)
+from uuid import (
+    UUID,
+)
+
 from minos.common import (
     FieldDiff,
     MinosConfig,
     MinosSetup,
 )
 from sqlalchemy import (
-    create_engine,
-    func,
-    desc,
     asc,
+    create_engine,
+    desc,
+    func,
+)
+from sqlalchemy.orm import (
+    sessionmaker,
 )
 
 from .models import (
