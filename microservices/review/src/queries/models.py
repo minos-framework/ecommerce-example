@@ -48,3 +48,12 @@ ProductDTO = ModelType.build(
         "username": str,
     },
 )
+
+RatingDTO = ModelType.build(
+    "RatingDTO",
+    {
+        "product_uuid": UUID,
+        "product_title": str,
+        "average": float,
+    },
+)
