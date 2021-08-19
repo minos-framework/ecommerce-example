@@ -8,17 +8,12 @@ Minos framework can not be copied and/or distributed without the express permiss
 from typing import (
     NoReturn,
 )
-from uuid import (
-    UUID,
-)
 
 from dependency_injector.wiring import (
     Provide,
 )
 from minos.common import (
-    UUID_REGEX,
     AggregateDiff,
-    ModelType,
 )
 from minos.cqrs import (
     QueryService,
@@ -26,7 +21,6 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    ResponseException,
     enroute,
 )
 
@@ -118,6 +112,23 @@ class ReviewQueryService(QueryService):
 
         return Response(res)
 
+    @enroute.rest.query("/reviews/last", "GET")
+    @enroute.broker.query("GetLastReviews")
+    async def get_last_reviews(self, request: Request) -> Response:
+        """Get cart items.
+        :param request: A request instance containing the payment identifiers.
+        :return: A response containing the queried payment instances.
+        """
+        content = await request.content()
+
+        limit = 1
+        if "limit" in content:
+            limit = content["limit"]
+
+        res = await self.repository.last_reviews(limit)
+
+        return Response(res)
+
     @enroute.broker.event("ReviewCreated")
     async def review_created(self, request: Request) -> NoReturn:
         """Handle the product create and update events.
@@ -129,7 +140,7 @@ class ReviewQueryService(QueryService):
         await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ReviewUpdated")
-    async def review_created(self, request: Request) -> NoReturn:
+    async def review_updated(self, request: Request) -> NoReturn:
         """Handle the product create and update events.
 
         :param request: A request instance containing the aggregate difference.

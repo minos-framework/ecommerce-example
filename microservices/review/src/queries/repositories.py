@@ -181,6 +181,23 @@ class ReviewQueryRepository(MinosSetup):
 
         return reviews
 
+    async def last_reviews(self, limit: int = 1) -> NoReturn:
+        """Create a new row.
+
+        :param limit: Records quantity.
+        :return: This method does not return anything.
+        """
+
+        query = REVIEW_TABLE.select()\
+            .order_by(desc(REVIEW_TABLE.columns.date))\
+            .limit(limit)
+
+        res = self.engine.execute(query)
+
+        reviews = [ProductDTO(**row) for row in res]
+
+        return reviews
+
     async def update(self, uuid: UUID, **kwargs) -> NoReturn:
         """Update an existing row.
 
