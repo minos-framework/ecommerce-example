@@ -5,7 +5,6 @@ from sqlalchemy import (
     Table,
     Boolean
 )
-from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
 META = MetaData()
 USER_TABLE = Table(
