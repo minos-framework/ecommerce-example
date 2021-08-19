@@ -72,7 +72,7 @@ class ReviewCommandService(CommandService):
         review = await Review.get_one(uuid)
 
         kwargs = content.avro_data
-        kwargs.pop('uuid')
+        kwargs.pop("uuid")
         await review.update(**kwargs)
 
         return Response(review)
