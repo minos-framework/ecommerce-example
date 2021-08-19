@@ -5,20 +5,17 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
-from minos.common import (
-    ModelType,
-)
+from minos.common import ModelType
 from sqlalchemy import (
     Column,
     Integer,
     MetaData,
     Numeric,
     Table,
-    Text, UniqueConstraint,
+    Text,
+    UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
@@ -35,7 +32,7 @@ REVIEW_TABLE = Table(
     Column("score", Integer, nullable=False),
     Column("product_title", Text, nullable=False),
     Column("username", Text, nullable=False),
-    UniqueConstraint('product_uuid', 'user_uuid', name='uix_1'),
+    UniqueConstraint("product_uuid", "user_uuid", name="uix_1"),
 )
 
 ProductDTO = ModelType.build(
@@ -52,11 +49,4 @@ ProductDTO = ModelType.build(
     },
 )
 
-RatingDTO = ModelType.build(
-    "RatingDTO",
-    {
-        "product_uuid": UUID,
-        "product_title": str,
-        "average": float,
-    },
-)
+RatingDTO = ModelType.build("RatingDTO", {"product_uuid": UUID, "product_title": str, "average": float,},)

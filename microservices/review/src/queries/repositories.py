@@ -5,19 +5,11 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
-from sqlalchemy.orm import (
-    sessionmaker,
-)
+from typing import NoReturn
+from uuid import UUID
+from sqlalchemy.orm import sessionmaker
 from minos.common import (
     FieldDiff,
     MinosConfig,
@@ -93,7 +85,12 @@ class ReviewQueryRepository(MinosSetup):
         :return: This method does not return anything.
         """
 
-        query = REVIEW_TABLE.select().where(REVIEW_TABLE.columns.product_uuid == product).order_by(REVIEW_TABLE.columns.score.desc()).limit(1)
+        query = (
+            REVIEW_TABLE.select()
+            .where(REVIEW_TABLE.columns.product_uuid == product)
+            .order_by(REVIEW_TABLE.columns.score.desc())
+            .limit(1)
+        )
         res = self.engine.execute(query)
 
         reviews = [ProductDTO(**row) for row in res]
@@ -107,7 +104,12 @@ class ReviewQueryRepository(MinosSetup):
         :return: This method does not return anything.
         """
 
-        query = REVIEW_TABLE.select().where(REVIEW_TABLE.columns.product_uuid == product).order_by(REVIEW_TABLE.columns.score.asc()).limit(1)
+        query = (
+            REVIEW_TABLE.select()
+            .where(REVIEW_TABLE.columns.product_uuid == product)
+            .order_by(REVIEW_TABLE.columns.score.asc())
+            .limit(1)
+        )
         res = self.engine.execute(query)
 
         reviews = [ProductDTO(**row) for row in res]
@@ -134,13 +136,16 @@ class ReviewQueryRepository(MinosSetup):
         :return: This method does not return anything.
         """
 
-        res = self.session\
-            .query(
+        res = (
+            self.session.query(
                 REVIEW_TABLE.columns.product_uuid,
                 REVIEW_TABLE.columns.product_title,
-                func.avg(REVIEW_TABLE.columns.score).label('average'))\
-            .group_by(REVIEW_TABLE.columns.product_uuid, REVIEW_TABLE.columns.product_title)\
-            .order_by(desc('average')).limit(10)
+                func.avg(REVIEW_TABLE.columns.score).label("average"),
+            )
+            .group_by(REVIEW_TABLE.columns.product_uuid, REVIEW_TABLE.columns.product_title)
+            .order_by(desc("average"))
+            .limit(10)
+        )
 
         reviews = [RatingDTO(**row) for row in res]
 
@@ -152,13 +157,16 @@ class ReviewQueryRepository(MinosSetup):
         :return: This method does not return anything.
         """
 
-        res = self.session \
-            .query(
+        res = (
+            self.session.query(
                 REVIEW_TABLE.columns.product_uuid,
                 REVIEW_TABLE.columns.product_title,
-                func.avg(REVIEW_TABLE.columns.score).label('average')) \
-            .group_by(REVIEW_TABLE.columns.product_uuid, REVIEW_TABLE.columns.product_title) \
-            .order_by(asc('average')).limit(10)
+                func.avg(REVIEW_TABLE.columns.score).label("average"),
+            )
+            .group_by(REVIEW_TABLE.columns.product_uuid, REVIEW_TABLE.columns.product_title)
+            .order_by(asc("average"))
+            .limit(10)
+        )
 
         reviews = [RatingDTO(**row) for row in res]
 
