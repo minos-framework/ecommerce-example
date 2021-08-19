@@ -66,7 +66,6 @@ class ReviewQueryRepository(MinosSetup):
         kwargs["user_uuid"] = kwargs["user"]["uuid"]
         kwargs["username"] = kwargs["user"]["username"]
 
-        kwargs.pop("uuid")
         kwargs.pop("product")
         kwargs.pop("user")
 
@@ -173,13 +172,6 @@ class ReviewQueryRepository(MinosSetup):
         :return: This method does not return anything.
         """
         kwargs = {k: v if not isinstance(v, FieldDiff) else v.value for k, v in kwargs.items()}
-
-        if "inventory" in kwargs:
-            kwargs["inventory_amount"] = kwargs["inventory"]["amount"]
-            kwargs["inventory_reserved"] = kwargs["inventory"]["reserved"]
-            kwargs["inventory_sold"] = kwargs["inventory"]["sold"]
-
-            kwargs.pop("inventory")
 
         query = REVIEW_TABLE.update().where(REVIEW_TABLE.columns.uuid == uuid).values(**kwargs)
         self.engine.execute(query)

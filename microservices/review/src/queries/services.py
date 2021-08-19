@@ -40,7 +40,7 @@ class ReviewQueryService(QueryService):
 
     repository: ReviewQueryRepository = Provide["review_repository"]
 
-    @enroute.rest.query("/reviews/product", "GET")
+    @enroute.rest.query("/reviews/product/{uuid}", "GET")
     @enroute.broker.query("GetProductReviews")
     async def get_product_reviews(self, request: Request) -> Response:
         """Get cart items.
@@ -53,7 +53,7 @@ class ReviewQueryService(QueryService):
 
         return Response(res)
 
-    @enroute.rest.query("/reviews/user", "GET")
+    @enroute.rest.query("/reviews/user/{uuid}", "GET")
     @enroute.broker.query("GetUserReviews")
     async def get_user_reviews(self, request: Request) -> Response:
         """Get cart items.
@@ -66,7 +66,7 @@ class ReviewQueryService(QueryService):
 
         return Response(res)
 
-    @enroute.rest.query("/reviews/product/top", "GET")
+    @enroute.rest.query("/reviews/product/{uuid}/top", "GET")
     @enroute.broker.query("GetTopProductRating")
     async def get_top_product_rating(self, request: Request) -> Response:
         """Get cart items.
@@ -79,7 +79,7 @@ class ReviewQueryService(QueryService):
 
         return Response(res)
 
-    @enroute.rest.query("/reviews/product/worst", "GET")
+    @enroute.rest.query("/reviews/product/{uuid}/worst", "GET")
     @enroute.broker.query("GetWorstProductRating")
     async def get_worst_product_rating(self, request: Request) -> Response:
         """Get cart items.
@@ -127,6 +127,16 @@ class ReviewQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
         await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
+
+    @enroute.broker.event("ReviewUpdated")
+    async def review_created(self, request: Request) -> NoReturn:
+        """Handle the product create and update events.
+
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
+        """
+        diff: AggregateDiff = await request.content()
+        await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ProductUpdated.title")
     async def product_title_updated(self, request: Request) -> NoReturn:

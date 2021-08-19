@@ -56,3 +56,23 @@ class ReviewCommandService(CommandService):
         product = await Review.create(product=product, user=user, title=title, description=description, score=score,)
 
         return Response(product)
+
+    @staticmethod
+    @enroute.broker.command("UpdateReview")
+    @enroute.rest.command("/reviews/{uuid}", "PUT")
+    async def update_review(request: Request) -> Response:
+        """Create a new product instance.
+
+        :param request: The ``Request`` that contains the needed information to create the product.
+        :return: A ``Response`` containing the already created product.
+        """
+        content = await request.content()
+        uuid = content["uuid"]
+
+        review = await Review.get_one(uuid)
+
+        kwargs = content.avro_data
+        kwargs.pop('uuid')
+        await review.update(**kwargs)
+
+        return Response(review)
