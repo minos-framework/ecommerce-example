@@ -1,15 +1,25 @@
 import base64
 import time
+from typing import NoReturn
 
 import jwt
+from dependency_injector.wiring import (
+    Provide,
+)
+from minos.common import (
+    AggregateDiff,
+)
 from minos.cqrs import (
     QueryService,
 )
 from minos.networks import (
     RestRequest,
+    Request,
     Response,
     enroute,
 )
+
+from .repositories import UserQueryRepository
 
 
 class LoginQueryService(QueryService):
@@ -20,6 +30,8 @@ class LoginQueryService(QueryService):
 
     TEST_USER = "test_user"
     TEST_PASSWORD = "test_password"
+
+    repository: UserQueryRepository = Provide["user_repository"]
 
     @enroute.rest.query("/authentication/login", "GET")
     async def authenticate(self, request: RestRequest) -> Response:
@@ -47,3 +59,13 @@ class LoginQueryService(QueryService):
             return True
         else:
             return False
+
+    @enroute.broker.event("UserCreated")
+    async def user_created(self, request: Request) -> NoReturn:
+        """Handle the product create and update events.
+
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
+        """
+        diff: AggregateDiff = await request.content()
+        await self.repository.create(diff.username, diff.password, diff.active)

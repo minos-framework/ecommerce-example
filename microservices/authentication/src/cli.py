@@ -1,4 +1,5 @@
 import logging
+import sys
 from pathlib import (
     Path,
 )
@@ -25,7 +26,7 @@ def start(
 ):
     """Start the microservice."""
     config = MinosConfig(file_path)
-    launcher = EntrypointLauncher.from_config(config=config)
+    launcher = EntrypointLauncher.from_config(file_path, external_modules=[sys.modules["src"]])
     launcher.launch()
 
 

@@ -6,5 +6,6 @@ from .commands import (
 )
 
 from .queries import (
-    LoginQueryService
+    LoginQueryService,
+    UserQueryRepository
 )
