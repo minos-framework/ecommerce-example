@@ -207,3 +207,11 @@ class ReviewQueryRepository(MinosSetup):
         """
         query = REVIEW_TABLE.delete().where(REVIEW_TABLE.columns.uuid == uuid)
         self.engine.execute(query)
+
+    async def delete_all(self) -> NoReturn:
+        """Delete all database.
+
+        :return: This method does not return anything.
+        """
+        query = REVIEW_TABLE.delete()
+        self.engine.execute(query)
