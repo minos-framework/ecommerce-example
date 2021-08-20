@@ -115,7 +115,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
                 "user": "e015a2e1-9092-448f-b4ca-a678fc384d0e",
                 "title": "Nice package but product broken",
                 "description": "The product came nicely packaged but was broken. The seller took care of it and sent me a new one.",
-                "score": 3
+                "score": 3,
             }
         )
         response = await self.service.create_review(request)
@@ -147,14 +147,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         observed = await response.content()
 
-        request = _FakeRequest(
-            {
-                "uuid": observed.uuid,
-                "title": "Good product!",
-                "description": "Test.",
-                "score": 5
-            }
-        )
+        request = _FakeRequest({"uuid": observed.uuid, "title": "Good product!", "description": "Test.", "score": 5})
 
         response = await self.service.update_review(request)
 
