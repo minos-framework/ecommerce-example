@@ -1,4 +1,10 @@
-from sqlalchemy import Column, String, MetaData, Table, Boolean
+from sqlalchemy import (
+    Boolean,
+    Column,
+    MetaData,
+    String,
+    Table,
+)
 
 META = MetaData()
 USER_TABLE = Table(

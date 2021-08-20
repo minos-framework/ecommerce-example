@@ -1,6 +1,10 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import NoReturn
+from typing import (
+    NoReturn,
+)
 
 from minos.common import (
     MinosConfig,
@@ -8,12 +12,14 @@ from minos.common import (
 )
 from sqlalchemy import (
     and_,
-    exists,
     create_engine,
+    exists,
 )
 
-from .models import META
-from .models import USER_TABLE
+from .models import (
+    META,
+    USER_TABLE,
+)
 
 
 class UserQueryRepository(MinosSetup):
