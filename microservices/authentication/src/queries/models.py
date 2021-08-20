@@ -1,9 +1,9 @@
 from sqlalchemy import (
+    Boolean,
     Column,
-    String,
     MetaData,
+    String,
     Table,
-    Boolean
 )
 
 META = MetaData()
@@ -12,5 +12,5 @@ USER_TABLE = Table(
     META,
     Column("username", String(32), nullable=False),
     Column("password", String(32), nullable=False),
-    Column("active", Boolean)
+    Column("active", Boolean),
 )

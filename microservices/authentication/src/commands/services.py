@@ -4,9 +4,11 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    enroute
+    enroute,
 )
-from src import User
+from src import (
+    User,
+)
 
 
 class LoginCommandService(CommandService):

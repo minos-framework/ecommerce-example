@@ -8,7 +8,8 @@ from pathlib import (
     Path,
 )
 from typing import (
-    NoReturn, Optional,
+    NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
@@ -29,7 +30,8 @@ from minos.networks import (
     Response,
 )
 from src import (
-    LoginCommandService, User,
+    LoginCommandService,
+    User,
 )
 
 
@@ -97,13 +99,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = User(
-            "test_name",
-            "test_password",
-            True,
-            uuid=observed.uuid,
-            version=observed.version,
-        )
+        expected = User("test_name", "test_password", True, uuid=observed.uuid, version=observed.version,)
         self.assertEqual(expected, observed)
 
 

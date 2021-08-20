@@ -29,7 +29,8 @@ from minos.networks import (
     RestRequest,
 )
 from src import (
-    LoginQueryService, User,
+    LoginQueryService,
+    User,
 )
 
 

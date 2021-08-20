@@ -12,14 +12,14 @@ from minos.common import (
 )
 from sqlalchemy import (
     and_,
-    exists,
     create_engine,
+    exists,
 )
 
 from .models import (
     META,
+    USER_TABLE,
 )
-from .models import USER_TABLE
 
 
 class UserQueryRepository(MinosSetup):
@@ -45,7 +45,7 @@ class UserQueryRepository(MinosSetup):
             and_(
                 USER_TABLE.columns.username == username,
                 USER_TABLE.columns.password == password,
-                USER_TABLE.columns.active == True  # Do not substitute '==' by 'is'
+                USER_TABLE.columns.active == True,  # Do not substitute '==' by 'is'
             )
         )
 

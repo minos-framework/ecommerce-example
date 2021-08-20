@@ -12,13 +12,15 @@ from minos.cqrs import (
     QueryService,
 )
 from minos.networks import (
-    RestRequest,
     Request,
     Response,
+    RestRequest,
     enroute,
 )
 
-from .repositories import UserQueryRepository
+from .repositories import (
+    UserQueryRepository,
+)
 
 
 class LoginQueryService(QueryService):
