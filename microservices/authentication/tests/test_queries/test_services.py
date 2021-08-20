@@ -8,7 +8,8 @@ from pathlib import (
     Path,
 )
 from typing import (
-    NoReturn, Optional,
+    NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
@@ -25,53 +26,45 @@ from minos.common import (
     Model,
 )
 from minos.networks import (
-    Request,
-    Response,
+    RestRequest,
 )
 from src import (
-    LoginCommandService, User,
+    LoginQueryService, User,
 )
 
 
-class _FakeRequest(Request):
-    """For testing purposes"""
-
+class _FakeRequest(RestRequest):
     def __init__(self, content):
         super().__init__()
         self._content = content
 
-    async def content(self, **kwargs):
-        """For testing purposes"""
-        return self._content
-
-    async def user(self) -> Optional[UUID]:
+    def user(self) -> Optional[UUID]:
         pass
 
+    async def content(self, **kwargs):
+        return self._content
+
     def __eq__(self, other: _FakeRequest) -> bool:
-        return self._content == other._content
+        return self._content == other._content and self.user == other.user
 
     def __repr__(self) -> str:
         return str()
 
 
 class _FakeBroker(MinosBroker):
-    """For testing purposes."""
-
     async def send(self, items: list[Model], **kwargs) -> NoReturn:
-        """For testing purposes."""
+        pass
 
 
 class _FakeSagaManager(MinosSagaManager):
-    """For testing purposes."""
-
     async def _run_new(self, name: str, **kwargs) -> UUID:
-        """For testing purposes."""
+        pass
 
     async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
-        """For testing purposes."""
+        pass
 
 
-class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
+class TestLoginQueryService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -85,25 +78,17 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = LoginCommandService()
+        self.service = LoginQueryService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_user(self):
-        request = _FakeRequest({"username": "test_name", "password": "test_password"})
-        response = await self.service.create_user(request)
+    async def test_get_token(self):
+        expected = await User.create("test_name", "test_password", True)
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
-        self.assertIsInstance(response, Response)
-
+        response = await self.service.get_token(request)
         observed = await response.content()
-        expected = User(
-            "test_name",
-            "test_password",
-            True,
-            uuid=observed.uuid,
-            version=observed.version,
-        )
         self.assertEqual(expected, observed)
 
 

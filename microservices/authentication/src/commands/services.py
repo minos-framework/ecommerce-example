@@ -12,8 +12,8 @@ from src import User
 class LoginCommandService(CommandService):
     """Login Command Service class"""
 
-    @enroute.rest.command("/authentication/login", "POST")
-    async def add_user(self, request: Request) -> Response:
+    @enroute.rest.command("/login", "POST")
+    async def create_user(self, request: Request) -> Response:
         """Create a new ``Order`` instance.
 
         :param request: The ``Request`` containing the list of product identifiers to be included in the ``Order``.

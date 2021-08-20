@@ -1,6 +1,5 @@
 import base64
 import time
-from typing import NoReturn
 
 import jwt
 from dependency_injector.wiring import (
@@ -23,30 +22,29 @@ from .repositories import UserQueryRepository
 
 
 class LoginQueryService(QueryService):
-    """Login Query Service class."""
-
     JWT_ALGORITHM = "HS256"
     SECRET = "secret"
 
     repository: UserQueryRepository = Provide["user_repository"]
 
-    @enroute.rest.query("/authentication/login", "GET")
-    async def authenticate(self, request: RestRequest) -> Response:
+    @enroute.rest.query("/login", "GET")
+    async def get_token(self, request: RestRequest) -> Response:
         auth_type, encoded_credentials = request.raw_request.headers["Authorization"].split()
         if auth_type == "Basic":
             user, password = base64.b64decode(encoded_credentials).decode().split(":")
 
             if await self.valid_credentials(user, password):
-                payload = {"sub": 1, "name": user, "iat": time.time()}
-                jwt_token = jwt.encode(payload, self.SECRET, algorithm=self.JWT_ALGORITHM)
-
+                jwt_token = await self.generate_token(user)
                 return Response(jwt_token)
             else:
-                # TODO: Where should I deal with this?
-                error_msg = "Invalid username or password"
-                return Response(error_msg)
+                return Response("Invalid username or password")
 
-    async def valid_credentials(self, user: str, password: str):
+    async def generate_token(self, user):
+        payload = {"sub": 1, "name": user, "iat": time.time()}
+        jwt_token = jwt.encode(payload, self.SECRET, algorithm=self.JWT_ALGORITHM)
+        return jwt_token
+
+    async def valid_credentials(self, user: str, password: str) -> bool:
         return await self.repository.exist_credentials(user, password)
 
     @enroute.broker.event("UserCreated")
