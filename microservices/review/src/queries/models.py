@@ -40,8 +40,8 @@ REVIEW_TABLE = Table(
     UniqueConstraint("product_uuid", "user_uuid", name="uix_1"),
 )
 
-ProductDTO = ModelType.build(
-    "ProductDTO",
+ReviewDTO = ModelType.build(
+    "ReviewDTO",
     {
         "uuid": UUID,
         "product_uuid": UUID,
@@ -51,7 +51,8 @@ ProductDTO = ModelType.build(
         "score": int,
         "product_title": str,
         "username": str,
+        "date": datetime.datetime,
     },
 )
 
-RatingDTO = ModelType.build("RatingDTO", {"product_uuid": UUID, "product_title": str, "average": float,},)
+RatingDTO = ModelType.build("RatingDTO", {"product_uuid": UUID, "product_title": str, "average": float})

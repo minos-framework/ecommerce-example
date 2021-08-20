@@ -43,7 +43,7 @@ class ReviewQueryService(QueryService):
         """
         content = await request.content()
 
-        res = await self.repository.find_by_product(content["uuid"])
+        res = await self.repository.get_reviews_by_product(content["uuid"])
 
         return Response(res)
 
@@ -56,59 +56,49 @@ class ReviewQueryService(QueryService):
         """
         content = await request.content()
 
-        res = await self.repository.find_by_user(content["uuid"])
+        res = await self.repository.get_reviews_by_user(content["uuid"])
 
         return Response(res)
 
-    @enroute.rest.query("/reviews/product/{uuid}/top", "GET")
+    @enroute.rest.query("/reviews/product/{uuid}/score", "GET")
     @enroute.broker.query("GetTopProductRating")
-    async def get_top_product_rating(self, request: Request) -> Response:
+    async def get_product_score_reviews(self, request: Request) -> Response:
         """Get cart items.
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
         content = await request.content()
 
-        res = await self.repository.top_product_rating(content["uuid"])
+        order = "asc"
+        if "order" in content:
+            order = content["order"]
+
+        limit = 1
+        if "limit" in content:
+            limit = content["limit"]
+
+        res = await self.repository.product_score(content["uuid"], limit, order)
 
         return Response(res)
 
-    @enroute.rest.query("/reviews/product/{uuid}/worst", "GET")
-    @enroute.broker.query("GetWorstProductRating")
-    async def get_worst_product_rating(self, request: Request) -> Response:
-        """Get cart items.
-        :param request: A request instance containing the payment identifiers.
-        :return: A response containing the queried payment instances.
-        """
-        content = await request.content()
-
-        res = await self.repository.worst_product_rating(content["uuid"])
-
-        return Response(res)
-
-    @enroute.rest.query("/reviews/top_rated_products", "GET")
+    @enroute.rest.query("/reviews/score", "GET")
     @enroute.broker.query("GetTopRatedProducts")
-    async def get_top_rated_products(self, request: Request) -> Response:
+    async def get_reviews_score(self, request: Request) -> Response:
         """Get cart items.
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
         content = await request.content()
 
-        res = await self.repository.top_rated_products()
+        order = "asc"
+        if "order" in content:
+            order = content["order"]
 
-        return Response(res)
+        limit = 1
+        if "limit" in content:
+            limit = content["limit"]
 
-    @enroute.rest.query("/reviews/worst_rated_products", "GET")
-    @enroute.broker.query("GetWorstRatedProducts")
-    async def get_worst_rated_products(self, request: Request) -> Response:
-        """Get cart items.
-        :param request: A request instance containing the payment identifiers.
-        :return: A response containing the queried payment instances.
-        """
-        content = await request.content()
-
-        res = await self.repository.worst_rated_products()
+        res = await self.repository.reviews_score(limit, order)
 
         return Response(res)
 

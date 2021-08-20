@@ -34,9 +34,13 @@ from sqlalchemy.orm import (
 from .models import (
     META,
     REVIEW_TABLE,
-    ProductDTO,
+    ReviewDTO,
     RatingDTO,
 )
+
+
+ORDER_ASC = "asc"
+ORDER_DESC = "desc"
 
 
 class ReviewQueryRepository(MinosSetup):
@@ -73,7 +77,7 @@ class ReviewQueryRepository(MinosSetup):
         query = REVIEW_TABLE.insert().values(**kwargs)
         self.engine.execute(query)
 
-    async def find_by_product(self, product: UUID) -> NoReturn:
+    async def get_reviews_by_product(self, product: UUID) -> NoReturn:
         """Create a new row.
 
         :param kwargs: The parameters of the creation query.
@@ -83,26 +87,29 @@ class ReviewQueryRepository(MinosSetup):
         query = REVIEW_TABLE.select().where(REVIEW_TABLE.columns.product_uuid == product)
         res = self.engine.execute(query)
 
-        reviews = [ProductDTO(**row) for row in res]
+        reviews = [ReviewDTO(**row) for row in res]
 
         return reviews
 
-    async def top_product_rating(self, product: UUID) -> NoReturn:
+    async def product_score(self, product: UUID, limit: int = 1, order: str = ORDER_ASC) -> NoReturn:
         """Create a new row.
 
-        :param kwargs: The parameters of the creation query.
+        :param product: Product UUID.
+        :param limit: Records quantity to return.
+        :param order: Score order.
         :return: This method does not return anything.
         """
+        direction = desc if order == ORDER_DESC else asc
 
         query = (
             REVIEW_TABLE.select()
             .where(REVIEW_TABLE.columns.product_uuid == product)
-            .order_by(REVIEW_TABLE.columns.score.desc())
-            .limit(1)
+            .order_by(direction(REVIEW_TABLE.columns.score))
+            .limit(limit)
         )
         res = self.engine.execute(query)
 
-        reviews = [ProductDTO(**row) for row in res]
+        reviews = [ReviewDTO(**row) for row in res]
 
         return reviews
 
@@ -121,11 +128,11 @@ class ReviewQueryRepository(MinosSetup):
         )
         res = self.engine.execute(query)
 
-        reviews = [ProductDTO(**row) for row in res]
+        reviews = [ReviewDTO(**row) for row in res]
 
         return reviews
 
-    async def find_by_user(self, user: UUID) -> NoReturn:
+    async def get_reviews_by_user(self, user: UUID) -> NoReturn:
         """Create a new row.
 
         :param kwargs: The parameters of the creation query.
@@ -135,15 +142,18 @@ class ReviewQueryRepository(MinosSetup):
         query = REVIEW_TABLE.select().where(REVIEW_TABLE.columns.user_uuid == user)
         res = self.engine.execute(query)
 
-        reviews = [ProductDTO(**row) for row in res]
+        reviews = [ReviewDTO(**row) for row in res]
 
         return reviews
 
-    async def top_rated_products(self) -> NoReturn:
+    async def reviews_score(self, limit: int = 10, order: str = ORDER_ASC) -> NoReturn:
         """Top 10 Most Rated Products.
 
+        :param limit: Records quantity to return.
+        :param order: Score order.
         :return: This method does not return anything.
         """
+        direction = desc if order == ORDER_DESC else asc
 
         res = (
             self.session.query(
@@ -152,29 +162,8 @@ class ReviewQueryRepository(MinosSetup):
                 func.avg(REVIEW_TABLE.columns.score).label("average"),
             )
             .group_by(REVIEW_TABLE.columns.product_uuid, REVIEW_TABLE.columns.product_title)
-            .order_by(desc("average"))
-            .limit(10)
-        )
-
-        reviews = [RatingDTO(**row) for row in res]
-
-        return reviews
-
-    async def worst_rated_products(self) -> NoReturn:
-        """Top 10 Worst Rated Products.
-
-        :return: This method does not return anything.
-        """
-
-        res = (
-            self.session.query(
-                REVIEW_TABLE.columns.product_uuid,
-                REVIEW_TABLE.columns.product_title,
-                func.avg(REVIEW_TABLE.columns.score).label("average"),
-            )
-            .group_by(REVIEW_TABLE.columns.product_uuid, REVIEW_TABLE.columns.product_title)
-            .order_by(asc("average"))
-            .limit(10)
+            .order_by(direction("average"))
+            .limit(limit)
         )
 
         reviews = [RatingDTO(**row) for row in res]
@@ -194,7 +183,7 @@ class ReviewQueryRepository(MinosSetup):
 
         res = self.engine.execute(query)
 
-        reviews = [ProductDTO(**row) for row in res]
+        reviews = [ReviewDTO(**row) for row in res]
 
         return reviews
 

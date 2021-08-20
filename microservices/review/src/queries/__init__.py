@@ -11,3 +11,7 @@ from .repositories import (
 from .services import (
     ReviewQueryService,
 )
+from .models import (
+    ReviewDTO,
+    RatingDTO,
+)

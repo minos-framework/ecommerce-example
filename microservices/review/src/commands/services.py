@@ -38,7 +38,7 @@ class ReviewCommandService(CommandService):
         description = content["description"]
         score = content["score"]
 
-        product = await Review.create(product=product, user=user, title=title, description=description, score=score,)
+        product = await Review.create(product=product, user=user, title=title, description=description, score=score)
 
         return Response(product)
 
@@ -56,7 +56,7 @@ class ReviewCommandService(CommandService):
 
         review = await Review.get_one(uuid)
 
-        kwargs = content.avro_data
+        kwargs = dict(content)
         kwargs.pop("uuid")
         await review.update(**kwargs)
 

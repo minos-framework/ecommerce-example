@@ -16,4 +16,6 @@ from .commands import (
 from .queries import (
     ReviewQueryRepository,
     ReviewQueryService,
+    ReviewDTO,
+    RatingDTO,
 )
