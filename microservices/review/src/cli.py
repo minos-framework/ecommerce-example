@@ -7,11 +7,17 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import logging
 import sys
-from pathlib import Path
-from typing import Optional
+from pathlib import (
+    Path,
+)
+from typing import (
+    Optional,
+)
 
 import typer
-from minos.common import EntrypointLauncher
+from minos.common import (
+    EntrypointLauncher,
+)
 
 logging.getLogger("aiohttp.access").setLevel(logging.WARNING)
 
