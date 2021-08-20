@@ -1,7 +1,3 @@
-from .services import (
-    LoginQueryService,
-)
+from .services import LoginQueryService
 
-from .repositories import (
-    UserQueryRepository
-)
+from .repositories import UserQueryRepository

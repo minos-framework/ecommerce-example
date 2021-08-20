@@ -2,15 +2,9 @@ import base64
 import time
 
 import jwt
-from dependency_injector.wiring import (
-    Provide,
-)
-from minos.common import (
-    AggregateDiff,
-)
-from minos.cqrs import (
-    QueryService,
-)
+from dependency_injector.wiring import Provide
+from minos.common import AggregateDiff
+from minos.cqrs import QueryService
 from minos.networks import (
     RestRequest,
     Request,

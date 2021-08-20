@@ -1,11 +1,5 @@
-from minos.cqrs import (
-    CommandService,
-)
-from minos.networks import (
-    Request,
-    Response,
-    enroute
-)
+from minos.cqrs import CommandService
+from minos.networks import Request, Response, enroute
 from src import User
 
 

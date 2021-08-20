@@ -1,10 +1,6 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    NoReturn,
-)
+from typing import NoReturn
 
 from minos.common import (
     MinosConfig,
@@ -16,9 +12,7 @@ from sqlalchemy import (
     create_engine,
 )
 
-from .models import (
-    META,
-)
+from .models import META
 from .models import USER_TABLE
 
 
@@ -45,7 +39,7 @@ class UserQueryRepository(MinosSetup):
             and_(
                 USER_TABLE.columns.username == username,
                 USER_TABLE.columns.password == password,
-                USER_TABLE.columns.active == True  # Do not substitute '==' by 'is'
+                USER_TABLE.columns.active == True,  # Do not substitute '==' by 'is'
             )
         )
 
