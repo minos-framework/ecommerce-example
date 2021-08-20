@@ -5,18 +5,12 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from collections import (
-    defaultdict,
-)
-from pathlib import (
-    Path,
-)
+from collections import defaultdict
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
@@ -26,9 +20,7 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -115,7 +107,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
                 "user": "e015a2e1-9092-448f-b4ca-a678fc384d0e",
                 "title": "Nice package but product broken",
                 "description": "The product came nicely packaged but was broken. The seller took care of it and sent me a new one.",
-                "score": 3
+                "score": 3,
             }
         )
         response = await self.service.create_review(request)
@@ -147,14 +139,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         observed = await response.content()
 
-        request = _FakeRequest(
-            {
-                "uuid": observed.uuid,
-                "title": "Good product!",
-                "description": "Test.",
-                "score": 5
-            }
-        )
+        request = _FakeRequest({"uuid": observed.uuid, "title": "Good product!", "description": "Test.", "score": 5})
 
         response = await self.service.update_review(request)
 
