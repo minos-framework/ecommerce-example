@@ -5,19 +5,13 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import datetime
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
-from pathlib import (
-    Path,
-)
+from asyncio import gather
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
@@ -27,12 +21,8 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import (
-    cached_property,
-)
-from dependency_injector.wiring import (
-    Provide,
-)
+from cached_property import cached_property
+from dependency_injector.wiring import Provide
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -125,7 +115,7 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         async with self.repository as repository:
             await repository.delete_all()
-            
+
         await self.injector.unwire()
 
     async def _populate_reviews(self):
