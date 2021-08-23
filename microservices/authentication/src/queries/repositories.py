@@ -36,7 +36,7 @@ class UserQueryRepository(MinosSetup):
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> UserQueryRepository:
         return cls(*args, **(config.repository._asdict()))
 
-    async def create(self, username: str, password: str, active: bool) -> None:
+    async def create_user(self, username: str, password: str, active: bool) -> None:
         query = USER_TABLE.insert().values(username=username, password=password, active=active)
         self.engine.execute(query)
 
@@ -45,7 +45,7 @@ class UserQueryRepository(MinosSetup):
             and_(
                 USER_TABLE.columns.username == username,
                 USER_TABLE.columns.password == password,
-                USER_TABLE.columns.active == True  # Do not substitute '==' by 'is'
+                USER_TABLE.columns.active == True  # Do not substitute '==' by 'is': SQLAlchemy fails
             )
         )
 

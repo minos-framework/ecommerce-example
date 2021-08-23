@@ -19,12 +19,13 @@ from minos.networks import (
 )
 
 from .repositories import UserQueryRepository
+from ..jwt_env import (
+    SECRET,
+    JWT_ALGORITHM
+)
 
 
 class LoginQueryService(QueryService):
-    JWT_ALGORITHM = "HS256"
-    SECRET = "secret"
-
     repository: UserQueryRepository = Provide["user_repository"]
 
     @enroute.rest.query("/login", "GET")
@@ -41,7 +42,7 @@ class LoginQueryService(QueryService):
 
     async def generate_token(self, user):
         payload = {"sub": 1, "name": user, "iat": time.time()}
-        jwt_token = jwt.encode(payload, self.SECRET, algorithm=self.JWT_ALGORITHM)
+        jwt_token = jwt.encode(payload, SECRET, algorithm=JWT_ALGORITHM)
         return jwt_token
 
     async def valid_credentials(self, user: str, password: str) -> bool:
@@ -50,4 +51,4 @@ class LoginQueryService(QueryService):
     @enroute.broker.event("UserCreated")
     async def user_created(self, request: Request) -> None:
         diff: AggregateDiff = await request.content()
-        await self.repository.create(diff.username, diff.password, diff.active)
+        await self.repository.create_user(diff.username, diff.password, diff.active)

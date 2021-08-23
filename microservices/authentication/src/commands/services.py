@@ -1,12 +1,22 @@
+import jwt
+from jwt.exceptions import (
+    InvalidSignatureError,
+)
 from minos.cqrs import (
     CommandService,
 )
 from minos.networks import (
     Request,
+    RestRequest,
     Response,
     enroute
 )
 from src import User
+
+from ..jwt_env import (
+    SECRET,
+    JWT_ALGORITHM
+)
 
 
 class LoginCommandService(CommandService):
@@ -26,3 +36,14 @@ class LoginCommandService(CommandService):
         user = await User.create(username, password, active=True)
 
         return Response(user)
+
+    @enroute.rest.command("/token", "POST")
+    async def validate_jwt(self, request: RestRequest) -> Response:
+        auth_type, jwt_token = request.raw_request.headers["Authorization"].split()
+
+        if auth_type == "Bearer":
+            try:
+                payload = jwt.decode(jwt_token, SECRET, algorithms=[JWT_ALGORITHM])
+                return Response(str(payload))
+            except InvalidSignatureError as exc:
+                return Response(exc)
