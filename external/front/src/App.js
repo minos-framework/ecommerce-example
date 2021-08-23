@@ -17,6 +17,8 @@ import Profile from "./components/auth/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardAdmin from "./components/board-admin.component";
 
+import Products from "./components/products/products.component";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -58,6 +60,12 @@ class App extends Component {
             <li className="nav-item">
               <Link to={"/home"} className="nav-link">
                 Home
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link to={"/products"} className="nav-link">
+                Products
               </Link>
             </li>
 
@@ -122,6 +130,7 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/profile" component={Profile} />
+            <Route exact path="/products" component={Products} />
             <Route path="/user" component={BoardUser} />
             <Route path="/admin" component={BoardAdmin} />
           </Switch>
