@@ -12,15 +12,15 @@ from minos.cqrs import (
     QueryService,
 )
 from minos.networks import (
-    RestRequest,
     Request,
     Response,
+    RestRequest,
     enroute,
 )
 
 from ..jwt_env import (
+    JWT_ALGORITHM,
     SECRET,
-    JWT_ALGORITHM
 )
 from .repositories import (
     UserQueryRepository,

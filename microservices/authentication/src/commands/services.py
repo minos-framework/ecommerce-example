@@ -7,8 +7,8 @@ from minos.cqrs import (
 )
 from minos.networks import (
     Request,
-    RestRequest,
     Response,
+    RestRequest,
     enroute,
     ResponseException
 )
@@ -17,8 +17,8 @@ from src import (
 )
 
 from ..jwt_env import (
+    JWT_ALGORITHM,
     SECRET,
-    JWT_ALGORITHM
 )
 
 
