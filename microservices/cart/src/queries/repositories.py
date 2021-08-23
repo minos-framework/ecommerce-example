@@ -36,7 +36,7 @@ from .models import (
 )
 
 
-class CartRepository(MinosSetup):
+class CartQueryRepository(MinosSetup):
     """Cart inventory repository"""
 
     def __init__(self, *args, **kwargs):
@@ -48,7 +48,7 @@ class CartRepository(MinosSetup):
         META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> CartRepository:
+    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> CartQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "cart_query_db"}) | kwargs)
 
     async def create_cart(self, uuid: UUID, version: int, user_id: int) -> NoReturn:

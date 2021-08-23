@@ -12,23 +12,15 @@ from pathlib import (
 from typing import (
     Optional,
 )
-
+import sys
 import typer
 from minos.common import (
     EntrypointLauncher,
-    MinosConfig,
 )
 
 logging.getLogger("aiohttp.access").setLevel(logging.WARNING)
 
 app = typer.Typer()
-
-
-class _MyEntrypointLauncher(EntrypointLauncher):
-    async def _setup(self):
-        import src
-
-        await self.injector.wire(modules=[src] + self._internal_modules)
 
 
 @app.command("start")
@@ -38,8 +30,7 @@ def start(
     )
 ):
     """Start the microservice."""
-    config = MinosConfig(file_path)
-    launcher = _MyEntrypointLauncher.from_config(config=config)
+    launcher = EntrypointLauncher.from_config(file_path, external_modules=[sys.modules["src"]])
     launcher.launch()
 
 

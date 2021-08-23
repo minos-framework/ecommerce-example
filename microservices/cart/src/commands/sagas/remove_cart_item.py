@@ -24,7 +24,7 @@ from src.aggregates import (
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 
 
-async def _reserve_products_callback(context: SagaContext) -> Model:
+async def _reserve_products(context: SagaContext) -> Model:
     product_uuids = [context["product_uuid"]]
     cart_id = context["cart_id"]
     quantities = defaultdict(int)
@@ -35,7 +35,7 @@ async def _reserve_products_callback(context: SagaContext) -> Model:
     return _ReserveProductsQuery(quantities=quantities)
 
 
-async def _release_products_callback(context: SagaContext) -> Model:
+async def _release_products(context: SagaContext) -> Model:
     product_uuids = [context["product_uuid"]]
     cart_id = context["cart_id"]
     quantities = defaultdict(int)
@@ -46,7 +46,7 @@ async def _release_products_callback(context: SagaContext) -> Model:
     return _ReserveProductsQuery(quantities=quantities)
 
 
-async def _create_commit_callback(context: SagaContext) -> SagaContext:
+async def _remove_cart_item(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
     product = context["product"]
     cart = await Cart.get_one(cart_id)
@@ -66,7 +66,7 @@ def get_product_quantity(cart: Cart, product: str):
 REMOVE_CART_ITEM = (
     Saga("RemoveCartItem")
     .step()
-    .invoke_participant("ReserveProducts", _release_products_callback)
-    .with_compensation("ReserveProducts", _reserve_products_callback)
-    .commit(_create_commit_callback)
+    .invoke_participant("ReserveProducts", _reserve_products)
+    .with_compensation("ReserveProducts", _release_products)
+    .commit(_remove_cart_item)
 )

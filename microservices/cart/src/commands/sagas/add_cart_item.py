@@ -15,12 +15,12 @@ from src.aggregates import (
 )
 
 from .callbacks import (
-    _release_products_callback,
-    _reserve_products_callback,
+    _release_products,
+    _reserve_products,
 )
 
 
-async def _create_commit_callback(context: SagaContext) -> SagaContext:
+async def _create_cart_item(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
     product_uuid = context["product_uuid"]
     quantity = context["quantity"]
@@ -34,7 +34,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 ADD_CART_ITEM = (
     Saga("AddCartItem")
     .step()
-    .invoke_participant("ReserveProducts", _reserve_products_callback)
-    .with_compensation("ReserveProducts", _release_products_callback)
-    .commit(_create_commit_callback)
+    .invoke_participant("ReserveProducts", _reserve_products)
+    .with_compensation("ReserveProducts", _release_products)
+    .commit(_create_cart_item)
 )

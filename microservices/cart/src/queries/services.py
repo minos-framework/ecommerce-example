@@ -22,14 +22,14 @@ from minos.networks import (
     enroute,
 )
 from src.queries.repositories import (
-    CartRepository,
+    CartQueryRepository,
 )
 
 
 class CartQueryService(QueryService):
     """Cart Query Service class"""
 
-    repository: CartRepository = Provide["cart_repository"]
+    repository: CartQueryRepository = Provide["cart_repository"]
 
     @enroute.rest.query("/carts/{uuid}", "GET")
     @enroute.broker.query("GetCart")

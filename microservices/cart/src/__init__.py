@@ -18,5 +18,5 @@ from .commands import (
 )
 from .queries import (
     CartQueryService,
-    CartRepository,
+    CartQueryRepository,
 )

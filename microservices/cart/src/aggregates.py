@@ -5,6 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
 from minos.common import (
     Aggregate,
     AggregateRef,
@@ -14,12 +17,11 @@ from minos.common import (
 )
 
 
-class Product(AggregateRef):
-    """Product AggregateRef class."""
+class Cart(Aggregate):
+    """Cart Aggregate class."""
 
-    title: str
-    description: str
-    price: float
+    user: int
+    entries: EntitySet[CartEntry]
 
 
 class CartEntry(Entity):
@@ -29,8 +31,9 @@ class CartEntry(Entity):
     product: ModelRef[Product]
 
 
-class Cart(Aggregate):
-    """Cart Aggregate class."""
+class Product(AggregateRef):
+    """Product AggregateRef class."""
 
-    user: int
-    entries: EntitySet[CartEntry]
+    title: str
+    description: str
+    price: float

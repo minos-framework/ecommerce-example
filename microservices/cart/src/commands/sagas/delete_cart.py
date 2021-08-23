@@ -22,7 +22,7 @@ from .callbacks import (
 )
 
 
-def _reserve_products_callback(context: SagaContext) -> Model:
+def _reserve_products(context: SagaContext) -> Model:
     cart = context["cart"]
     quantities = defaultdict(int)
     for item in cart.entries:
@@ -31,7 +31,7 @@ def _reserve_products_callback(context: SagaContext) -> Model:
     return _ReserveProductsQuery(quantities=quantities)
 
 
-def _release_products_callback(context: SagaContext) -> Model:
+def _release_products(context: SagaContext) -> Model:
     cart = context["cart"]
     quantities = defaultdict(int)
     for item in cart.entries:
@@ -40,7 +40,7 @@ def _release_products_callback(context: SagaContext) -> Model:
     return _ReserveProductsQuery(quantities=quantities)
 
 
-async def _create_commit_callback(context: SagaContext) -> SagaContext:
+async def _create_cart(context: SagaContext) -> SagaContext:
     cart = context["cart"]
     result = await cart.delete()
     return SagaContext(result=result)
@@ -49,7 +49,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 DELETE_CART = (
     Saga("DeleteCart")
     .step()
-    .invoke_participant("ReserveProducts", _release_products_callback)
-    .with_compensation("ReserveProducts", _reserve_products_callback)
-    .commit(_create_commit_callback)
+    .invoke_participant("ReserveProducts", _reserve_products)
+    .with_compensation("ReserveProducts", _release_products)
+    .commit(_create_cart)
 )

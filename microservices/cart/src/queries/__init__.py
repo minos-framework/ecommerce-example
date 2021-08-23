@@ -1,5 +1,5 @@
 from .repositories import (
-    CartRepository,
+    CartQueryRepository,
 )
 from .services import (
     CartQueryService,
