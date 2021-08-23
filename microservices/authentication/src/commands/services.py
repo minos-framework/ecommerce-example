@@ -10,6 +10,7 @@ from minos.networks import (
     RestRequest,
     Response,
     enroute,
+    ResponseException
 )
 from src import (
     User,
@@ -41,6 +42,7 @@ class LoginCommandService(CommandService):
         if auth_type == "Bearer":
             try:
                 payload = jwt.decode(jwt_token, SECRET, algorithms=[JWT_ALGORITHM])
-                return Response(str(payload))
             except InvalidSignatureError as exc:
-                return Response(exc)
+                raise ResponseException(exc.args[0])
+            else:
+                return Response(str(payload))
