@@ -1,19 +1,13 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
 )
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
 from minos.common import (
     CommandReply,

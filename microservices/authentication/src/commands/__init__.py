@@ -1,3 +1,1 @@
-from .services import (
-    LoginCommandService,
-)
+from .services import LoginCommandService

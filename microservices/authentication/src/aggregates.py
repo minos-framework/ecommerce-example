@@ -1,10 +1,6 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from minos.common import (
-    Aggregate,
-)
+from minos.common import Aggregate
 
 
 class User(Aggregate):
