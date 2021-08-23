@@ -250,7 +250,6 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         request = _FakeRequest({"quantities": quantities})
         await self.service.reserve_products(request)
 
-
         obtained = await Product.get_one(product.uuid)
 
         expected = Product(
