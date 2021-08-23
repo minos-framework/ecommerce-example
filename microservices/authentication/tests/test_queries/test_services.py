@@ -15,7 +15,7 @@ from typing import (
 from uuid import (
     UUID,
 )
-from minos.networks import RestRequest
+
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -26,8 +26,12 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
+from minos.networks import (
+    RestRequest,
+)
 from src import (
-    LoginQueryService, UserQueryRepository,
+    LoginQueryService,
+    UserQueryRepository,
 )
 
 
@@ -67,7 +71,7 @@ class TestLoginQueryService(unittest.IsolatedAsyncioTestCase):
             event_broker=_FakeBroker,
             repository=InMemoryRepository,
             snapshot=InMemorySnapshot,
-            user_repository=UserQueryRepository
+            user_repository=UserQueryRepository,
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
