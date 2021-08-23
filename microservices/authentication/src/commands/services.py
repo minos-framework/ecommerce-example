@@ -8,9 +8,9 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
+    ResponseException,
     RestRequest,
     enroute,
-    ResponseException
 )
 from src import (
     User,
