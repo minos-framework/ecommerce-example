@@ -3,15 +3,11 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
@@ -21,9 +17,7 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -111,7 +105,15 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Ticket(observed.code, [], 0.0, uuid=observed.uuid, version=observed.version)
+        expected = Ticket(
+            observed.code,
+            [],
+            0.0,
+            uuid=observed.uuid,
+            version=observed.version,
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
+        )
 
         self.assertEqual(expected, observed)
 
