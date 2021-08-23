@@ -34,10 +34,9 @@ from sqlalchemy.orm import (
 from .models import (
     META,
     REVIEW_TABLE,
-    ReviewDTO,
     RatingDTO,
+    ReviewDTO,
 )
-
 
 ORDER_ASC = "asc"
 ORDER_DESC = "desc"
@@ -177,9 +176,7 @@ class ReviewQueryRepository(MinosSetup):
         :return: This method does not return anything.
         """
 
-        query = REVIEW_TABLE.select()\
-            .order_by(desc(REVIEW_TABLE.columns.date))\
-            .limit(limit)
+        query = REVIEW_TABLE.select().order_by(desc(REVIEW_TABLE.columns.date)).limit(limit)
 
         res = self.engine.execute(query)
 
