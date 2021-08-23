@@ -6,13 +6,14 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 import logging
+import sys
 from pathlib import (
     Path,
 )
 from typing import (
     Optional,
 )
-import sys
+
 import typer
 from minos.common import (
     EntrypointLauncher,

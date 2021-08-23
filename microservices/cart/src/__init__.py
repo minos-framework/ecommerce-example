@@ -17,6 +17,6 @@ from .commands import (
     CartCommandService,
 )
 from .queries import (
-    CartQueryService,
     CartQueryRepository,
+    CartQueryService,
 )
