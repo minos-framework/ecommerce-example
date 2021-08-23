@@ -6,11 +6,18 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 import logging
-from pathlib import Path
-from typing import Optional
 import sys
+from pathlib import (
+    Path,
+)
+from typing import (
+    Optional,
+)
+
 import typer
-from minos.common import EntrypointLauncher
+from minos.common import (
+    EntrypointLauncher,
+)
 
 logging.getLogger("aiohttp.access").setLevel(logging.WARNING)
 
