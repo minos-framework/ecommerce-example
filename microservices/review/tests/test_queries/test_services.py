@@ -125,7 +125,7 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         async with self.repository as repository:
             await repository.delete_all()
-            
+
         await self.injector.unwire()
 
     async def _populate_reviews(self):
