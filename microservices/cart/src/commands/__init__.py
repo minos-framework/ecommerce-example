@@ -4,6 +4,4 @@ from .sagas import (
     REMOVE_CART_ITEM,
     UPDATE_CART_ITEM,
 )
-from .services import (
-    CartCommandService,
-)
+from .services import CartCommandService
