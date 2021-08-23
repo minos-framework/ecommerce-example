@@ -2,8 +2,6 @@ from __future__ import (
     annotations,
 )
 
-import base64
-import json
 import sys
 import unittest
 from pathlib import (
@@ -11,11 +9,12 @@ from pathlib import (
 )
 from typing import (
     NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
 )
-from minos.networks import RestRequest
+
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -26,9 +25,12 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from src import (
-    LoginQueryService, UserQueryRepository,
+from minos.networks import (
+    RestRequest,
 )
+from src import (
+    User,
+    LoginQueryService, )
 
 
 class _FakeRawRequest:
@@ -67,7 +69,6 @@ class TestLoginQueryService(unittest.IsolatedAsyncioTestCase):
             event_broker=_FakeBroker,
             repository=InMemoryRepository,
             snapshot=InMemorySnapshot,
-            user_repository=UserQueryRepository
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
@@ -77,18 +78,12 @@ class TestLoginQueryService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_get_token(self):
-        username = "test_username"
-        password = "test_password"
+        expected = await User.create("test_name", "test_password", True)
+        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
-        await self.service.repository.create_user(username, password, True)
-
-        fake_request = _FakeRestRequest(username, password)
-        response = await self.service.get_token(fake_request)
-        token = await response.content()
-        token = token.split(".")
-        observed_username = json.loads(base64.b64decode(token[1]).decode())["name"]
-
-        self.assertEqual(username, observed_username)
+        response = await self.service.get_token(request)
+        observed = await response.content()
+        self.assertEqual(expected, observed)
 
 
 if __name__ == "__main__":

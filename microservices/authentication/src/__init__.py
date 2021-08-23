@@ -1,11 +1,10 @@
 from .aggregates import (
-    User
+    User,
 )
 from .commands import (
-    LoginCommandService
+    LoginCommandService,
 )
-
 from .queries import (
     LoginQueryService,
-    UserQueryRepository
+    UserQueryRepository,
 )

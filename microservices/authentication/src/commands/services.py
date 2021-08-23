@@ -9,9 +9,11 @@ from minos.networks import (
     Request,
     RestRequest,
     Response,
-    enroute
+    enroute,
 )
-from src import User
+from src import (
+    User,
+)
 
 from ..jwt_env import (
     SECRET,

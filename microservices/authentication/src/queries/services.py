@@ -18,10 +18,12 @@ from minos.networks import (
     enroute,
 )
 
-from .repositories import UserQueryRepository
 from ..jwt_env import (
     SECRET,
     JWT_ALGORITHM
+)
+from .repositories import (
+    UserQueryRepository,
 )
 
 
