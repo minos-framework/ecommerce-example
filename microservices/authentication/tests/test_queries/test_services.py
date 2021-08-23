@@ -1,12 +1,20 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import base64
 import json
 import sys
 import unittest
-from pathlib import Path
-from typing import NoReturn
-from uuid import UUID
+from pathlib import (
+    Path,
+)
+from typing import (
+    NoReturn,
+)
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     CommandReply,
@@ -18,7 +26,9 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from minos.networks import RestRequest
+from minos.networks import (
+    RestRequest,
+)
 from src import (
     LoginQueryService,
     UserQueryRepository,

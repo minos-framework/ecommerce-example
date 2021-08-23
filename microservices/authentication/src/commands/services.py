@@ -1,8 +1,20 @@
 import jwt
-from jwt.exceptions import InvalidSignatureError
-from minos.cqrs import CommandService
-from minos.networks import Request, Response, RestRequest, enroute, ResponseException
-from src import User
+from jwt.exceptions import (
+    InvalidSignatureError,
+)
+from minos.cqrs import (
+    CommandService,
+)
+from minos.networks import (
+    Request,
+    Response,
+    ResponseException,
+    RestRequest,
+    enroute,
+)
+from src import (
+    User,
+)
 
 from ..jwt_env import (
     JWT_ALGORITHM,
