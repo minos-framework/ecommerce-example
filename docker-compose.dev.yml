@@ -35,3 +35,10 @@ services:
       target: development
     volumes:
       - ./microservices/user:/microservice
+
+  microservice-review:
+    build:
+      context: microservices/review
+      target: development
+    volumes:
+      - ./microservices/review:/microservice
