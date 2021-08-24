@@ -30,8 +30,8 @@ from minos.networks import (
     Response,
 )
 from src import (
-    LoginCommandService,
     Credential,
+    LoginCommandService,
 )
 
 
@@ -99,7 +99,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Credential("test_name", "test_password", True, uuid=observed.uuid, version=observed.version, )
+        expected = Credential("test_name", "test_password", True, uuid=observed.uuid, version=observed.version,)
         self.assertEqual(expected, observed)
 
 
