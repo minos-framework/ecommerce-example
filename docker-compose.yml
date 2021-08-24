@@ -38,7 +38,7 @@ services:
     volumes:
       - postgres_volume:/var/lib/postgresql
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db,user_db,ticket_query_db,product_query_db,payment_query_db
+      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db,user_db,cart_query_db,ticket_query_db,product_query_db,payment_query_db,review_db,review_query_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
@@ -112,6 +112,14 @@ services:
     restart: always
     build:
       context: microservices/user
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-review:
+    restart: always
+    build:
+      context: microservices/review
       target: production
     environment: *microservice-environment
     depends_on: *microservice-depends-on
