@@ -111,7 +111,14 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertIsInstance(response, Response)
         observed = await response.content()
-        expected = Cart(3, EntitySet({}), uuid=observed.uuid, version=observed.version)
+        expected = Cart(
+            3,
+            EntitySet({}),
+            uuid=observed.uuid,
+            version=observed.version,
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
+        )
 
         self.assertEqual(expected, observed)
 
