@@ -307,7 +307,7 @@ minos-microservice-saga = ">=0.0.9"
 
 [[package]]
 name = "minos-microservice-networks"
-version = "0.0.12"
+version = "0.0.13"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
 category = "main"
 optional = false
@@ -543,7 +543,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "53dab07e9aa3f67074b771c85cba8ed2abfa0e52ae971312a6e6aec834d0e273"
+content-hash = "489135247bdd435a8d38bb85a3fc3cd92e7b736c5ac8b2658c7840fca826f7a4"
 
 [metadata.files]
 aiohttp = [
@@ -895,8 +895,8 @@ minos-microservice-cqrs = [
     {file = "minos_microservice_cqrs-0.0.1.tar.gz", hash = "sha256:1c9927871fdc70cc72410d77b6a714cf7808d29e21635a816c483c4776031d3a"},
 ]
 minos-microservice-networks = [
-    {file = "minos_microservice_networks-0.0.12-py3-none-any.whl", hash = "sha256:86ad95f68029e10bb6c3abbc7450c03104fabfa11e969b5d921e2e59a7134e1c"},
-    {file = "minos_microservice_networks-0.0.12.tar.gz", hash = "sha256:ae2453250daa098ae241becbe955432c56b70304f384e32ce5f19f93e2804e2f"},
+    {file = "minos_microservice_networks-0.0.13-py3-none-any.whl", hash = "sha256:458fbcf02c7791250cc7a3f9cac2c9172f44d8a2f0348fa109a7bbfaa3e4e099"},
+    {file = "minos_microservice_networks-0.0.13.tar.gz", hash = "sha256:22c8d20b3da15ae51f39a7f0075cee93f31ca9e4a8288a55a61c24a0a3f9d265"},
 ]
 minos-microservice-saga = [
     {file = "minos_microservice_saga-0.0.9-py3-none-any.whl", hash = "sha256:911cc561d074968d01cf6ca11e96c88645df009bc199f0e4d40acd157c523681"},
