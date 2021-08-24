@@ -112,7 +112,15 @@ class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Payment(1234, 3.4, "created", uuid=observed.uuid, version=observed.version)
+        expected = Payment(
+            1234,
+            3.4,
+            "created",
+            uuid=observed.uuid,
+            version=observed.version,
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
+        )
 
         self.assertEqual(expected, observed)
 

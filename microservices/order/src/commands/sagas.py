@@ -8,9 +8,6 @@ Minos framework can not be copied and/or distributed without the express permiss
 from collections import (
     defaultdict,
 )
-from datetime import (
-    datetime,
-)
 from uuid import (
     UUID,
 )
@@ -64,9 +61,8 @@ def _create_ticket_reply(value: Aggregate) -> UUID:
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
     product_uuids = context["product_uuids"]
     ticket_uuid = context["ticket_uuid"]
-    now = datetime.now()
     status = "created"
-    order = await Order.create(product_uuids, ticket_uuid, status, created_at=now, updated_at=now)
+    order = await Order.create(product_uuids, ticket_uuid, status)
     return SagaContext(order=order)
 
 
