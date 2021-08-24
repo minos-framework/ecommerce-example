@@ -40,6 +40,14 @@ PRODUCT_TABLE = Table(
 )
 
 ProductDTO = ModelType.build(
-    "ProductDTO", {"uuid": UUID, "code": str, "title": str, "description": str, "price": float, "reviews_count": int,
-                   "reviews_score": float}
+    "ProductDTO",
+    {
+        "uuid": UUID,
+        "code": str,
+        "title": str,
+        "description": str,
+        "price": float,
+        "reviews_count": int,
+        "reviews_score": float,
+    },
 )
