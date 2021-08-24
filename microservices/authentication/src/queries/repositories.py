@@ -1,6 +1,10 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import NoReturn
+from typing import (
+    NoReturn,
+)
 
 from minos.common import (
     MinosConfig,
