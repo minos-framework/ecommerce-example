@@ -1,19 +1,13 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
 )
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
 from minos.common import (
     CommandReply,
@@ -99,7 +93,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Credential("test_name", "test_password", True, uuid=observed.uuid, version=observed.version, )
+        expected = Credential("test_name", "test_password", True, uuid=observed.uuid, version=observed.version,)
         self.assertEqual(expected, observed)
 
 
