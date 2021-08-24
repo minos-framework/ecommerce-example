@@ -28,3 +28,4 @@ class User(Aggregate):
     status: str
     address: Address
     created_at: datetime
+    updated_at: datetime

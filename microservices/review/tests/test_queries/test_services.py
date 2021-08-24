@@ -108,7 +108,7 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
             self.config,
             saga_manager=_FakeSagaManager,
             event_broker=_FakeBroker,
-            review_repository=ReviewQueryRepository,
+            review_repository=ReviewQueryRepository.from_config(self.config, database=self.config.repository.database),
             snapshot=InMemorySnapshot,
         )
         await self.injector.wire(modules=[sys.modules[__name__]])

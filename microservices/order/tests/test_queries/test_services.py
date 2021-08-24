@@ -14,10 +14,6 @@ import unittest
 from asyncio import (
     gather,
 )
-from datetime import (
-    datetime,
-    timezone,
-)
 from pathlib import (
     Path,
 )
@@ -112,11 +108,9 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_get_orders(self):
-        now = datetime.now(tz=timezone.utc)
-
         expected = await gather(
-            Order.create([uuid4(), uuid4()], uuid4(), "created", now, now),
-            Order.create([uuid4(), uuid4()], uuid4(), "cancelled", now, now),
+            Order.create([uuid4(), uuid4()], uuid4(), "created"),
+            Order.create([uuid4(), uuid4()], uuid4(), "cancelled"),
         )
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})

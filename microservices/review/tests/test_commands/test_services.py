@@ -136,6 +136,8 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
             score=3,
             uuid=observed.uuid,
             version=observed.version,
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
         )
 
         self.assertEqual(expected, observed)
@@ -163,6 +165,8 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
             score=5,
             uuid=observed.uuid,
             version=observed.version,
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
         )
 
         self.assertEqual(expected, observed)

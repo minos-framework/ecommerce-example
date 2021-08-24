@@ -48,7 +48,6 @@ from minos.saga import (
     SagaContext,
 )
 from src import (
-    Order,
     OrderCommandService,
 )
 
@@ -129,7 +128,12 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
         self.assertEqual(expected, observed)
-        self.assertEqual(call("CreateOrder", context=SagaContext(product_uuids=[1, 2, 3])), mock.call_args)
+        self.assertEqual(
+            call(
+                "CreateOrder", context=SagaContext(product_uuids=[1, 2, 3]), pause_on_disk=True, return_execution=False
+            ),
+            mock.call_args,
+        )
 
 
 if __name__ == "__main__":
