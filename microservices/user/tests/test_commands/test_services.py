@@ -126,6 +126,7 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
             "created",
             Address(street="Green Dolphin Street", street_no=42),
             created_at=observed.created_at,
+            updated_at=observed.updated_at,
             uuid=observed.uuid,
             version=observed.version,
         )

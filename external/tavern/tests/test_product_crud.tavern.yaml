@@ -17,6 +17,8 @@ stages:
       json:
         uuid: !anystr
         version: 1
+        created_at: !anyint
+        updated_at: !anyint
         code: !anystr
         title: Cacao 1kg
         description: Desayuno y merienda
@@ -43,6 +45,8 @@ stages:
       json:
         - uuid: "{product_uuid}"
           version: 1
+          created_at: !anyint
+          updated_at: !anyint
           code: "{product_code}"
           title: Cacao 1kg
           description: Desayuno y merienda
@@ -64,6 +68,8 @@ stages:
       json:
         uuid: "{product_uuid}"
         version: 2
+        created_at: !anyint
+        updated_at: !anyint
         code: "{product_code}"
         title: Cacao 1kg
         description: Desayuno y merienda
@@ -85,6 +91,8 @@ stages:
       json:
         uuid: "{product_uuid}"
         version: 3
+        created_at: !anyint
+        updated_at: !anyint
         code: "{product_code}"
         title: Cacao 1kg
         description: Desayuno y merienda
