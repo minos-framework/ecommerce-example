@@ -2,9 +2,6 @@ on:
   push:
     paths:
       - 'microservices/payment/**'
-  pull_request:
-    paths:
-      - 'microservices/payment/**'
 
 jobs:
   build:

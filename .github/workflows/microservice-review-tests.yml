@@ -2,9 +2,6 @@ on:
   push:
     paths:
       - 'microservices/review/**'
-  pull_request:
-    paths:
-      - 'microservices/review/**'
 
 jobs:
   build:

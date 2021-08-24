@@ -2,9 +2,6 @@ on:
   push:
     paths:
       - 'microservices/order/**'
-  pull_request:
-    paths:
-      - 'microservices/order/**'
 
 jobs:
   build:

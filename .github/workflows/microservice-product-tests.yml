@@ -2,9 +2,6 @@ on:
   push:
     paths:
       - 'microservices/product/**'
-  pull_request:
-    paths:
-      - 'microservices/product/**'
 
 jobs:
   build:
