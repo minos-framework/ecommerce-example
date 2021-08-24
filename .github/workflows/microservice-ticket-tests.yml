@@ -2,6 +2,9 @@ on:
   push:
     paths:
       - 'microservices/ticket/**'
+  pull_request:
+    paths:
+      - 'microservices/ticket/**'
 
 jobs:
   build:

@@ -2,6 +2,9 @@ on:
   push:
     paths:
       - 'microservices/review/**'
+  pull_request:
+    paths:
+      - 'microservices/review/**'
 
 jobs:
   build:
@@ -11,7 +14,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: user_db
+          POSTGRES_DB: review_db
           POSTGRES_USER: minos
           POSTGRES_PASSWORD: min0s
         ports:
