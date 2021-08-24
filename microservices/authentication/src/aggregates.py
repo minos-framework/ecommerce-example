@@ -7,7 +7,7 @@ from minos.common import (
 )
 
 
-class User(Aggregate):
+class Credential(Aggregate):
     username: str
     password: str
     active: bool

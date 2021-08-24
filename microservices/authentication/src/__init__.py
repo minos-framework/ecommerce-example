@@ -1,5 +1,5 @@
 from .aggregates import (
-    User,
+    Credential,
 )
 from .commands import (
     LoginCommandService,
