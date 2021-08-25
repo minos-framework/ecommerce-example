@@ -11,3 +11,5 @@ discovery:
     host: localhost
     port: 6379
     password:
+cors:
+  enabled: false

@@ -267,7 +267,7 @@ cffi = ">=0.8"
 
 [[package]]
 name = "minos-microservice-common"
-version = "0.1.10"
+version = "0.1.11"
 description = "Python Package with common Classes and Utilities used in Minos Microservices."
 category = "main"
 optional = false
@@ -504,7 +504,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "3f9a4d0cd08d7360d63126381cf1da41c33eb2e24ab8269048ff2e3f95c24690"
+content-hash = "1fe93a43bb158143bd3946c307448e7ce59ac3ce67039436b92eec316f5c17a6"
 
 [metadata.files]
 aiohttp = [
@@ -796,8 +796,8 @@ lmdb = [
     {file = "lmdb-1.2.1.tar.gz", hash = "sha256:5f76a90ebd08922acca11948779b5055f7a262687178e9e94f4e804b9f8465bc"},
 ]
 minos-microservice-common = [
-    {file = "minos_microservice_common-0.1.10-py3-none-any.whl", hash = "sha256:dafa6ddb96a0efc971d64f9e9690400a36e17e73a343bfa16153641e9baf8ffc"},
-    {file = "minos_microservice_common-0.1.10.tar.gz", hash = "sha256:2df1eccab12f22538a9edb18befc31eb6c11f7eb77f7b05ca613961653a88eff"},
+    {file = "minos_microservice_common-0.1.11-py3-none-any.whl", hash = "sha256:16a474135dbf69e05fc1603a84b79f7c2306ff261145d440ca0e10c764a3285e"},
+    {file = "minos_microservice_common-0.1.11.tar.gz", hash = "sha256:30c41e7bdb9ab76f1333153fa6b75928ba5b516d9c0b9b35a9f95d442b950dcd"},
 ]
 minos-microservice-cqrs = [
     {file = "minos_microservice_cqrs-0.0.1-py3-none-any.whl", hash = "sha256:be738f960fb4a8f4611fc5f5933eb1d2196079bde204e778f460758d903d0a2c"},
