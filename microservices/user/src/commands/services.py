@@ -5,9 +5,6 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from datetime import (
-    datetime,
-)
 
 from minos.cqrs import (
     CommandService,
@@ -42,8 +39,7 @@ class UserCommandService(CommandService):
         password = content["password"]
         status = content["status"]
         address = Address(**content["address"])
-        created_at = datetime.now()
 
-        user = await User.create(username, password, status, address, created_at)
+        user = await User.create(username, password, status, address)
 
         return Response(user)

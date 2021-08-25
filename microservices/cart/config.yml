@@ -1,0 +1,74 @@
+service:
+  name: carts
+  injections:
+    postgresql_pool: minos.common.PostgreSqlPool
+    command_broker: minos.networks.CommandBroker
+    command_reply_broker: minos.networks.CommandReplyBroker
+    event_broker: minos.networks.EventBroker
+    repository: minos.common.PostgreSqlRepository
+    reply_pool: minos.networks.ReplyHandlerPool
+    saga_manager: minos.saga.SagaManager
+    snapshot: minos.common.PostgreSqlSnapshot
+    discovery: minos.networks.DiscoveryConnector
+    cart_repository: src.CartQueryRepository
+  services:
+    - minos.networks.CommandConsumerService
+    - minos.networks.CommandHandlerService
+    - minos.networks.CommandReplyConsumerService
+    - minos.networks.CommandReplyHandlerService
+    - minos.networks.EventConsumerService
+    - minos.networks.EventHandlerService
+    - minos.networks.RestService
+    - minos.networks.SnapshotService
+    - minos.networks.ProducerService
+rest:
+  host: 0.0.0.0
+  port: 8088
+broker:
+  host: localhost
+  port: 9092
+  queue:
+    database: cart_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
+repository:
+  database: cart_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+snapshot:
+  database: cart_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+commands:
+  service: src.CartCommandService
+queries:
+  service: src.CartQueryService
+events:
+  service: src.CartQueryService
+saga:
+  storage:
+    path: "./cart.lmdb"
+  items:
+    - name: AddCartItem
+      controller: src
+      action: ADD_CART_ITEM
+    - name: RemoveCartItem
+      controller: src
+      action: REMOVE_CART_ITEM
+    - name: DeleteCart
+      controller: src
+      action: DELETE_CART
+    - name: UpdateCartItem
+      controller: src
+      action: UPDATE_CART_ITEM
+discovery:
+  host: localhost
+  port: 5567
