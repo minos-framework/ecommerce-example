@@ -3,15 +3,9 @@ import time
 from uuid import UUID
 
 import jwt
-from dependency_injector.wiring import (
-    Provide,
-)
-from minos.common import (
-    AggregateDiff,
-)
-from minos.cqrs import (
-    QueryService,
-)
+from dependency_injector.wiring import Provide
+from minos.common import AggregateDiff
+from minos.cqrs import QueryService
 from minos.networks import (
     Request,
     Response,
@@ -23,9 +17,7 @@ from ..jwt_env import (
     JWT_ALGORITHM,
     SECRET,
 )
-from .repositories import (
-    UserQueryRepository,
-)
+from .repositories import UserQueryRepository
 
 
 class LoginQueryService(QueryService):
