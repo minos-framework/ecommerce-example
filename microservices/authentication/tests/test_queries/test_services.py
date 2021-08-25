@@ -13,9 +13,11 @@ from typing import (
     NoReturn,
 )
 from uuid import (
-    UUID, uuid4,
+    UUID,
+    uuid4,
 )
 
+import jwt
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -33,9 +35,9 @@ from src import (
     LoginQueryService,
     UserQueryRepository,
 )
-
-from src.queries import AlreadyExists
-import jwt
+from src.queries import (
+    AlreadyExists,
+)
 
 
 class _FakeRawRequest:

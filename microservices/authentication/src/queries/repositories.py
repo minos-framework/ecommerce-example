@@ -5,19 +5,25 @@ from __future__ import (
 from typing import (
     NoReturn,
 )
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     MinosConfig,
     MinosSetup,
 )
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy import (
     and_,
     create_engine,
 )
+from sqlalchemy.exc import (
+    IntegrityError,
+)
 
-from .exceptions import AlreadyExists
+from .exceptions import (
+    AlreadyExists,
+)
 from .models import (
     META,
     USER_TABLE,
