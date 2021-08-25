@@ -74,3 +74,20 @@ label {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
+
+.btn-add-to-cart {
+  background: #f0c14b;
+  color: black;
+  border: 2px solid #FCD200;
+  border-radius: 3px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.undecorated-link {
+  text-decoration: none;
+
+  &:focus, &:hover, &:visited, &:link, &:active {
+    text-decoration: none;
+  }
+}

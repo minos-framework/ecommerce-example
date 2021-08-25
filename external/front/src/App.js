@@ -17,7 +17,8 @@ import Profile from "./components/auth/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardAdmin from "./components/board-admin.component";
 
-import Products from "./components/products/products.component";
+import Products from "./components/products/products-list";
+import ProductDetail from "./components/products/product-detail";
 
 class App extends Component {
   constructor(props) {
@@ -124,12 +125,13 @@ class App extends Component {
           )}
         </nav>
 
-        <div className="container mt-3">
+        <div className="container-fluid ml-3 mt-3">
           <Switch>
             <Route exact path={["/", "/home"]} component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/profile" component={Profile} />
+            <Route path="/product/:id" component={ProductDetail} />
             <Route exact path="/products" component={Products} />
             <Route path="/user" component={BoardUser} />
             <Route path="/admin" component={BoardAdmin} />
