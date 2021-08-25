@@ -1,16 +1,23 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import base64
 import json
 import sys
 import unittest
-from pathlib import Path
-from typing import NoReturn
+from pathlib import (
+    Path,
+)
+from typing import (
+    NoReturn,
+)
 from uuid import (
     UUID,
     uuid4,
 )
 
+import jwt
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -21,14 +28,16 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from minos.networks import RestRequest
+from minos.networks import (
+    RestRequest,
+)
 from src import (
     LoginQueryService,
     UserQueryRepository,
 )
-
-from src.queries import AlreadyExists
-import jwt
+from src.queries import (
+    AlreadyExists,
+)
 
 
 class _FakeRawRequest:
