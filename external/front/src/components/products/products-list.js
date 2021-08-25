@@ -2,7 +2,7 @@ import React from 'react';
 import axios from "axios";
 
 import ProductCard from "./product-item";
-import {Row, Col, CardGroup} from "react-bootstrap";
+import {Row, Col, CardGroup, Breadcrumb} from "react-bootstrap";
 
 class Products extends React.Component {
 
@@ -32,10 +32,11 @@ class Products extends React.Component {
                 console.log("Error")
             })
     }
+
     render() {
         let products = []
 
-        if(this.state.products !== null && this.state.products.length > 0) {
+        if (this.state.products !== null && this.state.products.length > 0) {
 
             for (let i = 0; i < this.state.products.length; i++) {
                 let product = this.state.products[i]
@@ -51,11 +52,22 @@ class Products extends React.Component {
 
         }
         return (
-            <Row>
-                <CardGroup>
-                    {products}
-                </CardGroup>
-            </Row>
+            <div>
+                <Row className="mt-3">
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+                            <Breadcrumb.Item active>Products</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
+                <Row>
+                    <CardGroup>
+                        {products}
+                    </CardGroup>
+                </Row>
+            </div>
+
         );
     }
 }
