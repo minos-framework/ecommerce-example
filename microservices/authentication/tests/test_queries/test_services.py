@@ -13,7 +13,7 @@ from typing import (
     NoReturn,
 )
 from uuid import (
-    UUID,
+    UUID, uuid4,
 )
 
 from minos.common import (
@@ -33,6 +33,9 @@ from src import (
     LoginQueryService,
     UserQueryRepository,
 )
+
+from src.queries import AlreadyExists
+import jwt
 
 
 class _FakeRawRequest:
@@ -81,18 +84,25 @@ class TestLoginQueryService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_get_token(self):
-        username = "test_username"
+        uuid = uuid4()
+        username = "test_username"  # UUID just to ensure its unique
         password = "test_password"
 
-        await self.service.repository.create_user(username, password, True)
+        try:
+            await self.service.repository.create_user(uuid, username, password, True)
+        except AlreadyExists:
+            row = await self.service.repository.get_by_username(username)
+            uuid = UUID(str(row["uuid"]))
+            username = row["username"]
+            password = row["password"]
 
         fake_request = _FakeRestRequest(username, password)
         response = await self.service.get_token(fake_request)
         token = await response.content()
-        token = token.split(".")
-        observed_username = json.loads(base64.b64decode(token[1]).decode())["name"]
+        payload = jwt.decode(token, options={"verify_signature": False})
+        observed_uuid = UUID(payload["sub"])
 
-        self.assertEqual(username, observed_username)
+        self.assertEqual(uuid, observed_uuid)
 
 
 if __name__ == "__main__":

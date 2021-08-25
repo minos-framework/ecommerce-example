@@ -1,5 +1,6 @@
 import base64
 import time
+from uuid import UUID
 
 import jwt
 from dependency_injector.wiring import (
@@ -34,16 +35,17 @@ class LoginQueryService(QueryService):
     async def get_token(self, request: RestRequest) -> Response:
         auth_type, encoded_credentials = request.raw_request.headers["Authorization"].split()
         if auth_type == "Basic":
-            user, password = base64.b64decode(encoded_credentials).decode().split(":")
+            username, password = base64.b64decode(encoded_credentials).decode().split(":")
 
-            if await self.valid_credentials(user, password):
-                jwt_token = await self.generate_token(user)
+            if await self.valid_credentials(username, password):
+                jwt_token = await self.generate_token(username)
                 return Response(jwt_token)
             else:
                 return Response("Invalid username or password")
 
-    async def generate_token(self, user):
-        payload = {"sub": 1, "name": user, "iat": time.time()}
+    async def generate_token(self, username):
+        user = await self.repository.get_by_username(username)
+        payload = {"sub": str(user["uuid"]), "name": user["username"], "iat": time.time()}
         jwt_token = jwt.encode(payload, SECRET, algorithm=JWT_ALGORITHM)
         return jwt_token
 
@@ -53,4 +55,4 @@ class LoginQueryService(QueryService):
     @enroute.broker.event("UserCreated")
     async def user_created(self, request: Request) -> None:
         diff: AggregateDiff = await request.content()
-        await self.repository.create_user(diff.username, diff.password, diff.active)
+        await self.repository.create_user(diff.uuid, diff.username, diff.password, diff.active)

@@ -5,17 +5,19 @@ from __future__ import (
 from typing import (
     NoReturn,
 )
+from uuid import UUID
 
 from minos.common import (
     MinosConfig,
     MinosSetup,
 )
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import (
     and_,
     create_engine,
-    exists,
 )
 
+from .exceptions import AlreadyExists
 from .models import (
     META,
     USER_TABLE,
@@ -36,9 +38,12 @@ class UserQueryRepository(MinosSetup):
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> UserQueryRepository:
         return cls(*args, **(config.repository._asdict()))
 
-    async def create_user(self, username: str, password: str, active: bool) -> None:
-        query = USER_TABLE.insert().values(username=username, password=password, active=active)
-        self.engine.execute(query)
+    async def create_user(self, uuid: UUID, username: str, password: str, active: bool) -> None:
+        try:
+            query = USER_TABLE.insert().values(uuid=uuid, username=username, password=password, active=active)
+            self.engine.execute(query)
+        except IntegrityError:
+            raise AlreadyExists
 
     async def exist_credentials(self, username, password) -> bool:
         query = USER_TABLE.select().where(
@@ -50,3 +55,7 @@ class UserQueryRepository(MinosSetup):
         )
 
         return True if self.engine.execute(query).first() else False
+
+    async def get_by_username(self, username: str):
+        query = USER_TABLE.select().where(USER_TABLE.columns.username == username)
+        return self.engine.execute(query).first()

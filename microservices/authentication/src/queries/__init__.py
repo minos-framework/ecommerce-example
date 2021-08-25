@@ -4,3 +4,7 @@ from .repositories import (
 from .services import (
     LoginQueryService,
 )
+
+from .exceptions import (
+    AlreadyExists
+)
