@@ -28,7 +28,7 @@ class ProductCard extends React.Component {
 
         return (
             <Col>
-                <Card style={{width: '18rem'}}>
+                <Card style={{width: '18rem'}} className="mt-3">
                     <StyledLink to={"/product/" + uuid}>
 
                     <Card.Img variant="top"
