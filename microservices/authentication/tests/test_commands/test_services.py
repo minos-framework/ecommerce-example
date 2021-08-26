@@ -99,8 +99,15 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Credential("test_name", "test_password", True, uuid=observed.uuid, version=observed.version,
-                              created_at=observed.created_at, updated_at=observed.updated_at)
+        expected = Credential(
+            "test_name",
+            "test_password",
+            True,
+            uuid=observed.uuid,
+            version=observed.version,
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
+        )
         self.assertEqual(expected, observed)
 
 

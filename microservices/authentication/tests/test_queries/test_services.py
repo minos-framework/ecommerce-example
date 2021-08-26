@@ -32,8 +32,8 @@ from minos.networks import (
     RestRequest,
 )
 from src import (
-    CredentialsQueryService,
     CredentialsQueryRepository,
+    CredentialsQueryService,
 )
 from src.queries import (
     AlreadyExists,

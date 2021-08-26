@@ -25,8 +25,8 @@ from .exceptions import (
     AlreadyExists,
 )
 from .models import (
-    META,
     CREDENTIALS_TABLE,
+    META,
 )
 
 
