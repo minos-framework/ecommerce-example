@@ -5,6 +5,7 @@ from uuid import (
 )
 
 import jwt
+from aiohttp import web
 from dependency_injector.wiring import (
     Provide,
 )
@@ -18,7 +19,7 @@ from minos.networks import (
     Request,
     Response,
     RestRequest,
-    enroute,
+    enroute, ResponseException,
 )
 
 from ..jwt_env import (
@@ -43,7 +44,7 @@ class LoginQueryService(QueryService):
                 jwt_token = await self.generate_token(username)
                 return Response(jwt_token)
             else:
-                return Response("Invalid username or password")
+                raise ResponseException("Invalid username or password")
 
     async def generate_token(self, username):
         user = await self.repository.get_by_username(username)
@@ -54,7 +55,7 @@ class LoginQueryService(QueryService):
     async def valid_credentials(self, user: str, password: str) -> bool:
         return await self.repository.exist_credentials(user, password)
 
-    @enroute.broker.event("UserCreated")
+    @enroute.broker.event("CredentialCreated")
     async def user_created(self, request: Request) -> None:
         diff: AggregateDiff = await request.content()
         await self.repository.create_user(diff.uuid, diff.username, diff.password, diff.active)
