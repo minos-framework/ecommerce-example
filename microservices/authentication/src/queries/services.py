@@ -5,7 +5,9 @@ from uuid import (
 )
 
 import jwt
-from aiohttp import web
+from aiohttp import (
+    web,
+)
 from dependency_injector.wiring import (
     Provide,
 )
@@ -18,8 +20,9 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
+    ResponseException,
     RestRequest,
-    enroute, ResponseException,
+    enroute,
 )
 
 from ..jwt_env import (
