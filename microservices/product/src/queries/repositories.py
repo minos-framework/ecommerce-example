@@ -46,6 +46,35 @@ class ProductQueryRepository(MinosSetup):
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "product_query_db"}) | kwargs)
 
+    async def get_all(self) -> NoReturn:
+        """Create a new row.
+
+        :param kwargs: The parameters of the creation query.
+        :return: This method does not return anything.
+        """
+
+        query = PRODUCT_TABLE.select()
+        result = self.engine.execute(query)
+
+        products = [ProductDTO(**row) for row in result]
+
+        return products
+
+    async def get(self, product_uuid: UUID) -> NoReturn:
+        """Create a new row.
+
+        :param kwargs: The parameters of the creation query.
+        :return: This method does not return anything.
+        """
+
+        query = PRODUCT_TABLE.select().where(PRODUCT_TABLE.columns.uuid == product_uuid)
+        result = self.engine.execute(query)
+
+        for row in result:
+            product = ProductDTO(**row)
+
+        return product
+
     async def get_without_stock(self) -> list[ProductDTO]:
         """Get product identifiers that do not have stock.
 
