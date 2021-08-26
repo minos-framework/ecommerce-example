@@ -2,8 +2,8 @@ from .exceptions import (
     AlreadyExists,
 )
 from .repositories import (
-    UserQueryRepository,
+    CredentialsQueryRepository,
 )
 from .services import (
-    LoginQueryService,
+    CredentialsQueryService,
 )

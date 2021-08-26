@@ -26,12 +26,12 @@ from ..jwt_env import (
     SECRET,
 )
 from .repositories import (
-    UserQueryRepository,
+    CredentialsQueryRepository,
 )
 
 
-class LoginQueryService(QueryService):
-    repository: UserQueryRepository = Provide["user_repository"]
+class CredentialsQueryService(QueryService):
+    repository: CredentialsQueryRepository = Provide["credentials_repository"]
 
     @enroute.rest.query("/login", "GET")
     async def get_token(self, request: RestRequest) -> Response:
@@ -46,15 +46,15 @@ class LoginQueryService(QueryService):
                 return Response("Invalid username or password")
 
     async def generate_token(self, username):
-        user = await self.repository.get_by_username(username)
-        payload = {"sub": str(user["uuid"]), "name": user["username"], "iat": time.time()}
+        credentials = await self.repository.get_by_username(username)
+        payload = {"sub": str(credentials["uuid"]), "name": credentials["username"], "iat": time.time()}
         jwt_token = jwt.encode(payload, SECRET, algorithm=JWT_ALGORITHM)
         return jwt_token
 
-    async def valid_credentials(self, user: str, password: str) -> bool:
-        return await self.repository.exist_credentials(user, password)
+    async def valid_credentials(self, username: str, password: str) -> bool:
+        return await self.repository.exist_credentials(username, password)
 
-    @enroute.broker.event("UserCreated")
-    async def user_created(self, request: Request) -> None:
+    @enroute.broker.event("CredentialsCreated")
+    async def credentials_created(self, request: Request) -> None:
         diff: AggregateDiff = await request.content()
-        await self.repository.create_user(diff.uuid, diff.username, diff.password, diff.active)
+        await self.repository.create_credentials(diff.uuid, diff.username, diff.password, diff.active)

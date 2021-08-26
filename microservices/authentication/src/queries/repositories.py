@@ -26,11 +26,11 @@ from .exceptions import (
 )
 from .models import (
     META,
-    USER_TABLE,
+    CREDENTIALS_TABLE,
 )
 
 
-class UserQueryRepository(MinosSetup):
+class CredentialsQueryRepository(MinosSetup):
     """ProductInventory Repository class."""
 
     def __init__(self, *args, **kwargs):
@@ -44,24 +44,24 @@ class UserQueryRepository(MinosSetup):
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> UserQueryRepository:
         return cls(*args, **(config.repository._asdict()))
 
-    async def create_user(self, uuid: UUID, username: str, password: str, active: bool) -> None:
+    async def create_credentials(self, uuid: UUID, username: str, password: str, active: bool) -> None:
         try:
-            query = USER_TABLE.insert().values(uuid=uuid, username=username, password=password, active=active)
+            query = CREDENTIALS_TABLE.insert().values(uuid=uuid, username=username, password=password, active=active)
             self.engine.execute(query)
         except IntegrityError:
             raise AlreadyExists
 
     async def exist_credentials(self, username, password) -> bool:
-        query = USER_TABLE.select().where(
+        query = CREDENTIALS_TABLE.select().where(
             and_(
-                USER_TABLE.columns.username == username,
-                USER_TABLE.columns.password == password,
-                USER_TABLE.columns.active == True,  # Do not substitute '==' by 'is'
+                CREDENTIALS_TABLE.columns.username == username,
+                CREDENTIALS_TABLE.columns.password == password,
+                CREDENTIALS_TABLE.columns.active == True,  # Do not substitute '==' by 'is'
             )
         )
 
         return True if self.engine.execute(query).first() else False
 
     async def get_by_username(self, username: str):
-        query = USER_TABLE.select().where(USER_TABLE.columns.username == username)
+        query = CREDENTIALS_TABLE.select().where(CREDENTIALS_TABLE.columns.username == username)
         return self.engine.execute(query).first()
