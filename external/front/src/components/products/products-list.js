@@ -3,7 +3,7 @@ import axios from "axios";
 
 import ProductCard from "./product-item";
 import {Row, Col, CardGroup, Breadcrumb} from "react-bootstrap";
-
+import Cart from "../cart";
 class Products extends React.Component {
 
     constructor(props) {
@@ -41,7 +41,7 @@ class Products extends React.Component {
             for (let i = 0; i < this.state.products.length; i++) {
                 let product = this.state.products[i]
                 products.push(<ProductCard
-                    uuid={product.uuid}
+                    id={product.uuid}
                     title={product.title}
                     description={product.description}
                     price={product.price}
@@ -66,6 +66,7 @@ class Products extends React.Component {
                         {products}
                     </CardGroup>
                 </Row>
+                <Cart/>
             </div>
 
         );
