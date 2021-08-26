@@ -17,6 +17,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
+    ResponseException,
     RestRequest,
     enroute,
 )
@@ -43,7 +44,7 @@ class CredentialsQueryService(QueryService):
                 jwt_token = await self.generate_token(username)
                 return Response(jwt_token)
             else:
-                return Response("Invalid username or password")
+                raise ResponseException("Invalid username or password")
 
     async def generate_token(self, username):
         credentials = await self.repository.get_by_username(username)
