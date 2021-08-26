@@ -1,1 +1,3 @@
-from .services import CredentialsCommandService
+from .services import (
+    CredentialsCommandService,
+)

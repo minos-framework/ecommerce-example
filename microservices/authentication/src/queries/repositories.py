@@ -1,7 +1,13 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import NoReturn
-from uuid import UUID
+from typing import (
+    NoReturn,
+)
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     MinosConfig,
@@ -11,12 +17,16 @@ from sqlalchemy import (
     and_,
     create_engine,
 )
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import (
+    IntegrityError,
+)
 
-from .exceptions import AlreadyExists
+from .exceptions import (
+    AlreadyExists,
+)
 from .models import (
-    META,
     CREDENTIALS_TABLE,
+    META,
 )
 
 
