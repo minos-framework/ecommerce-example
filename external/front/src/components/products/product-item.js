@@ -1,42 +1,40 @@
 import React, {useState} from 'react';
-import {Button, Card, Col} from "react-bootstrap";
-import {RatingView} from 'react-simple-star-rating'
-import StyledLink from '../shared/styled-link'
 import {useCart} from "react-use-cart";
+import {formatNumber} from "../../helpers/utils";
+import {Link} from "react-router-dom";
+import {RatingView} from "react-simple-star-rating";
 
 function ProductCard(props) {
     const [product] = useState({...props});
-
+    const detail_link = "/product/" + product.id
     const {addItem, inCart} = useCart();
 
     return (
-        <Col>
-            <Card style={{width: '18rem'}} className="mt-3">
-                <StyledLink to={"/product/" + product.id}>
+        <div className="card card-body">
+            <img style={{display: "block", margin: "0 auto 10px", maxHeight: "200px"}} className="img-fluid"
+            src={product.photo} alt=""/>
+            <p>{product.title}</p>
+            <p>
+                <RatingView ratingValue={product.reviews_score}/>
+                <span className="ml-2 align-top">{product.reviews_count}</span>
+            </p>
+            <h4 className="text-left">{formatNumber(product.price)}</h4>
+            <div className="text-right">
+                <Link  to={detail_link} className="btn btn-link btn-sm mr-2">Details</Link>
 
-                    <Card.Img variant="top"
-                              src="https://knowledge.insead.edu/sites/www.insead.edu/files/styles/w_650/public/styles/panoramic/public/images/2014/02/coke.jpg?itok=nMcR-Ore"/>
-                    <Card.Body className="pl-0 pr-0 pb-2">
-                        <Card.Title>{product.title}</Card.Title>
-                        <RatingView ratingValue={product.reviews_score}/>
-                        <span className="ml-2 align-top">{product.reviews_count}</span>
-                        <Card.Text>
-                            <h5>
-                                <span className="font-weight-bold">{product.price}</span>
-                                <small className="ml-2 align-top">€</small>
-                            </h5>
-
-                            {product.description}
-                        </Card.Text>
-                    </Card.Body>
-                </StyledLink>
                 {(inCart(product.id)) ? (
-                    <Button onClick={() => addItem(product)} variant="add-to-cart" size="lg">Add more</Button>
-                ) : (
-                    <Button onClick={() => addItem(product)} variant="add-to-cart" size="lg">Add to cart</Button>
+                    <button
+                    onClick={() => addItem(product)}
+                    className="btn btn-outline-dark btn-sm">Add more</button>
+                    ): (
+                        <button
+                    onClick={() => addItem(product)}
+                    className="btn btn-dark btn-sm">Add to cart</button>
                 )}
-            </Card>
-        </Col>
+
+
+            </div>
+        </div>
     );
 }
 

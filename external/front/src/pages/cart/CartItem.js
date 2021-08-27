@@ -6,18 +6,18 @@ import {useCart} from "react-use-cart";
 
 const CartItem = ({product}) => {
 
-    const { increase, decrease, removeProduct } = useCart();
+    const { addItem, removeItem, updateItemQuantity } = useCart();
 
     return (
         <div className="row no-gutters py-2">
             <div className="col-sm-2 p-2">
                 <img
-                alt={product.name}
+                alt={product.title}
                 style={{margin: "0 auto", maxHeight: "50px"}}
                 src={product.photo} className="img-fluid d-block"/>
             </div>
             <div className="col-sm-4 p-2">
-                <h5 className="mb-1">{product.name}</h5>
+                <h5 className="mb-1">{product.title}</h5>
                 <p className="mb-1">Price: {formatNumber(product.price)} </p>
 
             </div>
@@ -26,7 +26,7 @@ const CartItem = ({product}) => {
             </div>
             <div className="col-sm-4 p-2 text-right">
                  <button
-                 onClick={() => increase(product)}
+                 onClick={() => addItem(product)}
                  className="btn btn-primary btn-sm mr-2 mb-1">
                      <PlusCircleIcon width={"20px"}/>
                  </button>
@@ -34,7 +34,7 @@ const CartItem = ({product}) => {
                  {
                      product.quantity > 1 &&
                      <button
-                    onClick={() => decrease(product)}
+                    onClick={() => updateItemQuantity(product.id, product.quantity - 1)}
                     className="btn btn-danger btn-sm mb-1">
                         <MinusCircleIcon width={"20px"}/>
                     </button>
@@ -43,7 +43,7 @@ const CartItem = ({product}) => {
                 {
                      product.quantity === 1 &&
                      <button
-                    onClick={() => removeProduct(product)}
+                    onClick={() => removeItem(product.id)}
                     className="btn btn-danger btn-sm mb-1">
                         <TrashIcon width={"20px"}/>
                     </button>
