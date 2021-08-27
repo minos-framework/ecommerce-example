@@ -45,4 +45,4 @@ class LoginCommandService(CommandService):
             except InvalidSignatureError as exc:
                 raise ResponseException(exc.args[0])
             else:
-                return Response(str(payload))
+                return Response(payload)
