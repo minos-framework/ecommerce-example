@@ -1,5 +1,5 @@
 from .aggregates import (
-    Credential,
+    Credentials,
 )
 from .commands import (
     CredentialsCommandService,

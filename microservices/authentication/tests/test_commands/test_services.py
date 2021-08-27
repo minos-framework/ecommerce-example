@@ -30,7 +30,7 @@ from minos.networks import (
     Response,
 )
 from src import (
-    Credential,
+    Credentials,
     CredentialsCommandService,
 )
 
@@ -99,7 +99,7 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Credential(
+        expected = Credentials(
             "test_name",
             "test_password",
             True,

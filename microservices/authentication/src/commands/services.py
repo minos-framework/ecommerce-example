@@ -13,7 +13,7 @@ from minos.networks import (
     enroute,
 )
 from src import (
-    Credential,
+    Credentials,
 )
 
 from ..jwt_env import (
@@ -31,7 +31,7 @@ class CredentialsCommandService(CommandService):
         username = content["username"]
         password = content["password"]
 
-        credentials = await Credential.create(username, password, active=True)
+        credentials = await Credentials.create(username, password, active=True)
 
         return Response(credentials)
 
