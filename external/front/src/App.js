@@ -1,10 +1,8 @@
 import React, {useCallback, useState} from "react";
 import {Switch, Route, Link} from "react-router-dom";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbreact/dist/css/mdb.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootswatch/dist/lux/bootstrap.css'
 
 import './App.scss';
 
