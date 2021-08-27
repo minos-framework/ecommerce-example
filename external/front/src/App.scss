@@ -91,3 +91,18 @@ label {
     text-decoration: none;
   }
 }
+
+.header {
+    padding: 10px;
+    text-align: center;
+
+    .cart-link a {
+      color: white;
+      padding-top: 8px;
+      display: block;
+      svg {
+          width: 25px;
+          margin-right: 5px;
+      }
+    }
+}

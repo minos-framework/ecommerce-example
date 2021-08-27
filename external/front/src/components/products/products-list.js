@@ -3,7 +3,8 @@ import axios from "axios";
 
 import ProductCard from "./product-item";
 import {Row, Col, CardGroup, Breadcrumb} from "react-bootstrap";
-import Cart from "../cart";
+
+
 class Products extends React.Component {
 
     constructor(props) {
@@ -66,7 +67,6 @@ class Products extends React.Component {
                         {products}
                     </CardGroup>
                 </Row>
-                <Cart/>
             </div>
 
         );
