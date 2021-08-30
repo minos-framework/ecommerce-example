@@ -41,8 +41,8 @@ class CredentialsQueryRepository(MinosSetup):
         META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> UserQueryRepository:
-        return cls(*args, **(config.repository._asdict()))
+    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> CredentialsQueryRepository:
+        return cls(*args, **(config.repository._asdict() | {"database": "auth_query_db"}) | kwargs)
 
     async def create_credentials(self, uuid: UUID, username: str, password: str, active: bool) -> None:
         try:
