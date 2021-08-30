@@ -108,9 +108,9 @@ class CartCommandService(CommandService):
         cart_id = content["uuid"]
         cart = await Cart.get_one(cart_id)
 
-        uuid = await self.saga_manager.run("DeleteCart", context=SagaContext(cart=cart))
+        saga_execution = await self.saga_manager.run("DeleteCart", context=SagaContext(cart=cart))
 
-        return Response(uuid)
+        return Response(saga_execution.uuid)
 
     @staticmethod
     async def _get_cart_item(cart_id: UUID, product_uuid: UUID):

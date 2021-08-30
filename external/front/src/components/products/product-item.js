@@ -15,12 +15,17 @@ function ProductCard(props) {
             CartService.create().then(
                 response => {
                     localStorage.setItem("cart_uuid", response.uuid);
+                    AddItem(product)
                 },
                 error => {
                     console.log(error)
                 })
+        } else {
+            AddItem(product)
         }
+    }
 
+    function AddItem(product) {
         let quantity = 1
 
         if (inCart(product.id)) {

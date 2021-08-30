@@ -2,7 +2,7 @@ import React from 'react';
 import axios from "axios";
 
 import ProductCard from "./product-item";
-import {Row, Col, CardGroup, Breadcrumb} from "react-bootstrap";
+import {Row, Col, Breadcrumb} from "react-bootstrap";
 import styles from './ProductsGrid.module.scss';
 
 class Products extends React.Component {

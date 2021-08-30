@@ -88,7 +88,14 @@ class CartService {
     * Delete Whole Cart.
     * */
     delete() {
-
+        const cart_uuid = localStorage.getItem("cart_uuid")
+        return axios.delete(API_URL + "carts/" + cart_uuid, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            return response.data;
+        });
     }
 }
 

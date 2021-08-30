@@ -7,7 +7,7 @@ import CartService from "../../services/cart/cart.service";
 
 const CartItem = ({product}) => {
 
-    const {addItem, removeItem, updateItemQuantity, getItem} = useCart();
+    const {removeItem, updateItemQuantity} = useCart();
 
     function Update(product, quantity) {
         CartService.update(product.id, quantity).then(
