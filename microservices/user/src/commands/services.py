@@ -17,21 +17,21 @@ from minos.networks import (
 
 from ..aggregates import (
     Address,
-    User,
+    Customer,
 )
 
 
 class UserCommandService(CommandService):
-    """User Service class"""
+    """Customer Service class"""
 
     @staticmethod
     @enroute.rest.command("/users", "POST")
     @enroute.broker.command("CreateUser")
     async def create_user(request: Request) -> Response:
-        """Create a new User instance.
+        """Create a new Customer instance.
 
-        :param request: The ``Request`` that contains the needed information to create the User.
-        :return: A ``Response`` containing the already created User.
+        :param request: The ``Request`` that contains the needed information to create the Customer.
+        :return: A ``Response`` containing the already created Customer.
         """
         content = await request.content()
 
@@ -40,6 +40,6 @@ class UserCommandService(CommandService):
         status = content["status"]
         address = Address(**content["address"])
 
-        user = await User.create(username, password, status, address)
+        user = await Customer.create(username, password, status, address)
 
         return Response(user)
