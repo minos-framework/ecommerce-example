@@ -13,7 +13,7 @@ from minos.networks import (
     enroute,
 )
 from src import (
-    Credential,
+    Credentials,
 )
 
 from ..jwt_env import (
@@ -22,18 +22,18 @@ from ..jwt_env import (
 )
 
 
-class LoginCommandService(CommandService):
+class CredentialsCommandService(CommandService):
     """Login Command Service class"""
 
     @enroute.rest.command("/login", "POST")
-    async def create_user(self, request: Request) -> Response:
+    async def create_credentials(self, request: Request) -> Response:
         content = await request.content()
         username = content["username"]
         password = content["password"]
 
-        user = await Credential.create(username, password, active=True)
+        credentials = await Credentials.create(username, password, active=True)
 
-        return Response(user)
+        return Response(credentials)
 
     @enroute.rest.command("/token", "POST")
     async def validate_jwt(self, request: RestRequest) -> Response:
@@ -45,4 +45,4 @@ class LoginCommandService(CommandService):
             except InvalidSignatureError as exc:
                 raise ResponseException(exc.args[0])
             else:
-                return Response(str(payload))
+                return Response(payload)

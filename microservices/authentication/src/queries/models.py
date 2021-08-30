@@ -8,8 +8,8 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
 META = MetaData()
-USER_TABLE = Table(
-    "users",
+CREDENTIALS_TABLE = Table(
+    "credentials",
     META,
     Column("uuid", UUID_PG(as_uuid=True), primary_key=True),
     Column("username", String(32), unique=True, nullable=False),

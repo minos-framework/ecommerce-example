@@ -32,8 +32,8 @@ from minos.networks import (
     RestRequest,
 )
 from src import (
-    LoginQueryService,
-    UserQueryRepository,
+    CredentialsQueryRepository,
+    CredentialsQueryService,
 )
 from src.queries import (
     AlreadyExists,
@@ -65,7 +65,7 @@ class _FakeSagaManager(MinosSagaManager):
         pass
 
 
-class TestLoginQueryService(unittest.IsolatedAsyncioTestCase):
+class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -76,11 +76,11 @@ class TestLoginQueryService(unittest.IsolatedAsyncioTestCase):
             event_broker=_FakeBroker,
             repository=InMemoryRepository,
             snapshot=InMemorySnapshot,
-            user_repository=UserQueryRepository,
+            credentials_repository=CredentialsQueryRepository,
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = LoginQueryService()
+        self.service = CredentialsQueryService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
@@ -91,7 +91,7 @@ class TestLoginQueryService(unittest.IsolatedAsyncioTestCase):
         password = "test_password"
 
         try:
-            await self.service.repository.create_user(uuid, username, password, True)
+            await self.service.repository.create_credentials(uuid, username, password, True)
         except AlreadyExists:
             row = await self.service.repository.get_by_username(username)
             uuid = UUID(str(row["uuid"]))
