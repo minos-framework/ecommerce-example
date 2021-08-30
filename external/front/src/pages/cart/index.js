@@ -4,6 +4,7 @@ import CartProducts from './CartProducts';
 import {formatNumber} from '../../helpers/utils';
 import {useCart} from "react-use-cart";
 import CartService from "../../services/cart/cart.service";
+import {Link} from "react-router-dom";
 
 function Cart() {
 
@@ -52,7 +53,9 @@ function Cart() {
                                 <h3 className="m-0 txt-right">{formatNumber(cartTotal)}</h3>
                                 <hr className="my-4"/>
                                 <div className="text-center">
-                                    <button type="button" className="btn btn-primary mb-2">CHECKOUT</button>
+                                    <Link to="/checkout">
+                                        <button type="button" className="btn btn-primary mb-2">CHECKOUT</button>
+                                    </Link>
                                     <button type="button" className="btn btn-outlineprimary btn-sm"
                                             onClick={() => DeleteCart()}>CLEAR
                                     </button>
