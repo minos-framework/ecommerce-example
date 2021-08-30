@@ -1,10 +1,10 @@
 from .aggregates import (
-    Credential,
+    Credentials,
 )
 from .commands import (
-    LoginCommandService,
+    CredentialsCommandService,
 )
 from .queries import (
-    LoginQueryService,
-    UserQueryRepository,
+    CredentialsQueryRepository,
+    CredentialsQueryService,
 )

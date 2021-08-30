@@ -39,6 +39,6 @@ class Product(AggregateRef):
 
 
 class User(AggregateRef):
-    """User AggregateRef class."""
+    """Customer AggregateRef class."""
 
     username: str

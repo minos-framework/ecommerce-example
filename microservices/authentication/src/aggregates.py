@@ -13,7 +13,7 @@ class User(AggregateRef):
     pass
 
 
-class Credential(Aggregate):
+class Credentials(Aggregate):
     username: str
     password: str
     active: bool

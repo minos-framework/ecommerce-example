@@ -19,7 +19,7 @@ from minos.networks import (
 
 
 class UserQueryService(QueryService):
-    """User Query Service class"""
+    """Customer Query Service class"""
 
     @staticmethod
     @enroute.broker.query("GetUsers")
@@ -36,10 +36,10 @@ class UserQueryService(QueryService):
 
         try:
             from ..aggregates import (
-                User,
+                Customer,
             )
 
-            iterable = User.get(uuids=content["uuids"])
+            iterable = Customer.get(uuids=content["uuids"])
             values = {v.uuid: v async for v in iterable}
             users = [values[uuid] for uuid in content["uuids"]]
         except Exception as exc:
@@ -62,10 +62,10 @@ class UserQueryService(QueryService):
 
         try:
             from ..aggregates import (
-                User,
+                Customer,
             )
 
-            user = await User.get_one(content["uuid"])
+            user = await Customer.get_one(content["uuid"])
         except Exception as exc:
             raise ResponseException(f"There was a problem while getting the user: {exc!r}")
 

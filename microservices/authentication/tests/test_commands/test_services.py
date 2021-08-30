@@ -30,8 +30,8 @@ from minos.networks import (
     Response,
 )
 from src import (
-    Credential,
-    LoginCommandService,
+    Credentials,
+    CredentialsCommandService,
 )
 
 
@@ -73,7 +73,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
+class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -87,19 +87,27 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = LoginCommandService()
+        self.service = CredentialsCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_user(self):
+    async def test_create_credentials(self):
         request = _FakeRequest({"username": "test_name", "password": "test_password"})
-        response = await self.service.create_user(request)
+        response = await self.service.create_credentials(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Credential("test_name", "test_password", True, uuid=observed.uuid, version=observed.version,)
+        expected = Credentials(
+            "test_name",
+            "test_password",
+            True,
+            uuid=observed.uuid,
+            version=observed.version,
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
+        )
         self.assertEqual(expected, observed)
 
 

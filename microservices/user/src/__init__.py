@@ -7,7 +7,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from .aggregates import (
     Address,
-    User,
+    Customer,
 )
 from .commands import (
     UserCommandService,

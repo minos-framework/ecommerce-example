@@ -10,7 +10,7 @@ service:
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
-    user_repository: src.UserQueryRepository
+    credentials_repository: src.CredentialsQueryRepository
   services:
     - minos.networks.CommandConsumerService
     - minos.networks.CommandHandlerService
@@ -48,11 +48,11 @@ snapshot:
   host: localhost
   port: 5432
 events:
-  service: src.LoginQueryService
+  service: src.CredentialsQueryService
 queries:
-  service: src.LoginQueryService
+  service: src.CredentialsQueryService
 commands:
-  service: src.LoginCommandService
+  service: src.CredentialsCommandService
 saga:
   storage:
     path: "./auth.lmdb"
