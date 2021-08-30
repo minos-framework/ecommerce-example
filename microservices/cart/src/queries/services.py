@@ -71,16 +71,15 @@ class CartQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        products = diff["entries"]
-
-        await self.repository.insert_cart_item(
-            diff.uuid,
-            products.product.uuid,
-            products.quantity,
-            products.product.title,
-            products.product.description,
-            products.product.price,
-        )
+        for entry in diff["entries"]:
+            await self.repository.insert_cart_item(
+                diff.uuid,
+                entry.product.uuid,
+                entry.quantity,
+                entry.product.title,
+                entry.product.description,
+                entry.product.price,
+            )
 
     @enroute.broker.event("CartUpdated.entries.delete")
     async def cart_item_deleted(self, request: Request) -> NoReturn:
@@ -90,9 +89,8 @@ class CartQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        products = diff["entries"]
-
-        await self.repository.delete_cart_item(diff.uuid, products.product.uuid)
+        for entry in diff["entries"]:
+            await self.repository.delete_cart_item(diff.uuid, entry.product.uuid)
 
     @enroute.broker.event("CartUpdated.entries.update")
     async def cart_item_updated(self, request: Request) -> NoReturn:
@@ -101,16 +99,16 @@ class CartQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        products = diff["entries"]
 
-        await self.repository.update_cart_item(
-            diff.uuid,
-            products.product.uuid,
-            products.quantity,
-            products.product.title,
-            products.product.description,
-            products.product.price,
-        )
+        for entry in diff["entries"]:
+            await self.repository.update_cart_item(
+                diff.uuid,
+                entry.product.uuid,
+                entry.quantity,
+                entry.product.title,
+                entry.product.description,
+                entry.product.price,
+            )
 
     @enroute.broker.event("ProductUpdated.price")
     @enroute.broker.event("ProductUpdated.title")

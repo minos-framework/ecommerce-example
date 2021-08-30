@@ -23,7 +23,7 @@ class CartService {
     * */
     create() {
         return axios.post(API_URL + "carts", {
-            user: localStorage.getItem("user_uuid"),
+            user: 1 //localStorage.getItem("user_uuid"),
         }, {
             headers: {
                 'Content-Type': 'application/json'
@@ -36,10 +36,10 @@ class CartService {
     /*
     * Add Cart Item.
     * */
-    add(product, quantity) {
+    add(uuid, quantity) {
         const cart_uuid = localStorage.getItem("cart_uuid")
         return axios.post(API_URL + "carts/" + cart_uuid + "/items", {
-            product_uuid: product,
+            product_uuid: uuid,
             quantity: quantity
         }, {
             headers: {
@@ -53,15 +53,35 @@ class CartService {
     /*
     * Remove Cart Item.
     * */
-    remove() {
-
+    remove(uuid) {
+        const cart_uuid = localStorage.getItem("cart_uuid")
+        return axios.delete(API_URL + "carts/" + cart_uuid + "/items", {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                product_uuid: uuid,
+            }
+        }).then(response => {
+            return response.data;
+        });
     }
 
     /*
     * Update Cart Item.
     * */
-    update() {
-
+    update(uuid, quantity) {
+        const cart_uuid = localStorage.getItem("cart_uuid")
+        return axios.put(API_URL + "carts/" + cart_uuid + "/items", {
+            product_uuid: uuid,
+            quantity: quantity
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            return response.data;
+        });
     }
 
     /*

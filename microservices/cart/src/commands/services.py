@@ -54,11 +54,11 @@ class CartCommandService(CommandService):
         cart = content["uuid"]
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
-        uuid = await self.saga_manager.run(
+        saga_execution = await self.saga_manager.run(
             "AddCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
         )
 
-        return Response(uuid)
+        return Response(saga_execution.uuid)
 
     @enroute.rest.command("/carts/{uuid}/items", "PUT")
     @enroute.broker.command("UpdateCartItem")
@@ -71,11 +71,11 @@ class CartCommandService(CommandService):
         cart = content["uuid"]
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
-        uuid = await self.saga_manager.run(
+        saga_execution = await self.saga_manager.run(
             "UpdateCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
         )
 
-        return Response(uuid)
+        return Response(saga_execution.uuid)
 
     @enroute.rest.command("/carts/{uuid}/items", "DELETE")
     @enroute.broker.command("RemoveCartItem")
@@ -90,11 +90,11 @@ class CartCommandService(CommandService):
 
         idx, product = await self._get_cart_item(cart, product_uuid)
 
-        saga_id = await self.saga_manager.run(
+        saga_execution = await self.saga_manager.run(
             "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, product=product)
         )
 
-        return Response(saga_id)
+        return Response(saga_execution.uuid)
 
     @enroute.rest.command("/carts/{uuid}", "DELETE")
     @enroute.broker.command("DeleteCart")
