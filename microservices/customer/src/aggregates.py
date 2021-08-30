@@ -23,9 +23,6 @@ class Address(ValueObject):
 class Customer(Aggregate):
     """Customer Aggregate class."""
 
-    username: str
-    password: str
-    status: str
     address: Address
     created_at: datetime
     updated_at: datetime

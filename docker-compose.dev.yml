@@ -31,7 +31,7 @@ services:
 
   microservice-user:
     build:
-      context: microservices/user
+      context: microservices/customer
       target: development
     volumes:
       - ./microservices/user:/microservice
