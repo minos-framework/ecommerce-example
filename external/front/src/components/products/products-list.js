@@ -2,7 +2,8 @@ import React from 'react';
 import axios from "axios";
 
 import ProductCard from "./product-item";
-import {Row, Col, CardGroup, Breadcrumb} from "react-bootstrap";
+import {Row, Col, Breadcrumb} from "react-bootstrap";
+import styles from './ProductsGrid.module.scss';
 
 class Products extends React.Component {
 
@@ -41,7 +42,8 @@ class Products extends React.Component {
             for (let i = 0; i < this.state.products.length; i++) {
                 let product = this.state.products[i]
                 products.push(<ProductCard
-                    uuid={product.uuid}
+                    id={product.uuid}
+                    photo="https://knowledge.insead.edu/sites/www.insead.edu/files/styles/w_650/public/styles/panoramic/public/images/2014/02/coke.jpg?itok=nMcR-Ore"
                     title={product.title}
                     description={product.description}
                     price={product.price}
@@ -61,11 +63,9 @@ class Products extends React.Component {
                         </Breadcrumb>
                     </Col>
                 </Row>
-                <Row>
-                    <CardGroup>
-                        {products}
-                    </CardGroup>
-                </Row>
+                <div className={styles.p__grid}>
+                    {products}
+                </div>
             </div>
 
         );
