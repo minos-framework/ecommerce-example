@@ -9,7 +9,7 @@ from minos.common import (
 )
 
 
-class User(AggregateRef):
+class Customer(AggregateRef):
     pass
 
 
@@ -17,4 +17,4 @@ class Credentials(Aggregate):
     username: str
     password: str
     active: bool
-    user = ModelRef[User]
+    user = ModelRef[Customer]
