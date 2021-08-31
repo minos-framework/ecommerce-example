@@ -25,9 +25,9 @@ class CustomerCommandService(CommandService):
     """Customer Service class"""
 
     @staticmethod
-    @enroute.rest.command("/users", "POST")
+    @enroute.rest.command("/customer", "POST")
     @enroute.broker.command("CreateCustomer")
-    async def create_user(request: Request) -> Response:
+    async def create_customer(request: Request) -> Response:
         """Create a new Customer instance.
 
         :param request: The ``Request`` that contains the needed information to create the Customer.
@@ -35,11 +35,10 @@ class CustomerCommandService(CommandService):
         """
         content = await request.content()
 
-        username = content["username"]
-        password = content["password"]
-        status = content["status"]
+        name = content["name"]
+        surname = content["surname"]
         address = Address(**content["address"])
 
-        user = await Customer.create(username, password, status, address)
+        customer = await Customer.create(name, surname, address)
 
-        return Response(user)
+        return Response(customer)

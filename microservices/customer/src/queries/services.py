@@ -23,7 +23,7 @@ class CustomerQueryService(QueryService):
 
     @staticmethod
     @enroute.broker.query("GetCustomers")
-    async def get_customer(request: Request) -> Response:
+    async def get_customers(request: Request) -> Response:
         """Get Customers.
 
         :param request: The ``Request`` instance that contains the user identifiers.

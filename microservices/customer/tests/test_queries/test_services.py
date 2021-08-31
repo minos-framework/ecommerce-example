@@ -102,25 +102,25 @@ class TestCustomerQueryService(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_get_users(self):
+    async def test_get_customers(self):
         expected = await gather(
-            Customer.create("foo", "bar", "active", {"street": "hello", "street_no": 1}),
-            Customer.create("one", "two", "inactive", {"street": "hola", "street_no": 0}),
+            Customer.create("foo", "bar", {"street": "hello", "street_no": 1}),
+            Customer.create("one", "two", {"street": "hola", "street_no": 0}),
         )
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
-        response = await self.service.get_users(request)
+        response = await self.service.get_customers(request)
         observed = await response.content()
 
         self.assertEqual(expected, observed)
 
-    async def test_get_user(self):
-        expected = await Customer.create("foo", "bar", "active", {"street": "hello", "street_no": 1})
+    async def test_get_customer(self):
+        expected = await Customer.create("foo", "bar", {"street": "hello", "street_no": 1})
 
         request = _FakeRequest({"uuid": expected.uuid})
 
-        response = await self.service.get_user(request)
+        response = await self.service.get_customer(request)
         observed = await response.content()
 
         self.assertEqual(expected, observed)
