@@ -9,9 +9,9 @@ from .aggregates import (
     Order,
     OrderEntry,
     OrderStatus,
-    Product,
     Payment,
     PaymentDetail,
+    Product,
     ShipmentDetail,
     User,
 )
@@ -19,4 +19,6 @@ from .commands import (
     CREATE_ORDER,
     OrderCommandService,
 )
-from .queries import OrderQueryService
+from .queries import (
+    OrderQueryService,
+)
