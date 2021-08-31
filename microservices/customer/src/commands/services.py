@@ -21,12 +21,12 @@ from ..aggregates import (
 )
 
 
-class UserCommandService(CommandService):
+class CustomerCommandService(CommandService):
     """Customer Service class"""
 
     @staticmethod
     @enroute.rest.command("/users", "POST")
-    @enroute.broker.command("CreateUser")
+    @enroute.broker.command("CreateCustomer")
     async def create_user(request: Request) -> Response:
         """Create a new Customer instance.
 

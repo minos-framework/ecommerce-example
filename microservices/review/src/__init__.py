@@ -8,7 +8,7 @@ Minos framework can not be copied and/or distributed without the express permiss
 from .aggregates import (
     Product,
     Review,
-    User,
+    Customer,
 )
 from .commands import (
     ReviewCommandService,

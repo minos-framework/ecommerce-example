@@ -48,7 +48,7 @@ class ReviewQueryService(QueryService):
         return Response(res)
 
     @enroute.rest.query("/reviews/user/{uuid}", "GET")
-    @enroute.broker.query("GetUserReviews")
+    @enroute.broker.query("GetCustomerReviews")
     async def get_user_reviews(self, request: Request) -> Response:
         """Get cart items.
         :param request: A request instance containing the payment identifiers.
@@ -149,7 +149,7 @@ class ReviewQueryService(QueryService):
         diff: AggregateDiff = await request.content()
         print(diff)
 
-    @enroute.broker.event("UserUpdated.username")
+    @enroute.broker.event("CustomerUpdated.username")
     async def username_updated(self, request: Request) -> NoReturn:
         """Handle the product create and update events.
         TODO: Uncomplete

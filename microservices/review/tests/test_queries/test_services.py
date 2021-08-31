@@ -55,7 +55,7 @@ from src import (
     ReviewDTO,
     ReviewQueryRepository,
     ReviewQueryService,
-    User,
+    Customer,
 )
 
 
@@ -117,8 +117,8 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
 
         self.product_1 = Product(uuid=uuid4(), title="Product 1", version=1)
         self.product_2 = Product(uuid=uuid4(), title="Product 2", version=1)
-        self.user_1 = User(uuid=uuid4(), username="test_user1", version=1)
-        self.user_2 = User(uuid=uuid4(), username="test_user2", version=1)
+        self.user_1 = Customer(uuid=uuid4(), username="test_user1", version=1)
+        self.user_2 = Customer(uuid=uuid4(), username="test_user2", version=1)
 
         await self._populate_reviews()
 

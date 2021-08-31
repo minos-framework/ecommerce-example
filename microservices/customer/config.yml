@@ -47,11 +47,11 @@ snapshot:
   host: localhost
   port: 5432
 events:
-  service: src.UserQueryService
+  service: src.CustomerQueryService
 queries:
-  service: src.UserQueryService
+  service: src.CustomerQueryService
 commands:
-  service: src.UserCommandService
+  service: src.CustomerCommandService
 saga:
   storage:
     path: "./user.lmdb"

@@ -42,8 +42,8 @@ from minos.networks import (
 )
 from src import (
     Address,
-    User,
-    UserCommandService,
+    Customer,
+    CustomerCommandService,
 )
 
 
@@ -87,7 +87,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
+class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -101,7 +101,7 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = UserCommandService()
+        self.service = CustomerCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
@@ -120,7 +120,7 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = User(
+        expected = Customer(
             "john_coltrane",
             "john_pass",
             "created",
