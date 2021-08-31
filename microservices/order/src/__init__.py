@@ -9,9 +9,9 @@ from .aggregates import (
     Order,
     OrderEntry,
     OrderStatus,
-    Product,
     Payment,
     PaymentDetail,
+    Product,
     ShipmentDetail,
     User,
 )

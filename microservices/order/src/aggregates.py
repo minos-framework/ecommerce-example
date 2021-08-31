@@ -8,11 +8,17 @@ Minos framework can not be copied and/or distributed without the express permiss
 from __future__ import (
     annotations,
 )
-from enum import Enum
+
 from datetime import (
     datetime,
 )
-from typing import Optional
+from enum import (
+    Enum,
+)
+from typing import (
+    Optional,
+)
+
 from minos.common import (
     Aggregate,
     AggregateRef,
@@ -70,6 +76,7 @@ class PaymentDetail(ValueObject):
 
 class Payment(AggregateRef):
     """Payment AggregateRef class"""
+
     status: str
 
 

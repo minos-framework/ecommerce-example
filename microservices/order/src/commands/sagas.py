@@ -26,7 +26,8 @@ from minos.saga import (
 
 from ..aggregates import (
     Order,
-    OrderEntry, OrderStatus,
+    OrderEntry,
+    OrderStatus,
 )
 
 PurchaseProductsQuery = ModelType.build("PurchaseProductsQuery", {"quantities": dict[str, int]})
@@ -48,12 +49,15 @@ async def _process_cart_items(context: SagaContext) -> SagaContext:
     for product in cart_products:
         total_price = product.price * product.quantity
         order_amount += total_price
-        order_entry = OrderEntry(total_price=total_price, unit_price=product.price, quantity=product.quantity, product=product.product_id)
+        order_entry = OrderEntry(
+            total_price=total_price, unit_price=product.price, quantity=product.quantity, product=product.product_id
+        )
         order_entries.append(order_entry)
 
         product_uuids.append(str(product.product_id))
 
     return SagaContext(order_entries=order_entries, order_amount=order_amount, product_uuids=product_uuids)
+
 
 """
 async def _process_cart_items(context: SagaContext) -> SagaContext:
@@ -72,7 +76,7 @@ async def _process_cart_items(context: SagaContext) -> SagaContext:
 
 
 def _purchase_products(context: SagaContext) -> Model:
-    product_uuids = context['products'].product_uuids
+    product_uuids = context["products"].product_uuids
     quantities = defaultdict(int)
     for product_uuid in product_uuids:
         quantities[str(product_uuid)] += 1
@@ -81,7 +85,7 @@ def _purchase_products(context: SagaContext) -> Model:
 
 
 def _revert_purchase_products(context: SagaContext) -> Model:
-    product_uuids = context['products'].product_uuids
+    product_uuids = context["products"].product_uuids
     quantities = defaultdict(int)
     for product_uuid in product_uuids:
         quantities[str(product_uuid)] -= 1
@@ -90,8 +94,8 @@ def _revert_purchase_products(context: SagaContext) -> Model:
 
 
 def _payment(context: SagaContext) -> Model:
-    amount = context['products'].order_amount
-    card_number = context['payment_detail'].card_number
+    amount = context["products"].order_amount
+    card_number = context["payment_detail"].card_number
     return PaymentQuery(card_number, amount)
 
 
@@ -102,8 +106,8 @@ def _get_payment(value: Aggregate) -> UUID:
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
     payment_uuid = context["payment"]
     order_uuid = context["order_uuid"]
-    order_entries = context['products'].order_entries
-    order_amount = context['products'].order_amount
+    order_entries = context["products"].order_entries
+    order_amount = context["products"].order_amount
 
     order = await Order.get_one(order_uuid)
 
