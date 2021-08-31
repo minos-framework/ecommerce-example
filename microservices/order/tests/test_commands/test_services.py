@@ -130,7 +130,10 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
         self.assertEqual(
             call(
-                "CreateOrder", context=SagaContext(product_uuids=[1, 2, 3], user_uuid=4), pause_on_disk=True, return_execution=False
+                "CreateOrder",
+                context=SagaContext(product_uuids=[1, 2, 3], user_uuid=4),
+                pause_on_disk=True,
+                return_execution=False,
             ),
             mock.call_args,
         )
