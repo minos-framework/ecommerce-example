@@ -9,10 +9,6 @@ import unittest
 from asyncio import (
     gather,
 )
-from datetime import (
-    datetime,
-    timezone,
-)
 from pathlib import (
     Path,
 )
@@ -107,11 +103,9 @@ class TestUserQueryService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_get_users(self):
-        now = datetime.now(tz=timezone.utc)
-
         expected = await gather(
-            User.create("foo", "bar", "active", {"street": "hello", "street_no": 1}, now),
-            User.create("one", "two", "inactive", {"street": "hola", "street_no": 0}, now),
+            User.create("foo", "bar", "active", {"street": "hello", "street_no": 1}),
+            User.create("one", "two", "inactive", {"street": "hola", "street_no": 0}),
         )
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})
@@ -122,9 +116,7 @@ class TestUserQueryService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_get_user(self):
-        now = datetime.now(tz=timezone.utc)
-
-        expected = await User.create("foo", "bar", "active", {"street": "hello", "street_no": 1}, now)
+        expected = await User.create("foo", "bar", "active", {"street": "hello", "street_no": 1})
 
         request = _FakeRequest({"uuid": expected.uuid})
 

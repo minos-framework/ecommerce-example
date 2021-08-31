@@ -1,0 +1,62 @@
+service:
+  name: authentication
+  injections:
+    postgresql_pool: minos.common.PostgreSqlPool
+    command_broker: minos.networks.CommandBroker
+    command_reply_broker: minos.networks.CommandReplyBroker
+    event_broker: minos.networks.EventBroker
+    reply_pool: minos.networks.ReplyHandlerPool
+    repository: minos.common.PostgreSqlRepository
+    saga_manager: minos.saga.SagaManager
+    snapshot: minos.common.PostgreSqlSnapshot
+    discovery: minos.networks.DiscoveryConnector
+    credentials_repository: src.CredentialsQueryRepository
+  services:
+    - minos.networks.CommandConsumerService
+    - minos.networks.CommandHandlerService
+    - minos.networks.CommandReplyConsumerService
+    - minos.networks.CommandReplyHandlerService
+    - minos.networks.EventConsumerService
+    - minos.networks.EventHandlerService
+    - minos.networks.RestService
+    - minos.networks.SnapshotService
+    - minos.networks.ProducerService
+rest:
+  host: 0.0.0.0
+  port: 8082
+broker:
+  host: localhost
+  port: 9092
+  queue:
+    database: auth_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+    records: 10
+    retry: 2
+repository:
+  database: auth_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+snapshot:
+  database: auth_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
+events:
+  service: src.CredentialsQueryService
+queries:
+  service: src.CredentialsQueryService
+commands:
+  service: src.CredentialsCommandService
+saga:
+  storage:
+    path: "./auth.lmdb"
+  items: []
+discovery:
+  host: localhost
+  port: 5567

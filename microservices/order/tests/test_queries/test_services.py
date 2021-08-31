@@ -14,10 +14,6 @@ import unittest
 from asyncio import (
     gather,
 )
-from datetime import (
-    datetime,
-    timezone,
-)
 from pathlib import (
     Path,
 )
@@ -36,7 +32,6 @@ from cached_property import (
 from minos.common import (
     CommandReply,
     DependencyInjector,
-    EntitySet,
     InMemoryRepository,
     InMemorySnapshot,
     MinosBroker,
@@ -49,7 +44,6 @@ from minos.networks import (
 )
 from src import (
     Order,
-    OrderEntry,
     OrderQueryService,
 )
 
@@ -114,25 +108,9 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_get_orders(self):
-        now = datetime.now(tz=timezone.utc)
-
         expected = await gather(
-            Order.create(
-                entries=EntitySet([OrderEntry(1, uuid4()), OrderEntry(1, uuid4())]),
-                ticket=uuid4(),
-                status="created",
-                created_at=now,
-                updated_at=now,
-                user=uuid4(),
-            ),
-            Order.create(
-                entries=EntitySet([OrderEntry(1, uuid4()), OrderEntry(1, uuid4())]),
-                ticket=uuid4(),
-                status="cancelled",
-                created_at=now,
-                updated_at=now,
-                user=uuid4(),
-            ),
+            Order.create([uuid4(), uuid4()], uuid4(), "created"),
+            Order.create([uuid4(), uuid4()], uuid4(), "cancelled"),
         )
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})

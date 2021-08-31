@@ -42,6 +42,8 @@ class TicketCommandService(CommandService):
         code = uuid4().hex.upper()[0:6]
         payments = list()
         ticket = await Ticket.create(code, payments, 0.0)
+
         await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_uuids=product_uuids))
+        await ticket.refresh()
 
         return Response(ticket)

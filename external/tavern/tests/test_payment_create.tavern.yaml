@@ -19,6 +19,8 @@ stages:
         status: "created"
         credit_number: 12345678123456768
         amount: 30.0
+        created_at: !anyint
+        updated_at: !anyint
       save:
         json:
           payment_uuid: "uuid"
@@ -41,3 +43,5 @@ stages:
           credit_number: 12345678123456768
           status: "created"
           amount: 30.0
+          created_at: !anyint
+          updated_at: !anyint
