@@ -29,12 +29,12 @@ services:
     volumes:
       - ./microservices/ticket:/microservice
 
-  microservice-user:
+  microservice-customer:
     build:
       context: microservices/customer
       target: development
     volumes:
-      - ./microservices/user:/microservice
+      - ./microservices/customer:/microservice
 
   microservice-review:
     build:

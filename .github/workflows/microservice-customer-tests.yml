@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - 'microservices/user/**'
+      - 'microservices/customer/**'
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: user_db
+          POSTGRES_DB: customer_db
           POSTGRES_USER: minos
           POSTGRES_PASSWORD: min0s
         ports:
@@ -32,7 +32,7 @@ jobs:
           KAFKA_ADVERTISED_HOST_NAME: kafka
     defaults:
       run:
-        working-directory: ./microservices/user
+        working-directory: ./microservices/customer
 
     env:
       MINOS_REPOSITORY_HOST: postgres

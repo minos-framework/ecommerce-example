@@ -48,6 +48,7 @@ from minos.networks import (
     Response,
 )
 from src import (
+    Customer,
     Product,
     RatingDTO,
     Review,
@@ -55,7 +56,6 @@ from src import (
     ReviewDTO,
     ReviewQueryRepository,
     ReviewQueryService,
-    Customer,
 )
 
 

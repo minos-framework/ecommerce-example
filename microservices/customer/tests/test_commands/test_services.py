@@ -106,24 +106,18 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_user(self):
+    async def test_create_customer(self):
         request = _FakeRequest(
-            {
-                "username": "john_coltrane",
-                "password": "john_pass",
-                "status": "created",
-                "address": {"street": "Green Dolphin Street", "street_no": 42},
-            }
+            {"name": "John", "surname": "Coltrane", "address": {"street": "Green Dolphin Street", "street_no": 42},}
         )
-        response = await self.service.create_credentials(request)
+        response = await self.service.create_customer(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
         expected = Customer(
-            "john_coltrane",
-            "john_pass",
-            "created",
+            "John",
+            "Coltrane",
             Address(street="Green Dolphin Street", street_no=42),
             created_at=observed.created_at,
             updated_at=observed.updated_at,
