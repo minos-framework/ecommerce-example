@@ -4,6 +4,7 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from minos.common import EntitySet
 from minos.cqrs import (
     CommandService,
 )
@@ -14,6 +15,11 @@ from minos.networks import (
 )
 from minos.saga import (
     SagaContext,
+)
+from ..aggregates import (
+    Order,
+    PaymentDetail,
+    ShipmentDetail, OrderStatus,
 )
 
 
@@ -28,9 +34,23 @@ class OrderCommandService(CommandService):
         :return: A ``Response`` containing the ``UUID`` that identifies the ``SagaExecution``.
         """
         content = await request.content()
-        product_uuids = content["product_uuids"]
+        cart_uuid = content["cart"]
         user_uuid = content["user"]
+        payment = content["payment"]
+        shipment = content["shipment"]
+
+        payment_detail = PaymentDetail(**payment)
+        shipment_detail = ShipmentDetail(**shipment)
+
+        order = await Order.create(
+            entries=EntitySet(),
+            payment_detail=payment_detail,
+            shipment_detail=shipment_detail,
+            status=OrderStatus.CREATED,
+            user=user_uuid,
+        )
+
         uuid = await self.saga_manager.run(
-            "CreateOrder", context=SagaContext(user_uuid=user_uuid, product_uuids=product_uuids)
+            "CreateOrder", context=SagaContext(cart_uuid=cart_uuid, order_uuid=order.uuid, payment_detail=payment_detail)
         )
         return Response(uuid)

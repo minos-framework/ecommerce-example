@@ -8,6 +8,12 @@ Minos framework can not be copied and/or distributed without the express permiss
 from .aggregates import (
     Order,
     OrderEntry,
+    OrderStatus,
+    Product,
+    Payment,
+    PaymentDetail,
+    ShipmentDetail,
+    User,
 )
 from .commands import (
     CREATE_ORDER,

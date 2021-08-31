@@ -8,26 +8,36 @@ Minos framework can not be copied and/or distributed without the express permiss
 from __future__ import (
     annotations,
 )
-
+from enum import Enum
 from datetime import (
     datetime,
 )
-
+from typing import Optional
 from minos.common import (
     Aggregate,
     AggregateRef,
     Entity,
     EntitySet,
     ModelRef,
+    ValueObject,
 )
+
+
+class OrderStatus(str, Enum):
+    CREATED = "created"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
 
 
 class Order(Aggregate):
     """Order Aggregate class."""
 
     entries: EntitySet[OrderEntry]
-    ticket: ModelRef[Ticket]
-    status: str
+    payment: Optional[ModelRef[Payment]]
+    payment_detail: PaymentDetail
+    shipment_detail: ShipmentDetail
+    status: OrderStatus
+    amount: Optional[float]
 
     created_at: datetime
     updated_at: datetime
@@ -38,7 +48,9 @@ class Order(Aggregate):
 class OrderEntry(Entity):
     """Order Item class"""
 
-    amount: int
+    total_price: float
+    unit_price: float
+    quantity: int
     product: ModelRef[Product]
 
 
@@ -49,10 +61,27 @@ class Product(AggregateRef):
     price: float
 
 
-class Ticket(AggregateRef):
-    """Ticket AggregateRef class"""
+class PaymentDetail(ValueObject):
+    card_holder: str
+    card_number: int
+    card_expire: str
+    card_cvc: str
 
-    total_price: float
+
+class Payment(AggregateRef):
+    """Payment AggregateRef class"""
+    status: str
+
+
+class ShipmentDetail(ValueObject):
+    name: str
+    last_name: str
+    email: str
+    address: str
+    country: str
+    city: str
+    province: str
+    zip: int
 
 
 class User(AggregateRef):

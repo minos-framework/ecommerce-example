@@ -50,4 +50,4 @@ CartItemDTO = ModelType.build(
     "CartItemDTO",
     {"product_id": UUID, "cart_id": UUID, "quantity": int, "title": str, "description": str, "price": float},
 )
-CartDTO = ModelType.build("CartDTO", {"uuid": UUID, "version": int, "products": list[Union[CartItemDTO, Any]]})
+CartDTO = ModelType.build("CartDTO", {"uuid": UUID, "version": int, "products": list[CartItemDTO]})
