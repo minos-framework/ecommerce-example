@@ -1,3 +1,5 @@
 """src.queries module."""
 
-from .services import CustomerQueryService
+from .services import (
+    CustomerQueryService,
+)

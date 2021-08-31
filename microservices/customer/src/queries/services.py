@@ -1,9 +1,15 @@
 """src.queries.services module."""
 
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
-from minos.common import ModelType
-from minos.cqrs import QueryService
+from minos.common import (
+    ModelType,
+)
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     Response,
@@ -29,7 +35,9 @@ class CustomerQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import Customer
+            from ..aggregates import (
+                Customer,
+            )
 
             iterable = Customer.get(uuids=content["uuids"])
             values = {v.uuid: v async for v in iterable}
@@ -53,7 +61,9 @@ class CustomerQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import Customer
+            from ..aggregates import (
+                Customer,
+            )
 
             user = await Customer.get_one(content["uuid"])
         except Exception as exc:
