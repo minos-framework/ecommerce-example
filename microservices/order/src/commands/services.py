@@ -1,4 +1,3 @@
-
 """
 Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
