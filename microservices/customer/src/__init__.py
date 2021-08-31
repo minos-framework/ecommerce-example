@@ -10,8 +10,8 @@ from .aggregates import (
     Customer,
 )
 from .commands import (
-    UserCommandService,
+    CustomerCommandService,
 )
 from .queries import (
-    UserQueryService,
+    CustomerQueryService,
 )

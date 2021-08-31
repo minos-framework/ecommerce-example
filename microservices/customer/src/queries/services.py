@@ -18,11 +18,11 @@ from minos.networks import (
 )
 
 
-class UserQueryService(QueryService):
+class CustomerQueryService(QueryService):
     """Customer Query Service class"""
 
     @staticmethod
-    @enroute.broker.query("GetUsers")
+    @enroute.broker.query("GetCustomers")
     async def get_users(request: Request) -> Response:
         """Get users.
 
@@ -48,7 +48,7 @@ class UserQueryService(QueryService):
         return Response(users)
 
     @staticmethod
-    @enroute.broker.query("GetUser")
+    @enroute.broker.query("GetCustomer")
     async def get_user(request: Request) -> Response:
         """Get user.
 
