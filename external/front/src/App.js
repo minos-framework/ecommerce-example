@@ -20,6 +20,7 @@ import ProductDetail from "./components/products/product-detail";
 import {useCart} from "react-use-cart";
 import {CartIcon} from "./components/icons";
 import Cart from "./pages/cart";
+import Checkout from "./pages/checkout";
 
 function App() {
     const user = AuthService.getCurrentUser();
@@ -133,6 +134,7 @@ function App() {
                     <Route path="/user" component={BoardUser}/>
                     <Route path="/admin" component={BoardAdmin}/>
                     <Route path="/cart" component={Cart}/>
+                    <Route path="/checkout" component={Checkout}/>
                 </Switch>
             </div>
 
