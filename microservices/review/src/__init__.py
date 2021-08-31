@@ -10,9 +10,7 @@ from .aggregates import (
     Review,
     Customer,
 )
-from .commands import (
-    ReviewCommandService,
-)
+from .commands import ReviewCommandService
 from .queries import (
     RatingDTO,
     ReviewDTO,
