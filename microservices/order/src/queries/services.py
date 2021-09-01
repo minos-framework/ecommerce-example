@@ -4,9 +4,10 @@ from uuid import (
     UUID,
 )
 
+from dependency_injector.wiring import Provide
 from minos.common import (
     UUID_REGEX,
-    ModelType,
+    ModelType, AggregateDiff,
 )
 from minos.cqrs import (
     QueryService,
@@ -18,9 +19,15 @@ from minos.networks import (
     enroute,
 )
 
+from .repositories import (
+    OrderQueryRepository,
+)
+
 
 class OrderQueryService(QueryService):
     """Order Query Service class."""
+
+    repository: OrderQueryRepository = Provide["order_repository"]
 
     @staticmethod
     @enroute.broker.query("GetOrders")
@@ -81,7 +88,9 @@ class OrderQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        print(await request.content())
+        diff: AggregateDiff = await request.content()
+        await self.repository.create(uuid=diff.uuid, version=diff.version, created_at=diff.created_at,
+                                     updated_at=diff.created_at, **diff.fields_diff)
 
     @enroute.broker.event("OrderUpdated")
     async def order_updated(self, request: Request) -> None:
