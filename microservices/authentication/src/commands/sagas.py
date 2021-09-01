@@ -9,7 +9,7 @@ from ..aggregates import (
 
 
 def _validate_username(context: SagaContext):
-    username = context["username"]
+    username = {"username": context["username"]}
     return username
 
 
@@ -28,7 +28,7 @@ async def _create_credentials(context: SagaContext) -> SagaContext:
 
 CREATE_CUSTOMER_SAGA = Saga("FullLogin") \
     .step() \
-    .invoke_participant("GetByUsername", _validate_username) \
+    .invoke_participant("UniqueUsername", _validate_username) \
     .step() \
     .invoke_participant("CreateCustomer", _create_customer) \
     .commit(_create_credentials)

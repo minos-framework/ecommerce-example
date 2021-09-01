@@ -1,4 +1,5 @@
 import base64
+import json
 import time
 from uuid import (
     UUID,
@@ -57,12 +58,23 @@ class CredentialsQueryService(QueryService):
 
     @enroute.broker.query("GetByUsername")
     async def get_by_username(self, request: Request) -> Response:
-        username = (await request.content())["username"]
+        content = await request.content()
+        username = content["username"]
         credentials = await self.repository.get_by_username(username)
         if credentials:
-            return Response(credentials)
+            return Response(credentials["username"])
         else:
             raise ResponseException("Username does not exist")
+
+    @enroute.broker.query("UniqueUsername")
+    async def unique_username(self, request: Request) -> Response:
+        content = await request.content()
+        username = content["username"]
+        credentials = await self.repository.get_by_username(username)
+        if credentials:
+            raise ResponseException("'username' already exists")
+        else:
+            return Response(True)
 
     @enroute.broker.event("CredentialsCreated")
     async def credentials_created(self, request: Request) -> None:
