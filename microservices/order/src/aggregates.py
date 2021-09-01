@@ -5,19 +5,11 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from datetime import (
-    datetime,
-)
-from enum import (
-    Enum,
-)
-from typing import (
-    Optional,
-)
+from datetime import datetime
+from enum import Enum
+from typing import Optional
 
 from minos.common import (
     Aggregate,
@@ -56,6 +48,7 @@ class Order(Aggregate):
 
 class Ticket(Aggregate):
     """Ticket Aggregate class."""
+
     code: Optional[str]
     total_price: Optional[float]
     entries: Optional[EntitySet[TicketEntry]]
@@ -105,5 +98,3 @@ class User(AggregateRef):
     """User class"""
 
     username: str
-
-

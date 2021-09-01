@@ -5,16 +5,10 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     FieldDiff,
@@ -27,9 +21,7 @@ from sqlalchemy import (
     desc,
     func,
 )
-from sqlalchemy.orm import (
-    sessionmaker,
-)
+from sqlalchemy.orm import sessionmaker
 
 from .models import (
     META,
@@ -66,7 +58,7 @@ class OrderQueryRepository(MinosSetup):
 
         kwargs["ticket_uuid"] = kwargs["ticket"]
         kwargs["payment_uuid"] = kwargs["payment"]
-        kwargs["user_uuid"] = kwargs["user"]['uuid']
+        kwargs["user_uuid"] = kwargs["user"]["uuid"]
         kwargs["payment_detail"] = dict(kwargs["payment_detail"])
         kwargs["shipment_detail"] = dict(kwargs["shipment_detail"])
 

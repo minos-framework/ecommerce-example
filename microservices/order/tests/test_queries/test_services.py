@@ -5,22 +5,16 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
+from asyncio import gather
 from datetime import (
     datetime,
     timezone,
 )
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
@@ -30,9 +24,7 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -44,13 +36,12 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from minos.networks import (
-    Request,
-)
+from minos.networks import Request
 from src import (
     Order,
     OrderEntry,
-    OrderQueryService, OrderStatus,
+    OrderQueryService,
+    OrderStatus,
 )
 
 
@@ -120,7 +111,7 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
             "card_holder": "John",
             "card_number": 2424242424242424,
             "card_expire": "12/24",
-            "card_cvc": "123"
+            "card_cvc": "123",
         }
 
         shipment_detail = {
@@ -131,7 +122,7 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
             "country": "Spain",
             "city": "Madrid",
             "province": "Madrid",
-            "zip": 34324
+            "zip": 34324,
         }
 
         expected = await gather(

@@ -1,17 +1,14 @@
 """src.queries.services module."""
 
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
 from dependency_injector.wiring import Provide
 from minos.common import (
     UUID_REGEX,
-    ModelType, AggregateDiff,
+    ModelType,
+    AggregateDiff,
 )
-from minos.cqrs import (
-    QueryService,
-)
+from minos.cqrs import QueryService
 from minos.networks import (
     Request,
     Response,
@@ -19,9 +16,7 @@ from minos.networks import (
     enroute,
 )
 
-from .repositories import (
-    OrderQueryRepository,
-)
+from .repositories import OrderQueryRepository
 
 
 class OrderQueryService(QueryService):
@@ -44,9 +39,7 @@ class OrderQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import (
-                Order,
-            )
+            from ..aggregates import Order
 
             iterable = Order.get(uuids=content["uuids"])
             values = {v.uuid: v async for v in iterable}
@@ -71,9 +64,7 @@ class OrderQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import (
-                Order,
-            )
+            from ..aggregates import Order
 
             order = await Order.get_one(content["uuid"])
         except Exception as exc:
@@ -89,8 +80,13 @@ class OrderQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        await self.repository.create(uuid=diff.uuid, version=diff.version, created_at=diff.created_at,
-                                     updated_at=diff.created_at, **diff.fields_diff)
+        await self.repository.create(
+            uuid=diff.uuid,
+            version=diff.version,
+            created_at=diff.created_at,
+            updated_at=diff.created_at,
+            **diff.fields_diff,
+        )
 
     @enroute.broker.event("OrderUpdated")
     async def order_updated(self, request: Request) -> None:

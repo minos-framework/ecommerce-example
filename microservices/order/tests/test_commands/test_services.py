@@ -5,15 +5,11 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
@@ -27,9 +23,7 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -44,12 +38,8 @@ from minos.networks import (
     Request,
     Response,
 )
-from minos.saga import (
-    SagaContext,
-)
-from src import (
-    OrderCommandService,
-)
+from minos.saga import SagaContext
+from src import OrderCommandService
 
 
 class _FakeRequest(Request):
@@ -124,13 +114,14 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         user = uuid4()
         order = uuid4()
         payment_detail = {
-                    "card_holder": "John",
-                    "card_number": 2424242424242424,
-                    "card_expire": "12/24",
-                    "card_cvc": "123"
-                }
+            "card_holder": "John",
+            "card_number": 2424242424242424,
+            "card_expire": "12/24",
+            "card_cvc": "123",
+        }
 
-        request = _FakeRequest({
+        request = _FakeRequest(
+            {
                 "cart": cart_uuid,
                 "user": user,
                 "payment": payment_detail,
@@ -142,9 +133,10 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
                     "country": "Spain",
                     "city": "Madrid",
                     "province": "Madrid",
-                    "zip": 34324
-                }
-            })
+                    "zip": 34324,
+                },
+            }
+        )
         response = await self.service.create_order(request)
         self.assertIsInstance(response, Response)
 
