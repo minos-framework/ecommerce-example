@@ -3,7 +3,9 @@ from minos.saga import (
     SagaContext,
 )
 
-from ..aggregates import Credentials
+from ..aggregates import (
+    Credentials,
+)
 
 
 def _create_customer(context: SagaContext):
