@@ -59,22 +59,6 @@ async def _process_cart_items(context: SagaContext) -> SagaContext:
     return SagaContext(order_entries=order_entries, order_amount=order_amount, product_uuids=product_uuids)
 
 
-"""
-async def _process_cart_items(context: SagaContext) -> SagaContext:
-    cart_products = context["products"]
-    order_uuid = context["order_uuid"]
-
-    order = await Order.get_one(order_uuid)
-
-    for product in cart_products:
-        total_price = product.price * product.quantity
-        order_entry = OrderEntry(total_price=total_price, unit_price=product.price, quantity=product.quantity, product=product.product_id)
-        order.entries.add(order_entry)
-
-    return SagaContext(order=order)
-"""
-
-
 def _purchase_products(context: SagaContext) -> Model:
     product_uuids = context["products"].product_uuids
     quantities = defaultdict(int)

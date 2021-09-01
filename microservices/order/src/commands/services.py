@@ -12,10 +12,10 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    enroute,
+    enroute, ResponseException,
 )
 from minos.saga import (
-    SagaContext,
+    SagaContext, SagaStatus,
 )
 
 from ..aggregates import (
@@ -53,8 +53,12 @@ class OrderCommandService(CommandService):
             user=user_uuid,
         )
 
-        uuid = await self.saga_manager.run(
+        saga = await self.saga_manager.run(
             "CreateOrder",
             context=SagaContext(cart_uuid=cart_uuid, order_uuid=order.uuid, payment_detail=payment_detail),
         )
-        return Response(uuid)
+
+        if saga.status == SagaStatus.Finished:
+            return Response(dict(saga.context['order']))
+        else:
+            raise ResponseException("An error occurred during order creation.")
