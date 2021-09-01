@@ -5,7 +5,7 @@ from __future__ import (
 from minos.common import (
     Aggregate,
     AggregateRef,
-    ModelRef
+    ModelRef,
 )
 
 
