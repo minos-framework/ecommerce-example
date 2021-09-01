@@ -12,12 +12,17 @@ from minos.networks import (
     RestRequest,
     enroute,
 )
-from minos.saga import SagaContext
+from minos.saga import (
+    SagaContext,
+)
 
 from .sagas import CREATE_CUSTOMER_SAGA
 from ..jwt_env import (
     JWT_ALGORITHM,
     SECRET,
+)
+from .sagas import (
+    CREATE_CUSTOMER_SAGA,
 )
 
 
@@ -35,7 +40,7 @@ class CredentialsCommandService(CommandService):
                 password=content["password"],
                 name=content["name"],
                 surname=content["surname"],
-                address=content["address"]
+                address=content["address"],
             ),
         )
 

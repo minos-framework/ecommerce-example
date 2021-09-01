@@ -14,11 +14,7 @@ def _validate_username(context: SagaContext):
 
 
 def _create_customer(context: SagaContext):
-    customer = {
-        "name": context["name"],
-        "surname": context["surname"],
-        "address": context["address"]
-    }
+    customer = {"name": context["name"], "surname": context["surname"], "address": context["address"]}
 
     return customer
 
