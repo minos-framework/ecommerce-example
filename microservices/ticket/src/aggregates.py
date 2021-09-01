@@ -11,10 +11,10 @@ from __future__ import (
 
 from minos.common import (
     Aggregate,
-    EntitySet,
-    Entity,
-    ModelRef,
     AggregateRef,
+    Entity,
+    EntitySet,
+    ModelRef,
 )
 
 

@@ -6,19 +6,23 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from uuid import (
-    UUID, uuid4,
+    UUID,
+    uuid4,
 )
 
 from minos.common import (
+    EntitySet,
     Model,
-    ModelType, EntitySet,
+    ModelType,
 )
 from minos.saga import (
     Saga,
     SagaContext,
 )
-
-from src import TicketEntry, Ticket
+from src import (
+    Ticket,
+    TicketEntry,
+)
 
 CartQuery = ModelType.build("CartQuery", {"uuid": UUID})
 
@@ -48,7 +52,7 @@ async def _commit_callback(context: SagaContext) -> SagaContext:
     ticket = await Ticket.create(
         code=uuid4().hex.upper()[0:6],
         total_price=context["products"]["total_amount"],
-        entries=context["products"]["ticket_entries"]
+        entries=context["products"]["ticket_entries"],
     )
 
     return SagaContext(ticket=ticket)

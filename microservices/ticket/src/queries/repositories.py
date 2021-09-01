@@ -13,20 +13,22 @@ from typing import (
 from uuid import (
     UUID,
 )
+
+from minos.common import (
+    MinosConfig,
+    PostgreSqlMinosDatabase,
+)
 from sqlalchemy import (
     create_engine,
 )
 from sqlalchemy.orm import (
     sessionmaker,
 )
-from minos.common import (
-    MinosConfig,
-    PostgreSqlMinosDatabase,
-)
+
 from .models import (
     META,
-    TICKET_TABLE,
     TICKET_ENTRY_TABLE,
+    TICKET_TABLE,
     TicketDTO,
     TicketEntryDTO,
 )
@@ -60,9 +62,13 @@ class TicketQueryRepository(PostgreSqlMinosDatabase):
         self.engine.execute(query)
 
         for entry in entries:
-            query = TICKET_ENTRY_TABLE.insert().values(ticket_uuid=uuid, title=entry.title,
-                                                       unit_price=entry.unit_price, quantity=entry.quantity,
-                                                       product_uuid=entry.product.uuid)
+            query = TICKET_ENTRY_TABLE.insert().values(
+                ticket_uuid=uuid,
+                title=entry.title,
+                unit_price=entry.unit_price,
+                quantity=entry.quantity,
+                product_uuid=entry.product.uuid,
+            )
             self.engine.execute(query)
 
     async def get_ticket(self, ticket_uuid: UUID) -> dict:
@@ -79,7 +85,8 @@ class TicketQueryRepository(PostgreSqlMinosDatabase):
 
         try:
             ticket_entries_query = TICKET_ENTRY_TABLE.select().where(
-                TICKET_ENTRY_TABLE.columns.ticket_uuid == ticket_uuid)
+                TICKET_ENTRY_TABLE.columns.ticket_uuid == ticket_uuid
+            )
             ticket_entries_results = self.engine.execute(ticket_entries_query)
         except:
             return {"error": "An error occurred while obtaining Ticket entries."}

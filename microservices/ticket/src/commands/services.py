@@ -11,10 +11,12 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    enroute, ResponseException,
+    ResponseException,
+    enroute,
 )
 from minos.saga import (
-    SagaContext, SagaStatus,
+    SagaContext,
+    SagaStatus,
 )
 
 
