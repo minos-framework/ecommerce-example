@@ -1,9 +1,9 @@
-FROM ghcr.io/clariteia/minos:0.1.3 as development
+FROM ghcr.io/clariteia/minos:0.1.4 as development
 
 COPY ./pyproject.toml ./poetry.lock ./
 RUN poetry install --no-root
 COPY . .
-CMD ["poetry", "run", "src", "start"]
+CMD ["poetry", "run", "microservice", "start"]
 
 FROM development as build
 RUN poetry export --without-hashes > req.txt && pip wheel -r req.txt --wheel-dir ./dist
