@@ -32,11 +32,11 @@ class TicketCommandService(CommandService):
         :return: A ``Response`` containing the created ticket.
         """
         content = await request.content()
-        cart_uuid = content["cart"]
+        cart_uuid = content["cart_uuid"]
 
         saga = await self.saga_manager.run("_CreateTicket", context=SagaContext(cart_uuid=cart_uuid))
 
         if saga.status == SagaStatus.Finished:
-            return Response(dict(saga.context["ticket"]))
+            return Response(saga.context["ticket"])
         else:
             raise ResponseException("An error occurred during order creation.")

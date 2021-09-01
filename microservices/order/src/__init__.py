@@ -7,11 +7,10 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from .aggregates import (
     Order,
-    OrderEntry,
+    Ticket,
     OrderStatus,
     Payment,
     PaymentDetail,
-    Product,
     ShipmentDetail,
     User,
 )
