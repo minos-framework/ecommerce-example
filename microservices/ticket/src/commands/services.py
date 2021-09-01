@@ -5,24 +5,16 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from uuid import (
-    uuid4,
-)
-
 from minos.cqrs import (
     CommandService,
 )
 from minos.networks import (
     Request,
     Response,
-    enroute,
+    enroute, ResponseException,
 )
 from minos.saga import (
-    SagaContext,
-)
-
-from ..aggregates import (
-    Ticket,
+    SagaContext, SagaStatus,
 )
 
 
@@ -38,12 +30,11 @@ class TicketCommandService(CommandService):
         :return: A ``Response`` containing the created ticket.
         """
         content = await request.content()
-        product_uuids = content["product_uuids"]
-        code = uuid4().hex.upper()[0:6]
-        payments = list()
-        ticket = await Ticket.create(code, payments, 0.0)
+        cart_uuid = content["cart"]
 
-        await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_uuids=product_uuids))
-        await ticket.refresh()
+        saga = await self.saga_manager.run("_CreateTicket", context=SagaContext(cart_uuid=cart_uuid))
 
-        return Response(ticket)
+        if saga.status == SagaStatus.Finished:
+            return Response(dict(saga.context["ticket"]))
+        else:
+            raise ResponseException("An error occurred during order creation.")

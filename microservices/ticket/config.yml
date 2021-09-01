@@ -1,26 +1,26 @@
 service:
   name: tickets
   injections:
-    postgresql_pool: minos.common.PostgreSqlPool
-    command_broker: minos.networks.CommandBroker
-    command_reply_broker: minos.networks.CommandReplyBroker
-    event_broker: minos.networks.EventBroker
-    reply_pool: minos.networks.ReplyHandlerPool
-    repository: minos.common.PostgreSqlRepository
-    saga_manager: minos.saga.SagaManager
-    snapshot: minos.common.PostgreSqlSnapshot
-    discovery: minos.networks.DiscoveryConnector
-    ticket_amount_repository: src.TicketAmountRepository
+      postgresql_pool: minos.common.PostgreSqlPool
+      command_broker: minos.networks.CommandBroker
+      command_reply_broker: minos.networks.CommandReplyBroker
+      event_broker: minos.networks.EventBroker
+      repository: minos.common.PostgreSqlRepository
+      reply_pool: minos.networks.ReplyHandlerPool
+      saga_manager: minos.saga.SagaManager
+      snapshot: minos.common.PostgreSqlSnapshot
+      discovery: minos.networks.DiscoveryConnector
+      ticket_repository: src.TicketQueryRepository
   services:
-    - minos.networks.CommandConsumerService
-    - minos.networks.CommandHandlerService
-    - minos.networks.CommandReplyConsumerService
-    - minos.networks.CommandReplyHandlerService
-    - minos.networks.EventConsumerService
-    - minos.networks.EventHandlerService
-    - minos.networks.RestService
-    - minos.networks.SnapshotService
-    - minos.networks.ProducerService
+      - minos.networks.CommandConsumerService
+      - minos.networks.CommandHandlerService
+      - minos.networks.CommandReplyConsumerService
+      - minos.networks.CommandReplyHandlerService
+      - minos.networks.EventConsumerService
+      - minos.networks.EventHandlerService
+      - minos.networks.RestService
+      - minos.networks.SnapshotService
+      - minos.networks.ProducerService
 rest:
   host: 0.0.0.0
   port: 8085
@@ -63,13 +63,3 @@ saga:
 discovery:
   host: localhost
   port: 5567
-  endpoints:
-    subscribe:
-      path: subscribe
-      method: POST
-    unsubscribe:
-      path: unsubscribe
-      method: POST
-    discover:
-      path: discover
-      method: GET

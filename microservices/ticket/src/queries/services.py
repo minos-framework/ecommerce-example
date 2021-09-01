@@ -31,14 +31,14 @@ from minos.networks import (
 )
 
 from .repositories import (
-    TicketAmountRepository,
+    TicketQueryRepository,
 )
 
 
 class TicketQueryService(QueryService):
     """Ticket Query Service class."""
 
-    repository: TicketAmountRepository = Provide["ticket_amount_repository"]
+    repository: TicketQueryRepository = Provide["ticket_repository"]
 
     @staticmethod
     @enroute.broker.query("GetTickets")

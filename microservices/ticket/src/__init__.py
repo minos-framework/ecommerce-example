@@ -7,12 +7,13 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from .aggregates import (
     Ticket,
+    TicketEntry,
 )
 from .commands import (
     _CREATE_TICKET,
     TicketCommandService,
 )
 from .queries import (
-    TicketAmountRepository,
+    TicketQueryRepository,
     TicketQueryService,
 )

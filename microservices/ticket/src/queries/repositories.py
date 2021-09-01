@@ -13,56 +13,34 @@ from typing import (
 from uuid import (
     UUID,
 )
-
+from sqlalchemy import (
+    and_,
+    create_engine,
+)
+from sqlalchemy.orm import (
+    sessionmaker,
+)
 from minos.common import (
     MinosConfig,
     PostgreSqlMinosDatabase,
 )
+from .models import (
+    META,
+    TICKET_TABLE,
+    TICKET_ENTRY_TABLE,
+)
 
 
-class TicketAmountRepository(PostgreSqlMinosDatabase):
+class TicketQueryRepository(PostgreSqlMinosDatabase):
     """Ticket Amount repository"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
+        self.session = sessionmaker(bind=self.engine)()
 
     async def _setup(self) -> NoReturn:
-        await self.submit_query(_CREATE_TABLE)
+        META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> TicketAmountRepository:
+    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> TicketQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "ticket_query_db"}) | kwargs)
-
-    async def insert_ticket_amount(self, uuid: UUID, total_price: int) -> NoReturn:
-        """ Insert Payment amount
-        :param uuid: UUID
-        :param total_price: Amount in float format
-        :return: Nothing
-        """
-        await self.submit_query(_INSERT_TICKET_QUERY, {"uuid": uuid, "total_price": total_price})
-
-    async def delete(self, uuid: UUID) -> NoReturn:
-        """ Delete Payment
-        :param uuid: UUID
-        :return: Nothing
-        """
-        await self.submit_query(_DELETE_TICKET_QUERY, {"uuid": uuid})
-
-
-_CREATE_TABLE = """
-CREATE TABLE IF NOT EXISTS ticket (
-    uuid UUID NOT NULL PRIMARY KEY,
-    total_price FLOAT NOT NULL
-);
-""".strip()
-
-_INSERT_TICKET_QUERY = """
-INSERT INTO ticket (uuid, total_price)
-VALUES (%(uuid)s,  %(total_price)s)
-ON CONFLICT (uuid)
-DO
-   UPDATE SET total_price = %(total_price)s
-;
-""".strip()
-
-_DELETE_TICKET_QUERY = """
-DELETE FROM ticket
-WHERE uuid = %(uuid)s;
-""".strip()
