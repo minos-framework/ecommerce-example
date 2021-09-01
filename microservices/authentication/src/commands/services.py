@@ -36,7 +36,7 @@ class CredentialsCommandService(CommandService):
                 name=content["name"],
                 surname=content["surname"],
                 address=content["address"]
-            )
+            ),
         )
 
         return Response(uuid)

@@ -10,7 +10,7 @@ from pathlib import (
     Path,
 )
 from typing import (
-    NoReturn,
+    NoReturn, Any, Optional,
 )
 from uuid import (
     UUID,
@@ -18,6 +18,7 @@ from uuid import (
 )
 
 import jwt
+from cached_property import cached_property
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -29,7 +30,7 @@ from minos.common import (
     Model,
 )
 from minos.networks import (
-    RestRequest,
+    RestRequest, Request, ResponseException,
 )
 from src import (
     CredentialsQueryRepository,
@@ -38,6 +39,7 @@ from src import (
 from src.queries import (
     AlreadyExists,
 )
+from src.queries.exceptions import DoesNotExist
 
 
 class _FakeRawRequest:
@@ -50,6 +52,29 @@ class _FakeRestRequest(RestRequest):
         encoded_credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
         headers = {"Authorization": f"Basic {encoded_credentials}"}
         self.raw_request = _FakeRawRequest(headers)
+
+
+class _FakeRequest(Request):
+    """For testing purposes"""
+
+    def __init__(self, content):
+        super().__init__()
+        self._content = content
+
+    @cached_property
+    def user(self) -> Optional[UUID]:
+        """For testing purposes"""
+        return uuid4()
+
+    async def content(self, **kwargs):
+        """For testing purposes"""
+        return self._content
+
+    def __eq__(self, other: _FakeRequest) -> bool:
+        return self._content == other._content and self.user == other.user
+
+    def __repr__(self) -> str:
+        return str()
 
 
 class _FakeBroker(MinosBroker):
@@ -105,6 +130,13 @@ class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
         observed_uuid = UUID(payload["sub"])
 
         self.assertEqual(uuid, observed_uuid)
+
+    async def test_get_by_username_does_not_exist(self):
+        wrong_username = "should_not_exist"
+
+        with self.assertRaises(ResponseException):
+            fake_request = _FakeRequest({"username": wrong_username})
+            response = await self.service.get_by_username(fake_request)
 
 
 if __name__ == "__main__":
