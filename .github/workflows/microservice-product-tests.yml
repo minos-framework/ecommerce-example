@@ -1,3 +1,5 @@
+name: Product Unit Tests
+
 on:
   push:
     paths:

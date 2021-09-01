@@ -1,3 +1,5 @@
+name: Ticket Unit Tests
+
 on:
   push:
     paths:

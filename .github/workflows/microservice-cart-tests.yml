@@ -1,3 +1,5 @@
+name: Cart Unit Tests
+
 on:
   push:
     paths:

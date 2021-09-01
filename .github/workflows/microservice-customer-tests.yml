@@ -1,3 +1,5 @@
+name: Customer Unit Tests
+
 on:
   push:
     paths:

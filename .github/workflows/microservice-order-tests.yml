@@ -1,3 +1,5 @@
+name: Order Unit Tests
+
 on:
   push:
     paths:

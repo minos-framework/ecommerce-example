@@ -1,3 +1,5 @@
+name: Review Unit Tests
+
 on:
   push:
     paths:
