@@ -1,16 +1,14 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import base64
 import json
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
-    NoReturn, Any, Optional,
+    NoReturn,
+    Any,
+    Optional,
 )
 from uuid import (
     UUID,
@@ -30,15 +28,15 @@ from minos.common import (
     Model,
 )
 from minos.networks import (
-    RestRequest, Request, ResponseException,
+    RestRequest,
+    Request,
+    ResponseException,
 )
 from src import (
     CredentialsQueryRepository,
     CredentialsQueryService,
 )
-from src.queries import (
-    AlreadyExists,
-)
+from src.queries import AlreadyExists
 from src.queries.exceptions import DoesNotExist
 
 

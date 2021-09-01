@@ -3,9 +3,7 @@ from minos.saga import (
     SagaContext,
 )
 
-from ..aggregates import (
-    Credentials,
-)
+from ..aggregates import Credentials
 
 
 def _validate_username(context: SagaContext):
@@ -26,9 +24,11 @@ async def _create_credentials(context: SagaContext) -> SagaContext:
     return SagaContext(credentials=credentials)
 
 
-CREATE_CUSTOMER_SAGA = Saga("FullLogin") \
-    .step() \
-    .invoke_participant("UniqueUsername", _validate_username) \
-    .step() \
-    .invoke_participant("CreateCustomer", _create_customer) \
+CREATE_CUSTOMER_SAGA = (
+    Saga("FullLogin")
+    .step()
+    .invoke_participant("UniqueUsername", _validate_username)
+    .step()
+    .invoke_participant("CreateCustomer", _create_customer)
     .commit(_create_credentials)
+)
