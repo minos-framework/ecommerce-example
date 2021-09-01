@@ -44,15 +44,12 @@ stages:
       status_code: 200
       json:
         - uuid: "{product_uuid}"
-          version: 1
-          created_at: !anyint
-          updated_at: !anyint
           code: "{product_code}"
           title: Cacao 1kg
           description: Desayuno y merienda
           price: 2.0
-          inventory:
-            amount: 0
+          reviews_count: 0
+          reviews_score: 0.0
 
 
   - name: Update inventory amount

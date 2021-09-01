@@ -48,13 +48,11 @@ class ProductQueryService(QueryService):
         :return: A ``Response`` instance containing the requested products.
         """
 
-        content = await request.content()
-
         res = await self.repository.get_all()
 
         return Response(res)
 
-    @enroute.rest.query(f"/products/product/{{uuid:{UUID_REGEX.pattern}}}", "GET")
+    @enroute.rest.query(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
     async def get_product_by_uuid(self, request: Request) -> Response:
         """Get all products.
 
@@ -96,7 +94,6 @@ class ProductQueryService(QueryService):
 
     @staticmethod
     @enroute.broker.query("GetProduct")
-    @enroute.rest.query(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
     async def get_product(request: Request) -> Response:
         """Get product.
 
