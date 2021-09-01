@@ -20,7 +20,7 @@ class Review(Aggregate):
     """Product Review class."""
 
     product: ModelRef[Product]
-    user: ModelRef[User]
+    user: ModelRef[Customer]
     title: str
     description: str
     score: int
@@ -38,7 +38,7 @@ class Product(AggregateRef):
     title: str
 
 
-class User(AggregateRef):
-    """User AggregateRef class."""
+class Customer(AggregateRef):
+    """Customer AggregateRef class."""
 
     username: str

@@ -20,12 +20,11 @@ class Address(ValueObject):
     street_no: int
 
 
-class User(Aggregate):
-    """User Aggregate class."""
+class Customer(Aggregate):
+    """Customer Aggregate class."""
 
-    username: str
-    password: str
-    status: str
+    name: str
+    surname: str
     address: Address
     created_at: datetime
     updated_at: datetime

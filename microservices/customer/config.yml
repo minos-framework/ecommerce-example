@@ -1,5 +1,5 @@
 service:
-  name: users
+  name: customer
   injections:
     postgresql_pool: minos.common.PostgreSqlPool
     command_broker: minos.networks.CommandBroker
@@ -27,7 +27,7 @@ broker:
   host: localhost
   port: 9092
   queue:
-    database: user_db
+    database: customer_db
     user: minos
     password: min0s
     host: localhost
@@ -35,26 +35,26 @@ broker:
     records: 10
     retry: 2
 repository:
-  database: user_db
+  database: customer_db
   user: minos
   password: min0s
   host: localhost
   port: 5432
 snapshot:
-  database: user_db
+  database: customer_db
   user: minos
   password: min0s
   host: localhost
   port: 5432
 events:
-  service: src.UserQueryService
+  service: src.CustomerQueryService
 queries:
-  service: src.UserQueryService
+  service: src.CustomerQueryService
 commands:
-  service: src.UserCommandService
+  service: src.CustomerCommandService
 saga:
   storage:
-    path: "./user.lmdb"
+    path: "./customer.lmdb"
   items: []
 discovery:
   host: localhost
