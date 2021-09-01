@@ -1,12 +1,6 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from minos.common import (
-    Aggregate,
-    AggregateRef,
-    ModelRef
-)
+from minos.common import Aggregate, AggregateRef, ModelRef
 
 
 class Customer(AggregateRef):

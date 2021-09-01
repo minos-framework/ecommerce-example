@@ -3,17 +3,11 @@ from minos.saga import (
     SagaContext,
 )
 
-from ..aggregates import (
-    Credentials,
-)
+from ..aggregates import Credentials
 
 
 def _create_customer(context: SagaContext):
-    customer = {
-        "name": context["name"],
-        "surname": context["surname"],
-        "address": context["address"]
-    }
+    customer = {"name": context["name"], "surname": context["surname"], "address": context["address"]}
 
     return customer
 
@@ -25,7 +19,6 @@ async def _create_credentials(context: SagaContext) -> SagaContext:
     return SagaContext(credentials=credentials)
 
 
-CREATE_CUSTOMER_SAGA = Saga("FullLogin") \
-    .step() \
-    .invoke_participant("CreateCustomer", _create_customer) \
-    .commit(_create_credentials)
+CREATE_CUSTOMER_SAGA = (
+    Saga("FullLogin").step().invoke_participant("CreateCustomer", _create_customer).commit(_create_credentials)
+)

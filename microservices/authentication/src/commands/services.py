@@ -1,10 +1,6 @@
 import jwt
-from jwt.exceptions import (
-    InvalidSignatureError,
-)
-from minos.cqrs import (
-    CommandService,
-)
+from jwt.exceptions import InvalidSignatureError
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
@@ -35,8 +31,8 @@ class CredentialsCommandService(CommandService):
                 password=content["password"],
                 name=content["name"],
                 surname=content["surname"],
-                address=content["address"]
-            )
+                address=content["address"],
+            ),
         )
 
         return Response(uuid)
