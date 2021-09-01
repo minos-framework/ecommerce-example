@@ -11,16 +11,18 @@ from uuid import (
 )
 
 from minos.common import (
+    EntitySet,
     Model,
     ModelType,
-    EntitySet,
 )
 from minos.saga import (
     Saga,
     SagaContext,
 )
-
-from src import TicketEntry, Ticket
+from src import (
+    Ticket,
+    TicketEntry,
+)
 
 CartQuery = ModelType.build("CartQuery", {"uuid": UUID})
 
