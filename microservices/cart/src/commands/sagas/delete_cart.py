@@ -47,7 +47,7 @@ async def _create_cart(context: SagaContext) -> SagaContext:
 
 
 DELETE_CART = (
-    Saga("DeleteCart")
+    Saga()
     .step()
     .invoke_participant("ReserveProducts", _reserve_products)
     .with_compensation("ReserveProducts", _release_products)

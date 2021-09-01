@@ -8,9 +8,9 @@ packages = [{ include = "src" }]
 [tool.poetry.dependencies]
 python = "^3.9"
 typer = "^0.3.2"
-minos-microservice-common = "^0.1.11"
-minos-microservice-networks = ">=0.0.13<0.1"
-minos-microservice-saga = ">=0.0.10<0.1"
+minos-microservice-common = "^0.1.12"
+minos-microservice-networks = ">=0.0.14<0.1"
+minos-microservice-saga = ">=0.0.11<0.1"
 minos-microservice-cqrs = ">=0.0.1<0.1"
 
 [tool.poetry.dev-dependencies]

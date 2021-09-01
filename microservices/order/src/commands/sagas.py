@@ -67,7 +67,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 
 
 CREATE_ORDER = (
-    Saga("CreateOrder")
+    Saga()
     .step()
     .invoke_participant("PurchaseProducts", _purchase_products)
     .with_compensation("PurchaseProducts", _revert_purchase_products)

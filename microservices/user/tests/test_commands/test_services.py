@@ -115,7 +115,7 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
                 "address": {"street": "Green Dolphin Street", "street_no": 42},
             }
         )
-        response = await self.service.create_credentials(request)
+        response = await self.service.create_user(request)
 
         self.assertIsInstance(response, Response)
 

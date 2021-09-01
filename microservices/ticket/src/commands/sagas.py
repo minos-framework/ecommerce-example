@@ -39,7 +39,7 @@ async def _commit_callback(context: SagaContext) -> SagaContext:
 
 
 _CREATE_TICKET = (
-    Saga("_CreateTicket")
+    Saga()
     .step()
     .invoke_participant("GetProducts", _get_products_callback)
     .on_reply("total_price", _get_products_reply_callback)
