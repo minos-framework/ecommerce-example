@@ -66,7 +66,7 @@ class OrderQueryRepository(MinosSetup):
 
         kwargs["ticket_uuid"] = kwargs["ticket"]
         kwargs["payment_uuid"] = kwargs["payment"]
-        kwargs["user_uuid"] = kwargs["user"]['uuid']
+        kwargs["user_uuid"] = kwargs["user"]["uuid"]
         kwargs["payment_detail"] = dict(kwargs["payment_detail"])
         kwargs["shipment_detail"] = dict(kwargs["shipment_detail"])
 

@@ -100,5 +100,3 @@ CREATE_ORDER = (
     .on_reply("payment", _get_payment)
     .commit(_create_commit_callback)
 )
-
-

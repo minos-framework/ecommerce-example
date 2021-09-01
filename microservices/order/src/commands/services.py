@@ -47,8 +47,9 @@ class OrderCommandService(CommandService):
 
         saga = await self.saga_manager.run(
             "CreateOrder",
-            context=SagaContext(cart_uuid=cart_uuid, user_uuid=user_uuid, payment_detail=payment_detail,
-                                shipment_detail=shipment_detail),
+            context=SagaContext(
+                cart_uuid=cart_uuid, user_uuid=user_uuid, payment_detail=payment_detail, shipment_detail=shipment_detail
+            ),
         )
 
         if saga.status == SagaStatus.Finished:

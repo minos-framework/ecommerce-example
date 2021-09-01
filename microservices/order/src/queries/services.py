@@ -4,10 +4,13 @@ from uuid import (
     UUID,
 )
 
-from dependency_injector.wiring import Provide
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     UUID_REGEX,
-    ModelType, AggregateDiff,
+    AggregateDiff,
+    ModelType,
 )
 from minos.cqrs import (
     QueryService,
@@ -89,8 +92,13 @@ class OrderQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: AggregateDiff = await request.content()
-        await self.repository.create(uuid=diff.uuid, version=diff.version, created_at=diff.created_at,
-                                     updated_at=diff.created_at, **diff.fields_diff)
+        await self.repository.create(
+            uuid=diff.uuid,
+            version=diff.version,
+            created_at=diff.created_at,
+            updated_at=diff.created_at,
+            **diff.fields_diff,
+        )
 
     @enroute.broker.event("OrderUpdated")
     async def order_updated(self, request: Request) -> None:

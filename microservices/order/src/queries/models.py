@@ -15,17 +15,17 @@ from minos.common import (
 )
 from sqlalchemy import (
     Column,
+    DateTime,
+    Integer,
     MetaData,
     Table,
     Text,
     text,
-    DateTime,
-    Integer,
 )
 from sqlalchemy.dialects.postgresql import (
-    UUID as UUID_PG,
     JSONB,
 )
+from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
 META = MetaData()
 ORDER_TABLE = Table(

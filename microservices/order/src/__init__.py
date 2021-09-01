@@ -7,11 +7,11 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 from .aggregates import (
     Order,
-    Ticket,
     OrderStatus,
     Payment,
     PaymentDetail,
     ShipmentDetail,
+    Ticket,
     User,
 )
 from .commands import (
@@ -19,6 +19,6 @@ from .commands import (
     OrderCommandService,
 )
 from .queries import (
-    OrderQueryService,
     OrderQueryRepository,
+    OrderQueryService,
 )

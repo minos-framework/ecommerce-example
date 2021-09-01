@@ -50,7 +50,8 @@ from minos.networks import (
 from src import (
     Order,
     OrderEntry,
-    OrderQueryService, OrderStatus,
+    OrderQueryService,
+    OrderStatus,
 )
 
 
@@ -120,7 +121,7 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
             "card_holder": "John",
             "card_number": 2424242424242424,
             "card_expire": "12/24",
-            "card_cvc": "123"
+            "card_cvc": "123",
         }
 
         shipment_detail = {
@@ -131,7 +132,7 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
             "country": "Spain",
             "city": "Madrid",
             "province": "Madrid",
-            "zip": 34324
+            "zip": 34324,
         }
 
         expected = await gather(

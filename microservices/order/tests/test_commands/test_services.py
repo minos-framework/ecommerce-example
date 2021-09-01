@@ -124,13 +124,14 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         user = uuid4()
         order = uuid4()
         payment_detail = {
-                    "card_holder": "John",
-                    "card_number": 2424242424242424,
-                    "card_expire": "12/24",
-                    "card_cvc": "123"
-                }
+            "card_holder": "John",
+            "card_number": 2424242424242424,
+            "card_expire": "12/24",
+            "card_cvc": "123",
+        }
 
-        request = _FakeRequest({
+        request = _FakeRequest(
+            {
                 "cart": cart_uuid,
                 "user": user,
                 "payment": payment_detail,
@@ -142,9 +143,10 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
                     "country": "Spain",
                     "city": "Madrid",
                     "province": "Madrid",
-                    "zip": 34324
-                }
-            })
+                    "zip": 34324,
+                },
+            }
+        )
         response = await self.service.create_order(request)
         self.assertIsInstance(response, Response)
 
