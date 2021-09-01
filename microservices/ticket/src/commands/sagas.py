@@ -32,7 +32,6 @@ async def _process_cart_items(cart) -> dict:
     cart_products = cart["products"]
 
     ticket_entries = EntitySet()
-    product_uuids = list()
     total_amount = 0
     for product in cart_products:
         total_price = product.price * product.quantity
@@ -42,9 +41,7 @@ async def _process_cart_items(cart) -> dict:
         )
         ticket_entries.add(order_entry)
 
-        product_uuids.append(str(product.product_id))
-
-    return dict(ticket_entries=ticket_entries, total_amount=total_amount, product_uuids=product_uuids)
+    return dict(ticket_entries=ticket_entries, total_amount=total_amount)
 
 
 async def _commit_callback(context: SagaContext) -> SagaContext:

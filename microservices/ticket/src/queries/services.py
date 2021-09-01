@@ -67,33 +67,21 @@ class TicketQueryService(QueryService):
 
         return Response(tickets)
 
-    @staticmethod
     @enroute.broker.query("GetTicket")
     @enroute.rest.query(f"/tickets/{{uuid:{UUID_REGEX.pattern}}}", "GET")
-    async def get_ticket(request: Request) -> Response:
+    async def get_ticket(self, request: Request) -> Response:
         """Get ticket.
 
         :param request: The ``Request`` instance that contains the ticket identifier.
         :return: A ``Response`` instance containing the requested ticket.
         """
-        try:
-            content = await request.content(model_type=ModelType.build("Query", {"uuid": UUID}))
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+        content = await request.content()
 
-        try:
-            from ..aggregates import (
-                Ticket,
-            )
+        res = await self.repository.get_ticket(content["uuid"])
 
-            ticket = await Ticket.get_one(content["uuid"])
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting the ticket: {exc!r}")
-
-        return Response(ticket)
+        return Response(res)
 
     @enroute.broker.event("TicketCreated")
-    @enroute.broker.event("TicketUpdated")
     async def ticket_created_or_updated(self, request: Request) -> NoReturn:
         """Handle the ticket creation events.
         :param request: A request instance containing the aggregate difference.
@@ -101,9 +89,12 @@ class TicketQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
         uuid = diff.uuid
+        version = diff["version"]
+        code = diff["code"]
         total_price = diff["total_price"]
+        entries = diff["entries"]
 
-        await self.repository.insert_ticket_amount(uuid, total_price)
+        await self.repository.insert(uuid, version, code, total_price, entries)
 
     @enroute.broker.event("TicketDeleted")
     async def ticket_deleted(self, request: Request) -> NoReturn:
