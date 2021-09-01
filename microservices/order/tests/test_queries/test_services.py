@@ -50,7 +50,7 @@ from minos.networks import (
 from src import (
     Order,
     OrderEntry,
-    OrderQueryService,
+    OrderQueryService, OrderStatus,
 )
 
 
@@ -116,21 +116,37 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
     async def test_get_orders(self):
         now = datetime.now(tz=timezone.utc)
 
+        payment_detail = {
+            "card_holder": "John",
+            "card_number": 2424242424242424,
+            "card_expire": "12/24",
+            "card_cvc": "123"
+        }
+
+        shipment_detail = {
+            "name": "Jack",
+            "last_name": "Johnson",
+            "email": "jack@gmail.com",
+            "address": "Calle Gran Víia 34",
+            "country": "Spain",
+            "city": "Madrid",
+            "province": "Madrid",
+            "zip": 34324
+        }
+
         expected = await gather(
             Order.create(
-                entries=EntitySet([OrderEntry(1, uuid4()), OrderEntry(1, uuid4())]),
-                ticket=uuid4(),
-                status="created",
-                created_at=now,
-                updated_at=now,
+                entries=EntitySet(),
+                payment_detail=payment_detail,
+                shipment_detail=shipment_detail,
+                status=OrderStatus.CREATED,
                 user=uuid4(),
             ),
             Order.create(
-                entries=EntitySet([OrderEntry(1, uuid4()), OrderEntry(1, uuid4())]),
-                ticket=uuid4(),
-                status="cancelled",
-                created_at=now,
-                updated_at=now,
+                entries=EntitySet(),
+                payment_detail=payment_detail,
+                shipment_detail=shipment_detail,
+                status=OrderStatus.CREATED,
                 user=uuid4(),
             ),
         )

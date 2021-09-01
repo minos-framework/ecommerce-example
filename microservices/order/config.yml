@@ -5,8 +5,8 @@ service:
     command_broker: minos.networks.CommandBroker
     command_reply_broker: minos.networks.CommandReplyBroker
     event_broker: minos.networks.EventBroker
-    reply_pool: minos.networks.ReplyHandlerPool
     repository: minos.common.PostgreSqlRepository
+    reply_pool: minos.networks.ReplyHandlerPool
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector

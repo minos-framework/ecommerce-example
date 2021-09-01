@@ -21,8 +21,6 @@ from minos.saga import (
 )
 
 from ..aggregates import (
-    Order,
-    OrderStatus,
     PaymentDetail,
     ShipmentDetail,
 )
@@ -41,23 +39,16 @@ class OrderCommandService(CommandService):
         content = await request.content()
         cart_uuid = content["cart"]
         user_uuid = content["user"]
-        payment = content["payment"]
-        shipment = content["shipment"]
+        payment = content["payment_detail"]
+        shipment = content["shipment_detail"]
 
         payment_detail = PaymentDetail(**payment)
         shipment_detail = ShipmentDetail(**shipment)
 
-        order = await Order.create(
-            entries=EntitySet(),
-            payment_detail=payment_detail,
-            shipment_detail=shipment_detail,
-            status=OrderStatus.CREATED,
-            user=user_uuid,
-        )
-
         saga = await self.saga_manager.run(
             "CreateOrder",
-            context=SagaContext(cart_uuid=cart_uuid, order_uuid=order.uuid, payment_detail=payment_detail),
+            context=SagaContext(cart_uuid=cart_uuid, user_uuid=user_uuid, payment_detail=payment_detail,
+                                shipment_detail=shipment_detail),
         )
 
         if saga.status == SagaStatus.Finished:

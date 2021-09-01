@@ -120,7 +120,31 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         mock = MagicMock(side_effect=_fn)
         self.service.saga_manager._run_new = mock
 
-        request = _FakeRequest({"product_uuids": [1, 2, 3], "user": 4})
+        cart_uuid = uuid4()
+        user = uuid4()
+        order = uuid4()
+        payment_detail = {
+                    "card_holder": "John",
+                    "card_number": 2424242424242424,
+                    "card_expire": "12/24",
+                    "card_cvc": "123"
+                }
+
+        request = _FakeRequest({
+                "cart": cart_uuid,
+                "user": user,
+                "payment": payment_detail,
+                "shipment": {
+                    "name": "Jack",
+                    "last_name": "Johnson",
+                    "email": "jack@gmail.com",
+                    "address": "Calle Gran Víia 34",
+                    "country": "Spain",
+                    "city": "Madrid",
+                    "province": "Madrid",
+                    "zip": 34324
+                }
+            })
         response = await self.service.create_order(request)
         self.assertIsInstance(response, Response)
 
@@ -131,7 +155,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(
             call(
                 "CreateOrder",
-                context=SagaContext(product_uuids=[1, 2, 3], user_uuid=4),
+                context=SagaContext(cart_uuid=cart_uuid, order_uuid=order, payment_detail=payment_detail),
                 pause_on_disk=True,
                 return_execution=False,
             ),

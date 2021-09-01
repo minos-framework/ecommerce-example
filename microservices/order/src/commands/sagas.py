@@ -26,41 +26,28 @@ from minos.saga import (
 
 from ..aggregates import (
     Order,
-    OrderEntry,
     OrderStatus,
 )
 
 PurchaseProductsQuery = ModelType.build("PurchaseProductsQuery", {"quantities": dict[str, int]})
-CartQuery = ModelType.build("CartQuery", {"uuid": UUID})
+TicketQuery = ModelType.build("TicketQuery", {"cart_uuid": UUID})
 PaymentQuery = ModelType.build("PaymentQuery", {"credit_number": int, "amount": float})
 
 
-def _get_cart_items(context: SagaContext) -> Model:
+def _create_ticket(context: SagaContext) -> Model:
     cart_uuid = context["cart_uuid"]
-    return CartQuery(cart_uuid)
+    return TicketQuery(cart_uuid)
 
 
-async def _process_cart_items(context: SagaContext) -> SagaContext:
-    cart_products = context["products"]
-
-    order_entries = list()
+async def _process_ticket_entries(ticket) -> dict:
     product_uuids = list()
-    order_amount = 0
-    for product in cart_products:
-        total_price = product.price * product.quantity
-        order_amount += total_price
-        order_entry = OrderEntry(
-            total_price=total_price, unit_price=product.price, quantity=product.quantity, product=product.product_id
-        )
-        order_entries.append(order_entry)
-
-        product_uuids.append(str(product.product_id))
-
-    return SagaContext(order_entries=order_entries, order_amount=order_amount, product_uuids=product_uuids)
+    for entry in ticket.entries.data.values():
+        product_uuids.append(str(entry.product))
+    return dict(uuid=ticket.uuid, product_uuids=product_uuids, total_amount=ticket.total_price)
 
 
 def _purchase_products(context: SagaContext) -> Model:
-    product_uuids = context["products"].product_uuids
+    product_uuids = context["ticket"]["product_uuids"]
     quantities = defaultdict(int)
     for product_uuid in product_uuids:
         quantities[str(product_uuid)] += 1
@@ -69,7 +56,7 @@ def _purchase_products(context: SagaContext) -> Model:
 
 
 def _revert_purchase_products(context: SagaContext) -> Model:
-    product_uuids = context["products"].product_uuids
+    product_uuids = context["ticket"]["product_uuids"]
     quantities = defaultdict(int)
     for product_uuid in product_uuids:
         quantities[str(product_uuid)] -= 1
@@ -78,7 +65,7 @@ def _revert_purchase_products(context: SagaContext) -> Model:
 
 
 def _payment(context: SagaContext) -> Model:
-    amount = context["products"].order_amount
+    amount = context["ticket"]["total_amount"]
     card_number = context["payment_detail"].card_number
     return PaymentQuery(card_number, amount)
 
@@ -88,22 +75,14 @@ def _get_payment(value: Aggregate) -> UUID:
 
 
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
-    payment_uuid = context["payment"]
-    order_uuid = context["order_uuid"]
-    order_entries = context["products"].order_entries
-    order_amount = context["products"].order_amount
-
-    order = await Order.get_one(order_uuid)
-
-    for entry in order_entries:
-        order.entries.add(entry)
-
-    order.updated_at = datetime.now()
-    order.payment = payment_uuid
-    order.amount = order_amount
-    order.status = OrderStatus.COMPLETED
-
-    await order.save()
+    order = await Order.create(
+        ticket=context["ticket"]["uuid"],
+        payment=context["payment"],
+        payment_detail=context["payment_detail"],
+        shipment_detail=context["shipment_detail"],
+        status=OrderStatus.COMPLETED,
+        user=context["user_uuid"],
+    )
 
     return SagaContext(order=order)
 
@@ -111,8 +90,8 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 CREATE_ORDER = (
     Saga("CreateOrder")
     .step()
-    .invoke_participant("GetCart", _get_cart_items)
-    .on_reply("products", _process_cart_items)
+    .invoke_participant("CreateTicket", _create_ticket)
+    .on_reply("ticket", _process_ticket_entries)
     .step()
     .invoke_participant("PurchaseProducts", _purchase_products)
     .with_compensation("PurchaseProducts", _revert_purchase_products)
@@ -121,3 +100,5 @@ CREATE_ORDER = (
     .on_reply("payment", _get_payment)
     .commit(_create_commit_callback)
 )
+
+

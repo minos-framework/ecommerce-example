@@ -22,10 +22,10 @@ from typing import (
 from minos.common import (
     Aggregate,
     AggregateRef,
-    Entity,
-    EntitySet,
     ModelRef,
     ValueObject,
+    Entity,
+    EntitySet,
 )
 
 
@@ -38,12 +38,15 @@ class OrderStatus(str, Enum):
 class Order(Aggregate):
     """Order Aggregate class."""
 
-    entries: EntitySet[OrderEntry]
+    ticket: Optional[ModelRef[Ticket]]
+
     payment: Optional[ModelRef[Payment]]
     payment_detail: PaymentDetail
+
+    # TODO: Future Shipment Microservice
     shipment_detail: ShipmentDetail
+
     status: OrderStatus
-    amount: Optional[float]
 
     created_at: datetime
     updated_at: datetime
@@ -51,10 +54,17 @@ class Order(Aggregate):
     user: ModelRef[User]
 
 
-class OrderEntry(Entity):
+class Ticket(Aggregate):
+    """Ticket Aggregate class."""
+    code: Optional[str]
+    total_price: Optional[float]
+    entries: Optional[EntitySet[TicketEntry]]
+
+
+class TicketEntry(Entity):
     """Order Item class"""
 
-    total_price: float
+    title: str
     unit_price: float
     quantity: int
     product: ModelRef[Product]
@@ -95,3 +105,5 @@ class User(AggregateRef):
     """User class"""
 
     username: str
+
+
