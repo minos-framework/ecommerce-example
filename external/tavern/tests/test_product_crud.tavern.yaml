@@ -40,16 +40,18 @@ stages:
     response:
       status_code: 200
       json:
-        - uuid: "{product_uuid}"
-          code: "{product_code}"
-          title: Cacao 1kg
-          description: Desayuno y merienda
-          price: 2.0
-          reviews_count: 0
-          reviews_score: 0.0
+        uuid: "{product_uuid}"
+        code: "{product_code}"
+        title: Cacao 1kg
+        description: Desayuno y merienda
+        price: 2.0
+        reviews_count: 0
+        reviews_score: 0.0
 
 
   - name: Update inventory amount
+
+    delay_before: 0.5
 
     request:
       url: "http://api-gateway:5566/products/{product_uuid}/inventory"
