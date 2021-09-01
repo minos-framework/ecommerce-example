@@ -5,24 +5,16 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from typing import NoReturn
+from uuid import UUID
 
-from dependency_injector.wiring import (
-    Provide,
-)
+from dependency_injector.wiring import Provide
 from minos.common import (
     UUID_REGEX,
     AggregateDiff,
     ModelType,
 )
-from minos.cqrs import (
-    QueryService,
-)
+from minos.cqrs import QueryService
 from minos.networks import (
     Request,
     Response,
@@ -30,9 +22,7 @@ from minos.networks import (
     enroute,
 )
 
-from .repositories import (
-    TicketQueryRepository,
-)
+from .repositories import TicketQueryRepository
 
 
 class TicketQueryService(QueryService):
@@ -55,9 +45,7 @@ class TicketQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import (
-                Ticket,
-            )
+            from ..aggregates import Ticket
 
             iterable = Ticket.get(uuids=content["uuids"])
             values = {v.uuid: v async for v in iterable}
