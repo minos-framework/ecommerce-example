@@ -38,8 +38,8 @@ from minos.networks import (
     Request,
 )
 from src import (
-    User,
-    UserQueryService,
+    Customer,
+    CustomerQueryService,
 )
 
 
@@ -83,7 +83,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestUserQueryService(unittest.IsolatedAsyncioTestCase):
+class TestCustomerQueryService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -97,30 +97,30 @@ class TestUserQueryService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = UserQueryService()
+        self.service = CustomerQueryService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_get_users(self):
+    async def test_get_customers(self):
         expected = await gather(
-            User.create("foo", "bar", "active", {"street": "hello", "street_no": 1}),
-            User.create("one", "two", "inactive", {"street": "hola", "street_no": 0}),
+            Customer.create("foo", "bar", {"street": "hello", "street_no": 1}),
+            Customer.create("one", "two", {"street": "hola", "street_no": 0}),
         )
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})
 
-        response = await self.service.get_users(request)
+        response = await self.service.get_customers(request)
         observed = await response.content()
 
         self.assertEqual(expected, observed)
 
-    async def test_get_user(self):
-        expected = await User.create("foo", "bar", "active", {"street": "hello", "street_no": 1})
+    async def test_get_customer(self):
+        expected = await Customer.create("foo", "bar", {"street": "hello", "street_no": 1})
 
         request = _FakeRequest({"uuid": expected.uuid})
 
-        response = await self.service.get_user(request)
+        response = await self.service.get_customer(request)
         observed = await response.content()
 
         self.assertEqual(expected, observed)

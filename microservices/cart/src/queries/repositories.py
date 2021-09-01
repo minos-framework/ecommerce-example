@@ -54,7 +54,7 @@ class CartQueryRepository(MinosSetup):
     async def create_cart(self, uuid: UUID, version: int, user_id: int) -> NoReturn:
         """ Insert Payment amount
         :param uuid: UUID
-        :param user_id: User ID
+        :param user_id: Customer ID
         :param version: Version ID
         :return: Nothing
         """
@@ -95,11 +95,11 @@ class CartQueryRepository(MinosSetup):
     async def insert_cart_item(self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price):
         """ Insert or Update Cart Item
         :param cart_uuid: UUID
-        :param item_uuid: User ID
-        :param quantity: User ID
-        :param item_title: User ID
-        :param item_description: User ID
-        :param item_price: User ID
+        :param item_uuid: Customer ID
+        :param quantity: Customer ID
+        :param item_title: Customer ID
+        :param item_description: Customer ID
+        :param item_price: Customer ID
         :return: Nothing
         """
         try:
@@ -119,11 +119,11 @@ class CartQueryRepository(MinosSetup):
     async def update_cart_item(self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price):
         """ Insert or Update Cart Item
         :param cart_uuid: UUID
-        :param item_uuid: User ID
-        :param quantity: User ID
-        :param item_title: User ID
-        :param item_description: User ID
-        :param item_price: User ID
+        :param item_uuid: Customer ID
+        :param quantity: Customer ID
+        :param item_title: Customer ID
+        :param item_description: Customer ID
+        :param item_price: Customer ID
         :return: Nothing
         """
         try:

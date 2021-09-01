@@ -42,8 +42,8 @@ from minos.networks import (
 )
 from src import (
     Address,
-    User,
-    UserCommandService,
+    Customer,
+    CustomerCommandService,
 )
 
 
@@ -87,7 +87,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
+class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -101,29 +101,23 @@ class TestUserCommandService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = UserCommandService()
+        self.service = CustomerCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_user(self):
+    async def test_create_customer(self):
         request = _FakeRequest(
-            {
-                "username": "john_coltrane",
-                "password": "john_pass",
-                "status": "created",
-                "address": {"street": "Green Dolphin Street", "street_no": 42},
-            }
+            {"name": "John", "surname": "Coltrane", "address": {"street": "Green Dolphin Street", "street_no": 42},}
         )
-        response = await self.service.create_user(request)
+        response = await self.service.create_customer(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = User(
-            "john_coltrane",
-            "john_pass",
-            "created",
+        expected = Customer(
+            "John",
+            "Coltrane",
             Address(street="Green Dolphin Street", street_no=42),
             created_at=observed.created_at,
             updated_at=observed.updated_at,
