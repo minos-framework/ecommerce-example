@@ -17,4 +17,3 @@ from .commands import (
     _CREATE_TICKET,
     TicketCommandService,
 )
-

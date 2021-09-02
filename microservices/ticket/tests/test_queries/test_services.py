@@ -3,15 +3,11 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import (
     NoReturn,
     Optional,
@@ -21,9 +17,7 @@ from uuid import (
     uuid4,
 )
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -35,9 +29,7 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from minos.networks import (
-    Request,
-)
+from minos.networks import Request
 from src import (
     Ticket,
     TicketQueryService,
@@ -107,10 +99,10 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
     async def test_get_payments(self):
         expected = await Ticket.create("kokrte3432", 1.4, EntitySet())
 
-        #request = _FakeRequest({"uuid": expected.uuid})
+        # request = _FakeRequest({"uuid": expected.uuid})
 
-        #response = await self.service.get_ticket(request)
-        #observed = await response.content()
+        # response = await self.service.get_ticket(request)
+        # observed = await response.content()
 
         self.assertIsInstance(expected.uuid, UUID)
 
