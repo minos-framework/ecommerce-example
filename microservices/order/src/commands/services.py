@@ -3,12 +3,8 @@ Copyright (C) 2021 Clariteia SL
 This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from minos.common import (
-    EntitySet,
-)
-from minos.cqrs import (
-    CommandService,
-)
+from minos.common import EntitySet
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
@@ -19,9 +15,7 @@ from minos.saga import (
     SagaContext,
     SagaStatus,
 )
-from .sagas import (
-    CREATE_ORDER,
-)
+from .sagas import CREATE_ORDER
 from ..aggregates import (
     PaymentDetail,
     ShipmentDetail,
@@ -50,7 +44,10 @@ class OrderCommandService(CommandService):
         saga = await self.saga_manager.run(
             CREATE_ORDER,
             context=SagaContext(
-                cart_uuid=cart_uuid, customer_uuid=customer_uuid, payment_detail=payment_detail, shipment_detail=shipment_detail
+                cart_uuid=cart_uuid,
+                customer_uuid=customer_uuid,
+                payment_detail=payment_detail,
+                shipment_detail=shipment_detail,
             ),
         )
 
