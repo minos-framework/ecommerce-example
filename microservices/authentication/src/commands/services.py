@@ -16,12 +16,12 @@ from minos.saga import (
     SagaContext,
 )
 
-from .sagas import (
-    CREATE_CUSTOMER_SAGA,
-)
 from ..jwt_env import (
     JWT_ALGORITHM,
     SECRET,
+)
+from .sagas import (
+    CREATE_CUSTOMER_SAGA,
 )
 
 

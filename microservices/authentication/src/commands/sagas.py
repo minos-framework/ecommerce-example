@@ -26,9 +26,11 @@ async def _create_credentials(context: SagaContext) -> SagaContext:
     return SagaContext(credentials=credentials)
 
 
-CREATE_CUSTOMER_SAGA = Saga("FullLogin") \
-    .step() \
-    .invoke_participant("UniqueUsername", _validate_username) \
-    .step() \
-    .invoke_participant("CreateCustomer", _create_customer) \
+CREATE_CUSTOMER_SAGA = (
+    Saga("FullLogin")
+    .step()
+    .invoke_participant("UniqueUsername", _validate_username)
+    .step()
+    .invoke_participant("CreateCustomer", _create_customer)
     .commit(_create_credentials)
+)

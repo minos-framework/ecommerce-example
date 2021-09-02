@@ -10,7 +10,9 @@ from pathlib import (
     Path,
 )
 from typing import (
-    NoReturn, Any, Optional,
+    Any,
+    NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
@@ -18,7 +20,9 @@ from uuid import (
 )
 
 import jwt
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -30,7 +34,9 @@ from minos.common import (
     Model,
 )
 from minos.networks import (
-    RestRequest, Request, ResponseException,
+    Request,
+    ResponseException,
+    RestRequest,
 )
 from src import (
     CredentialsQueryRepository,
@@ -39,7 +45,9 @@ from src import (
 from src.queries import (
     AlreadyExists,
 )
-from src.queries.exceptions import DoesNotExist
+from src.queries.exceptions import (
+    DoesNotExist,
+)
 
 
 class _FakeRawRequest:
