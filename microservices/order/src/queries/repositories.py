@@ -1,17 +1,9 @@
-"""
-Copyright (C) 2021 Clariteia SL
+"""src.queries.repositories module."""
 
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
 
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
 )
@@ -28,10 +20,6 @@ from sqlalchemy.orm import (
     sessionmaker,
 )
 
-from .. import (
-    PaymentDetail,
-    ShipmentDetail,
-)
 from .models import (
     META,
     ORDER_TABLE,
@@ -50,14 +38,14 @@ class OrderQueryRepository(MinosSetup):
         self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
         self.session = sessionmaker(bind=self.engine)()
 
-    async def _setup(self) -> NoReturn:
+    async def _setup(self) -> None:
         META.create_all(self.engine)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> OrderQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "order_query_db"}) | kwargs)
 
-    async def create(self, **kwargs) -> NoReturn:
+    async def create(self, **kwargs) -> None:
         """Create a new row.
 
         :param kwargs: The parameters of the creation query.
@@ -73,12 +61,12 @@ class OrderQueryRepository(MinosSetup):
 
         kwargs.pop("payment")
         kwargs.pop("ticket")
-        kwargs.pop("user")
+        kwargs.pop("customer")
 
         query = ORDER_TABLE.insert().values(**kwargs)
         self.engine.execute(query)
 
-    async def get(self, uuid: UUID) -> NoReturn:
+    async def get(self, uuid: UUID) -> None:
         """Create a new row.
 
         :param uuid: The parameters of the creation query.
@@ -94,7 +82,7 @@ class OrderQueryRepository(MinosSetup):
 
         return order
 
-    async def get_by_user(self, uuid: UUID) -> NoReturn:
+    async def get_by_user(self, uuid: UUID) -> list[OrderDTO]:
         """Create a new row.
 
         :param uuid: The parameters of the creation query.
