@@ -1,27 +1,9 @@
 name: Unit Tests - Review
 
-on:
-  push:
-    paths:
-      - 'microservices/review/**'
-  pull_request:
-    paths:
-      - 'microservices/review/**'
+on: push
 
 jobs:
-  pre_job:
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@master
-        with:
-          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
-
-  main_job:
-    needs: pre_job
-    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+  build:
     runs-on: ubuntu-latest
     container: python:3.9-buster
     services:
