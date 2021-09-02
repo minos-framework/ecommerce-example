@@ -40,8 +40,8 @@ from minos.networks import (
 )
 from src import (
     Ticket,
-    TicketQueryService,
     TicketQueryRepository,
+    TicketQueryService,
 )
 
 
@@ -107,10 +107,10 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
     async def test_get_payments(self):
         expected = await Ticket.create("kokrte3432", 1.4, EntitySet())
 
-        #request = _FakeRequest({"uuid": expected.uuid})
+        # request = _FakeRequest({"uuid": expected.uuid})
 
-        #response = await self.service.get_ticket(request)
-        #observed = await response.content()
+        # response = await self.service.get_ticket(request)
+        # observed = await response.content()
 
         self.assertIsInstance(expected.uuid, UUID)
 
