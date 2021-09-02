@@ -9,11 +9,11 @@ from .aggregates import (
     Ticket,
     TicketEntry,
 )
-from .queries import (
-    TicketQueryRepository,
-    TicketQueryService,
-)
 from .commands import (
     _CREATE_TICKET,
     TicketCommandService,
+)
+from .queries import (
+    TicketQueryRepository,
+    TicketQueryService,
 )
