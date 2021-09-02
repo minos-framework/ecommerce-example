@@ -1,8 +1,6 @@
 """src.queries.services module."""
 
-from minos.cqrs import (
-    QueryService,
-)
+from minos.cqrs import QueryService
 
 
 class CustomerQueryService(QueryService):

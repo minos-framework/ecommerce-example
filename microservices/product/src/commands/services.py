@@ -1,17 +1,13 @@
 """src.commands.services module."""
 
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
 from minos.common import (
     UUID_REGEX,
     MinosSnapshotAggregateNotFoundException,
     MinosSnapshotDeletedAggregateException,
 )
-from minos.cqrs import (
-    CommandService,
-)
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
@@ -19,9 +15,7 @@ from minos.networks import (
     enroute,
 )
 
-from ..aggregates import (
-    Product,
-)
+from ..aggregates import Product
 
 
 class ProductCommandService(CommandService):

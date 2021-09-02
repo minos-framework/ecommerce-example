@@ -5,9 +5,7 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from collections import (
-    defaultdict,
-)
+from collections import defaultdict
 
 from minos.common import (
     Model,
@@ -17,9 +15,7 @@ from minos.saga import (
     Saga,
     SagaContext,
 )
-from src.aggregates import (
-    Cart,
-)
+from src.aggregates import Cart
 
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 
