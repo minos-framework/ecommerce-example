@@ -28,7 +28,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: authentication_db
+          POSTGRES_DB: auth_db
           POSTGRES_USER: minos
           POSTGRES_PASSWORD: min0s
         ports:
