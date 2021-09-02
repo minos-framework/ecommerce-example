@@ -48,6 +48,8 @@ jobs:
     steps:
       - name: Skip if already running
         uses: fkirc/skip-duplicate-actions
+        with:
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
 
       - name: Check out repository code
         uses: actions/checkout@v2
