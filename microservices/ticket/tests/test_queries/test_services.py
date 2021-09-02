@@ -35,7 +35,7 @@ from minos.common import (
     MinosBroker,
     MinosConfig,
     MinosSagaManager,
-    Model,
+    Model, EntitySet,
 )
 from minos.networks import (
     Request,
@@ -107,8 +107,8 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def test_get_payments(self):
         expected = await gather(
-            Ticket.create("kokrte3432", [uuid4(), uuid4(), uuid4()], 34),
-            Ticket.create("343j4k3j4", [uuid4(), uuid4(), uuid4()], 132),
+            Ticket.create("kokrte3432", 1.4, EntitySet()),
+            Ticket.create("343j4k3j4", 1.6, EntitySet()),
         )
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})

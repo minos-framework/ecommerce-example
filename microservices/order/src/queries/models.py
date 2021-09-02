@@ -13,6 +13,9 @@ from uuid import (
 from minos.common import (
     ModelType,
 )
+from typing import (
+    Any,
+)
 from sqlalchemy import (
     Column,
     DateTime,
@@ -20,7 +23,7 @@ from sqlalchemy import (
     MetaData,
     Table,
     Text,
-    text,
+    text, Numeric,
 )
 from sqlalchemy.dialects.postgresql import (
     JSONB,
@@ -36,6 +39,7 @@ ORDER_TABLE = Table(
     Column("ticket_uuid", UUID_PG(as_uuid=True)),
     Column("payment_uuid", UUID_PG(as_uuid=True)),
     Column("user_uuid", UUID_PG(as_uuid=True)),
+    Column("total_amount", Numeric, nullable=False),
     Column("payment_detail", JSONB, default=text("'{}'::jsonb"), server_default=text("'{}'::jsonb")),
     Column("shipment_detail", JSONB, default=text("'{}'::jsonb"), server_default=text("'{}'::jsonb")),
     Column("status", Text, nullable=False),
@@ -50,8 +54,9 @@ OrderDTO = ModelType.build(
         "ticket_uuid": UUID,
         "payment_uuid": UUID,
         "user_uuid": UUID,
-        "payment_detail": dict,
-        "shipment_detail": dict,
+        "total_amount": float,
+        "payment_detail": dict[str, Any],
+        "shipment_detail": dict[str, Any],
         "status": str,
         "created_at": datetime.datetime,
         "updated_at": datetime.datetime,

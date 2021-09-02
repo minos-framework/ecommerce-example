@@ -111,7 +111,7 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_order(self):
+    async def _test_create_order(self):
         expected = uuid4()
 
         async def _fn(*args, **kwargs):

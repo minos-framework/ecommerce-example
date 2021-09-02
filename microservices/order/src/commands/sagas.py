@@ -80,6 +80,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
         payment=context["payment"],
         payment_detail=context["payment_detail"],
         shipment_detail=context["shipment_detail"],
+        total_amount=context["ticket"]["total_amount"],
         status=OrderStatus.COMPLETED,
         user=context["user_uuid"],
     )

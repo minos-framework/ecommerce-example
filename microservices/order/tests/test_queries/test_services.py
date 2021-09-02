@@ -49,7 +49,6 @@ from minos.networks import (
 )
 from src import (
     Order,
-    OrderEntry,
     OrderQueryService,
     OrderStatus,
 )

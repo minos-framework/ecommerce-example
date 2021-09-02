@@ -47,6 +47,7 @@ class Order(Aggregate):
     shipment_detail: ShipmentDetail
 
     status: OrderStatus
+    total_amount: Optional[float]
 
     created_at: datetime
     updated_at: datetime
@@ -54,12 +55,12 @@ class Order(Aggregate):
     user: ModelRef[User]
 
 
-class Ticket(Aggregate):
+class Ticket(AggregateRef):
     """Ticket Aggregate class."""
 
-    code: Optional[str]
-    total_price: Optional[float]
-    entries: Optional[EntitySet[TicketEntry]]
+    code: str
+    total_price: float
+    entries: EntitySet[TicketEntry]
 
 
 class TicketEntry(Entity):

@@ -36,6 +36,7 @@ from .models import (
     ORDER_TABLE,
     OrderDTO,
 )
+from .. import PaymentDetail, ShipmentDetail
 
 ORDER_ASC = "asc"
 ORDER_DESC = "desc"
@@ -76,3 +77,33 @@ class OrderQueryRepository(MinosSetup):
 
         query = ORDER_TABLE.insert().values(**kwargs)
         self.engine.execute(query)
+
+    async def get(self, uuid: UUID) -> NoReturn:
+        """Create a new row.
+
+        :param uuid: The parameters of the creation query.
+        :return: This method does not return anything.
+        """
+
+        query = ORDER_TABLE.select().where(ORDER_TABLE.columns.uuid == uuid)
+        res = self.engine.execute(query)
+
+        order = None
+        for row in res:
+            order = OrderDTO(**row)
+
+        return order
+
+    async def get_by_user(self, uuid: UUID) -> NoReturn:
+        """Create a new row.
+
+        :param uuid: The parameters of the creation query.
+        :return: This method does not return anything.
+        """
+
+        query = ORDER_TABLE.select().where(ORDER_TABLE.columns.user_uuid == uuid)
+        res = self.engine.execute(query)
+
+        orders = [OrderDTO(**row) for row in res]
+
+        return orders

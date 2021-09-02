@@ -25,6 +25,7 @@ from minos.networks import (
 from .repositories import (
     OrderQueryRepository,
 )
+from .. import PaymentDetail, ShipmentDetail
 
 
 class OrderQueryService(QueryService):
@@ -59,28 +60,37 @@ class OrderQueryService(QueryService):
 
         return Response(orders)
 
-    @staticmethod
     @enroute.broker.query("GetOrder")
     @enroute.rest.query(f"/orders/{{uuid:{UUID_REGEX.pattern}}}", "GET")
-    async def get_order(request: Request) -> Response:
+    async def get_order(self, request: Request) -> Response:
         """Get order.
 
         :param request: The ``Request`` instance that contains the order identifier.
         :return: A ``Response`` instance containing the requested order.
         """
+        content = await request.content()
         try:
-            content = await request.content(model_type=ModelType.build("Query", {"uuid": UUID}))
+            order = await self.repository.get(content["uuid"])
+
         except Exception as exc:
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
-        try:
-            from ..aggregates import (
-                Order,
-            )
+        return Response(order)
 
-            order = await Order.get_one(content["uuid"])
+    @enroute.broker.query("GetUserOrders")
+    @enroute.rest.query(f"/orders/user/{{uuid:{UUID_REGEX.pattern}}}", "GET")
+    async def get_user_orders(self, request: Request) -> Response:
+        """Get user orders.
+
+        :param request: The ``Request`` instance that contains the order identifier.
+        :return: A ``Response`` instance containing the requested order.
+        """
+        content = await request.content()
+        try:
+            order = await self.repository.get_by_user(content["uuid"])
+
         except Exception as exc:
-            raise ResponseException(f"There was a problem while getting the order: {exc!r}")
+            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         return Response(order)
 

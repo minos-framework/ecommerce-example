@@ -103,7 +103,7 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_create_ticket(self):
+    async def _test_create_ticket(self):
         gen_uuid = [uuid4(), uuid4(), uuid4()]
         request = _FakeRequest({"product_uuids": gen_uuid})
         response = await self.service.create_ticket(request)
