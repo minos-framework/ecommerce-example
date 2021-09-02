@@ -9,6 +9,16 @@ on:
       - 'microservices/product/**'
 
 jobs:
+  pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+
   build:
     runs-on: ubuntu-latest
     container: python:3.9-buster
@@ -49,10 +59,6 @@ jobs:
       MINOS_SAGA_QUEUE_HOST: postgres
 
     steps:
-      - name: Skip if already running
-        uses: fkirc/skip-duplicate-actions
-        with:
-          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
 
       - name: Check out repository code
         uses: actions/checkout@v2
