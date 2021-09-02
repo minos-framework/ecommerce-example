@@ -24,24 +24,3 @@ stages:
       save:
         json:
           payment_uuid: "uuid"
-
-
-  - name: Get a payment
-
-    request:
-      url: "http://api-gateway:5566/payments"
-      method: GET
-      json:
-        uuids:
-          - "{payment_uuid}"
-
-    response:
-      status_code: 200
-      json:
-        - uuid: "{payment_uuid}"
-          version: 1
-          credit_number: 12345678123456768
-          status: "created"
-          amount: 30.0
-          created_at: !anyint
-          updated_at: !anyint
