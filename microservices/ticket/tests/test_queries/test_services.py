@@ -1,17 +1,11 @@
-"""
-Copyright (C) 2021 Clariteia SL
-This file is part of minos framework.
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
+"""tests.queries.services module."""
+
 from __future__ import (
     annotations,
 )
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
 from pathlib import (
     Path,
 )
@@ -104,19 +98,6 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
-
-    async def test_get_payments(self):
-        expected = await gather(
-            Ticket.create("kokrte3432", [uuid4(), uuid4(), uuid4()], 34),
-            Ticket.create("343j4k3j4", [uuid4(), uuid4(), uuid4()], 132),
-        )
-
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
-
-        response = await self.service.get_tickets(request)
-        observed = await response.content()
-
-        self.assertEqual(expected, observed)
 
 
 if __name__ == "__main__":
