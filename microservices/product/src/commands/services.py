@@ -1,16 +1,7 @@
-"""
-Copyright (C) 2021 Clariteia SL
+"""src.commands.services module."""
 
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
-    uuid4,
 )
 
 from minos.common import (
@@ -140,7 +131,7 @@ class ProductCommandService(CommandService):
 
     @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
-    async def delete_product(request: Request) -> NoReturn:
+    async def delete_product(request: Request) -> None:
         """Delete a product by identifier.
 
         :param request: A request containing the product identifier.
@@ -156,7 +147,7 @@ class ProductCommandService(CommandService):
             raise ResponseException(f"The product does not exist.")
 
     @enroute.broker.command("ReserveProducts")
-    async def reserve_products(self, request: Request) -> NoReturn:
+    async def reserve_products(self, request: Request) -> None:
         """Reserve the requested quantities of products.
 
         :param: request: The ``Request`` instance that contains the quantities dictionary.
@@ -174,7 +165,7 @@ class ProductCommandService(CommandService):
             raise ResponseException(f"There is not enough product amount: {exc!r}")
 
     @enroute.broker.command("PurchaseProducts")
-    async def purchase_products(self, request: Request) -> NoReturn:
+    async def purchase_products(self, request: Request) -> None:
         """Purchase the requested quantities of products.
 
         :param: request: The ``Request`` instance that contains the quantities dictionary.
