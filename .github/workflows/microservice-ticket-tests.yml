@@ -1,9 +1,6 @@
-name: Ticket Unit Tests
+name: Unit Tests - Ticket
 
-on:
-  push:
-    paths:
-      - 'microservices/ticket/**'
+on: push
 
 jobs:
   build:
@@ -43,6 +40,7 @@ jobs:
       MINOS_BROKER_HOST: kafka
 
     steps:
+
       - name: Check out repository code
         uses: actions/checkout@v2
 

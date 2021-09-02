@@ -1,4 +1,4 @@
-name: Unit Tests - Review
+name: Unit Tests - Authentication
 
 on: push
 
@@ -10,7 +10,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: review_db
+          POSTGRES_DB: auth_db
           POSTGRES_USER: minos
           POSTGRES_PASSWORD: min0s
         ports:
@@ -31,7 +31,7 @@ jobs:
           KAFKA_ADVERTISED_HOST_NAME: kafka
     defaults:
       run:
-        working-directory: ./microservices/review
+        working-directory: ./microservices/authentication
 
     env:
       MINOS_REPOSITORY_HOST: postgres

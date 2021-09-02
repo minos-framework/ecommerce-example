@@ -1,9 +1,6 @@
-name: Customer Unit Tests
+name: Unit Tests - Customer
 
-on:
-  push:
-    paths:
-      - 'microservices/customer/**'
+on: push
 
 jobs:
   build:

@@ -76,7 +76,9 @@ class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
             event_broker=_FakeBroker,
             repository=InMemoryRepository,
             snapshot=InMemorySnapshot,
-            credentials_repository=CredentialsQueryRepository,
+            credentials_repository=CredentialsQueryRepository.from_config(
+                self.config, database=self.config.repository.database
+            ),
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 

@@ -1,9 +1,6 @@
-name: Order Unit Tests
+name: Unit Tests - Order
 
-on:
-  push:
-    paths:
-      - 'microservices/order/**'
+on: push
 
 jobs:
   build:
