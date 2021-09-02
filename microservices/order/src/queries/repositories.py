@@ -28,6 +28,10 @@ from sqlalchemy.orm import (
     sessionmaker,
 )
 
+from .. import (
+    PaymentDetail,
+    ShipmentDetail,
+)
 from .models import (
     META,
     ORDER_TABLE,

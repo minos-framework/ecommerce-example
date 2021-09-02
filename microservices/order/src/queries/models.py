@@ -6,6 +6,9 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 import datetime
+from typing import (
+    Any,
+)
 from uuid import (
     UUID,
 )
@@ -13,17 +16,15 @@ from uuid import (
 from minos.common import (
     ModelType,
 )
-from typing import (
-    Any,
-)
 from sqlalchemy import (
     Column,
     DateTime,
     Integer,
     MetaData,
+    Numeric,
     Table,
     Text,
-    text, Numeric,
+    text,
 )
 from sqlalchemy.dialects.postgresql import (
     JSONB,
