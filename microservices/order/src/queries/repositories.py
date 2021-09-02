@@ -22,10 +22,7 @@ from minos.common import (
     MinosSetup,
 )
 from sqlalchemy import (
-    asc,
     create_engine,
-    desc,
-    func,
 )
 from sqlalchemy.orm import (
     sessionmaker,
@@ -36,7 +33,6 @@ from .models import (
     ORDER_TABLE,
     OrderDTO,
 )
-from .. import PaymentDetail, ShipmentDetail
 
 ORDER_ASC = "asc"
 ORDER_DESC = "desc"
@@ -67,7 +63,7 @@ class OrderQueryRepository(MinosSetup):
 
         kwargs["ticket_uuid"] = kwargs["ticket"]
         kwargs["payment_uuid"] = kwargs["payment"]
-        kwargs["user_uuid"] = kwargs["user"]["uuid"]
+        kwargs["customer_uuid"] = kwargs["customer"]["uuid"]
         kwargs["payment_detail"] = dict(kwargs["payment_detail"])
         kwargs["shipment_detail"] = dict(kwargs["shipment_detail"])
 
@@ -101,7 +97,7 @@ class OrderQueryRepository(MinosSetup):
         :return: This method does not return anything.
         """
 
-        query = ORDER_TABLE.select().where(ORDER_TABLE.columns.user_uuid == uuid)
+        query = ORDER_TABLE.select().where(ORDER_TABLE.columns.customer_uuid == uuid)
         res = self.engine.execute(query)
 
         orders = [OrderDTO(**row) for row in res]

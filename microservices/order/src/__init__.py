@@ -12,7 +12,7 @@ from .aggregates import (
     PaymentDetail,
     ShipmentDetail,
     Ticket,
-    User,
+    Customer,
 )
 from .commands import (
     CREATE_ORDER,

@@ -18,7 +18,9 @@ from minos.saga import (
     SagaContext,
     SagaStatus,
 )
-
+from .sagas import (
+    _CREATE_TICKET,
+)
 
 class TicketCommandService(CommandService):
     """Ticket Service class"""
@@ -34,7 +36,7 @@ class TicketCommandService(CommandService):
         content = await request.content()
         cart_uuid = content["cart_uuid"]
 
-        saga = await self.saga_manager.run("_CreateTicket", context=SagaContext(cart_uuid=cart_uuid))
+        saga = await self.saga_manager.run(_CREATE_TICKET, context=SagaContext(cart_uuid=cart_uuid))
 
         if saga.status == SagaStatus.Finished:
             return Response(saga.context["ticket"])

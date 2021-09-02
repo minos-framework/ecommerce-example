@@ -19,7 +19,9 @@ from minos.saga import (
     SagaContext,
     SagaStatus,
 )
-
+from .sagas import (
+    CREATE_ORDER,
+)
 from ..aggregates import (
     PaymentDetail,
     ShipmentDetail,
@@ -46,7 +48,7 @@ class OrderCommandService(CommandService):
         shipment_detail = ShipmentDetail(**shipment)
 
         saga = await self.saga_manager.run(
-            "CreateOrder",
+            CREATE_ORDER,
             context=SagaContext(
                 cart_uuid=cart_uuid, user_uuid=user_uuid, payment_detail=payment_detail, shipment_detail=shipment_detail
             ),

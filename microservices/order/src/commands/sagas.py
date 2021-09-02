@@ -82,14 +82,14 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
         shipment_detail=context["shipment_detail"],
         total_amount=context["ticket"]["total_amount"],
         status=OrderStatus.COMPLETED,
-        user=context["user_uuid"],
+        customer=context["customer_uuid"],
     )
 
     return SagaContext(order=order)
 
 
 CREATE_ORDER = (
-    Saga()
+    Saga("CreateOrder")
     .step()
     .invoke_participant("CreateTicket", _create_ticket)
     .on_reply("ticket", _process_ticket_entries)

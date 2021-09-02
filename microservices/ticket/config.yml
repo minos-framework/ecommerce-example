@@ -12,7 +12,7 @@ service:
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
-    ticket_amount_repository: src.TicketAmountRepository
+    ticket_repository: src.TicketQueryRepository
   services:
     - minos.networks.CommandHandlerService
     - minos.networks.CommandReplyHandlerService

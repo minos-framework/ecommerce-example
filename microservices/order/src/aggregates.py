@@ -52,7 +52,7 @@ class Order(Aggregate):
     created_at: datetime
     updated_at: datetime
 
-    user: ModelRef[User]
+    customer: ModelRef[Customer]
 
 
 class Ticket(AggregateRef):
@@ -103,7 +103,7 @@ class ShipmentDetail(ValueObject):
     zip: int
 
 
-class User(AggregateRef):
+class Customer(AggregateRef):
     """User class"""
 
     username: str
