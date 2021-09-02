@@ -140,14 +140,14 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
                 payment_detail=payment_detail,
                 shipment_detail=shipment_detail,
                 status=OrderStatus.CREATED,
-                user=uuid4(),
+                customer=uuid4(),
             ),
             Order.create(
                 entries=EntitySet(),
                 payment_detail=payment_detail,
                 shipment_detail=shipment_detail,
                 status=OrderStatus.CREATED,
-                user=uuid4(),
+                customer=uuid4(),
             ),
         )
 
