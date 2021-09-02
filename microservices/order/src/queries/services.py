@@ -1,14 +1,20 @@
 """src.queries.services module."""
 
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
-from dependency_injector.wiring import Provide
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     UUID_REGEX,
     AggregateDiff,
     ModelType,
 )
-from minos.cqrs import QueryService
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     Response,
@@ -16,8 +22,13 @@ from minos.networks import (
     enroute,
 )
 
-from .repositories import OrderQueryRepository
-from .. import PaymentDetail, ShipmentDetail
+from .. import (
+    PaymentDetail,
+    ShipmentDetail,
+)
+from .repositories import (
+    OrderQueryRepository,
+)
 
 
 class OrderQueryService(QueryService):
@@ -40,7 +51,9 @@ class OrderQueryService(QueryService):
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
         try:
-            from ..aggregates import Order
+            from ..aggregates import (
+                Order,
+            )
 
             iterable = Order.get(uuids=content["uuids"])
             values = {v.uuid: v async for v in iterable}
