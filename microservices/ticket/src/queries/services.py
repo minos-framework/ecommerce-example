@@ -54,6 +54,19 @@ class TicketQueryService(QueryService):
 
         return Response(res)
 
+    @enroute.broker.query("GetTicketsQRS")
+    async def get_tickets(self, request: Request) -> Response:
+        """Get ticket.
+
+        :param request: The ``Request`` instance that contains the ticket identifier.
+        :return: A ``Response`` instance containing the requested ticket.
+        """
+        content = await request.content()
+
+        res = await self.repository.get_ticket(content["uuid"])
+
+        return Response(res)
+
     @enroute.broker.event("TicketCreated")
     async def ticket_created_or_updated(self, request: Request) -> NoReturn:
         """Handle the ticket creation events.
