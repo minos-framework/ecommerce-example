@@ -17,6 +17,10 @@ from minos.saga import (
     SagaContext,
 )
 
+from .sagas import (
+    CREATE_ORDER,
+)
+
 
 class OrderCommandService(CommandService):
     """Ticket Service class"""
@@ -31,7 +35,7 @@ class OrderCommandService(CommandService):
         """
         content = await request.content()
         product_uuids = content["product_uuids"]
-        uuid = await self.saga_manager.run(
-            "CreateOrder", context=SagaContext(product_uuids=product_uuids), pause_on_disk=True, return_execution=False
-        )
-        return Response(uuid)
+        execution = await self.saga_manager.run(CREATE_ORDER, context=SagaContext(product_uuids=product_uuids))
+        order = execution.context["order"]
+
+        return Response(order)

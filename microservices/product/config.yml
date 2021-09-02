@@ -1,62 +1,61 @@
 service:
-    name: products
-    injections:
-        postgresql_pool: minos.common.PostgreSqlPool
-        command_broker: minos.networks.CommandBroker
-        command_reply_broker: minos.networks.CommandReplyBroker
-        event_broker: minos.networks.EventBroker
-        repository: minos.common.PostgreSqlRepository
-        reply_pool: minos.networks.ReplyHandlerPool
-        saga_manager: minos.saga.SagaManager
-        snapshot: minos.common.PostgreSqlSnapshot
-        discovery: minos.networks.DiscoveryConnector
-        product_repository: src.ProductQueryRepository
-    services:
-        - minos.networks.CommandConsumerService
-        - minos.networks.CommandHandlerService
-        - minos.networks.CommandReplyConsumerService
-        - minos.networks.CommandReplyHandlerService
-        - minos.networks.EventConsumerService
-        - minos.networks.EventHandlerService
-        - minos.networks.RestService
-        - minos.networks.SnapshotService
-        - minos.networks.ProducerService
+  name: product
+  aggregate: src.aggregates.Product
+  injections:
+    postgresql_pool: minos.common.PostgreSqlPool
+    command_broker: minos.networks.CommandBroker
+    command_reply_broker: minos.networks.CommandReplyBroker
+    event_broker: minos.networks.EventBroker
+    consumer: minos.networks.Consumer
+    dynamic_handler_pool: minos.networks.DynamicHandlerPool
+    repository: minos.common.PostgreSqlRepository
+    saga_manager: minos.saga.SagaManager
+    snapshot: minos.common.PostgreSqlSnapshot
+    discovery: minos.networks.DiscoveryConnector
+    product_repository: src.ProductQueryRepository
+  services:
+    - minos.networks.ConsumerService
+    - minos.networks.CommandHandlerService
+    - minos.networks.CommandReplyHandlerService
+    - minos.networks.EventHandlerService
+    - minos.networks.RestService
+    - minos.networks.SnapshotService
+    - minos.networks.ProducerService
 rest:
-    host: 0.0.0.0
-    port: 8084
+  host: 0.0.0.0
+  port: 8084
 broker:
+  host: localhost
+  port: 9092
+  queue:
+    database: product_db
+    user: minos
+    password: min0s
     host: localhost
-    port: 9092
-    queue:
-        database: product_db
-        user: minos
-        password: min0s
-        host: localhost
-        port: 5432
-        records: 10
-        retry: 2
+    port: 5432
+    records: 1000
+    retry: 2
 repository:
-    database: product_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
+  database: product_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
 snapshot:
-    database: product_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
+  database: product_db
+  user: minos
+  password: min0s
+  host: localhost
+  port: 5432
 commands:
-    service: src.ProductCommandService
+  service: src.ProductCommandService
 queries:
-    service: src.ProductQueryService
+  service: src.ProductQueryService
 events:
-    service: src.ProductQueryService
+  service: src.ProductQueryService
 saga:
-    storage:
-        path: "./product.lmdb"
-    items: []
+  storage:
+    path: "./product.lmdb"
 discovery:
   host: localhost
   port: 5567

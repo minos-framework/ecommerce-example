@@ -19,7 +19,7 @@ from typing import (
     Optional,
 )
 from unittest.mock import (
-    MagicMock,
+    AsyncMock,
     call,
 )
 from uuid import (
@@ -46,8 +46,11 @@ from minos.networks import (
 )
 from minos.saga import (
     SagaContext,
+    SagaExecution,
 )
 from src import (
+    CREATE_ORDER,
+    Order,
     OrderCommandService,
 )
 
@@ -112,27 +115,22 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_order(self):
-        expected = uuid4()
+        products = [uuid4(), uuid4(), uuid4()]
+        ticket = uuid4()
+        order = Order(products=products, ticket=ticket, status="created",)
 
-        async def _fn(*args, **kwargs):
-            return expected
-
-        mock = MagicMock(side_effect=_fn)
+        mock = AsyncMock(return_value=SagaExecution.from_saga(CREATE_ORDER, SagaContext(order=order)))
         self.service.saga_manager._run_new = mock
 
-        request = _FakeRequest({"product_uuids": [1, 2, 3]})
+        request = _FakeRequest({"product_uuids": products})
         response = await self.service.create_order(request)
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        self.assertEqual(expected, observed)
+        self.assertEqual(order, observed)
 
-        self.assertEqual(expected, observed)
         self.assertEqual(
-            call(
-                "CreateOrder", context=SagaContext(product_uuids=[1, 2, 3]), pause_on_disk=True, return_execution=False
-            ),
-            mock.call_args,
+            call(CREATE_ORDER, context=SagaContext(product_uuids=products)), mock.call_args,
         )
 
 

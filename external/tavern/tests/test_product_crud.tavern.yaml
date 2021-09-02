@@ -33,26 +33,22 @@ stages:
 
   - name: Get a Product
 
+    delay_before: 0.5
+
     request:
-      url: "http://api-gateway:5566/products"
+      url: "http://api-gateway:5566/products/{product_uuid}"
       method: GET
-      json:
-        uuids:
-          - "{product_uuid}"
 
     response:
       status_code: 200
       json:
-        - uuid: "{product_uuid}"
-          version: 1
-          created_at: !anyint
-          updated_at: !anyint
-          code: "{product_code}"
-          title: Cacao 1kg
-          description: Desayuno y merienda
-          price: 2.0
-          inventory:
-            amount: 0
+        uuid: "{product_uuid}"
+        code: "{product_code}"
+        title: Cacao 1kg
+        description: Desayuno y merienda
+        price: 2.0
+        reviews_count: 0
+        reviews_score: 0.0
 
 
   - name: Update inventory amount

@@ -32,7 +32,7 @@ async def _create_cart_item(context: SagaContext) -> SagaContext:
 
 
 ADD_CART_ITEM = (
-    Saga("AddCartItem")
+    Saga()
     .step()
     .invoke_participant("ReserveProducts", _reserve_products)
     .with_compensation("ReserveProducts", _release_products)

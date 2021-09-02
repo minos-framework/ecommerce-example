@@ -1,19 +1,11 @@
-"""
-Copyright (C) 2021 Clariteia SL
+"""tests.queries.services module."""
 
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
 from pathlib import (
     Path,
 )
@@ -43,7 +35,6 @@ from minos.networks import (
     Request,
 )
 from src import (
-    Order,
     OrderQueryService,
 )
 
@@ -106,19 +97,6 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
-
-    async def test_get_orders(self):
-        expected = await gather(
-            Order.create([uuid4(), uuid4()], uuid4(), "created"),
-            Order.create([uuid4(), uuid4()], uuid4(), "cancelled"),
-        )
-
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
-
-        response = await self.service.get_orders(request)
-        observed = await response.content()
-
-        self.assertEqual(expected, observed)
 
 
 if __name__ == "__main__":

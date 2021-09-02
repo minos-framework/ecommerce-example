@@ -1,25 +1,25 @@
 service:
-  name: tickets
+  name: ticket
+  aggregate: src.aggregates.Ticket
   injections:
     postgresql_pool: minos.common.PostgreSqlPool
     command_broker: minos.networks.CommandBroker
     command_reply_broker: minos.networks.CommandReplyBroker
     event_broker: minos.networks.EventBroker
-    reply_pool: minos.networks.ReplyHandlerPool
+    consumer: minos.networks.Consumer
+    dynamic_handler_pool: minos.networks.DynamicHandlerPool
     repository: minos.common.PostgreSqlRepository
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
     ticket_amount_repository: src.TicketAmountRepository
   services:
-    - minos.networks.CommandConsumerService
     - minos.networks.CommandHandlerService
-    - minos.networks.CommandReplyConsumerService
     - minos.networks.CommandReplyHandlerService
-    - minos.networks.EventConsumerService
     - minos.networks.EventHandlerService
     - minos.networks.RestService
     - minos.networks.SnapshotService
+    - minos.networks.ConsumerService
     - minos.networks.ProducerService
 rest:
   host: 0.0.0.0
@@ -33,7 +33,7 @@ broker:
     password: min0s
     host: localhost
     port: 5432
-    records: 10
+    records: 1000
     retry: 2
 repository:
   database: ticket_db
@@ -56,10 +56,6 @@ commands:
 saga:
   storage:
     path: "./ticket.lmdb"
-  items:
-    - name: _CreateTicket
-      controller: src
-      action: _CREATE_TICKET
 discovery:
   host: localhost
   port: 5567

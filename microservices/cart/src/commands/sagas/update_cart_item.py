@@ -93,7 +93,7 @@ async def _update_cart_item(context: SagaContext) -> SagaContext:
 
 
 UPDATE_CART_ITEM = (
-    Saga("UpdateCartItem")
+    Saga()
     .step()
     .invoke_participant("ReserveProducts", _release_or_reserve_products)
     .with_compensation("ReserveProducts", _compensation)

@@ -24,6 +24,9 @@ from minos.saga import (
 from ..aggregates import (
     Ticket,
 )
+from .sagas import (
+    _CREATE_TICKET,
+)
 
 
 class TicketCommandService(CommandService):
@@ -43,7 +46,7 @@ class TicketCommandService(CommandService):
         payments = list()
         ticket = await Ticket.create(code, payments, 0.0)
 
-        await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_uuids=product_uuids))
+        await self.saga_manager.run(_CREATE_TICKET, context=SagaContext(ticket=ticket, product_uuids=product_uuids))
         await ticket.refresh()
 
         return Response(ticket)

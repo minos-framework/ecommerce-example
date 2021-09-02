@@ -1,7 +1,6 @@
-on:
-  push:
-    paths:
-      - 'microservices/cart/**'
+name: Unit Tests - Cart
+
+on: push
 
 jobs:
   build:
