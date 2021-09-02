@@ -37,7 +37,7 @@ class OrderQueryService(QueryService):
     repository: OrderQueryRepository = Provide["order_repository"]
 
     @staticmethod
-    @enroute.broker.query("GetOrders")
+    @enroute.broker.query("GetOrdersQRS")
     @enroute.rest.query("/orders", "GET")
     async def get_orders(request: Request) -> Response:
         """Get orders.
@@ -63,7 +63,7 @@ class OrderQueryService(QueryService):
 
         return Response(orders)
 
-    @enroute.broker.query("GetOrder")
+    @enroute.broker.query("GetOrderQRS")
     @enroute.rest.query(f"/orders/{{uuid:{UUID_REGEX.pattern}}}", "GET")
     async def get_order(self, request: Request) -> Response:
         """Get order.

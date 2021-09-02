@@ -40,7 +40,7 @@ class OrderCommandService(CommandService):
         """
         content = await request.content()
         cart_uuid = content["cart"]
-        user_uuid = content["user"]
+        customer_uuid = content["customer"]
         payment = content["payment_detail"]
         shipment = content["shipment_detail"]
 
@@ -50,7 +50,7 @@ class OrderCommandService(CommandService):
         saga = await self.saga_manager.run(
             CREATE_ORDER,
             context=SagaContext(
-                cart_uuid=cart_uuid, user_uuid=user_uuid, payment_detail=payment_detail, shipment_detail=shipment_detail
+                cart_uuid=cart_uuid, customer_uuid=customer_uuid, payment_detail=payment_detail, shipment_detail=shipment_detail
             ),
         )
 

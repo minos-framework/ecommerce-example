@@ -40,34 +40,7 @@ class TicketQueryService(QueryService):
 
     repository: TicketQueryRepository = Provide["ticket_repository"]
 
-    @staticmethod
-    @enroute.broker.query("GetTickets")
-    @enroute.rest.query("/tickets", "GET")
-    async def get_tickets(request: Request) -> Response:
-        """Get tickets.
-
-        :param request: The ``Request`` instance that contains the ticket identifiers.
-        :return: A ``Response`` instance containing the requested tickets.
-        """
-        try:
-            content = await request.content(model_type=ModelType.build("Query", {"uuids": list[UUID]}))
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
-
-        try:
-            from ..aggregates import (
-                Ticket,
-            )
-
-            iterable = Ticket.get(uuids=content["uuids"])
-            values = {v.uuid: v async for v in iterable}
-            tickets = [values[uuid] for uuid in content["uuids"]]
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting tickets: {exc!r}")
-
-        return Response(tickets)
-
-    @enroute.broker.query("GetTicket")
+    @enroute.broker.query("GetTicketQRS")
     @enroute.rest.query(f"/tickets/{{uuid:{UUID_REGEX.pattern}}}", "GET")
     async def get_ticket(self, request: Request) -> Response:
         """Get ticket.
@@ -104,4 +77,4 @@ class TicketQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        await self.repository.delete(diff.uuid)
+        print(diff)
