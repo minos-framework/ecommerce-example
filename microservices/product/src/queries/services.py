@@ -48,13 +48,11 @@ class ProductQueryService(QueryService):
         :return: A ``Response`` instance containing the requested products.
         """
 
-        content = await request.content()
-
         res = await self.repository.get_all()
 
         return Response(res)
 
-    @enroute.rest.query(f"/products/product/{{uuid:{UUID_REGEX.pattern}}}", "GET")
+    @enroute.rest.query(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
     async def get_product_by_uuid(self, request: Request) -> Response:
         """Get all products.
 
@@ -96,7 +94,6 @@ class ProductQueryService(QueryService):
 
     @staticmethod
     @enroute.broker.query("GetProduct")
-    @enroute.rest.query(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
     async def get_product(request: Request) -> Response:
         """Get product.
 
@@ -169,6 +166,16 @@ class ProductQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
         await self.repository.delete(diff.uuid)
+
+    @enroute.broker.event("ReviewCreated")
+    async def review_created(self, request: Request) -> None:
+        """Handle the product create and update events.
+
+        :param request: A request instance containing the aggregate difference.
+        :return: This method does not return anything.
+        """
+        diff: AggregateDiff = await request.content()
+        print(diff)
 
     @enroute.broker.event("ReviewCreated")
     async def review_created(self, request: Request) -> NoReturn:

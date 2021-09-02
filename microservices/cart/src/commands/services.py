@@ -28,6 +28,12 @@ from minos.saga import (
 from ..aggregates import (
     Cart,
 )
+from .sagas import (
+    ADD_CART_ITEM,
+    DELETE_CART,
+    REMOVE_CART_ITEM,
+    UPDATE_CART_ITEM,
+)
 
 
 class CartCommandService(CommandService):
@@ -58,7 +64,7 @@ class CartCommandService(CommandService):
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
         saga_execution = await self.saga_manager.run(
-            "AddCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
+            ADD_CART_ITEM, context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
         )
 
         return Response(saga_execution.uuid)
@@ -75,7 +81,7 @@ class CartCommandService(CommandService):
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
         saga_execution = await self.saga_manager.run(
-            "UpdateCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
+            UPDATE_CART_ITEM, context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
         )
 
         return Response(saga_execution.uuid)
@@ -94,7 +100,7 @@ class CartCommandService(CommandService):
         idx, product = await self._get_cart_item(cart, product_uuid)
 
         saga_execution = await self.saga_manager.run(
-            "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, product=product)
+            REMOVE_CART_ITEM, context=SagaContext(cart_id=cart, product_uuid=product_uuid, product=product)
         )
 
         return Response(saga_execution.uuid)
@@ -111,7 +117,7 @@ class CartCommandService(CommandService):
         cart_id = content["uuid"]
         cart = await Cart.get_one(cart_id)
 
-        saga_execution = await self.saga_manager.run("DeleteCart", context=SagaContext(cart=cart))
+        saga_execution = await self.saga_manager.run(DELETE_CART, context=SagaContext(cart=cart))
 
         return Response(saga_execution.uuid)
 

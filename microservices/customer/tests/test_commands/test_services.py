@@ -1,14 +1,16 @@
-"""tests.queries.services module."""
+"""
+Copyright (C) 2021 Clariteia SL
 
+This file is part of minos framework.
+
+Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
+"""
 from __future__ import (
     annotations,
 )
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
 from pathlib import (
     Path,
 )
@@ -36,10 +38,12 @@ from minos.common import (
 )
 from minos.networks import (
     Request,
+    Response,
 )
 from src import (
-    User,
-    UserQueryService,
+    Address,
+    Customer,
+    CustomerCommandService,
 )
 
 
@@ -60,7 +64,7 @@ class _FakeRequest(Request):
         return self._content
 
     def __eq__(self, other: _FakeRequest) -> bool:
-        return self._content == other._content and self.user == other.user
+        return self._content == other._content
 
     def __repr__(self) -> str:
         return str()
@@ -83,7 +87,7 @@ class _FakeSagaManager(MinosSagaManager):
         """For testing purposes."""
 
 
-class TestUserQueryService(unittest.IsolatedAsyncioTestCase):
+class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
@@ -97,31 +101,29 @@ class TestUserQueryService(unittest.IsolatedAsyncioTestCase):
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 
-        self.service = UserQueryService()
+        self.service = CustomerCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def test_get_users(self):
-        expected = await gather(
-            User.create("foo", "bar", "active", {"street": "hello", "street_no": 1}),
-            User.create("one", "two", "inactive", {"street": "hola", "street_no": 0}),
+    async def test_create_customer(self):
+        request = _FakeRequest(
+            {"name": "John", "surname": "Coltrane", "address": {"street": "Green Dolphin Street", "street_no": 42},}
         )
+        response = await self.service.create_customer(request)
 
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
+        self.assertIsInstance(response, Response)
 
-        response = await self.service.get_users(request)
         observed = await response.content()
-
-        self.assertEqual(expected, observed)
-
-    async def test_get_user(self):
-        expected = await User.create("foo", "bar", "active", {"street": "hello", "street_no": 1})
-
-        request = _FakeRequest({"uuid": expected.uuid})
-
-        response = await self.service.get_user(request)
-        observed = await response.content()
+        expected = Customer(
+            "John",
+            "Coltrane",
+            Address(street="Green Dolphin Street", street_no=42),
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
+            uuid=observed.uuid,
+            version=observed.version,
+        )
 
         self.assertEqual(expected, observed)
 

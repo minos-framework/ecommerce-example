@@ -89,7 +89,7 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 
 
 CREATE_ORDER = (
-    Saga("CreateOrder")
+    Saga()
     .step()
     .invoke_participant("CreateTicket", _create_ticket)
     .on_reply("ticket", _process_ticket_entries)

@@ -19,7 +19,7 @@ class ProductDetail extends React.Component {
     }
 
     getProduct() {
-        axios.get(`http://localhost:5566/products/product/${this.state.uuid}`, {
+        axios.get(`http://localhost:5566/products/${this.state.uuid}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

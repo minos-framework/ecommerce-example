@@ -64,7 +64,7 @@ def get_product_quantity(cart: Cart, product: str):
 
 
 REMOVE_CART_ITEM = (
-    Saga("RemoveCartItem")
+    Saga()
     .step()
     .invoke_participant("ReserveProducts", _reserve_products)
     .with_compensation("ReserveProducts", _release_products)
