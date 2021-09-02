@@ -47,10 +47,7 @@ jobs:
 
     steps:
       - name: Skip if already running
-        uses: fkirc/skip-duplicate-actions@skip_concurrent_trigger
-        with:
-          github_token: ${{ github.token }}
-          skip_concurrent_trigger: 'push'
+        uses: fkirc/skip-duplicate-actions
 
       - name: Check out repository code
         uses: actions/checkout@v2
