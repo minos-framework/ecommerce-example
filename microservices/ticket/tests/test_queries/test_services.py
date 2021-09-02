@@ -30,12 +30,13 @@ from cached_property import (
 from minos.common import (
     CommandReply,
     DependencyInjector,
+    EntitySet,
     InMemoryRepository,
     InMemorySnapshot,
     MinosBroker,
     MinosConfig,
     MinosSagaManager,
-    Model, EntitySet,
+    Model,
 )
 from minos.networks import (
     Request,
@@ -107,8 +108,7 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def test_get_payments(self):
         expected = await gather(
-            Ticket.create("kokrte3432", 1.4, EntitySet()),
-            Ticket.create("343j4k3j4", 1.6, EntitySet()),
+            Ticket.create("kokrte3432", 1.4, EntitySet()), Ticket.create("343j4k3j4", 1.6, EntitySet()),
         )
 
         request = _FakeRequest({"uuids": [v.uuid for v in expected]})

@@ -31,12 +31,15 @@ from sqlalchemy.orm import (
     sessionmaker,
 )
 
+from .. import (
+    PaymentDetail,
+    ShipmentDetail,
+)
 from .models import (
     META,
     ORDER_TABLE,
     OrderDTO,
 )
-from .. import PaymentDetail, ShipmentDetail
 
 ORDER_ASC = "asc"
 ORDER_DESC = "desc"

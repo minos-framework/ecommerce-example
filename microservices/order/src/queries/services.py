@@ -22,10 +22,13 @@ from minos.networks import (
     enroute,
 )
 
+from .. import (
+    PaymentDetail,
+    ShipmentDetail,
+)
 from .repositories import (
     OrderQueryRepository,
 )
-from .. import PaymentDetail, ShipmentDetail
 
 
 class OrderQueryService(QueryService):
