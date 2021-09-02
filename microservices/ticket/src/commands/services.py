@@ -18,9 +18,11 @@ from minos.saga import (
     SagaContext,
     SagaStatus,
 )
+
 from .sagas import (
     _CREATE_TICKET,
 )
+
 
 class TicketCommandService(CommandService):
     """Ticket Service class"""
