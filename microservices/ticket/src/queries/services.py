@@ -6,15 +6,23 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 
-from dependency_injector.wiring import Provide
-from minos.common import AggregateDiff
-from minos.cqrs import QueryService
+from dependency_injector.wiring import (
+    Provide,
+)
+from minos.common import (
+    AggregateDiff,
+)
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     enroute,
 )
 
-from .repositories import TicketAmountRepository
+from .repositories import (
+    TicketAmountRepository,
+)
 
 
 class TicketQueryService(QueryService):
