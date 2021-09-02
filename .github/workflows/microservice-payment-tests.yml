@@ -1,7 +1,10 @@
-name: Payment Unit Tests
+name: Unit Tests - Payment
 
 on:
   push:
+    paths:
+      - 'microservices/payment/**'
+  pull_request:
     paths:
       - 'microservices/payment/**'
 
@@ -43,6 +46,12 @@ jobs:
       MINOS_BROKER_HOST: kafka
 
     steps:
+      - name: Skip if already running
+        uses: fkirc/skip-duplicate-actions@skip_concurrent_trigger
+        with:
+          github_token: ${{ github.token }}
+          skip_concurrent_trigger: 'push'
+
       - name: Check out repository code
         uses: actions/checkout@v2
 

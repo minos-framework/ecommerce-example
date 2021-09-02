@@ -1,7 +1,10 @@
-name: Product Unit Tests
+name: Unit Tests - Product
 
 on:
   push:
+    paths:
+      - 'microservices/product/**'
+  pull_request:
     paths:
       - 'microservices/product/**'
 
@@ -46,6 +49,12 @@ jobs:
       MINOS_SAGA_QUEUE_HOST: postgres
 
     steps:
+      - name: Skip if already running
+        uses: fkirc/skip-duplicate-actions@skip_concurrent_trigger
+        with:
+          github_token: ${{ github.token }}
+          skip_concurrent_trigger: 'push'
+
       - name: Check out repository code
         uses: actions/checkout@v2
 
