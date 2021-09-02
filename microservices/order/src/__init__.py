@@ -6,13 +6,13 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 from .aggregates import (
+    Customer,
     Order,
     OrderStatus,
     Payment,
     PaymentDetail,
     ShipmentDetail,
     Ticket,
-    Customer,
 )
 from .commands import (
     CREATE_ORDER,
