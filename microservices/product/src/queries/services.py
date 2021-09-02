@@ -1,16 +1,4 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+"""src.queries.services module."""
 
 from dependency_injector.wiring import (
     Provide,
@@ -18,7 +6,6 @@ from dependency_injector.wiring import (
 from minos.common import (
     UUID_REGEX,
     AggregateDiff,
-    ModelType,
 )
 from minos.cqrs import (
     QueryService,
@@ -66,56 +53,6 @@ class ProductQueryService(QueryService):
 
         return Response(res)
 
-    @staticmethod
-    @enroute.broker.query("GetProducts")
-    async def get_products(request: Request) -> Response:
-        """Get products.
-
-        :param request: The ``Request`` instance that contains the product identifiers.
-        :return: A ``Response`` instance containing the requested products.
-        """
-        try:
-            content = await request.content(model_type=ModelType.build("Query", {"uuids": list[UUID]}))
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
-
-        try:
-            from ..aggregates import (
-                Product,
-            )
-
-            iterable = Product.get(uuids=content["uuids"])
-            values = {v.uuid: v async for v in iterable}
-            products = [values[uuid] for uuid in content["uuids"]]
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting products: {exc!r}")
-
-        return Response(products)
-
-    @staticmethod
-    @enroute.broker.query("GetProduct")
-    async def get_product(request: Request) -> Response:
-        """Get product.
-
-        :param request: The ``Request`` instance that contains the product identifier.
-        :return: A ``Response`` instance containing the requested product.
-        """
-        try:
-            content = await request.content(model_type=ModelType.build("Query", {"uuid": UUID}))
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
-
-        try:
-            from ..aggregates import (
-                Product,
-            )
-
-            product = await Product.get_one(content["uuid"])
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting the product: {exc!r}")
-
-        return Response(product)
-
     # noinspection PyUnusedLocal
     @enroute.rest.query("/products/without-stock", "GET")
     @enroute.broker.query("GetProductsWithoutStock")
@@ -138,7 +75,7 @@ class ProductQueryService(QueryService):
         raise ResponseException("Not Implemented yet!")
 
     @enroute.broker.event("ProductCreated")
-    async def product_created(self, request: Request) -> NoReturn:
+    async def product_created(self, request: Request) -> None:
         """Handle the product create and update events.
 
         :param request: A request instance containing the aggregate difference.
@@ -148,7 +85,7 @@ class ProductQueryService(QueryService):
         await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ProductUpdated")
-    async def product_updated(self, request: Request) -> NoReturn:
+    async def product_updated(self, request: Request) -> None:
         """Handle the product create and update events.
 
         :param request: A request instance containing the aggregate difference.
@@ -158,7 +95,7 @@ class ProductQueryService(QueryService):
         await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ProductDeleted")
-    async def product_deleted(self, request: Request) -> NoReturn:
+    async def product_deleted(self, request: Request) -> None:
         """Handle the product delete events.
 
         :param request: A request instance containing the aggregate difference.
@@ -178,7 +115,7 @@ class ProductQueryService(QueryService):
         print(diff)
 
     @enroute.broker.event("ReviewCreated")
-    async def review_created(self, request: Request) -> NoReturn:
+    async def review_created(self, request: Request) -> None:
         """Handle review created or updated events.
 
         :param request: A request instance containing the aggregate difference.
@@ -188,7 +125,7 @@ class ProductQueryService(QueryService):
         await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ReviewUpdated.score")
-    async def review_updated(self, request: Request) -> NoReturn:
+    async def review_updated(self, request: Request) -> None:
         """Handle review created or updated events.
 
         :param request: A request instance containing the aggregate difference.
