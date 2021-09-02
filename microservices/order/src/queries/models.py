@@ -6,16 +6,10 @@ This file is part of minos framework.
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
 import datetime
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
-from minos.common import (
-    ModelType,
-)
-from typing import (
-    Any,
-)
+from minos.common import ModelType
+from typing import Any
 from sqlalchemy import (
     Column,
     DateTime,
@@ -23,11 +17,10 @@ from sqlalchemy import (
     MetaData,
     Table,
     Text,
-    text, Numeric,
+    text,
+    Numeric,
 )
-from sqlalchemy.dialects.postgresql import (
-    JSONB,
-)
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
 META = MetaData()
