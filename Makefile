@@ -1,5 +1,5 @@
 build:
-	docker-compose build  --progres plain
+	docker-compose build  --progres plain --parallel
 
 up: build
 	echo "Starting containers..."
