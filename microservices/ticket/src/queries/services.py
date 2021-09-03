@@ -10,6 +10,7 @@ from dependency_injector.wiring import (
     Provide,
 )
 from minos.common import (
+    UUID_REGEX,
     AggregateDiff,
 )
 from minos.cqrs import (
@@ -17,21 +18,35 @@ from minos.cqrs import (
 )
 from minos.networks import (
     Request,
+    Response,
     enroute,
 )
 
 from .repositories import (
-    TicketAmountRepository,
+    TicketQueryRepository,
 )
 
 
 class TicketQueryService(QueryService):
     """Ticket Query Service class."""
 
-    repository: TicketAmountRepository = Provide["ticket_amount_repository"]
+    repository: TicketQueryRepository = Provide["ticket_repository"]
+
+    @enroute.broker.query("GetTicketQRS")
+    @enroute.rest.query(f"/tickets/{{uuid:{UUID_REGEX.pattern}}}", "GET")
+    async def get_ticket(self, request: Request) -> Response:
+        """Get ticket.
+
+        :param request: The ``Request`` instance that contains the ticket identifier.
+        :return: A ``Response`` instance containing the requested ticket.
+        """
+        content = await request.content()
+
+        res = await self.repository.get_ticket(content["uuid"])
+
+        return Response(res)
 
     @enroute.broker.event("TicketCreated")
-    @enroute.broker.event("TicketUpdated")
     async def ticket_created_or_updated(self, request: Request) -> None:
         """Handle the ticket creation events.
         :param request: A request instance containing the aggregate difference.
@@ -39,9 +54,12 @@ class TicketQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
         uuid = diff.uuid
+        version = diff["version"]
+        code = diff["code"]
         total_price = diff["total_price"]
+        entries = diff["entries"]
 
-        await self.repository.insert_ticket_amount(uuid, total_price)
+        await self.repository.insert(uuid, version, code, total_price, entries)
 
     @enroute.broker.event("TicketDeleted")
     async def ticket_deleted(self, request: Request) -> None:
@@ -51,4 +69,4 @@ class TicketQueryService(QueryService):
         """
         diff: AggregateDiff = await request.content()
 
-        await self.repository.delete(diff.uuid)
+        print(diff)

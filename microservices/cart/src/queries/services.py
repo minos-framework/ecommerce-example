@@ -26,6 +26,7 @@ class CartQueryService(QueryService):
     repository: CartQueryRepository = Provide["cart_repository"]
 
     @enroute.rest.query("/carts/{uuid}", "GET")
+    @enroute.broker.query("GetCartQRS")
     async def get_cart_items(self, request: Request) -> Response:
         """Get cart items.
         :param request: A request instance containing the payment identifiers.

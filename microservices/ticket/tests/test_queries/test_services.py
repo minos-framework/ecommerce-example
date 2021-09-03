@@ -1,5 +1,8 @@
-"""tests.queries.services module."""
-
+"""
+Copyright (C) 2021 Clariteia SL
+This file is part of minos framework.
+Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
+"""
 from __future__ import (
     annotations,
 )
@@ -24,6 +27,7 @@ from cached_property import (
 from minos.common import (
     CommandReply,
     DependencyInjector,
+    EntitySet,
     InMemoryRepository,
     InMemorySnapshot,
     MinosBroker,
@@ -36,6 +40,7 @@ from minos.networks import (
 )
 from src import (
     Ticket,
+    TicketQueryRepository,
     TicketQueryService,
 )
 
@@ -98,6 +103,16 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
+
+    async def test_get_payments(self):
+        expected = await Ticket.create("kokrte3432", 1.4, EntitySet())
+
+        # request = _FakeRequest({"uuid": expected.uuid})
+
+        # response = await self.service.get_ticket(request)
+        # observed = await response.content()
+
+        self.assertIsInstance(expected.uuid, UUID)
 
 
 if __name__ == "__main__":
