@@ -9,8 +9,6 @@ from uuid import (
 
 from minos.common import (
     EntitySet,
-    MinosSnapshotAggregateNotFoundException,
-    MinosSnapshotDeletedAggregateException,
 )
 from minos.cqrs import (
     CommandService,
@@ -18,7 +16,6 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    ResponseException,
     enroute,
 )
 from minos.saga import (

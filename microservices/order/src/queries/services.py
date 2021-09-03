@@ -21,11 +21,6 @@ from minos.networks import (
     ResponseException,
     enroute,
 )
-
-from .. import (
-    PaymentDetail,
-    ShipmentDetail,
-)
 from .repositories import (
     OrderQueryRepository,
 )

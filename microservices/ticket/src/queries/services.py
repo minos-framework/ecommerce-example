@@ -5,12 +5,6 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
 
 from dependency_injector.wiring import (
     Provide,
@@ -18,7 +12,6 @@ from dependency_injector.wiring import (
 from minos.common import (
     UUID_REGEX,
     AggregateDiff,
-    ModelType,
 )
 from minos.cqrs import (
     QueryService,
@@ -26,7 +19,6 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    ResponseException,
     enroute,
 )
 
@@ -54,21 +46,8 @@ class TicketQueryService(QueryService):
 
         return Response(res)
 
-    @enroute.broker.query("GetTicketsQRS")
-    async def get_tickets(self, request: Request) -> Response:
-        """Get ticket.
-
-        :param request: The ``Request`` instance that contains the ticket identifier.
-        :return: A ``Response`` instance containing the requested ticket.
-        """
-        content = await request.content()
-
-        res = await self.repository.get_ticket(content["uuid"])
-
-        return Response(res)
-
     @enroute.broker.event("TicketCreated")
-    async def ticket_created_or_updated(self, request: Request) -> NoReturn:
+    async def ticket_created_or_updated(self, request: Request) -> None:
         """Handle the ticket creation events.
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
@@ -83,7 +62,7 @@ class TicketQueryService(QueryService):
         await self.repository.insert(uuid, version, code, total_price, entries)
 
     @enroute.broker.event("TicketDeleted")
-    async def ticket_deleted(self, request: Request) -> NoReturn:
+    async def ticket_deleted(self, request: Request) -> None:
         """Handle the ticket delete events.
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
