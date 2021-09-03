@@ -21,6 +21,7 @@ from minos.networks import (
     ResponseException,
     enroute,
 )
+
 from .repositories import (
     OrderQueryRepository,
 )
