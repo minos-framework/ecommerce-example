@@ -25,6 +25,8 @@ stages:
         price: 2.0
         inventory:
           amount: 0
+          reserved: 0
+          stock: 0
       save:
         json:
           product_uuid: uuid
