@@ -26,7 +26,7 @@ stages:
         inventory:
           amount: 0
           reserved: 0
-          stock: 0
+          sold: 0
       save:
         json:
           product_uuid: uuid
