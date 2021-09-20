@@ -22,6 +22,7 @@ import {CartIcon} from "./components/icons";
 import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
 import Orders from "./pages/orders";
+import OrderDetail from "./pages/orders/detail";
 
 function App() {
     const user = AuthService.getCurrentUser();
@@ -137,6 +138,7 @@ function App() {
                     <Route path="/cart" component={Cart}/>
                     <Route path="/checkout" component={Checkout}/>
                     <Route path="/orders" component={Orders}/>
+                    <Route path="/order/:id" component={OrderDetail}/>
                 </Switch>
             </div>
 

@@ -30,6 +30,10 @@ class OrderService {
             return response
         });
     }
+
+    get_order(uuid) {
+
+    }
 }
 
 export default new OrderService();
