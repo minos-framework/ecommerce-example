@@ -32,7 +32,14 @@ class OrderService {
     }
 
     get_order(uuid) {
-
+        return axios.get(`${API_URL}orders/${uuid}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            return response
+        });
     }
 }
 
