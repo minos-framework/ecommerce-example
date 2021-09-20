@@ -57,7 +57,7 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
         amount = content["amount"]
 
-        product = await Product.get_one(uuid)
+        product = await Product.get(uuid)
         product.set_inventory_amount(amount)
         await product.save()
 
@@ -75,7 +75,7 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
         amount_diff = content["amount_diff"]
 
-        product = await Product.get_one(uuid)
+        product = await Product.get(uuid)
         product.update_inventory_amount(amount_diff)
         await product.save()
 
@@ -95,7 +95,7 @@ class ProductCommandService(CommandService):
         description = content["description"]
         price = content["price"]
 
-        product = await Product.get_one(uuid)
+        product = await Product.get(uuid)
         product.title = title
         product.description = description
         product.price = price
@@ -114,7 +114,7 @@ class ProductCommandService(CommandService):
         """
         content = await request.content()
         uuid = content["uuid"]
-        product = await Product.get_one(uuid)
+        product = await Product.get(uuid)
 
         if "title" in content:
             product.title = content["title"]
@@ -141,7 +141,7 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
 
         try:
-            product = await Product.get_one(uuid)
+            product = await Product.get(uuid)
             await product.delete()
         except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
             raise ResponseException(f"The product does not exist.")

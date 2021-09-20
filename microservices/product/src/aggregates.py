@@ -9,6 +9,9 @@ from __future__ import (
     annotations,
 )
 
+from asyncio import (
+    gather,
+)
 from typing import (
     NoReturn,
     Optional,
@@ -68,7 +71,8 @@ class Product(Aggregate):
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
-        async for product in Product.get(uuids=set(quantities.keys())):
+        products = await gather(*(Product.get(uuid) for uuid in quantities.keys()))
+        for product in products:
             inventory = product.inventory
             reserved = inventory.reserved
             if feasible and (inventory.amount - reserved) < quantities[product.uuid]:
@@ -91,7 +95,8 @@ class Product(Aggregate):
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
-        async for product in Product.get(uuids=set(quantities.keys())):
+        products = await gather(*(Product.get(uuid) for uuid in quantities.keys()))
+        for product in products:
             inventory = product.inventory
             reserved = inventory.reserved
             sold = inventory.sold

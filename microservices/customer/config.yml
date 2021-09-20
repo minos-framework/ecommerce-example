@@ -56,15 +56,6 @@ saga:
   storage:
     path: "./customer.lmdb"
 discovery:
+  client: minos.networks.MinosDiscoveryClient
   host: localhost
   port: 5567
-  endpoints:
-    subscribe:
-      path: subscribe
-      method: POST
-    unsubscribe:
-      path: unsubscribe
-      method: POST
-    discover:
-      path: discover
-      method: GET

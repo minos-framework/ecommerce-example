@@ -56,7 +56,7 @@ events:
 saga:
   storage:
     path: "./payment.lmdb"
-  items: [ ]
 discovery:
+  client: minos.networks.MinosDiscoveryClient
   host: localhost
   port: 5567

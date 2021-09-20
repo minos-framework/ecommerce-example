@@ -24,7 +24,7 @@ async def _create_cart_item(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
     product_uuid = context["product_uuid"]
     quantity = context["quantity"]
-    cart = await Cart.get_one(cart_id)
+    cart = await Cart.get(cart_id)
     cart_item = CartEntry(product=product_uuid, quantity=quantity)
     cart.entries.add(cart_item)
     await cart.save()

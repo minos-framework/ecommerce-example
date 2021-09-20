@@ -18,10 +18,6 @@ from typing import (
     NoReturn,
     Optional,
 )
-from unittest.mock import (
-    AsyncMock,
-    call,
-)
 from uuid import (
     UUID,
     uuid4,
@@ -42,11 +38,6 @@ from minos.common import (
 )
 from minos.networks import (
     Request,
-    Response,
-)
-from minos.saga import (
-    SagaContext,
-    SagaExecution,
 )
 from src import (
     CREATE_ORDER,

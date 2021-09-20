@@ -57,5 +57,6 @@ saga:
   storage:
     path: "./cart.lmdb"
 discovery:
+  client: minos.networks.MinosDiscoveryClient
   host: localhost
   port: 5567

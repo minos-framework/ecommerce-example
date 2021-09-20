@@ -31,7 +31,7 @@ async def _release_or_reserve_products(context: SagaContext) -> Model:
     quantity = context["quantity"]
 
     for product_id in product_uuids:
-        prev = await Cart.get_one(cart_id)
+        prev = await Cart.get(cart_id)
 
         prev_quantity = 0
         for key, value in prev.entries.data.items():
@@ -58,7 +58,7 @@ async def _compensation(context: SagaContext) -> Model:
     quantity = context["quantity"]
 
     for product_id in product_uuids:
-        prev = await Cart.get_one(cart_id)
+        prev = await Cart.get(cart_id)
 
         prev_quantity = 0
         for key, value in prev.entries.data.items():
@@ -82,7 +82,7 @@ async def _update_cart_item(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
     product_uuid = context["product_uuid"]
     quantity = context["quantity"]
-    cart = await Cart.get_one(cart_id)
+    cart = await Cart.get(cart_id)
 
     for key, value in cart.entries.data.items():
         if str(value.product) == product_uuid:

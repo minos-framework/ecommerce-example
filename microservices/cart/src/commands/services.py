@@ -112,7 +112,7 @@ class CartCommandService(CommandService):
         content = await request.content()
 
         cart_id = content["uuid"]
-        cart = await Cart.get_one(cart_id)
+        cart = await Cart.get(cart_id)
 
         saga_execution = await self.saga_manager.run(DELETE_CART, context=SagaContext(cart=cart))
 
@@ -120,7 +120,7 @@ class CartCommandService(CommandService):
 
     @staticmethod
     async def _get_cart_item(cart_id: UUID, product_uuid: UUID):
-        cart = await Cart.get_one(cart_id)
+        cart = await Cart.get(cart_id)
         for idx, product in enumerate(cart.entries):
             if str(product.product) == product_uuid:
                 return idx, product
