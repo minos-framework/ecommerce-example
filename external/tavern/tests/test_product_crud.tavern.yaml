@@ -74,6 +74,8 @@ stages:
         price: 2.0
         inventory:
           amount: 56
+          reserved: 0
+          sold: 0
 
 
   - name: Update inventory amount diff
