@@ -12,7 +12,6 @@ class AuthService {
                 }
             })
             .then(response => {
-
                 if (response.data.length > 100) {
                     localStorage.setItem("username", username);
                     localStorage.setItem("user_token", response.data);
@@ -28,11 +27,10 @@ class AuthService {
         localStorage.removeItem("user_token");
     }
 
-    register(username, password, street, number) {
-        return axios.post(API_URL + "users", {
-            username: username,
-            password: password,
-            status: "created",
+    register(name, surname, username, password) {
+        return axios.post(API_URL + "customer", {
+            name: name,
+            surname: surname,
             address: {
                 street: "Green Dolphin Street",
                 street_no: "42"
@@ -43,11 +41,6 @@ class AuthService {
                 'Content-Type': 'application/json'
             }
         }).then(response => {
-            if (response.data.uuid) {
-                localStorage.setItem("user_uuid", response.data.uuid);
-                localStorage.setItem("username", response.data.username);
-            }
-
             return this.createLogin(username, password);
         });
     }
