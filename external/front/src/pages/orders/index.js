@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import OrderService from "../../services/order";
 import {useHistory} from "react-router-dom";
+import {buildDate} from "../../helpers/utils";
 
 function Orders() {
     const [orders, setOrders] = useState([]);
@@ -47,7 +48,7 @@ function Orders() {
                         <td>{item.ticket_uuid.slice(3, -25)}...</td>
                         <td>{item.payment_uuid.slice(3, -25)}...</td>
                         <td>{item.total_amount} €</td>
-                        <td>{item.created_at}</td>
+                        <td>{buildDate(item.created_at).toDateString()}</td>
                     </tr>
                 ))}
                 </tbody>

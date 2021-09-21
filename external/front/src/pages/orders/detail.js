@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import OrderService from "../../services/order";
 import {useParams} from 'react-router-dom';
 import TicketDetail from "../../components/tickets/detail"
+import {buildDate} from "../../helpers/utils";
 
 function OrderDetail() {
     const [order, setOrder] = useState(undefined);
@@ -44,7 +45,7 @@ function OrderDetail() {
                             </div>
                             <div className="col-md-3">
                                 <h4>PLACED</h4>
-                                {order.created_at}
+                                {buildDate(order.created_at).toDateString()}
                             </div>
                             <div className="col-md-2 ml-auto float-right">
                                 <h4>STATUS</h4>
