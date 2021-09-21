@@ -11,13 +11,6 @@ from __future__ import (
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
-from datetime import (
-    datetime,
-    timezone,
-)
 from pathlib import (
     Path,
 )
@@ -36,7 +29,6 @@ from cached_property import (
 from minos.common import (
     CommandReply,
     DependencyInjector,
-    EntitySet,
     InMemoryRepository,
     InMemorySnapshot,
     MinosBroker,
@@ -112,51 +104,6 @@ class TestOrderQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
-
-    async def test_get_orders(self):
-        now = datetime.now(tz=timezone.utc)
-
-        payment_detail = {
-            "card_holder": "John",
-            "card_number": 2424242424242424,
-            "card_expire": "12/24",
-            "card_cvc": "123",
-        }
-
-        shipment_detail = {
-            "name": "Jack",
-            "last_name": "Johnson",
-            "email": "jack@gmail.com",
-            "address": "Calle Gran Víia 34",
-            "country": "Spain",
-            "city": "Madrid",
-            "province": "Madrid",
-            "zip": 34324,
-        }
-
-        expected = await gather(
-            Order.create(
-                entries=EntitySet(),
-                payment_detail=payment_detail,
-                shipment_detail=shipment_detail,
-                status=OrderStatus.CREATED,
-                customer=uuid4(),
-            ),
-            Order.create(
-                entries=EntitySet(),
-                payment_detail=payment_detail,
-                shipment_detail=shipment_detail,
-                status=OrderStatus.CREATED,
-                customer=uuid4(),
-            ),
-        )
-
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
-
-        response = await self.service.get_orders(request)
-        observed = await response.content()
-
-        self.assertEqual(expected, observed)
 
 
 if __name__ == "__main__":

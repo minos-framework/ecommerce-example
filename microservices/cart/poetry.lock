@@ -33,7 +33,7 @@ snappy = ["python-snappy (>=0.5)"]
 
 [[package]]
 name = "aiomisc"
-version = "14.4.2"
+version = "14.4.3"
 description = "aiomisc - miscellaneous utils for asyncio"
 category = "main"
 optional = false
@@ -48,7 +48,7 @@ asgi = ["aiohttp-asgi"]
 carbon = ["aiocarbon (>=0.15,<1.0)"]
 contextvars = ["contextvars (>=2.4,<3.0)"]
 cron = ["croniter (>=0.3.34,<0.4.0)"]
-develop = ["aiocontextvars (==0.2.2)", "aiohttp (<4)", "aiohttp-asgi", "async-generator", "async-timeout", "coverage (==4.5.1)", "coveralls", "croniter (>=0.3.34,<0.4.0)", "fastapi", "freezegun (<1.1)", "mypy (>=0.782,<1.0)", "pylava", "pytest", "pytest-cov (>=2.5.1,<2.6.0)", "pytest-freezegun (>=0.4.2,<0.5.0)", "sphinx (>=3.5.1)", "sphinx-autobuild", "sphinx-intl", "timeout-decorator", "types-croniter", "tox (>=2.4)"]
+develop = ["aiocontextvars (==0.2.2)", "aiohttp (<4)", "aiohttp-asgi", "async-timeout", "coverage (==4.5.1)", "coveralls", "croniter (>=0.3.34,<0.4.0)", "fastapi", "freezegun (<1.1)", "mypy (>=0.782,<1.0)", "pylava", "pytest", "pytest-cov (>=2.5.1,<2.6.0)", "pytest-freezegun (>=0.4.2,<0.5.0)", "sphinx (>=3.5.1)", "sphinx-autobuild", "sphinx-intl", "timeout-decorator", "types-croniter", "tox (>=2.4)"]
 raven = ["raven-aiohttp"]
 uvloop = ["uvloop (>=0.14,<1)"]
 
@@ -99,7 +99,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "black"
-version = "21.8b0"
+version = "21.9b0"
 description = "The uncompromising code formatter."
 category = "dev"
 optional = false
@@ -269,7 +269,7 @@ cffi = ">=0.8"
 
 [[package]]
 name = "minos-microservice-common"
-version = "0.1.12"
+version = "0.1.13"
 description = "Python Package with common Classes and Utilities used in Minos Microservices."
 category = "main"
 optional = false
@@ -287,7 +287,7 @@ PyYAML = ">=5.4.1,<6.0.0"
 
 [[package]]
 name = "minos-microservice-cqrs"
-version = "0.0.2"
+version = "0.0.3"
 description = "Minos Microservice CQRS package"
 category = "main"
 optional = false
@@ -295,13 +295,13 @@ python-versions = ">=3.9,<4.0"
 
 [package.dependencies]
 dependency-injector = ">=4.34.0,<5.0.0"
-minos-microservice-common = ">=0.1.12,<0.2.0"
-minos-microservice-networks = ">=0.0.15"
+minos-microservice-common = ">=0.1.13,<0.2.0"
+minos-microservice-networks = ">=0.0.16"
 minos-microservice-saga = ">=0.0.11"
 
 [[package]]
 name = "minos-microservice-networks"
-version = "0.0.15"
+version = "0.0.16"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
 category = "main"
 optional = false
@@ -313,7 +313,7 @@ aiokafka = ">=0.7.0,<0.8.0"
 aiomisc = ">=14.0.3,<15.0.0"
 aiopg = ">=1.2.1,<2.0.0"
 dependency-injector = ">=4.32.2,<5.0.0"
-minos-microservice-common = ">=0.1.8,<0.2.0"
+minos-microservice-common = ">=0.1.13,<0.2.0"
 
 [[package]]
 name = "minos-microservice-saga"
@@ -329,7 +329,7 @@ minos-microservice-common = ">=0.1.12,<0.2.0"
 
 [[package]]
 name = "more-itertools"
-version = "8.8.0"
+version = "8.10.0"
 description = "More routines for operating on iterables, beyond itertools"
 category = "dev"
 optional = false
@@ -566,7 +566,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "00348daaac940e1eb66e02c0be9bd9f8eb4624c282b362ef8aa860e8071113d0"
+content-hash = "bf3d6aa0d0f10e186b574af4c52f36216ce648b3509343899703f804caaa42fd"
 
 [metadata.files]
 aiohttp = [
@@ -632,8 +632,8 @@ aiokafka = [
     {file = "aiokafka-0.7.2.tar.gz", hash = "sha256:a8fc41d18731d8879483aecb93ae7ebf5457f63daf4c8923ddc046792c2c3096"},
 ]
 aiomisc = [
-    {file = "aiomisc-14.4.2-py3-none-any.whl", hash = "sha256:a89f91e371b5fca4c77b3c0d6af6153a326b816e344809432142729fbd6c3cf2"},
-    {file = "aiomisc-14.4.2.tar.gz", hash = "sha256:d794d5f1687d459a68f46d1b06eb90d53c767f10f0d32e9b0a4685a7aba2b508"},
+    {file = "aiomisc-14.4.3-py3-none-any.whl", hash = "sha256:d3ffd130705f64bf7ba63b48d975d8b849a950526f40202076d5e3b94b4e6157"},
+    {file = "aiomisc-14.4.3.tar.gz", hash = "sha256:3059483a396c554c214e91c1e7c1767802b13489a1e61ed09269bc40d6d68b0d"},
 ]
 aiopg = [
     {file = "aiopg-1.3.1-py3-none-any.whl", hash = "sha256:7a3fb1eb399ab0bb0335ddca66b51de31f6bb2251b5af2a45e7fec20040e5eac"},
@@ -652,8 +652,8 @@ attrs = [
     {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
 ]
 black = [
-    {file = "black-21.8b0-py3-none-any.whl", hash = "sha256:2a0f9a8c2b2a60dbcf1ccb058842fb22bdbbcb2f32c6cc02d9578f90b92ce8b7"},
-    {file = "black-21.8b0.tar.gz", hash = "sha256:570608d28aa3af1792b98c4a337dbac6367877b47b12b88ab42095cfc1a627c2"},
+    {file = "black-21.9b0-py3-none-any.whl", hash = "sha256:380f1b5da05e5a1429225676655dddb96f5ae8c75bdf91e53d798871b902a115"},
+    {file = "black-21.9b0.tar.gz", hash = "sha256:7de4cfc7eb6b710de325712d40125689101d21d25283eed7e9998722cf10eb91"},
 ]
 cached-property = [
     {file = "cached-property-1.5.2.tar.gz", hash = "sha256:9fa5755838eecbb2d234c3aa390bd80fbd3ac6b6869109bfc1b499f7bd89a130"},
@@ -894,24 +894,24 @@ lmdb = [
     {file = "lmdb-1.2.1.tar.gz", hash = "sha256:5f76a90ebd08922acca11948779b5055f7a262687178e9e94f4e804b9f8465bc"},
 ]
 minos-microservice-common = [
-    {file = "minos_microservice_common-0.1.12-py3-none-any.whl", hash = "sha256:539832b4480945a9f5b1813263b08a7a5a9501e0230166181b920a343ec449b6"},
-    {file = "minos_microservice_common-0.1.12.tar.gz", hash = "sha256:db37ebab5deb84ebcce9c6583b99ba4d1506c034918e4a18b9e222bc7117df17"},
+    {file = "minos_microservice_common-0.1.13-py3-none-any.whl", hash = "sha256:6d9557d793530b44d38cde881825b9373e6600344bfaf233d6c1257cd2d71d8a"},
+    {file = "minos_microservice_common-0.1.13.tar.gz", hash = "sha256:0f66dd3f5d69cf0cb3f66a76ff7293157c4f60566ce9b824c9ce33cdc6f0918c"},
 ]
 minos-microservice-cqrs = [
-    {file = "minos_microservice_cqrs-0.0.2-py3-none-any.whl", hash = "sha256:77b31a8a1a417d0b27ef9fdfb2e3d1547dcd38264783ca9b413332bfd820a053"},
-    {file = "minos_microservice_cqrs-0.0.2.tar.gz", hash = "sha256:56a8305a6ccf8a8af42a2109a21bf220fb60714e45f5e30a44233a5ccf690cd7"},
+    {file = "minos_microservice_cqrs-0.0.3-py3-none-any.whl", hash = "sha256:b2017773d808b6237fea9127b390998582542ef32b613d53a70b10eb0a26f00f"},
+    {file = "minos_microservice_cqrs-0.0.3.tar.gz", hash = "sha256:29cc9b7026ce355341388e310d98c89df14b22a907c316ec394b0cacfbf09b5c"},
 ]
 minos-microservice-networks = [
-    {file = "minos_microservice_networks-0.0.15-py3-none-any.whl", hash = "sha256:9913d3599ba0b40973e0d178f3093e26db1f1bdf74918dd6b4cfbaaa56f35994"},
-    {file = "minos_microservice_networks-0.0.15.tar.gz", hash = "sha256:820073386e45e1c6fbf35ba555e061e1f23ba2c61c66c9f6f83ea5af42de7c57"},
+    {file = "minos_microservice_networks-0.0.16-py3-none-any.whl", hash = "sha256:15e49750df055ae54a1717cc1ffb427964cc429cc452813c7d2d9e579a1217eb"},
+    {file = "minos_microservice_networks-0.0.16.tar.gz", hash = "sha256:adde8cbe8878b4925724cabbd717a53a5f9e08c65230b46de68b9f693cb2cd1e"},
 ]
 minos-microservice-saga = [
     {file = "minos_microservice_saga-0.0.11-py3-none-any.whl", hash = "sha256:d63737536d2a86af5cab7f54fcc0a9717d2a52bef498b11cf99c143cdbbb326d"},
     {file = "minos_microservice_saga-0.0.11.tar.gz", hash = "sha256:1fda0c7d8e2467700ff4d4503b8b04935eb1df75c07fc3033d3baaf6a7f91d63"},
 ]
 more-itertools = [
-    {file = "more-itertools-8.8.0.tar.gz", hash = "sha256:83f0308e05477c68f56ea3a888172c78ed5d5b3c282addb67508e7ba6c8f813a"},
-    {file = "more_itertools-8.8.0-py3-none-any.whl", hash = "sha256:2cf89ec599962f2ddc4d568a05defc40e0a587fbc10d5989713638864c36be4d"},
+    {file = "more-itertools-8.10.0.tar.gz", hash = "sha256:1debcabeb1df793814859d64a81ad7cb10504c24349368ccf214c664c474f41f"},
+    {file = "more_itertools-8.10.0-py3-none-any.whl", hash = "sha256:56ddac45541718ba332db05f464bebfb0768110111affd27f66e0051f276fa43"},
 ]
 multidict = [
     {file = "multidict-5.1.0-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:b7993704f1a4b204e71debe6095150d43b2ee6150fa4f44d6d966ec356a8d61f"},

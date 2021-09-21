@@ -54,7 +54,7 @@ class ReviewCommandService(CommandService):
         content = await request.content()
         uuid = content["uuid"]
 
-        review = await Review.get_one(uuid)
+        review = await Review.get(uuid)
 
         kwargs = dict(content)
         kwargs.pop("uuid")

@@ -224,7 +224,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         request = _FakeRequest({"quantities": quantities})
         await self.service.reserve_products(request)
-        obtained = await Product.get_one(product.uuid)
+        obtained = await Product.get(product.uuid)
         expected = Product(
             "Cacao",
             "1KG",
@@ -250,7 +250,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         request = _FakeRequest({"quantities": quantities})
         await self.service.reserve_products(request)
 
-        obtained = await Product.get_one(product.uuid)
+        obtained = await Product.get(product.uuid)
 
         expected = Product(
             "Cacao",
@@ -268,7 +268,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         await self.service.purchase_products(request)
 
-        obtained = await Product.get_one(product.uuid)
+        obtained = await Product.get(product.uuid)
         expected = Product(
             "Cacao",
             "1KG",
