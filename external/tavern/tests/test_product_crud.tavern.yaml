@@ -99,3 +99,5 @@ stages:
         price: 2.0
         inventory:
           amount: 44
+          reserved: 0
+          sold: 0
