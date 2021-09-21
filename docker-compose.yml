@@ -3,14 +3,8 @@ version: "3.9"
 x-microservice-environment: &microservice-environment
   - MINOS_BROKER_QUEUE_HOST=postgres
   - MINOS_BROKER_HOST=kafka
-  - MINOS_EVENTS_QUEUE_HOST=postgres  # TODO: Remove
-  - MINOS_EVENTS_BROKER=kafka  # TODO: Remove
-  - MINOS_COMMANDS_QUEUE_HOST=postgres  # TODO: Remove
-  - MINOS_COMMANDS_BROKER=kafka  # TODO: Remove
   - MINOS_REPOSITORY_HOST=postgres
   - MINOS_SNAPSHOT_HOST=postgres
-  - MINOS_SAGA_QUEUE_HOST=postgres  # TODO: Remove
-  - MINOS_SAGA_BROKER=kafka  # TODO: Remove
   - MINOS_DISCOVERY_HOST=discovery
 
 x-microservice-depends-on: &microservice-depends-on
@@ -28,23 +22,24 @@ services:
   kafka:
     restart: always
     image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
     depends_on:
       - zookeeper
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    logging:
-      driver: none
 
   postgres:
     restart: always
     build: external/postgres
     ports:
-    - 5432:5432
+    - "5432:5432"
     volumes:
       - postgres_volume:/var/lib/postgresql
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db,user_db
+      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db,customer_db,cart_query_db,ticket_query_db,product_query_db,payment_query_db,review_db,review_query_db,auth_db,auth_query_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
     logging:
@@ -67,7 +62,7 @@ services:
     restart: always
     build: ./api_gateway
     ports:
-      - 5566:5566
+      - "5566:5566"
     environment:
       - PYTHONPATH=/api_gateway
       - DISCOVERY_SERVICE_HOST=discovery
@@ -77,6 +72,8 @@ services:
   discovery:
     restart: always
     build: ./external/discovery
+    ports:
+      - "5567:5567"
     environment:
       - DISCOVERY_SERVICE_DB_HOST=redis
     depends_on:
@@ -114,10 +111,18 @@ services:
     environment: *microservice-environment
     depends_on: *microservice-depends-on
 
-  microservice-user:
+  microservice-customer:
     restart: always
     build:
-      context: microservices/user
+      context: microservices/customer
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-review:
+    restart: always
+    build:
+      context: microservices/review
       target: production
     environment: *microservice-environment
     depends_on: *microservice-depends-on

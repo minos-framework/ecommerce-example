@@ -8,10 +8,11 @@ packages = [{ include = "src" }]
 [tool.poetry.dependencies]
 python = "^3.9"
 typer = "^0.3.2"
-minos-microservice-common = "^0.1.7"
-minos-microservice-networks = ">=0.0.11<0.1"
-minos-microservice-saga = ">=0.0.9<0.1"
-minos-microservice-cqrs = ">=0.0.1<0.1"
+minos-microservice-common = "^0.1.13"
+minos-microservice-networks = ">=0.0.16<0.1"
+minos-microservice-saga = ">=0.0.11<0.1"
+minos-microservice-cqrs = ">=0.0.3<0.1"
+SQLAlchemy = "1.4.22"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

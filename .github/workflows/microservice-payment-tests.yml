@@ -1,7 +1,6 @@
-on:
-  push:
-    paths:
-      - 'microservices/payment/**'
+name: Unit Tests - Payment
+
+on: push
 
 jobs:
   build:

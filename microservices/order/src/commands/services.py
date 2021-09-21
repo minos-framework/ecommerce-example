@@ -1,17 +1,5 @@
-"""
-Copyright (C) 2021 Clariteia SL
+"""src.commands.services module."""
 
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
-from uuid import (
-    UUID,
-)
-
-from minos.common import (
-    ModelType,
-)
 from minos.cqrs import (
     CommandService,
 )
@@ -23,10 +11,15 @@ from minos.networks import (
 )
 from minos.saga import (
     SagaContext,
+    SagaStatus,
 )
 
 from ..aggregates import (
-    Order,
+    PaymentDetail,
+    ShipmentDetail,
+)
+from .sagas import (
+    CREATE_ORDER,
 )
 
 
@@ -37,36 +30,29 @@ class OrderCommandService(CommandService):
     @enroute.broker.command("CreateOrder")
     async def create_order(self, request: Request) -> Response:
         """Create a new ``Order`` instance.
-
         :param request: The ``Request`` containing the list of product identifiers to be included in the ``Order``.
         :return: A ``Response`` containing the ``UUID`` that identifies the ``SagaExecution``.
         """
         content = await request.content()
-        product_uuids = content["product_uuids"]
-        uuid = await self.saga_manager.run("CreateOrder", context=SagaContext(product_uuids=product_uuids))
-        return Response(uuid)
+        cart_uuid = content["cart"]
+        customer_uuid = content["customer"]
+        payment = content["payment_detail"]
+        shipment = content["shipment_detail"]
 
-    @staticmethod
-    @enroute.rest.command("/orders", "GET")
-    @enroute.broker.command("GetOrders")
-    async def get_orders(request: Request) -> Response:
-        """Get a list of orders by uuid.
+        payment_detail = PaymentDetail(**payment)
+        shipment_detail = ShipmentDetail(**shipment)
 
-        :param request: The ``Request`` instance containing the list of ``Order`` identifiers.
-        :return: A ``Response`` containing the list of ``Order`` instances.
-        """
-        _Query = ModelType.build("Query", {"uuids": list[UUID]})
-        try:
-            content = await request.content(model_type=_Query)
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
+        saga = await self.saga_manager.run(
+            CREATE_ORDER,
+            context=SagaContext(
+                cart_uuid=cart_uuid,
+                customer_uuid=customer_uuid,
+                payment_detail=payment_detail,
+                shipment_detail=shipment_detail,
+            ),
+        )
 
-        uuids = content["uuids"]
-
-        try:
-            values = {v.uuid: v async for v in Order.get(uuids=uuids)}
-        except Exception as exc:
-            raise ResponseException(f"There was a problem while getting orders: {exc!r}")
-        orders = [values[uuid] for uuid in uuids]
-
-        return Response(orders)
+        if saga.status == SagaStatus.Finished:
+            return Response(dict(saga.context["order"]))
+        else:
+            raise ResponseException("An error occurred during order creation.")

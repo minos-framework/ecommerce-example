@@ -1,14 +1,11 @@
-"""
-Copyright (C) 2021 Clariteia SL
+"""src.queries.services module."""
 
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
-from typing import (
-    NoReturn,
+from dependency_injector.wiring import (
+    Provide,
 )
-
+from minos.common import (
+    AggregateDiff,
+)
 from minos.cqrs import (
     QueryService,
 )
@@ -17,36 +14,37 @@ from minos.networks import (
     enroute,
 )
 
+from .repositories import (
+    PaymentAmountRepository,
+)
+
 
 class PaymentQueryService(QueryService):
     """Payment Query Service class"""
 
-    @staticmethod
+    repository: PaymentAmountRepository = Provide["payment_amount_repository"]
+
     @enroute.broker.event("PaymentCreated")
-    async def payment_created(request: Request) -> NoReturn:
+    @enroute.broker.event("PaymentUpdated")
+    async def payment_created_or_updated(self, request: Request) -> None:
         """Handle the payment create events.
 
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        print(await request.content())
+        diff: AggregateDiff = await request.content()
+        uuid = diff.uuid
+        amount = diff["amount"]
 
-    @staticmethod
-    @enroute.broker.event("PaymentUpdated")
-    async def payment_updated(request: Request) -> NoReturn:
-        """Handle the payment update events.
+        await self.repository.insert_payment_amount(uuid, amount)
 
-        :param request: A request instance containing the aggregate difference.
-        :return: This method does not return anything.
-        """
-        print(await request.content())
-
-    @staticmethod
     @enroute.broker.event("PaymentDeleted")
-    async def payment_deleted(request: Request) -> NoReturn:
+    async def payment_deleted(self, request: Request) -> None:
         """Handle the payment delete events.
 
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        print(await request.content())
+        diff: AggregateDiff = await request.content()
+
+        await self.repository.delete(diff.uuid)

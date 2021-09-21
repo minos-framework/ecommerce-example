@@ -11,19 +11,21 @@ from __future__ import (
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
 from pathlib import (
     Path,
 )
 from typing import (
     NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
+    uuid4,
 )
 
+from cached_property import (
+    cached_property,
+)
 from minos.common import (
     CommandReply,
     DependencyInjector,
@@ -51,12 +53,17 @@ class _FakeRequest(Request):
         super().__init__()
         self._content = content
 
+    @cached_property
+    def user(self) -> Optional[UUID]:
+        """For testing purposes"""
+        return uuid4()
+
     async def content(self, **kwargs):
         """For testing purposes"""
         return self._content
 
     def __eq__(self, other: _FakeRequest) -> bool:
-        return self._content == other._content
+        return self._content == other._content and self.user == other.user
 
     def __repr__(self) -> str:
         return str()
@@ -105,17 +112,15 @@ class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Payment(1234, 3.4, "created", uuid=observed.uuid, version=observed.version)
-
-        self.assertEqual(expected, observed)
-
-    async def test_get_payments(self):
-        expected = await gather(Payment.create(1234, 3.4, "created"), Payment.create(5678, 3.4, "cancelled"))
-
-        request = _FakeRequest({"uuids": [v.uuid for v in expected]})
-
-        response = await self.service.get_payments(request)
-        observed = await response.content()
+        expected = Payment(
+            1234,
+            3.4,
+            "created",
+            uuid=observed.uuid,
+            version=observed.version,
+            created_at=observed.created_at,
+            updated_at=observed.updated_at,
+        )
 
         self.assertEqual(expected, observed)
 

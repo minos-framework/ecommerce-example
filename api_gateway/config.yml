@@ -1,80 +1,15 @@
 rest:
   host: 0.0.0.0
   port: 5566
-  endpoints:
-
-    - name: AddOrder
-      route: /orders
-      method: POST
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: GetOrders
-      route: /orders
-      method: GET
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: AddPayment
-      route: /payments
-      method: POST
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: GetPayments
-      route: /payments
-      method: GET
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: AddProduct
-      route: /products
-      method: POST
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: GetProducts
-      route: /products
-      method: GET
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: DeleteProduct
-      route: /products/{id}
-      method: DELETE
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: UpdateInventory
-      route: /products/{uuid}/inventory
-      method: PUT
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: UpdateInventoryDiff
-      route: /products/{uuid}/inventory
-      method: PATCH
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: GetTickets
-      route: /tickets
-      method: GET
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
-    - name: CreateUser
-      route: /users
-      method: POST
-      controller: minos.api_gateway.rest.DefaultController
-      action: default
-
+  endpoints: []
 discovery:
   host: localhost
   port: 5567
-  path: /discover
+  path: ""
   endpoints: []
   db:
     host: localhost
     port: 6379
     password:
+cors:
+  enabled: true

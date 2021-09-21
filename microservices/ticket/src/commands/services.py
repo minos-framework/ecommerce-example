@@ -5,28 +5,22 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from uuid import (
-    UUID,
-    uuid4,
-)
-
-from minos.common import (
-    ModelType,
-)
 from minos.cqrs import (
     CommandService,
 )
 from minos.networks import (
     Request,
     Response,
+    ResponseException,
     enroute,
 )
 from minos.saga import (
     SagaContext,
+    SagaStatus,
 )
 
-from ..aggregates import (
-    Ticket,
+from .sagas import (
+    _CREATE_TICKET,
 )
 
 
@@ -42,28 +36,11 @@ class TicketCommandService(CommandService):
         :return: A ``Response`` containing the created ticket.
         """
         content = await request.content()
-        product_uuids = content["product_uuids"]
-        code = uuid4().hex.upper()[0:6]
-        payments = list()
-        ticket = await Ticket.create(code, payments, 0.0)
-        await self.saga_manager.run("_CreateTicket", context=SagaContext(ticket=ticket, product_uuids=product_uuids))
+        cart_uuid = content["cart_uuid"]
 
-        return Response(ticket)
+        saga = await self.saga_manager.run(_CREATE_TICKET, context=SagaContext(cart_uuid=cart_uuid))
 
-    @staticmethod
-    @enroute.rest.command("/tickets", "GET")
-    @enroute.broker.command("GetTicket")
-    async def get_tickets(request: Request) -> Response:
-        """Get a list of tickets by uuid.
-
-        :param request: A ``Request`` instance containing the list of ticket identifiers.
-        :return: A ``Response`` containing the list of requested tickets.
-        """
-        _Query = ModelType.build("Query", {"uuids": list[UUID]})
-        content = await request.content(model_type=_Query)
-        uuids = content["uuids"]
-
-        values = {v.uuid: v async for v in Ticket.get(uuids=uuids)}
-        tickets = [values[uuid] for uuid in uuids]
-
-        return Response(tickets)
+        if saga.status == SagaStatus.Finished:
+            return Response(saga.context["ticket"])
+        else:
+            raise ResponseException("An error occurred during order creation.")
