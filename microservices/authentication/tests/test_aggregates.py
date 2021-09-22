@@ -6,7 +6,7 @@ from tests.utils import (
 )
 
 
-class TestOrder(unittest.IsolatedAsyncioTestCase):
+class TestAuthentication(unittest.IsolatedAsyncioTestCase):
     """Test Order"""
 
     def setUp(self) -> None:
