@@ -13,6 +13,8 @@ minos-microservice-saga = ">=0.0.11<0.1"
 minos-microservice-cqrs = ">=0.0.3<0.1"
 typer = "^0.3.2"
 SQLAlchemy = "1.4.22"
+flake8 = "^3.9.2"
+coverage = "^5.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

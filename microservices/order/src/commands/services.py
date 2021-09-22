@@ -1,5 +1,3 @@
-"""src.commands.services module."""
-
 from minos.cqrs import (
     CommandService,
 )

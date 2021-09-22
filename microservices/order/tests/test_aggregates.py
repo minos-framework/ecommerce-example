@@ -1,7 +1,3 @@
-from __future__ import (
-    annotations,
-)
-
 import sys
 import unittest
 
@@ -10,7 +6,9 @@ from tests.utils import (
 )
 
 
-class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
+class TestOrder(unittest.IsolatedAsyncioTestCase):
+    """Test Order"""
+
     def setUp(self) -> None:
         self.injector = build_dependency_injector()
 
@@ -19,9 +17,6 @@ class TestOrderCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
-
-    async def test_true(self):
-        self.assertTrue(True)
 
 
 if __name__ == "__main__":

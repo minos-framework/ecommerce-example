@@ -1,5 +1,3 @@
-"""src.queries.services module."""
-
 from dependency_injector.wiring import (
     Provide,
 )
