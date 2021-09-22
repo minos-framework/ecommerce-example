@@ -1,8 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-This file is part of minos framework.
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
@@ -52,7 +47,7 @@ class CartQueryRepository(MinosSetup):
         return cls(*args, **(config.repository._asdict() | {"database": "cart_query_db"}) | kwargs)
 
     async def create_cart(self, uuid: UUID, version: int, user_id: int) -> NoReturn:
-        """ Insert Payment amount
+        """Insert Payment amount
         :param uuid: UUID
         :param user_id: Customer ID
         :param version: Version ID
@@ -62,7 +57,7 @@ class CartQueryRepository(MinosSetup):
         self.engine.execute(query)
 
     async def get_cart_items(self, cart_id):
-        """ Insert Payment amount
+        """Insert Payment amount
         :param cart_id: UUID
         :return: Nothing
         """
@@ -71,14 +66,14 @@ class CartQueryRepository(MinosSetup):
         try:
             # Get Cart information
             cart_query = self.session.query(CART_TABLE).filter(CART_TABLE.columns.uuid == cart_id).one()
-        except:
+        except Exception:
             return {"error": "Invalid Cart UUID"}
 
         try:
             # Get Cart Item information
             cart_items_query = CART_ITEM_TABLE.select().where(CART_ITEM_TABLE.columns.cart_id == cart_id)
             cart_item_results = self.engine.execute(cart_items_query)
-        except:
+        except Exception:
             return {"error": "An error occurred while obtaining Cart Items."}
 
         try:
@@ -87,13 +82,13 @@ class CartQueryRepository(MinosSetup):
 
             # Format Cart DTO with Cart and CartItems attributes
             result = CartDTO(**cart_query, products=cart_items)
-        except:
+        except Exception:
             result = {"error": "An error occurred when formatting result."}
 
         return result
 
     async def insert_cart_item(self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price):
-        """ Insert or Update Cart Item
+        """Insert or Update Cart Item
         :param cart_uuid: UUID
         :param item_uuid: Customer ID
         :param quantity: Customer ID
@@ -113,11 +108,11 @@ class CartQueryRepository(MinosSetup):
                 description=item_description,
             )
             self.engine.execute(query)
-        except:
+        except Exception:
             return {"error": "Error inserting Cart Item."}
 
     async def update_cart_item(self, cart_uuid, item_uuid, quantity, item_title, item_description, item_price):
-        """ Insert or Update Cart Item
+        """Insert or Update Cart Item
         :param cart_uuid: UUID
         :param item_uuid: Customer ID
         :param quantity: Customer ID
@@ -129,13 +124,21 @@ class CartQueryRepository(MinosSetup):
         try:
             cart_item_update_query = (
                 CART_ITEM_TABLE.update()
-                .values(quantity=quantity, price=item_price, title=item_title, description=item_description,)
+                .values(
+                    quantity=quantity,
+                    price=item_price,
+                    title=item_title,
+                    description=item_description,
+                )
                 .where(
-                    and_(CART_ITEM_TABLE.columns.product_id == item_uuid, CART_ITEM_TABLE.columns.cart_id == cart_uuid,)
+                    and_(
+                        CART_ITEM_TABLE.columns.product_id == item_uuid,
+                        CART_ITEM_TABLE.columns.cart_id == cart_uuid,
+                    )
                 )
             )
             self.engine.execute(cart_item_update_query)
-        except:
+        except Exception:
             return {"error": "Error updating Cart Item."}
 
     async def update_cart_items(self, uuid: UUID, **kwargs) -> NoReturn:
@@ -151,7 +154,7 @@ class CartQueryRepository(MinosSetup):
         self.engine.execute(query)
 
     async def delete_cart(self, cart_uuid: UUID) -> NoReturn:
-        """ Delete Payment
+        """Delete Payment
         :param cart_uuid: UUID
         :return: Nothing
         """
@@ -159,7 +162,7 @@ class CartQueryRepository(MinosSetup):
         self.engine.execute(cart_delete_query)
 
     async def delete_cart_item(self, cart_uuid: UUID, product_uuid: UUID) -> NoReturn:
-        """ Delete Payment
+        """Delete Payment
         :param cart_uuid: Cart UUID
         :param product_uuid: Item UUID
         :return: Nothing

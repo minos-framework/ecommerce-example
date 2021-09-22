@@ -1,12 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-This file is part of minos framework.
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
-from typing import (
-    Any,
-    Union,
-)
 from uuid import (
     UUID,
 )
@@ -44,7 +35,12 @@ CART_ITEM_TABLE = Table(
     Column("title", Text, nullable=False),
     Column("description", Text, nullable=False),
     Column("price", Numeric, nullable=False),
-    ForeignKeyConstraint(["cart_id"], ["cart.uuid"], name="fk_cart", ondelete="CASCADE",),
+    ForeignKeyConstraint(
+        ["cart_id"],
+        ["cart.uuid"],
+        name="fk_cart",
+        ondelete="CASCADE",
+    ),
 )
 CartItemDTO = ModelType.build(
     "CartItemDTO",

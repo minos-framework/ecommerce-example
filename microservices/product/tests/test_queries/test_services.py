@@ -33,11 +33,9 @@ from minos.common import (
 )
 from minos.networks import (
     Request,
-    Response,
 )
+
 from src import (
-    Inventory,
-    Product,
     ProductQueryService,
 )
 

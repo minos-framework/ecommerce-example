@@ -1,19 +1,9 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
 
 import sys
 import unittest
-from collections import (
-    defaultdict,
-)
 from pathlib import (
     Path,
 )
@@ -43,6 +33,7 @@ from minos.networks import (
     Request,
     Response,
 )
+
 from src import (
     Review,
     ReviewCommandService,
@@ -114,7 +105,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
                 "product": "2cc51893-153e-482e-b785-f77c5c1c4aea",
                 "user": "e015a2e1-9092-448f-b4ca-a678fc384d0e",
                 "title": "Nice package but product broken",
-                "description": "The product came nicely packaged but was broken. The seller took care of it and sent me a new one.",
+                "description": (
+                    "The product came nicely packaged but was broken. The seller took care of it and sent me a new one."
+                ),
                 "score": 3,
             }
         )
@@ -132,7 +125,9 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
             product=observed.product,
             user=observed.user,
             title="Nice package but product broken",
-            description="The product came nicely packaged but was broken. The seller took care of it and sent me a new one.",
+            description=(
+                "The product came nicely packaged but was broken. The seller took care of it and sent me a new one."
+            ),
             score=3,
             uuid=observed.uuid,
             version=observed.version,

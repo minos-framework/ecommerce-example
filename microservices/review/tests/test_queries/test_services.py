@@ -1,20 +1,9 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
 
-import datetime
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
 from pathlib import (
     Path,
 )
@@ -30,13 +19,9 @@ from uuid import (
 from cached_property import (
     cached_property,
 )
-from dependency_injector.wiring import (
-    Provide,
-)
 from minos.common import (
     CommandReply,
     DependencyInjector,
-    InMemoryRepository,
     InMemorySnapshot,
     MinosBroker,
     MinosConfig,
@@ -47,12 +32,11 @@ from minos.networks import (
     Request,
     Response,
 )
+
 from src import (
     Customer,
     Product,
     RatingDTO,
-    Review,
-    ReviewCommandService,
     ReviewDTO,
     ReviewQueryRepository,
     ReviewQueryService,
@@ -173,7 +157,7 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
                 await repository.create(**review)
 
     async def test_get_product_reviews(self):
-        request = _FakeRequest({"uuid": self.product_1.uuid,})
+        request = _FakeRequest({"uuid": self.product_1.uuid})
         response = await self.service.get_product_reviews(request)
 
         self.assertIsInstance(response, Response)
@@ -208,7 +192,7 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([ReviewDTO(**row) for row in expected], observed)
 
     async def test_get_user_reviews(self):
-        request = _FakeRequest({"uuid": self.user_1.uuid,})
+        request = _FakeRequest({"uuid": self.user_1.uuid})
         response = await self.service.get_user_reviews(request)
 
         self.assertIsInstance(response, Response)
@@ -243,7 +227,7 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([ReviewDTO(**row) for row in expected], observed)
 
     async def test_get_product_score_reviews_asc(self):
-        request = _FakeRequest({"uuid": self.product_1.uuid, "limit": 1, "order": "asc",})
+        request = _FakeRequest({"uuid": self.product_1.uuid, "limit": 1, "order": "asc"})
         response = await self.service.get_product_score_reviews(request)
 
         self.assertIsInstance(response, Response)
@@ -267,7 +251,7 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([ReviewDTO(**row) for row in expected], observed)
 
     async def test_get_product_score_reviews_desc(self):
-        request = _FakeRequest({"uuid": self.product_1.uuid, "limit": 1, "order": "desc",})
+        request = _FakeRequest({"uuid": self.product_1.uuid, "limit": 1, "order": "desc"})
         response = await self.service.get_product_score_reviews(request)
 
         self.assertIsInstance(response, Response)
@@ -291,7 +275,7 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([ReviewDTO(**row) for row in expected], observed)
 
     async def test_get_reviews_score_asc(self):
-        request = _FakeRequest({"limit": 10, "order": "asc",})
+        request = _FakeRequest({"limit": 10, "order": "asc"})
         response = await self.service.get_reviews_score(request)
 
         self.assertIsInstance(response, Response)
@@ -299,14 +283,14 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
         observed = await response.content()
 
         expected = [
-            {"product_uuid": self.product_2.uuid, "product_title": "Product 2", "average": 2.0,},
-            {"product_uuid": self.product_1.uuid, "product_title": "Product 1", "average": 3.5,},
+            {"product_uuid": self.product_2.uuid, "product_title": "Product 2", "average": 2.0},
+            {"product_uuid": self.product_1.uuid, "product_title": "Product 1", "average": 3.5},
         ]
 
         self.assertEqual([RatingDTO(**row) for row in expected], observed)
 
     async def test_get_reviews_score_desc(self):
-        request = _FakeRequest({"limit": 10, "order": "desc",})
+        request = _FakeRequest({"limit": 10, "order": "desc"})
         response = await self.service.get_reviews_score(request)
 
         self.assertIsInstance(response, Response)
@@ -314,14 +298,14 @@ class TestProductQueryService(unittest.IsolatedAsyncioTestCase):
         observed = await response.content()
 
         expected = [
-            {"product_uuid": self.product_1.uuid, "product_title": "Product 1", "average": 3.5,},
-            {"product_uuid": self.product_2.uuid, "product_title": "Product 2", "average": 2.0,},
+            {"product_uuid": self.product_1.uuid, "product_title": "Product 1", "average": 3.5},
+            {"product_uuid": self.product_2.uuid, "product_title": "Product 2", "average": 2.0},
         ]
 
         self.assertEqual([RatingDTO(**row) for row in expected], observed)
 
     async def test_get_get_last_reviews(self):
-        request = _FakeRequest({"limit": 1,})
+        request = _FakeRequest({"limit": 1})
         response = await self.service.get_last_reviews(request)
 
         self.assertIsInstance(response, Response)

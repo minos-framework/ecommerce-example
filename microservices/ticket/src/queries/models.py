@@ -1,8 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-This file is part of minos framework.
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from uuid import (
     UUID,
 )
@@ -40,10 +35,16 @@ TICKET_ENTRY_TABLE = Table(
     Column("unit_price", Numeric, nullable=False),
     Column("quantity", Integer, nullable=False),
     Column("product_uuid", UUID_PG(as_uuid=True), nullable=False),
-    ForeignKeyConstraint(["ticket_uuid"], ["ticket.uuid"], name="fk_ticket", ondelete="CASCADE",),
+    ForeignKeyConstraint(
+        ["ticket_uuid"],
+        ["ticket.uuid"],
+        name="fk_ticket",
+        ondelete="CASCADE",
+    ),
 )
 TicketEntryDTO = ModelType.build(
-    "TicketEntryDTO", {"ticket_uuid": UUID, "title": str, "unit_price": float, "quantity": int, "product_uuid": UUID},
+    "TicketEntryDTO",
+    {"ticket_uuid": UUID, "title": str, "unit_price": float, "quantity": int, "product_uuid": UUID},
 )
 TicketDTO = ModelType.build(
     "TicketDTO", {"uuid": UUID, "version": int, "code": str, "total_price": float, "entries": list[TicketEntryDTO]}

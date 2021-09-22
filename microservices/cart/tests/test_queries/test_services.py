@@ -1,17 +1,9 @@
-"""
-Copyright (C) 2021 Clariteia SL
-This file is part of minos framework.
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
 from pathlib import (
     Path,
 )
@@ -30,7 +22,6 @@ from cached_property import (
 from minos.common import (
     CommandReply,
     DependencyInjector,
-    EntitySet,
     InMemoryRepository,
     InMemorySnapshot,
     MinosBroker,
@@ -40,11 +31,9 @@ from minos.common import (
 )
 from minos.networks import (
     Request,
-    Response,
 )
+
 from src import (
-    Cart,
-    CartEntry,
     CartQueryService,
 )
 

@@ -1,10 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 import logging
 import sys
 from pathlib import (
@@ -27,7 +20,9 @@ app = typer.Typer()
 @app.command("start")
 def start(
     file_path: Optional[Path] = typer.Argument(
-        "config.yml", help="Microservice configuration file.", envvar="MINOS_CONFIGURATION_FILE_PATH",
+        "config.yml",
+        help="Microservice configuration file.",
+        envvar="MINOS_CONFIGURATION_FILE_PATH",
     )
 ):
     """Start the microservice."""

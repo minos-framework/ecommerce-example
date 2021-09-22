@@ -144,7 +144,7 @@ class ProductCommandService(CommandService):
             product = await Product.get(uuid)
             await product.delete()
         except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
-            raise ResponseException(f"The product does not exist.")
+            raise ResponseException("The product does not exist.")
 
     @enroute.broker.command("ReserveProducts")
     async def reserve_products(self, request: Request) -> None:

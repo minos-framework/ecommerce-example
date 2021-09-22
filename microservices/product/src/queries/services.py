@@ -106,16 +106,6 @@ class ProductQueryService(QueryService):
 
     @enroute.broker.event("ReviewCreated")
     async def review_created(self, request: Request) -> None:
-        """Handle the product create and update events.
-
-        :param request: A request instance containing the aggregate difference.
-        :return: This method does not return anything.
-        """
-        diff: AggregateDiff = await request.content()
-        print(diff)
-
-    @enroute.broker.event("ReviewCreated")
-    async def review_created(self, request: Request) -> None:
         """Handle review created or updated events.
 
         :param request: A request instance containing the aggregate difference.

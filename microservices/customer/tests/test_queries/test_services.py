@@ -34,8 +34,8 @@ from minos.common import (
 from minos.networks import (
     Request,
 )
+
 from src import (
-    Customer,
     CustomerQueryService,
 )
 

@@ -1,10 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
@@ -40,6 +33,7 @@ from minos.networks import (
     Request,
     Response,
 )
+
 from src import (
     Address,
     Customer,
@@ -108,7 +102,11 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def test_create_customer(self):
         request = _FakeRequest(
-            {"name": "John", "surname": "Coltrane", "address": {"street": "Green Dolphin Street", "street_no": 42},}
+            {
+                "name": "John",
+                "surname": "Coltrane",
+                "address": {"street": "Green Dolphin Street", "street_no": 42},
+            }
         )
         response = await self.service.create_customer(request)
 
