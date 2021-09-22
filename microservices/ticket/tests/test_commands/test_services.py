@@ -22,7 +22,7 @@ from tests.utils import (
 )
 
 
-class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
+class TestTicketCommandService(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.injector = build_dependency_injector()
 
