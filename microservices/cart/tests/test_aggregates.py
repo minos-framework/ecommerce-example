@@ -6,8 +6,8 @@ from tests.utils import (
 )
 
 
-class TestCredentials(unittest.IsolatedAsyncioTestCase):
-    """Test Credential"""
+class TestCart(unittest.IsolatedAsyncioTestCase):
+    """Test Order"""
 
     def setUp(self) -> None:
         self.injector = build_dependency_injector()
