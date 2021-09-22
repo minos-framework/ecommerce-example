@@ -1,5 +1,3 @@
-"""src.queries.services module."""
-
 from minos.cqrs import (
     QueryService,
 )

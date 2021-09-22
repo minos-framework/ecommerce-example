@@ -1,1 +1,0 @@
-"""tests.queries module."""

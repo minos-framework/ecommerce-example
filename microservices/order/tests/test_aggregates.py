@@ -7,8 +7,6 @@ from tests.utils import (
 
 
 class TestOrder(unittest.IsolatedAsyncioTestCase):
-    """Test Order"""
-
     def setUp(self) -> None:
         self.injector = build_dependency_injector()
 
