@@ -1,7 +1,9 @@
 import sys
 import unittest
 
-from tests.utils import build_dependency_injector
+from tests.utils import (
+    build_dependency_injector,
+)
 
 
 class TestPayment(unittest.IsolatedAsyncioTestCase):

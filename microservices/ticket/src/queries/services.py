@@ -1,16 +1,22 @@
-from dependency_injector.wiring import Provide
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     UUID_REGEX,
     AggregateDiff,
 )
-from minos.cqrs import QueryService
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
 
-from .repositories import TicketQueryRepository
+from .repositories import (
+    TicketQueryRepository,
+)
 
 
 class TicketQueryService(QueryService):

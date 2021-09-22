@@ -1,9 +1,13 @@
-from dependency_injector.wiring import Provide
+from dependency_injector.wiring import (
+    Provide,
+)
 from minos.common import (
     UUID_REGEX,
     AggregateDiff,
 )
-from minos.cqrs import QueryService
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     Response,
@@ -11,7 +15,9 @@ from minos.networks import (
     enroute,
 )
 
-from .repositories import ProductQueryRepository
+from .repositories import (
+    ProductQueryRepository,
+)
 
 
 class ProductQueryService(QueryService):

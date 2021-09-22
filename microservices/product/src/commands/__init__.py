@@ -1,1 +1,3 @@
-from .services import ProductCommandService
+from .services import (
+    ProductCommandService,
+)

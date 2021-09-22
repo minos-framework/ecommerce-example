@@ -1,2 +1,6 @@
-from .repositories import OrderQueryRepository
-from .services import OrderQueryService
+from .repositories import (
+    OrderQueryRepository,
+)
+from .services import (
+    OrderQueryService,
+)

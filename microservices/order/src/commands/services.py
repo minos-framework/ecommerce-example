@@ -1,4 +1,6 @@
-from minos.cqrs import CommandService
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
     Request,
     Response,
@@ -14,7 +16,9 @@ from ..aggregates import (
     PaymentDetail,
     ShipmentDetail,
 )
-from .sagas import CREATE_ORDER
+from .sagas import (
+    CREATE_ORDER,
+)
 
 
 class OrderCommandService(CommandService):

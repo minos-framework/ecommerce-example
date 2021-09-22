@@ -1,5 +1,9 @@
-from collections import defaultdict
-from uuid import UUID
+from collections import (
+    defaultdict,
+)
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     Aggregate,

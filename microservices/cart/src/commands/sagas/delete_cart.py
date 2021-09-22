@@ -1,12 +1,18 @@
-from collections import defaultdict
+from collections import (
+    defaultdict,
+)
 
-from minos.common import Model
+from minos.common import (
+    Model,
+)
 from minos.saga import (
     Saga,
     SagaContext,
 )
 
-from .callbacks import _ReserveProductsQuery
+from .callbacks import (
+    _ReserveProductsQuery,
+)
 
 
 def _reserve_products(context: SagaContext) -> Model:

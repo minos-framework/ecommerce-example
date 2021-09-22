@@ -1,6 +1,10 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from asyncio import gather
+from asyncio import (
+    gather,
+)
 from typing import (
     NoReturn,
     Optional,

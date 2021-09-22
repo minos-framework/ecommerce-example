@@ -1,4 +1,6 @@
-from collections import defaultdict
+from collections import (
+    defaultdict,
+)
 
 from minos.common import (
     Model,
@@ -9,7 +11,9 @@ from minos.saga import (
     SagaContext,
 )
 
-from src.aggregates import Cart
+from src.aggregates import (
+    Cart,
+)
 
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 

@@ -3,7 +3,9 @@ from .aggregates import (
     Product,
     Review,
 )
-from .commands import ReviewCommandService
+from .commands import (
+    ReviewCommandService,
+)
 from .queries import (
     RatingDTO,
     ReviewDTO,
