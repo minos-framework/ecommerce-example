@@ -7,8 +7,6 @@ from tests.utils import (
 
 
 class TestCredentials(unittest.IsolatedAsyncioTestCase):
-    """Test Credential"""
-
     def setUp(self) -> None:
         self.injector = build_dependency_injector()
 

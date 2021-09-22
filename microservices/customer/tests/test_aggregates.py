@@ -6,7 +6,7 @@ from tests.utils import (
 )
 
 
-class TestCart(unittest.IsolatedAsyncioTestCase):
+class TestCustomer(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.injector = build_dependency_injector()
 
