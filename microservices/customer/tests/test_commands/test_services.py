@@ -32,11 +32,7 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def test_create_customer(self):
         request = _FakeRequest(
-            {
-                "name": "John",
-                "surname": "Coltrane",
-                "address": {"street": "Green Dolphin Street", "street_no": 42},
-            }
+            {"name": "John", "surname": "Coltrane", "address": {"street": "Green Dolphin Street", "street_no": 42}}
         )
         response = await self.service.create_customer(request)
 

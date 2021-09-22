@@ -20,7 +20,6 @@ from tests.utils import (
 
 
 class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
-
     async def asyncSetUp(self) -> None:
         self.injector = build_dependency_injector()
 

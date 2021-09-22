@@ -124,17 +124,9 @@ class CartQueryRepository(MinosSetup):
         try:
             cart_item_update_query = (
                 CART_ITEM_TABLE.update()
-                .values(
-                    quantity=quantity,
-                    price=item_price,
-                    title=item_title,
-                    description=item_description,
-                )
+                .values(quantity=quantity, price=item_price, title=item_title, description=item_description,)
                 .where(
-                    and_(
-                        CART_ITEM_TABLE.columns.product_id == item_uuid,
-                        CART_ITEM_TABLE.columns.cart_id == cart_uuid,
-                    )
+                    and_(CART_ITEM_TABLE.columns.product_id == item_uuid, CART_ITEM_TABLE.columns.cart_id == cart_uuid,)
                 )
             )
             self.engine.execute(cart_item_update_query)

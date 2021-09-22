@@ -35,12 +35,7 @@ CART_ITEM_TABLE = Table(
     Column("title", Text, nullable=False),
     Column("description", Text, nullable=False),
     Column("price", Numeric, nullable=False),
-    ForeignKeyConstraint(
-        ["cart_id"],
-        ["cart.uuid"],
-        name="fk_cart",
-        ondelete="CASCADE",
-    ),
+    ForeignKeyConstraint(["cart_id"], ["cart.uuid"], name="fk_cart", ondelete="CASCADE",),
 )
 CartItemDTO = ModelType.build(
     "CartItemDTO",

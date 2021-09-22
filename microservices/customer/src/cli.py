@@ -20,9 +20,7 @@ app = typer.Typer()
 @app.command("start")
 def start(
     file_path: Optional[Path] = typer.Argument(
-        "config.yml",
-        help="Microservice configuration file.",
-        envvar="MINOS_CONFIGURATION_FILE_PATH",
+        "config.yml", help="Microservice configuration file.", envvar="MINOS_CONFIGURATION_FILE_PATH",
     )
 ):
     """Start the microservice."""
