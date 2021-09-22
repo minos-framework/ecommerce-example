@@ -1,3 +1,1 @@
-from .services import (
-    CustomerQueryService,
-)
+from .services import CustomerQueryService

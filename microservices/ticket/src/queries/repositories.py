@@ -1,24 +1,14 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     MinosConfig,
     PostgreSqlMinosDatabase,
 )
-from sqlalchemy import (
-    create_engine,
-)
-from sqlalchemy.orm import (
-    sessionmaker,
-)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from .models import (
     META,

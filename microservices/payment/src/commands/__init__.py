@@ -1,3 +1,1 @@
-from .services import (
-    PaymentCommandService,
-)
+from .services import PaymentCommandService

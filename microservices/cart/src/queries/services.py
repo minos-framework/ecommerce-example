@@ -1,21 +1,13 @@
-from dependency_injector.wiring import (
-    Provide,
-)
-from minos.common import (
-    AggregateDiff,
-)
-from minos.cqrs import (
-    QueryService,
-)
+from dependency_injector.wiring import Provide
+from minos.common import AggregateDiff
+from minos.cqrs import QueryService
 from minos.networks import (
     Request,
     Response,
     enroute,
 )
 
-from .repositories import (
-    CartQueryRepository,
-)
+from .repositories import CartQueryRepository
 
 
 class CartQueryService(QueryService):
