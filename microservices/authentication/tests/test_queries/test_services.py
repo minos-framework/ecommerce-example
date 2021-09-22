@@ -3,7 +3,6 @@ from __future__ import (
 )
 
 import base64
-import json
 import sys
 import unittest
 from pathlib import (
@@ -31,6 +30,7 @@ from minos.common import (
 from minos.networks import (
     RestRequest,
 )
+
 from src import (
     CredentialsQueryRepository,
     CredentialsQueryService,

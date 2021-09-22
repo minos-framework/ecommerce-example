@@ -56,7 +56,7 @@ class CredentialsQueryRepository(MinosSetup):
             and_(
                 CREDENTIALS_TABLE.columns.username == username,
                 CREDENTIALS_TABLE.columns.password == password,
-                CREDENTIALS_TABLE.columns.active == True,  # Do not substitute '==' by 'is'
+                CREDENTIALS_TABLE.columns.active == True,  # Do not substitute '==' by 'is' # noqa: E712
             )
         )
 
