@@ -33,6 +33,7 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
+        self.injector.container.unwire()
 
     async def test_create_credentials(self):
         request = _FakeRequest({"username": "test_name", "password": "test_password"})
@@ -65,7 +66,7 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
 
         observed = await gather(*(self.service.create_credentials(request) for _ in range(10)), return_exceptions=True)
 
-        self.assertEqual(1, sum(not isinstance(o, ResponseException) for o in observed), str(observed))
+        self.assertEqual(1, sum(not isinstance(o, ResponseException) for o in observed))
 
 
 if __name__ == "__main__":
