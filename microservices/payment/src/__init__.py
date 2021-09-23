@@ -1,4 +1,3 @@
-"""src module."""
 from .aggregates import (
     Payment,
 )

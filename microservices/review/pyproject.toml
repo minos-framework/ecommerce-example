@@ -18,6 +18,8 @@ SQLAlchemy = "1.4.22"
 pytest = "^6.2.4"
 black = "^19.10b"
 isort = "^5.8.0"
+flake8 = "^3.9.2"
+coverage = "^5.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -1,8 +1,5 @@
 import base64
 import time
-from uuid import (
-    UUID,
-)
 
 import jwt
 from dependency_injector.wiring import (

@@ -2,9 +2,6 @@ from __future__ import (
     annotations,
 )
 
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
 )
@@ -37,7 +34,7 @@ class CredentialsQueryRepository(MinosSetup):
         super().__init__(*args, **kwargs)
         self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
 
-    async def _setup(self) -> NoReturn:
+    async def _setup(self) -> None:
         META.create_all(self.engine)
 
     @classmethod
@@ -56,7 +53,7 @@ class CredentialsQueryRepository(MinosSetup):
             and_(
                 CREDENTIALS_TABLE.columns.username == username,
                 CREDENTIALS_TABLE.columns.password == password,
-                CREDENTIALS_TABLE.columns.active == True,  # Do not substitute '==' by 'is'
+                CREDENTIALS_TABLE.columns.active == True,  # Do not substitute '==' by 'is' # noqa: E712
             )
         )
 

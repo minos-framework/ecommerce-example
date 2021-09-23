@@ -3,14 +3,10 @@ from __future__ import (
 )
 
 import base64
-import json
 import sys
 import unittest
 from pathlib import (
     Path,
-)
-from typing import (
-    NoReturn,
 )
 from uuid import (
     UUID,
@@ -19,24 +15,25 @@ from uuid import (
 
 import jwt
 from minos.common import (
-    CommandReply,
     DependencyInjector,
     InMemoryRepository,
     InMemorySnapshot,
-    MinosBroker,
     MinosConfig,
-    MinosSagaManager,
-    Model,
 )
 from minos.networks import (
     RestRequest,
 )
+
 from src import (
     CredentialsQueryRepository,
     CredentialsQueryService,
 )
 from src.queries import (
     AlreadyExists,
+)
+from tests.utils import (
+    _FakeBroker,
+    _FakeSagaManager,
 )
 
 
@@ -50,19 +47,6 @@ class _FakeRestRequest(RestRequest):
         encoded_credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
         headers = {"Authorization": f"Basic {encoded_credentials}"}
         self.raw_request = _FakeRawRequest(headers)
-
-
-class _FakeBroker(MinosBroker):
-    async def send(self, items: list[Model], **kwargs) -> NoReturn:
-        pass
-
-
-class _FakeSagaManager(MinosSagaManager):
-    async def _run_new(self, name: str, **kwargs) -> UUID:
-        pass
-
-    async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
-        pass
 
 
 class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):

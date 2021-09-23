@@ -1,5 +1,3 @@
-"""src.commands.sagas module."""
-
 from collections import (
     defaultdict,
 )

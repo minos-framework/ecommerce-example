@@ -1,5 +1,3 @@
-"""src.queries.repositories module."""
-
 from __future__ import (
     annotations,
 )

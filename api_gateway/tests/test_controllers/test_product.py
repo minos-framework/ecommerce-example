@@ -1,10 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 import unittest
 
 import requests
@@ -21,6 +14,7 @@ from minos.api_gateway.common import (
 from minos.api_gateway.rest import (
     ApiGatewayRestService,
 )
+
 from tests.mock_servers.server import (
     MockServer,
 )
