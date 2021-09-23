@@ -70,6 +70,7 @@ class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
+        self.injector.container.shutdown_resources()
 
     async def test_get_token(self):
         uuid = uuid4()
