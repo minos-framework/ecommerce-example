@@ -7,6 +7,7 @@ import unittest
 
 from minos.networks import (
     Response,
+    ResponseException,
 )
 
 from src import (
@@ -46,6 +47,14 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
             updated_at=observed.updated_at,
         )
         self.assertEqual(expected, observed)
+
+    async def test_create_credentials_raises_duplicated_username(self):
+        await Credentials.create("foo", "bar", True)
+
+        request = _FakeRequest({"username": "foo", "password": "bar"})
+
+        with self.assertRaises(ResponseException):
+            await self.service.create_credentials(request)
 
 
 if __name__ == "__main__":

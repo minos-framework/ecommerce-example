@@ -1,7 +1,9 @@
 import sys
 import unittest
 
-from src import Credentials
+from src import (
+    Credentials,
+)
 from tests.utils import (
     build_dependency_injector,
 )
