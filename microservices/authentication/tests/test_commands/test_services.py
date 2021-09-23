@@ -1,6 +1,4 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
@@ -60,10 +58,7 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_create_credentials_concurrently(self):
         request = _FakeRequest({"username": "foo", "password": "bar"})
 
-        observed = await gather(
-            *(self.service.create_credentials(request) for _ in range(10)),
-            return_exceptions=True
-        )
+        observed = await gather(*(self.service.create_credentials(request) for _ in range(10)), return_exceptions=True)
 
         self.assertEqual(1, sum(not isinstance(o, ResponseException) for o in observed))
 
