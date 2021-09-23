@@ -33,16 +33,16 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
 
     async def test_create_credentials(self):
         service = CredentialsCommandService()
-        request = _FakeRequest({"username": "test_name", "password": "test_password"})
+        request = _FakeRequest({"username": "foo", "password": "bar"})
         response = await service.create_credentials(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
         expected = Credentials(
-            "test_name",
-            "test_password",
-            True,
+            username="foo",
+            password="bar",
+            active=True,
             uuid=observed.uuid,
             version=observed.version,
             created_at=observed.created_at,
