@@ -3,7 +3,7 @@ from __future__ import (
 )
 
 from typing import (
-    NoReturn,
+    Optional,
 )
 from uuid import (
     UUID,
@@ -32,17 +32,16 @@ class ProductQueryRepository(MinosSetup):
         super().__init__(*args, **kwargs)
         self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
 
-    async def _setup(self) -> NoReturn:
+    async def _setup(self) -> None:
         META.create_all(self.engine)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "product_query_db"}) | kwargs)
 
-    async def get_all(self) -> NoReturn:
+    async def get_all(self) -> ProductDTO:
         """Create a new row.
 
-        :param kwargs: The parameters of the creation query.
         :return: This method does not return anything.
         """
 
@@ -53,15 +52,16 @@ class ProductQueryRepository(MinosSetup):
 
         return products
 
-    async def get(self, product_uuid: UUID) -> NoReturn:
+    async def get(self, product_uuid: UUID) -> Optional[ProductDTO]:
         """Create a new row.
 
-        :param kwargs: The parameters of the creation query.
+        :param product_uuid: The parameters of the creation query.
         :return: This method does not return anything.
         """
 
         query = PRODUCT_TABLE.select().where(PRODUCT_TABLE.columns.uuid == product_uuid)
         result = self.engine.execute(query)
+        product = None
 
         for row in result:
             product = ProductDTO(**row)
@@ -77,7 +77,7 @@ class ProductQueryRepository(MinosSetup):
         result = self.engine.execute(query)
         return [ProductDTO(**row) for row in result]
 
-    async def create(self, **kwargs) -> NoReturn:
+    async def create(self, **kwargs) -> None:
         """Create a new row.
 
         :param kwargs: The parameters of the creation query.
@@ -94,7 +94,7 @@ class ProductQueryRepository(MinosSetup):
         query = PRODUCT_TABLE.insert().values(**kwargs)
         self.engine.execute(query)
 
-    async def update(self, uuid: UUID, **kwargs) -> NoReturn:
+    async def update(self, uuid: UUID, **kwargs) -> None:
         """Update an existing row.
 
         :param uuid: The identifier of the row.
@@ -113,7 +113,7 @@ class ProductQueryRepository(MinosSetup):
         query = PRODUCT_TABLE.update().where(PRODUCT_TABLE.columns.uuid == uuid).values(**kwargs)
         self.engine.execute(query)
 
-    async def delete(self, uuid: UUID) -> NoReturn:
+    async def delete(self, uuid: UUID) -> None:
         """Delete an entry from the database.
 
         :param uuid: The product identifier.

@@ -6,7 +6,6 @@ from asyncio import (
     gather,
 )
 from typing import (
-    NoReturn,
     Optional,
 )
 from uuid import (
@@ -38,7 +37,7 @@ class Product(Aggregate):
 
         super().__init__(code, *args, inventory=inventory, **kwargs)
 
-    def set_inventory_amount(self, amount: int) -> NoReturn:
+    def set_inventory_amount(self, amount: int) -> None:
         """Update the inventory amount.
 
         :param amount: The new inventory amount.
@@ -46,7 +45,7 @@ class Product(Aggregate):
         """
         self.inventory = self.inventory.set_amount(amount)
 
-    def update_inventory_amount(self, amount_diff: int) -> NoReturn:
+    def update_inventory_amount(self, amount_diff: int) -> None:
         """Update the inventory amount.
 
         :param amount_diff: The difference from the actual amount.
@@ -55,7 +54,7 @@ class Product(Aggregate):
         self.inventory = self.inventory.update_amount(amount_diff)
 
     @classmethod
-    async def reserve(cls, quantities: dict[UUID, int]) -> NoReturn:
+    async def reserve(cls, quantities: dict[UUID, int]) -> None:
         """Reserve product quantities.
 
         :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
@@ -79,7 +78,7 @@ class Product(Aggregate):
             raise ValueError("The reservation query could not be satisfied.")
 
     @classmethod
-    async def purchase(cls, quantities: dict[UUID, int]) -> NoReturn:
+    async def purchase(cls, quantities: dict[UUID, int]) -> None:
         """Purchase products.
 
         :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are

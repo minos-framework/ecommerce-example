@@ -2,9 +2,6 @@ from __future__ import (
     annotations,
 )
 
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
 )
@@ -18,14 +15,14 @@ from minos.common import (
 class PaymentAmountRepository(PostgreSqlMinosDatabase):
     """Payment inventory repository"""
 
-    async def _setup(self) -> NoReturn:
+    async def _setup(self) -> None:
         await self.submit_query(_CREATE_TABLE)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> PaymentAmountRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "payment_query_db"}) | kwargs)
 
-    async def insert_payment_amount(self, uuid: UUID, amount: int) -> NoReturn:
+    async def insert_payment_amount(self, uuid: UUID, amount: int) -> None:
         """ Insert Payment amount
         :param uuid: UUID
         :param amount: Amount in float format
@@ -33,7 +30,7 @@ class PaymentAmountRepository(PostgreSqlMinosDatabase):
         """
         await self.submit_query(_INSERT_PAYMENT_QUERY, {"uuid": uuid, "amount": amount})
 
-    async def delete(self, uuid: UUID) -> NoReturn:
+    async def delete(self, uuid: UUID) -> None:
         """ Delete Payment
         :param uuid: UUID
         :return: Nothing
