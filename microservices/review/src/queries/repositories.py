@@ -1,13 +1,7 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    NoReturn,
-)
-from uuid import (
-    UUID,
-)
+from typing import NoReturn
+from uuid import UUID
 
 from minos.common import (
     FieldDiff,
@@ -20,9 +14,7 @@ from sqlalchemy import (
     desc,
     func,
 )
-from sqlalchemy.orm import (
-    sessionmaker,
-)
+from sqlalchemy.orm import sessionmaker
 
 from .models import (
     META,

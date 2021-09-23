@@ -1,11 +1,7 @@
 import datetime
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
-from minos.common import (
-    ModelType,
-)
+from minos.common import ModelType
 from sqlalchemy import (
     Column,
     DateTime,

@@ -1,14 +1,8 @@
 import datetime
-from typing import (
-    Any,
-)
-from uuid import (
-    UUID,
-)
+from typing import Any
+from uuid import UUID
 
-from minos.common import (
-    ModelType,
-)
+from minos.common import ModelType
 from sqlalchemy import (
     Column,
     DateTime,
@@ -19,9 +13,7 @@ from sqlalchemy import (
     Text,
     text,
 )
-from sqlalchemy.dialects.postgresql import (
-    JSONB,
-)
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as UUID_PG
 
 META = MetaData()

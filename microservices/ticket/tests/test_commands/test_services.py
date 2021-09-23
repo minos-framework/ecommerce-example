@@ -1,16 +1,10 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from uuid import (
-    uuid4,
-)
+from uuid import uuid4
 
-from minos.networks import (
-    Response,
-)
+from minos.networks import Response
 
 from src import (
     Ticket,

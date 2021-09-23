@@ -1,10 +1,6 @@
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
-from minos.common import (
-    ModelType,
-)
+from minos.common import ModelType
 from sqlalchemy import (
     Column,
     Integer,
@@ -14,9 +10,7 @@ from sqlalchemy import (
     Text,
 )
 from sqlalchemy.dialects.postgresql import UUID as UUID_PG
-from sqlalchemy.schema import (
-    ForeignKeyConstraint,
-)
+from sqlalchemy.schema import ForeignKeyConstraint
 
 META = MetaData()
 TICKET_TABLE = Table(

@@ -1,6 +1,2 @@
-from .sagas import (
-    CREATE_ORDER,
-)
-from .services import (
-    OrderCommandService,
-)
+from .sagas import CREATE_ORDER
+from .services import OrderCommandService
