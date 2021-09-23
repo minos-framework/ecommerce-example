@@ -65,7 +65,7 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
 
         observed = await gather(*(self.service.create_credentials(request) for _ in range(10)), return_exceptions=True)
 
-        self.assertEqual(1, sum(not isinstance(o, ResponseException) for o in observed))
+        self.assertEqual(1, sum(not isinstance(o, ResponseException) for o in observed), str(observed))
 
 
 if __name__ == "__main__":
