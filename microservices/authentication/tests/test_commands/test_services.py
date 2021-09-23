@@ -1,12 +1,8 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from asyncio import (
-    gather,
-)
+from asyncio import gather
 
 from minos.networks import (
     Response,
@@ -24,7 +20,6 @@ from tests.utils import (
 
 
 class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
-
     async def asyncSetUp(self) -> None:
         self.injector = build_dependency_injector()
 
