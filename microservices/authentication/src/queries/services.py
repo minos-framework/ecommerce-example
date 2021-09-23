@@ -2,9 +2,15 @@ import base64
 import time
 
 import jwt
-from dependency_injector.wiring import Provide
-from minos.common import AggregateDiff
-from minos.cqrs import QueryService
+from dependency_injector.wiring import (
+    Provide,
+)
+from minos.common import (
+    AggregateDiff,
+)
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     Response,
@@ -17,7 +23,9 @@ from ..jwt_env import (
     JWT_ALGORITHM,
     SECRET,
 )
-from .repositories import CredentialsQueryRepository
+from .repositories import (
+    CredentialsQueryRepository,
+)
 
 
 class CredentialsQueryService(QueryService):

@@ -1,7 +1,13 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from pathlib import Path
-from typing import Optional
+from pathlib import (
+    Path,
+)
+from typing import (
+    Optional,
+)
 from uuid import (
     UUID,
     uuid4,
@@ -17,7 +23,9 @@ from minos.common import (
     MinosSagaManager,
     Model,
 )
-from minos.networks import Request
+from minos.networks import (
+    Request,
+)
 
 
 class _FakeRequest(Request):

@@ -1,2 +1,6 @@
-from .repositories import TicketQueryRepository
-from .services import TicketQueryService
+from .repositories import (
+    TicketQueryRepository,
+)
+from .services import (
+    TicketQueryService,
+)

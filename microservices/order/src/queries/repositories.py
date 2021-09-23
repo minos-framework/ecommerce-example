@@ -1,14 +1,22 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
 from minos.common import (
     FieldDiff,
     MinosConfig,
     MinosSetup,
 )
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import (
+    create_engine,
+)
+from sqlalchemy.orm import (
+    sessionmaker,
+)
 
 from .models import (
     META,

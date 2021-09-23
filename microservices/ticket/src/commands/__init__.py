@@ -1,2 +1,6 @@
-from .sagas import _CREATE_TICKET
-from .services import TicketCommandService
+from .sagas import (
+    _CREATE_TICKET,
+)
+from .services import (
+    TicketCommandService,
+)

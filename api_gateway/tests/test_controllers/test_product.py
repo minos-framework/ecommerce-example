@@ -1,16 +1,26 @@
 import unittest
 
 import requests
-from aiohttp import web
+from aiohttp import (
+    web,
+)
 from aiohttp.test_utils import (
     AioHTTPTestCase,
     unittest_run_loop,
 )
-from minos.api_gateway.common import MinosConfig
-from minos.api_gateway.rest import ApiGatewayRestService
+from minos.api_gateway.common import (
+    MinosConfig,
+)
+from minos.api_gateway.rest import (
+    ApiGatewayRestService,
+)
 
-from tests.mock_servers.server import MockServer
-from tests.utils import BASE_PATH
+from tests.mock_servers.server import (
+    MockServer,
+)
+from tests.utils import (
+    BASE_PATH,
+)
 
 
 class TestProduct(AioHTTPTestCase):
