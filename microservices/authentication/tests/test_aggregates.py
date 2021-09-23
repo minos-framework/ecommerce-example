@@ -14,10 +14,10 @@ class TestCredentials(unittest.IsolatedAsyncioTestCase):
         self.injector = build_dependency_injector()
 
     async def asyncSetUp(self) -> None:
-        await self.injector.wire(modules=[sys.modules[__name__]])
+        self.injector.container.wire(modules=[sys.modules[__name__]])
 
     async def asyncTearDown(self) -> None:
-        await self.injector.unwire()
+        self.injector.container.unwire()
 
     async def test_exists_username(self) -> None:
         self.assertFalse(await Credentials.exists_username("foo"))

@@ -64,12 +64,12 @@ class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
                 self.config, database=self.config.repository.database
             ),
         )
-        await self.injector.wire(modules=[sys.modules[__name__]])
+        self.injector.container.wire(modules=[sys.modules[__name__]])
 
         self.service = CredentialsQueryService()
 
     async def asyncTearDown(self) -> None:
-        await self.injector.unwire()
+        self.injector.container.unwire()
 
     async def test_get_token(self):
         uuid = uuid4()
