@@ -4,6 +4,7 @@ from __future__ import (
 
 import sys
 import unittest
+from asyncio import gather
 
 from minos.networks import (
     Response,
@@ -55,6 +56,16 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
 
         with self.assertRaises(ResponseException):
             await self.service.create_credentials(request)
+
+    async def test_create_credentials_concurrently(self):
+        request = _FakeRequest({"username": "foo", "password": "bar"})
+
+        observed = await gather(
+            *(self.service.create_credentials(request) for _ in range(10)),
+            return_exceptions=True
+        )
+
+        self.assertEqual(1, sum(not isinstance(o, ResponseException) for o in observed))
 
 
 if __name__ == "__main__":
