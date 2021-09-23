@@ -2,9 +2,6 @@ from __future__ import (
     annotations,
 )
 
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
 )
@@ -39,14 +36,14 @@ class CartQueryRepository(MinosSetup):
         self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
         self.session = sessionmaker(bind=self.engine)()
 
-    async def _setup(self) -> NoReturn:
+    async def _setup(self) -> None:
         META.create_all(self.engine)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> CartQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "cart_query_db"}) | kwargs)
 
-    async def create_cart(self, uuid: UUID, version: int, user_id: int) -> NoReturn:
+    async def create_cart(self, uuid: UUID, version: int, user_id: int) -> None:
         """Insert Payment amount
         :param uuid: UUID
         :param user_id: Customer ID
@@ -133,7 +130,7 @@ class CartQueryRepository(MinosSetup):
         except Exception:
             return {"error": "Error updating Cart Item."}
 
-    async def update_cart_items(self, uuid: UUID, **kwargs) -> NoReturn:
+    async def update_cart_items(self, uuid: UUID, **kwargs) -> None:
         """Update an existing row.
 
         :param uuid: The identifier of the row.
@@ -145,7 +142,7 @@ class CartQueryRepository(MinosSetup):
         query = CART_ITEM_TABLE.update().where(CART_ITEM_TABLE.columns.product_id == uuid).values(**kwargs)
         self.engine.execute(query)
 
-    async def delete_cart(self, cart_uuid: UUID) -> NoReturn:
+    async def delete_cart(self, cart_uuid: UUID) -> None:
         """Delete Payment
         :param cart_uuid: UUID
         :return: Nothing
@@ -153,7 +150,7 @@ class CartQueryRepository(MinosSetup):
         cart_delete_query = CART_TABLE.delete().where(CART_TABLE.columns.uuid == cart_uuid)
         self.engine.execute(cart_delete_query)
 
-    async def delete_cart_item(self, cart_uuid: UUID, product_uuid: UUID) -> NoReturn:
+    async def delete_cart_item(self, cart_uuid: UUID, product_uuid: UUID) -> None:
         """Delete Payment
         :param cart_uuid: Cart UUID
         :param product_uuid: Item UUID

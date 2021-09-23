@@ -2,9 +2,6 @@ from __future__ import (
     annotations,
 )
 
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
 )
@@ -37,14 +34,14 @@ class TicketQueryRepository(PostgreSqlMinosDatabase):
         self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
         self.session = sessionmaker(bind=self.engine)()
 
-    async def _setup(self) -> NoReturn:
+    async def _setup(self) -> None:
         META.create_all(self.engine)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> TicketQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "ticket_query_db"}) | kwargs)
 
-    async def insert(self, uuid: UUID, version: int, code: str, total_price: float, entries) -> NoReturn:
+    async def insert(self, uuid: UUID, version: int, code: str, total_price: float, entries) -> None:
         """Insert Payment amount
         :param uuid: UUID
         :param version: Version ID

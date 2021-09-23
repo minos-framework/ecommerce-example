@@ -2,9 +2,6 @@ from __future__ import (
     annotations,
 )
 
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
 )
@@ -43,14 +40,14 @@ class ReviewQueryRepository(MinosSetup):
         self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
         self.session = sessionmaker(bind=self.engine)()
 
-    async def _setup(self) -> NoReturn:
+    async def _setup(self) -> None:
         META.create_all(self.engine)
 
     @classmethod
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ReviewQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "review_query_db"}) | kwargs)
 
-    async def create(self, **kwargs) -> NoReturn:
+    async def create(self, **kwargs) -> None:
         """Create a new row.
 
         :param kwargs: The parameters of the creation query.
@@ -69,10 +66,10 @@ class ReviewQueryRepository(MinosSetup):
         query = REVIEW_TABLE.insert().values(**kwargs)
         self.engine.execute(query)
 
-    async def get_reviews_by_product(self, product: UUID) -> NoReturn:
+    async def get_reviews_by_product(self, product: UUID) -> list[ReviewDTO]:
         """Create a new row.
 
-        :param kwargs: The parameters of the creation query.
+        :param product: The parameters of the creation query.
         :return: This method does not return anything.
         """
 
@@ -83,7 +80,7 @@ class ReviewQueryRepository(MinosSetup):
 
         return reviews
 
-    async def product_score(self, product: UUID, limit: int = 1, order: str = ORDER_ASC) -> NoReturn:
+    async def product_score(self, product: UUID, limit: int = 1, order: str = ORDER_ASC) -> list[ReviewDTO]:
         """Create a new row.
 
         :param product: Product UUID.
@@ -105,10 +102,10 @@ class ReviewQueryRepository(MinosSetup):
 
         return reviews
 
-    async def worst_product_rating(self, product: UUID) -> NoReturn:
+    async def worst_product_rating(self, product: UUID) -> list[ReviewDTO]:
         """Create a new row.
 
-        :param kwargs: The parameters of the creation query.
+        :param product: The parameters of the creation query.
         :return: This method does not return anything.
         """
 
@@ -124,10 +121,10 @@ class ReviewQueryRepository(MinosSetup):
 
         return reviews
 
-    async def get_reviews_by_user(self, user: UUID) -> NoReturn:
+    async def get_reviews_by_user(self, user: UUID) -> list[ReviewDTO]:
         """Create a new row.
 
-        :param kwargs: The parameters of the creation query.
+        :param user: The parameters of the creation query.
         :return: This method does not return anything.
         """
 
@@ -138,7 +135,7 @@ class ReviewQueryRepository(MinosSetup):
 
         return reviews
 
-    async def reviews_score(self, limit: int = 10, order: str = ORDER_ASC) -> NoReturn:
+    async def reviews_score(self, limit: int = 10, order: str = ORDER_ASC) -> list[RatingDTO]:
         """Top 10 Most Rated Products.
 
         :param limit: Records quantity to return.
@@ -162,7 +159,7 @@ class ReviewQueryRepository(MinosSetup):
 
         return reviews
 
-    async def last_reviews(self, limit: int = 1) -> NoReturn:
+    async def last_reviews(self, limit: int = 1) -> list[ReviewDTO]:
         """Create a new row.
 
         :param limit: Records quantity.
@@ -177,7 +174,7 @@ class ReviewQueryRepository(MinosSetup):
 
         return reviews
 
-    async def update(self, uuid: UUID, **kwargs) -> NoReturn:
+    async def update(self, uuid: UUID, **kwargs) -> None:
         """Update an existing row.
 
         :param uuid: The identifier of the row.
@@ -189,7 +186,7 @@ class ReviewQueryRepository(MinosSetup):
         query = REVIEW_TABLE.update().where(REVIEW_TABLE.columns.uuid == uuid).values(**kwargs)
         self.engine.execute(query)
 
-    async def delete(self, uuid: UUID) -> NoReturn:
+    async def delete(self, uuid: UUID) -> None:
         """Delete an entry from the database.
 
         :param uuid: The product identifier.
@@ -198,7 +195,7 @@ class ReviewQueryRepository(MinosSetup):
         query = REVIEW_TABLE.delete().where(REVIEW_TABLE.columns.uuid == uuid)
         self.engine.execute(query)
 
-    async def delete_all(self) -> NoReturn:
+    async def delete_all(self) -> None:
         """Delete all database.
 
         :return: This method does not return anything.
