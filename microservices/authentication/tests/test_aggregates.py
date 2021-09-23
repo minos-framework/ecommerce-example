@@ -1,6 +1,7 @@
 import sys
 import unittest
 
+from src import Credentials
 from tests.utils import (
     build_dependency_injector,
 )
@@ -15,6 +16,13 @@ class TestCredentials(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
+
+    async def test_exists_username(self) -> None:
+        self.assertFalse(await Credentials.exists_username("foo"))
+
+        await Credentials.create("foo", "bar", True)
+
+        self.assertTrue(await Credentials.exists_username("foo"))
 
 
 if __name__ == "__main__":
