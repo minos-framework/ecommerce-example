@@ -16,7 +16,6 @@ from minos.networks import (
 from ..aggregates import (
     Credentials,
 )
-
 from ..jwt_env import (
     JWT_ALGORITHM,
     SECRET,
