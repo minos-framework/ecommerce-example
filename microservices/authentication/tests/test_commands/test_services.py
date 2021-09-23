@@ -24,15 +24,14 @@ from tests.utils import (
 
 
 class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
-    def setUp(self) -> None:
-        self.injector = build_dependency_injector()
-        self.service = CredentialsCommandService()
 
     async def asyncSetUp(self) -> None:
-        await self.injector.wire(modules=[sys.modules[__name__]])
+        self.injector = build_dependency_injector()
 
-    async def asyncTearDown(self) -> None:
-        await self.injector.unwire()
+        await self.injector.wire(modules=[sys.modules[__name__]])
+        self.addAsyncCleanup(self.injector.unwire)
+
+        self.service = CredentialsCommandService()
 
     async def test_create_credentials(self):
         request = _FakeRequest({"username": "test_name", "password": "test_password"})
