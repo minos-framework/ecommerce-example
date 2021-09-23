@@ -26,18 +26,15 @@ from tests.utils import (
 class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.injector = build_dependency_injector()
-
         await self.injector.wire(modules=[sys.modules[__name__]])
-
-        self.service = CredentialsCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
-        self.injector.container.unwire()
 
     async def test_create_credentials(self):
+        service = CredentialsCommandService()
         request = _FakeRequest({"username": "test_name", "password": "test_password"})
-        response = await self.service.create_credentials(request)
+        response = await service.create_credentials(request)
 
         self.assertIsInstance(response, Response)
 
@@ -54,17 +51,21 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected, observed)
 
     async def test_create_credentials_raises_duplicated_username(self):
+        service = CredentialsCommandService()
+
         await Credentials.create("foo", "bar", True)
 
         request = _FakeRequest({"username": "foo", "password": "bar"})
 
         with self.assertRaises(ResponseException):
-            await self.service.create_credentials(request)
+            await service.create_credentials(request)
 
     async def test_create_credentials_concurrently(self):
+        service = CredentialsCommandService()
+
         request = _FakeRequest({"username": "foo", "password": "bar"})
 
-        observed = await gather(*(self.service.create_credentials(request) for _ in range(10)), return_exceptions=True)
+        observed = await gather(*(service.create_credentials(request) for _ in range(10)), return_exceptions=True)
 
         self.assertEqual(1, sum(not isinstance(o, ResponseException) for o in observed))
 
