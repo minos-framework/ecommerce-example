@@ -1,7 +1,11 @@
 import logging
 import sys
-from pathlib import Path
-from typing import Optional
+from pathlib import (
+    Path,
+)
+from typing import (
+    Optional,
+)
 
 import typer
 from minos.common import (

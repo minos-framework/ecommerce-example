@@ -1,10 +1,16 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import base64
 import sys
 import unittest
-from asyncio import gather
-from pathlib import Path
+from asyncio import (
+    gather,
+)
+from pathlib import (
+    Path,
+)
 from uuid import (
     UUID,
     uuid4,
@@ -17,13 +23,17 @@ from minos.common import (
     InMemorySnapshot,
     MinosConfig,
 )
-from minos.networks import RestRequest
+from minos.networks import (
+    RestRequest,
+)
 
 from src import (
     CredentialsQueryRepository,
     CredentialsQueryService,
 )
-from src.queries import AlreadyExists
+from src.queries import (
+    AlreadyExists,
+)
 from tests.utils import (
     _FakeBroker,
     _FakeSagaManager,
