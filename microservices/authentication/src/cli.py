@@ -25,7 +25,6 @@ def start(
     )
 ):
     """Start the microservice."""
-    config = MinosConfig(file_path)
     launcher = EntrypointLauncher.from_config(file_path, external_modules=[sys.modules["src"]])
     launcher.launch()
 
