@@ -30,7 +30,6 @@ from .repositories import (
 
 
 class CredentialsQueryService(QueryService):
-
     @inject
     def __init__(self, *args, repository: CredentialsQueryRepository = Provide["credentials_repository"], **kwargs):
         super().__init__(*args, **kwargs)
