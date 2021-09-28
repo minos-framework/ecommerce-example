@@ -4,6 +4,7 @@ import time
 import jwt
 from dependency_injector.wiring import (
     Provide,
+    inject,
 )
 from minos.common import (
     AggregateDiff,
@@ -29,7 +30,10 @@ from .repositories import (
 
 
 class CredentialsQueryService(QueryService):
-    repository: CredentialsQueryRepository = Provide["credentials_repository"]
+    @inject
+    def __init__(self, *args, repository: CredentialsQueryRepository = Provide["credentials_repository"], **kwargs):
+        super().__init__(*args, **kwargs)
+        self.repository = repository
 
     @enroute.rest.query("/login", "GET")
     async def get_token(self, request: RestRequest) -> Response:
