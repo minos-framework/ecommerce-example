@@ -26,9 +26,7 @@ from tests.utils import (
 class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.injector = build_dependency_injector()
-
         await self.injector.wire(modules=[sys.modules[__name__]])
-
         self.service = ProductCommandService()
 
     async def asyncTearDown(self) -> None:
