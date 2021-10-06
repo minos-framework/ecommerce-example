@@ -1,11 +1,15 @@
-from typing import Any
+from typing import (
+    Any,
+)
 
 from minos.saga import (
     Saga,
     SagaContext,
 )
 
-from ..aggregates import Credentials
+from ..aggregates import (
+    Credentials,
+)
 
 
 def _validate_username(context: SagaContext):
