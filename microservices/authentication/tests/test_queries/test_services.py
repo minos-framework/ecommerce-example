@@ -3,41 +3,29 @@ from __future__ import (
 )
 
 import base64
-import json
 import sys
 import unittest
 from pathlib import (
     Path,
 )
-from typing import (
-    Any,
-    NoReturn,
-    Optional,
-)
+
 from uuid import (
     UUID,
     uuid4,
 )
 
 import jwt
-from cached_property import (
-    cached_property,
-)
 from minos.common import (
-    CommandReply,
     DependencyInjector,
     InMemoryRepository,
     InMemorySnapshot,
-    MinosBroker,
     MinosConfig,
-    MinosSagaManager,
-    Model,
 )
 from minos.networks import (
-    Request,
     ResponseException,
     RestRequest,
 )
+
 from src import (
     CredentialsQueryRepository,
     CredentialsQueryService,
@@ -45,8 +33,10 @@ from src import (
 from src.queries import (
     AlreadyExists,
 )
-from src.queries.exceptions import (
-    DoesNotExist,
+from tests.utils import (
+    _FakeRequest,
+    _FakeBroker,
+    _FakeSagaManager,
 )
 
 
@@ -62,42 +52,6 @@ class _FakeRestRequest(RestRequest):
         self.raw_request = _FakeRawRequest(headers)
 
 
-class _FakeRequest(Request):
-    """For testing purposes"""
-
-    def __init__(self, content):
-        super().__init__()
-        self._content = content
-
-    @cached_property
-    def user(self) -> Optional[UUID]:
-        """For testing purposes"""
-        return uuid4()
-
-    async def content(self, **kwargs):
-        """For testing purposes"""
-        return self._content
-
-    def __eq__(self, other: _FakeRequest) -> bool:
-        return self._content == other._content and self.user == other.user
-
-    def __repr__(self) -> str:
-        return str()
-
-
-class _FakeBroker(MinosBroker):
-    async def send(self, items: list[Model], **kwargs) -> NoReturn:
-        pass
-
-
-class _FakeSagaManager(MinosSagaManager):
-    async def _run_new(self, name: str, **kwargs) -> UUID:
-        pass
-
-    async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
-        pass
-
-
 class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
@@ -109,7 +63,9 @@ class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
             event_broker=_FakeBroker,
             repository=InMemoryRepository,
             snapshot=InMemorySnapshot,
-            credentials_repository=CredentialsQueryRepository,
+            credentials_repository=CredentialsQueryRepository.from_config(
+                self.config, database=self.config.repository.database
+            ),
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
 

@@ -1,10 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from minos.cqrs import (
     CommandService,
 )
@@ -54,7 +47,7 @@ class ReviewCommandService(CommandService):
         content = await request.content()
         uuid = content["uuid"]
 
-        review = await Review.get_one(uuid)
+        review = await Review.get(uuid)
 
         kwargs = dict(content)
         kwargs.pop("uuid")

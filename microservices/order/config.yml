@@ -1,21 +1,22 @@
 service:
-  name: orders
+  name: order
+  aggregate: src.aggregates.Order
   injections:
     postgresql_pool: minos.common.PostgreSqlPool
     command_broker: minos.networks.CommandBroker
     command_reply_broker: minos.networks.CommandReplyBroker
     event_broker: minos.networks.EventBroker
-    reply_pool: minos.networks.ReplyHandlerPool
+    consumer: minos.networks.Consumer
+    dynamic_handler_pool: minos.networks.DynamicHandlerPool
     repository: minos.common.PostgreSqlRepository
     saga_manager: minos.saga.SagaManager
     snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
+    order_repository: src.OrderQueryRepository
   services:
-    - minos.networks.CommandConsumerService
+    - minos.networks.ConsumerService
     - minos.networks.CommandHandlerService
-    - minos.networks.CommandReplyConsumerService
     - minos.networks.CommandReplyHandlerService
-    - minos.networks.EventConsumerService
     - minos.networks.EventHandlerService
     - minos.networks.RestService
     - minos.networks.SnapshotService
@@ -32,7 +33,7 @@ broker:
     password: min0s
     host: localhost
     port: 5432
-    records: 10
+    records: 1000
     retry: 2
 repository:
   database: order_db
@@ -55,10 +56,7 @@ commands:
 saga:
   storage:
     path: "./order.lmdb"
-  items:
-    - name: CreateOrder
-      controller: src
-      action: CREATE_ORDER
 discovery:
+  client: minos.networks.MinosDiscoveryClient
   host: localhost
   port: 5567

@@ -1,15 +1,7 @@
-"""
-Copyright (C) 2021 Clariteia SL
-This file is part of minos framework.
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
 
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
 )
@@ -18,51 +10,84 @@ from minos.common import (
     MinosConfig,
     PostgreSqlMinosDatabase,
 )
+from sqlalchemy import (
+    create_engine,
+)
+from sqlalchemy.orm import (
+    sessionmaker,
+)
+
+from .models import (
+    META,
+    TICKET_ENTRY_TABLE,
+    TICKET_TABLE,
+    TicketDTO,
+    TicketEntryDTO,
+)
 
 
-class TicketAmountRepository(PostgreSqlMinosDatabase):
+class TicketQueryRepository(PostgreSqlMinosDatabase):
     """Ticket Amount repository"""
 
-    async def _setup(self) -> NoReturn:
-        await self.submit_query(_CREATE_TABLE)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.engine = create_engine("postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**kwargs))
+        self.session = sessionmaker(bind=self.engine)()
+
+    async def _setup(self) -> None:
+        META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> TicketAmountRepository:
+    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> TicketQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "ticket_query_db"}) | kwargs)
 
-    async def insert_ticket_amount(self, uuid: UUID, total_price: int) -> NoReturn:
-        """ Insert Payment amount
+    async def insert(self, uuid: UUID, version: int, code: str, total_price: float, entries) -> None:
+        """Insert Payment amount
         :param uuid: UUID
-        :param total_price: Amount in float format
+        :param version: Version ID
+        :param code: Ticket code
+        :param total_price: Ticket total price
+        :param entries: Ticket entries
         :return: Nothing
         """
-        await self.submit_query(_INSERT_TICKET_QUERY, {"uuid": uuid, "total_price": total_price})
+        query = TICKET_TABLE.insert().values(uuid=uuid, version=version, code=code, total_price=total_price)
+        self.engine.execute(query)
 
-    async def delete(self, uuid: UUID) -> NoReturn:
-        """ Delete Payment
-        :param uuid: UUID
+        for entry in entries:
+            query = TICKET_ENTRY_TABLE.insert().values(
+                ticket_uuid=uuid,
+                title=entry.title,
+                unit_price=entry.unit_price,
+                quantity=entry.quantity,
+                product_uuid=entry.product.uuid,
+            )
+            self.engine.execute(query)
+
+    async def get_ticket(self, ticket_uuid: UUID) -> dict:
+        """Insert Payment amount
+        :param ticket_uuid: UUID
         :return: Nothing
         """
-        await self.submit_query(_DELETE_TICKET_QUERY, {"uuid": uuid})
+        result = {}
 
+        try:
+            ticket_query = self.session.query(TICKET_TABLE).filter(TICKET_TABLE.columns.uuid == ticket_uuid).one()
+        except Exception:
+            return {"error": "Invalid Ticket UUID"}
 
-_CREATE_TABLE = """
-CREATE TABLE IF NOT EXISTS ticket (
-    uuid UUID NOT NULL PRIMARY KEY,
-    total_price FLOAT NOT NULL
-);
-""".strip()
+        try:
+            ticket_entries_query = TICKET_ENTRY_TABLE.select().where(
+                TICKET_ENTRY_TABLE.columns.ticket_uuid == ticket_uuid
+            )
+            ticket_entries_results = self.engine.execute(ticket_entries_query)
+        except Exception:
+            return {"error": "An error occurred while obtaining Ticket entries."}
 
-_INSERT_TICKET_QUERY = """
-INSERT INTO ticket (uuid, total_price)
-VALUES (%(uuid)s,  %(total_price)s)
-ON CONFLICT (uuid)
-DO
-   UPDATE SET total_price = %(total_price)s
-;
-""".strip()
+        try:
+            ticket_entries = [TicketEntryDTO(**row) for row in ticket_entries_results]
 
-_DELETE_TICKET_QUERY = """
-DELETE FROM ticket
-WHERE uuid = %(uuid)s;
-""".strip()
+            result = TicketDTO(**ticket_query, entries=ticket_entries)
+        except Exception:
+            result = {"error": "An error occurred when formatting result."}
+
+        return result

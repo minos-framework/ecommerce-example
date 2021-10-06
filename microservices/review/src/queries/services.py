@@ -1,14 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
-from typing import (
-    NoReturn,
-)
-
 from dependency_injector.wiring import (
     Provide,
 )
@@ -120,7 +109,7 @@ class ReviewQueryService(QueryService):
         return Response(res)
 
     @enroute.broker.event("ReviewCreated")
-    async def review_created(self, request: Request) -> NoReturn:
+    async def review_created(self, request: Request) -> None:
         """Handle the product create and update events.
 
         :param request: A request instance containing the aggregate difference.
@@ -130,7 +119,7 @@ class ReviewQueryService(QueryService):
         await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ReviewUpdated")
-    async def review_updated(self, request: Request) -> NoReturn:
+    async def review_updated(self, request: Request) -> None:
         """Handle the product create and update events.
 
         :param request: A request instance containing the aggregate difference.
@@ -140,7 +129,7 @@ class ReviewQueryService(QueryService):
         await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ProductUpdated.title")
-    async def product_title_updated(self, request: Request) -> NoReturn:
+    async def product_title_updated(self, request: Request) -> None:
         """Handle the product create and update events.
         TODO: Uncomplete
         :param request: A request instance containing the aggregate difference.
@@ -150,7 +139,7 @@ class ReviewQueryService(QueryService):
         print(diff)
 
     @enroute.broker.event("CustomerUpdated.username")
-    async def username_updated(self, request: Request) -> NoReturn:
+    async def username_updated(self, request: Request) -> None:
         """Handle the product create and update events.
         TODO: Uncomplete
         :param request: A request instance containing the aggregate difference.

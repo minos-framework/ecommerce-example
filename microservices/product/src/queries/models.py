@@ -1,10 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from uuid import (
     UUID,
 )
@@ -32,11 +25,22 @@ PRODUCT_TABLE = Table(
     Column("title", Text, nullable=False),
     Column("description", Text, nullable=False),
     Column("price", Numeric, nullable=False),
+    Column("reviews_count", Integer, default=0),
+    Column("reviews_score", Numeric, default=0),
     Column("inventory_amount", Integer, nullable=False),
     Column("inventory_reserved", Integer, nullable=False),
     Column("inventory_sold", Integer, nullable=False),
 )
 
 ProductDTO = ModelType.build(
-    "ProductDTO", {"uuid": UUID, "code": str, "title": str, "description": str, "price": float}
+    "ProductDTO",
+    {
+        "uuid": UUID,
+        "code": str,
+        "title": str,
+        "description": str,
+        "price": float,
+        "reviews_count": int,
+        "reviews_score": float,
+    },
 )

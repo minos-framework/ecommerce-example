@@ -1,16 +1,5 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
-from typing import (
-    NoReturn,
-)
 from uuid import (
     UUID,
-    uuid4,
 )
 
 from minos.common import (
@@ -66,7 +55,7 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
         amount = content["amount"]
 
-        product = await Product.get_one(uuid)
+        product = await Product.get(uuid)
         product.set_inventory_amount(amount)
         await product.save()
 
@@ -84,7 +73,7 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
         amount_diff = content["amount_diff"]
 
-        product = await Product.get_one(uuid)
+        product = await Product.get(uuid)
         product.update_inventory_amount(amount_diff)
         await product.save()
 
@@ -104,7 +93,7 @@ class ProductCommandService(CommandService):
         description = content["description"]
         price = content["price"]
 
-        product = await Product.get_one(uuid)
+        product = await Product.get(uuid)
         product.title = title
         product.description = description
         product.price = price
@@ -123,7 +112,7 @@ class ProductCommandService(CommandService):
         """
         content = await request.content()
         uuid = content["uuid"]
-        product = await Product.get_one(uuid)
+        product = await Product.get(uuid)
 
         if "title" in content:
             product.title = content["title"]
@@ -140,7 +129,7 @@ class ProductCommandService(CommandService):
 
     @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
-    async def delete_product(request: Request) -> NoReturn:
+    async def delete_product(request: Request) -> None:
         """Delete a product by identifier.
 
         :param request: A request containing the product identifier.
@@ -150,13 +139,13 @@ class ProductCommandService(CommandService):
         uuid = content["uuid"]
 
         try:
-            product = await Product.get_one(uuid)
+            product = await Product.get(uuid)
             await product.delete()
         except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
-            raise ResponseException(f"The product does not exist.")
+            raise ResponseException("The product does not exist.")
 
     @enroute.broker.command("ReserveProducts")
-    async def reserve_products(self, request: Request) -> NoReturn:
+    async def reserve_products(self, request: Request) -> None:
         """Reserve the requested quantities of products.
 
         :param: request: The ``Request`` instance that contains the quantities dictionary.
@@ -174,7 +163,7 @@ class ProductCommandService(CommandService):
             raise ResponseException(f"There is not enough product amount: {exc!r}")
 
     @enroute.broker.command("PurchaseProducts")
-    async def purchase_products(self, request: Request) -> NoReturn:
+    async def purchase_products(self, request: Request) -> None:
         """Purchase the requested quantities of products.
 
         :param: request: The ``Request`` instance that contains the quantities dictionary.

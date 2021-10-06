@@ -1,10 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from collections import (
     defaultdict,
 )
@@ -47,7 +40,7 @@ async def _create_cart(context: SagaContext) -> SagaContext:
 
 
 DELETE_CART = (
-    Saga("DeleteCart")
+    Saga()
     .step()
     .invoke_participant("ReserveProducts", _reserve_products)
     .with_compensation("ReserveProducts", _release_products)

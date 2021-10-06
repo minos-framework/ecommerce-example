@@ -1,8 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-This file is part of minos framework.
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from uuid import (
     UUID,
 )
@@ -24,6 +19,12 @@ from minos.saga import (
 
 from ..aggregates import (
     Cart,
+)
+from .sagas import (
+    ADD_CART_ITEM,
+    DELETE_CART,
+    REMOVE_CART_ITEM,
+    UPDATE_CART_ITEM,
 )
 
 
@@ -54,11 +55,11 @@ class CartCommandService(CommandService):
         cart = content["uuid"]
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
-        uuid = await self.saga_manager.run(
-            "AddCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
+        saga_execution = await self.saga_manager.run(
+            ADD_CART_ITEM, context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
         )
 
-        return Response(uuid)
+        return Response(saga_execution.uuid)
 
     @enroute.rest.command("/carts/{uuid}/items", "PUT")
     @enroute.broker.command("UpdateCartItem")
@@ -71,11 +72,11 @@ class CartCommandService(CommandService):
         cart = content["uuid"]
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
-        uuid = await self.saga_manager.run(
-            "UpdateCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
+        saga_execution = await self.saga_manager.run(
+            UPDATE_CART_ITEM, context=SagaContext(cart_id=cart, product_uuid=product_uuid, quantity=quantity)
         )
 
-        return Response(uuid)
+        return Response(saga_execution.uuid)
 
     @enroute.rest.command("/carts/{uuid}/items", "DELETE")
     @enroute.broker.command("RemoveCartItem")
@@ -90,11 +91,11 @@ class CartCommandService(CommandService):
 
         idx, product = await self._get_cart_item(cart, product_uuid)
 
-        saga_id = await self.saga_manager.run(
-            "RemoveCartItem", context=SagaContext(cart_id=cart, product_uuid=product_uuid, product=product)
+        saga_execution = await self.saga_manager.run(
+            REMOVE_CART_ITEM, context=SagaContext(cart_id=cart, product_uuid=product_uuid, product=product)
         )
 
-        return Response(saga_id)
+        return Response(saga_execution.uuid)
 
     @enroute.rest.command("/carts/{uuid}", "DELETE")
     @enroute.broker.command("DeleteCart")
@@ -106,15 +107,15 @@ class CartCommandService(CommandService):
         content = await request.content()
 
         cart_id = content["uuid"]
-        cart = await Cart.get_one(cart_id)
+        cart = await Cart.get(cart_id)
 
-        uuid = await self.saga_manager.run("DeleteCart", context=SagaContext(cart=cart))
+        saga_execution = await self.saga_manager.run(DELETE_CART, context=SagaContext(cart=cart))
 
-        return Response(uuid)
+        return Response(saga_execution.uuid)
 
     @staticmethod
     async def _get_cart_item(cart_id: UUID, product_uuid: UUID):
-        cart = await Cart.get_one(cart_id)
+        cart = await Cart.get(cart_id)
         for idx, product in enumerate(cart.entries):
             if str(product.product) == product_uuid:
                 return idx, product
