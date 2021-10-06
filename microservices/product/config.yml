@@ -21,6 +21,7 @@ service:
     - minos.networks.RestService
     - minos.networks.SnapshotService
     - minos.networks.ProducerService
+    - minos.networks.PeriodicTaskSchedulerService
 rest:
   host: 0.0.0.0
   port: 8084
