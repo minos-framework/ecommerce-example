@@ -47,8 +47,6 @@ snapshot:
   password: min0s
   host: localhost
   port: 5432
-events:
-  service: src.CustomerQueryService
 queries:
   service: src.CustomerQueryService
 commands:

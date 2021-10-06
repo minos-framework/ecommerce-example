@@ -52,8 +52,6 @@ commands:
   service: src.PaymentCommandService
 queries:
   service: src.PaymentQueryService
-events:
-  service: src.PaymentQueryService
 saga:
   storage:
     path: "./payment.lmdb"

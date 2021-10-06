@@ -52,8 +52,6 @@ commands:
   service: src.ReviewCommandService
 queries:
   service: src.ReviewQueryService
-events:
-  service: src.ReviewQueryService
 saga:
   storage:
     path: "./review.lmdb"

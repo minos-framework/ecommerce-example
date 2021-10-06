@@ -52,8 +52,6 @@ commands:
   service: src.ProductCommandService
 queries:
   service: src.ProductQueryService
-events:
-  service: src.ProductQueryService
 saga:
   storage:
     path: "./product.lmdb"

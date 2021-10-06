@@ -52,8 +52,6 @@ commands:
   service: src.CartCommandService
 queries:
   service: src.CartQueryService
-events:
-  service: src.CartQueryService
 saga:
   storage:
     path: "./cart.lmdb"
