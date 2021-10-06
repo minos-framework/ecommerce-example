@@ -1,6 +1,7 @@
 from minos.saga import (
     Saga,
     SagaContext,
+    SagaResponse,
 )
 
 from src.aggregates import (
@@ -14,6 +15,11 @@ from .callbacks import (
 )
 
 
+# noinspection PyUnusedLocal
+def _raise(context: SagaContext, response: SagaResponse) -> SagaContext:
+    raise ValueError("Errored response must abort the execution!")
+
+
 async def _create_cart_item(context: SagaContext) -> SagaContext:
     cart_id = context["cart_id"]
     product_uuid = context["product_uuid"]
@@ -25,10 +31,4 @@ async def _create_cart_item(context: SagaContext) -> SagaContext:
     return SagaContext(cart=cart)
 
 
-ADD_CART_ITEM = (
-    Saga()
-    .step()
-    .invoke_participant("ReserveProducts", _reserve_products)
-    .with_compensation("ReserveProducts", _release_products)
-    .commit(_create_cart_item)
-)
+ADD_CART_ITEM = Saga().step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_create_cart_item)
