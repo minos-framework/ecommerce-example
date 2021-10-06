@@ -1,13 +1,9 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import base64
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from uuid import (
     UUID,
     uuid4,

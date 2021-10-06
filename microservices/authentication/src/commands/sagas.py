@@ -1,15 +1,11 @@
-from typing import (
-    Any,
-)
+from typing import Any
 
 from minos.saga import (
     Saga,
     SagaContext,
 )
 
-from ..aggregates import (
-    Credentials,
-)
+from ..aggregates import Credentials
 
 
 def _validate_username(context: SagaContext):
@@ -33,8 +29,5 @@ async def _create_credentials(context: SagaContext) -> SagaContext:
 
 
 CREATE_CUSTOMER_SAGA = (
-    Saga("FullLogin")
-    .step()
-    .invoke_participant("CreateCustomer", _create_customer)
-    .commit(_create_credentials)
+    Saga("FullLogin").step().invoke_participant("CreateCustomer", _create_customer).commit(_create_credentials)
 )
