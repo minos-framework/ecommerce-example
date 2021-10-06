@@ -41,16 +41,14 @@ class CredentialsCommandService(CommandService):
         """
         content = await request.content()
 
+        username = content["username"]
+        password = content["password"]
+        metadata = {k: v for k, v in content.items() if k not in {"username", "password"}}
+
         try:
             execution = await self.saga_manager.run(
                 definition=CREATE_CUSTOMER_SAGA,
-                context=SagaContext(
-                    username=content["username"],
-                    password=content["password"],
-                    name=content["name"],
-                    surname=content["surname"],
-                    address=content["address"],
-                ),
+                context=SagaContext(username=username, password=password, metadata=metadata),
             )
         except Exception as exc:
             raise ResponseException(repr(exc))

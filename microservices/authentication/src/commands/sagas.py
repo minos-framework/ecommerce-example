@@ -1,3 +1,7 @@
+from typing import (
+    Any,
+)
+
 from minos.saga import (
     Saga,
     SagaContext,
@@ -13,10 +17,8 @@ def _validate_username(context: SagaContext):
     return username
 
 
-def _create_customer(context: SagaContext):
-    customer = {"name": context["name"], "surname": context["surname"], "address": context["address"]}
-
-    return customer
+def _create_customer(context: SagaContext) -> dict[str, Any]:
+    return context["metadata"]
 
 
 async def _create_credentials(context: SagaContext) -> SagaContext:
