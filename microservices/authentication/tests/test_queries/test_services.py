@@ -8,7 +8,6 @@ import unittest
 from pathlib import (
     Path,
 )
-
 from uuid import (
     UUID,
     uuid4,
@@ -27,15 +26,13 @@ from minos.networks import (
 )
 
 from src import (
+    AlreadyExists,
     CredentialsQueryRepository,
     CredentialsQueryService,
 )
-from src.queries import (
-    AlreadyExists,
-)
 from tests.utils import (
-    _FakeRequest,
     _FakeBroker,
+    _FakeRequest,
     _FakeSagaManager,
 )
 
@@ -46,6 +43,7 @@ class _FakeRawRequest:
 
 
 class _FakeRestRequest(RestRequest):
+    # noinspection PyMissingConstructor
     def __init__(self, username: str, password: str):
         encoded_credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
         headers = {"Authorization": f"Basic {encoded_credentials}"}
@@ -100,7 +98,7 @@ class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
 
         with self.assertRaises(ResponseException):
             fake_request = _FakeRequest({"username": wrong_username})
-            response = await self.service.get_by_username(fake_request)
+            await self.service.get_by_username(fake_request)
 
 
 if __name__ == "__main__":

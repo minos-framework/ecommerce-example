@@ -22,14 +22,16 @@ def _create_customer(context: SagaContext):
 async def _create_credentials(context: SagaContext) -> SagaContext:
     username = context["username"]
     password = context["password"]
+
+    if await Credentials.exists_username(username):
+        raise Exception(f"The given username already exists: {username}")
+
     credentials = await Credentials.create(username, password, active=True)
     return SagaContext(credentials=credentials)
 
 
 CREATE_CUSTOMER_SAGA = (
     Saga("FullLogin")
-    .step()
-    .invoke_participant("UniqueUsername", _validate_username)
     .step()
     .invoke_participant("CreateCustomer", _create_customer)
     .commit(_create_credentials)

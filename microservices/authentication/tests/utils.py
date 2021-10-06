@@ -26,6 +26,9 @@ from minos.common import (
 from minos.networks import (
     Request,
 )
+from minos.saga import (
+    SagaContext,
+)
 
 
 class _FakeRequest(Request):
@@ -67,6 +70,11 @@ class _FakeSagaManager(MinosSagaManager):
 
     async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
         """For testing purposes."""
+
+
+class _FakeSagaExecution:
+    def __init__(self, context: SagaContext):
+        self.context = context
 
 
 def build_dependency_injector() -> DependencyInjector:

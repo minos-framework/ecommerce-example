@@ -14,6 +14,7 @@ from minos.networks import (
 )
 from minos.saga import (
     SagaContext,
+)
 
 from ..aggregates import (
     Credentials,
@@ -39,26 +40,23 @@ class CredentialsCommandService(CommandService):
         :return:
         """
         content = await request.content()
-        
-        username = content["username"]
-        password = content["password"]
 
-        if await Credentials.exists_username(username):
-            raise ResponseException(f"The given username already exists: {username}")
-        
+        try:
+            execution = await self.saga_manager.run(
+                definition=CREATE_CUSTOMER_SAGA,
+                context=SagaContext(
+                    username=content["username"],
+                    password=content["password"],
+                    name=content["name"],
+                    surname=content["surname"],
+                    address=content["address"],
+                ),
+            )
+        except Exception as exc:
+            raise ResponseException(repr(exc))
 
-        uuid = await self.saga_manager.run(
-            definition=CREATE_CUSTOMER_SAGA,
-            context=SagaContext(
-                username=username,
-                password=password,
-                name=content["name"],
-                surname=content["surname"],
-                address=content["address"],
-            ),
-        )
-
-        return Response(uuid)
+        credentials = execution.context["credentials"]
+        return Response({"user": credentials.user})
 
     @enroute.rest.command("/login", "DELETE")
     async def remove_credentials(self, request: Request) -> None:
