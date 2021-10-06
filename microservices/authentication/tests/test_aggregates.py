@@ -1,5 +1,8 @@
 import sys
 import unittest
+from uuid import (
+    uuid4,
+)
 
 from src import (
     Credentials,
@@ -20,7 +23,7 @@ class TestCredentials(unittest.IsolatedAsyncioTestCase):
     async def test_exists_username(self) -> None:
         self.assertFalse(await Credentials.exists_username("foo"))
 
-        await Credentials.create("foo", "bar", True)
+        await Credentials.create("foo", "bar", True, uuid4())
 
         self.assertTrue(await Credentials.exists_username("foo"))
 

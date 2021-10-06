@@ -23,7 +23,7 @@ class Credentials(Aggregate):
     username: str
     password: str
     active: bool
-    user = ModelRef[Customer]
+    user: ModelRef[Customer]
 
     @classmethod
     async def exists_username(cls, username: str) -> bool:

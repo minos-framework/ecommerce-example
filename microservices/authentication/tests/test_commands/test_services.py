@@ -60,7 +60,7 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual({"user": expected.user}, observed)
 
     async def test_create_credentials_raises_duplicated_username(self):
-        await Credentials.create("foo", "bar", True)
+        await Credentials.create("foo", "bar", True, uuid4())
 
         request = _FakeRequest({"username": "foo", "password": "bar"})
 
