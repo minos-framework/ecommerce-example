@@ -45,7 +45,7 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_create_credentials(self):
         expected = await Credentials.create("foo", "bar", active=True, user=uuid4())
 
-        self.injector.injections["saga_manager"]._run_new = AsyncMock(
+        self.injector.injections["saga_manager"].run = AsyncMock(
             return_value=_FakeSagaExecution(SagaContext(credentials=expected))
         )
 

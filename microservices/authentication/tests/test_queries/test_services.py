@@ -14,11 +14,13 @@ from uuid import (
 )
 
 import jwt
+from minos.common.testing import (
+    PostgresAsyncTestCase,
+)
 from minos.common import (
     DependencyInjector,
     InMemoryRepository,
     InMemorySnapshot,
-    MinosConfig,
 )
 from minos.networks import (
     ResponseException,
@@ -50,11 +52,11 @@ class _FakeRestRequest(RestRequest):
         self.raw_request = _FakeRawRequest(headers)
 
 
-class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
+class TestCredentialsQueryService(PostgresAsyncTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
-        self.config = MinosConfig(self.CONFIG_FILE_PATH)
+        await super().asyncSetUp()
         self.injector = DependencyInjector(
             self.config,
             saga_manager=_FakeSagaManager,
@@ -99,6 +101,17 @@ class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(ResponseException):
             fake_request = _FakeRequest({"username": wrong_username})
             await self.service.get_by_username(fake_request)
+
+    async def test_unique_username(self):
+        request = _FakeRequest({"username": "foo"})
+        response = await self.service.unique_username(request)
+        self.assertTrue(await response.content())
+
+    async def test_unique_username_raises(self):
+        await self.service.repository.create_credentials(uuid4(), "foo", "bar", True)
+        with self.assertRaises(ResponseException):
+            request = _FakeRequest({"username": "foo"})
+            await self.service.unique_username(request)
 
 
 if __name__ == "__main__":

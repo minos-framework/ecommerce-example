@@ -10,10 +10,6 @@ from minos.common import (
 )
 
 
-class Customer(AggregateRef):
-    pass
-
-
 class Credentials(Aggregate):
     """Credentials Aggregate class.
 
@@ -37,3 +33,7 @@ class Credentials(Aggregate):
             return True
         except StopAsyncIteration:
             return False
+
+
+class Customer(AggregateRef):
+    """Customer Aggregate-Reference class."""
