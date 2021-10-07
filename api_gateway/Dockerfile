@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install --yes curl git netcat
 # Install and setup poetry
 RUN pip install -U pip \
     && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
-ENV PATH="${PATH}:/root/.poetry/bin"
+ENV PATH="${PATH}:/root/.local/bin"
 
 WORKDIR /api_gateway
 COPY . .
