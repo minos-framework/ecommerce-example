@@ -2,7 +2,6 @@ from __future__ import (
     annotations,
 )
 
-import base64
 import sys
 import unittest
 from pathlib import (
@@ -14,17 +13,16 @@ from uuid import (
 )
 
 import jwt
-from minos.common.testing import (
-    PostgresAsyncTestCase,
-)
 from minos.common import (
     DependencyInjector,
     InMemoryRepository,
     InMemorySnapshot,
 )
+from minos.common.testing import (
+    PostgresAsyncTestCase,
+)
 from minos.networks import (
     ResponseException,
-    RestRequest,
 )
 
 from src import (
@@ -35,21 +33,9 @@ from src import (
 from tests.utils import (
     _FakeBroker,
     _FakeRequest,
+    _FakeRestRequest,
     _FakeSagaManager,
 )
-
-
-class _FakeRawRequest:
-    def __init__(self, headers: dict[str, str]):
-        self.headers = headers
-
-
-class _FakeRestRequest(RestRequest):
-    # noinspection PyMissingConstructor
-    def __init__(self, username: str, password: str):
-        encoded_credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
-        headers = {"Authorization": f"Basic {encoded_credentials}"}
-        self.raw_request = _FakeRawRequest(headers)
 
 
 class TestCredentialsQueryService(PostgresAsyncTestCase):
