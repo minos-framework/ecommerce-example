@@ -26,7 +26,6 @@ from minos.networks import (
 )
 
 from src import (
-    AlreadyExists,
     CredentialsQueryRepository,
     CredentialsQueryService,
 )
@@ -62,16 +61,10 @@ class TestCredentialsQueryService(PostgresAsyncTestCase):
 
     async def test_get_token(self):
         uuid = uuid4()
-        username = "test_username"  # UUID just to ensure its unique
-        password = "test_password"
+        username = "foo"  # UUID just to ensure its unique
+        password = "bar"
 
-        try:
-            await self.service.repository.create_credentials(uuid, username, password, True)
-        except AlreadyExists:
-            row = await self.service.repository.get_by_username(username)
-            uuid = UUID(str(row["uuid"]))
-            username = row["username"]
-            password = row["password"]
+        await self.service.repository.create_credentials(uuid, username, password, True)
 
         fake_request = _FakeRestRequest(username, password)
         response = await self.service.get_token(fake_request)
