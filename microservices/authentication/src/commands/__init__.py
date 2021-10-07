@@ -1,5 +1,5 @@
 from .sagas import (
-    CREATE_CUSTOMER_SAGA,
+    CREATE_CREDENTIALS_SAGA,
 )
 from .services import (
     CredentialsCommandService,

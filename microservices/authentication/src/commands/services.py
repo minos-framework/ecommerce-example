@@ -24,7 +24,7 @@ from ..jwt_env import (
     SECRET,
 )
 from .sagas import (
-    CREATE_CUSTOMER_SAGA,
+    CREATE_CREDENTIALS_SAGA,
 )
 
 
@@ -47,7 +47,7 @@ class CredentialsCommandService(CommandService):
 
         try:
             execution = await self.saga_manager.run(
-                definition=CREATE_CUSTOMER_SAGA,
+                definition=CREATE_CREDENTIALS_SAGA,
                 context=SagaContext(username=username, password=password, metadata=metadata),
             )
         except Exception as exc:

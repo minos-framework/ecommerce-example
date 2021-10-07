@@ -25,6 +25,10 @@ def _create_customer(context: SagaContext) -> dict[str, Any]:
     return context["metadata"]
 
 
+async def _remove_customer(context: SagaContext) -> dict[str, Any]:
+    return {"uuid": context["user"]}
+
+
 def _on_reply(user: Customer) -> UUID:
     return user.uuid
 
@@ -41,10 +45,11 @@ async def _create_credentials(context: SagaContext) -> SagaContext:
     return SagaContext(credentials=credentials)
 
 
-CREATE_CUSTOMER_SAGA = (
-    Saga("FullLogin")
+CREATE_CREDENTIALS_SAGA = (
+    Saga()
     .step()
     .invoke_participant("CreateCustomer", _create_customer)
+    .with_compensation("RemoveCustomer", _remove_customer)
     .on_reply("user", _on_reply)
     .commit(_create_credentials)
 )
