@@ -1,20 +1,26 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import base64
 import sys
 import unittest
-from pathlib import Path
+from pathlib import (
+    Path,
+)
 from uuid import (
     UUID,
     uuid4,
 )
 
 import jwt
-from minos.common.testing import PostgresAsyncTestCase
 from minos.common import (
     DependencyInjector,
     InMemoryRepository,
     InMemorySnapshot,
+)
+from minos.common.testing import (
+    PostgresAsyncTestCase,
 )
 from minos.networks import (
     ResponseException,

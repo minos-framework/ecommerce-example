@@ -1,9 +1,15 @@
 import sys
 import unittest
-from uuid import uuid4
+from uuid import (
+    uuid4,
+)
 
-from src import Credentials
-from tests.utils import build_dependency_injector
+from src import (
+    Credentials,
+)
+from tests.utils import (
+    build_dependency_injector,
+)
 
 
 class TestCredentials(unittest.IsolatedAsyncioTestCase):

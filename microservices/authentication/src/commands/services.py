@@ -1,6 +1,10 @@
 import jwt
-from jwt.exceptions import InvalidSignatureError
-from minos.cqrs import CommandService
+from jwt.exceptions import (
+    InvalidSignatureError,
+)
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
     Request,
     Response,
@@ -8,14 +12,20 @@ from minos.networks import (
     RestRequest,
     enroute,
 )
-from minos.saga import SagaContext
+from minos.saga import (
+    SagaContext,
+)
 
-from ..aggregates import Credentials
+from ..aggregates import (
+    Credentials,
+)
 from ..jwt_env import (
     JWT_ALGORITHM,
     SECRET,
 )
-from .sagas import CREATE_CUSTOMER_SAGA
+from .sagas import (
+    CREATE_CUSTOMER_SAGA,
+)
 
 
 class CredentialsCommandService(CommandService):
