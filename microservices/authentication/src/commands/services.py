@@ -1,13 +1,9 @@
 import logging
 
 import jwt
-from jwt.exceptions import (
-    InvalidSignatureError,
-)
+from jwt.exceptions import InvalidSignatureError
 from minos.common import Condition
-from minos.cqrs import (
-    CommandService,
-)
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
@@ -15,20 +11,14 @@ from minos.networks import (
     RestRequest,
     enroute,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 
-from ..aggregates import (
-    Credentials,
-)
+from ..aggregates import Credentials
 from ..jwt_env import (
     JWT_ALGORITHM,
     SECRET,
 )
-from .sagas import (
-    CREATE_CREDENTIALS_SAGA,
-)
+from .sagas import CREATE_CREDENTIALS_SAGA
 
 logger = logging.getLogger(__name__)
 

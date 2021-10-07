@@ -1,14 +1,8 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import base64
-from pathlib import (
-    Path,
-)
-from typing import (
-    Optional,
-)
+from pathlib import Path
+from typing import Optional
 from uuid import (
     UUID,
     uuid4,
@@ -28,9 +22,7 @@ from minos.networks import (
     Request,
     RestRequest,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 
 
 class _FakeRawRestRequest:
