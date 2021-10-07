@@ -18,4 +18,5 @@ RUN poetry config virtualenvs.in-project true \
   && poetry install --no-interaction --no-ansi
 
 
+ENTRYPOINT ["poetry", "run"]
 CMD ["api_gateway", "start"]
