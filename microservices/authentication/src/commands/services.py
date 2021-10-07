@@ -64,7 +64,7 @@ class CredentialsCommandService(CommandService):
         return Response({"user": credentials.user})
 
     @enroute.rest.command("/login", "DELETE")
-    async def remove_credentials(self, request: Request) -> None:
+    async def delete_credentials(self, request: Request) -> None:
         """Remove exising credentials based on a given identifier.
 
         :param request: A ``Request`` containing the username and password.
