@@ -41,8 +41,8 @@ class CustomerCommandService(CommandService):
 
     @staticmethod
     @enroute.rest.command(f"/customers/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
-    @enroute.broker.command("RemoveCustomer")
-    async def remove_customer(request: Request) -> None:
+    @enroute.broker.command("DeleteCustomer")
+    async def delete_customer(request: Request) -> None:
         """Remove a Customer instance.
 
         :param request: The ``Request`` that contains the needed customer identifier.

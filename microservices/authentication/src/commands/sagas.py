@@ -25,7 +25,7 @@ def _create_customer(context: SagaContext) -> dict[str, Any]:
     return context["metadata"]
 
 
-async def _remove_customer(context: SagaContext) -> dict[str, Any]:
+async def _delete_customer(context: SagaContext) -> dict[str, Any]:
     return {"uuid": context["user"]}
 
 
@@ -49,7 +49,7 @@ CREATE_CREDENTIALS_SAGA = (
     Saga()
     .step()
     .invoke_participant("CreateCustomer", _create_customer)
-    .with_compensation("RemoveCustomer", _remove_customer)
+    .with_compensation("DeleteCustomer", _delete_customer)
     .on_reply("user", _on_reply)
     .commit(_create_credentials)
 )

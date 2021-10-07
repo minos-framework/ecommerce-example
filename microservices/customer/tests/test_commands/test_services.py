@@ -58,26 +58,26 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(expected, observed)
 
-    async def test_remove_customer(self):
+    async def test_delete_customer(self):
         customer = await Customer.create("John", "Coltrane", Address(street="Green Dolphin Street", street_no=42),)
 
         request = _FakeRequest({"uuid": customer.uuid})
-        await self.service.remove_customer(request)
+        await self.service.delete_customer(request)
 
         with self.assertRaises(MinosSnapshotDeletedAggregateException):
             await Customer.get(customer.uuid)
 
-    async def test_remove_customer_bad_request(self):
+    async def test_delete_customer_bad_request(self):
         customer = await Customer.create("John", "Coltrane", Address(street="Green Dolphin Street", street_no=42),)
 
         request = _FakeRequest({"uusdfasfid": customer.uuid})
         with self.assertRaises(ResponseException):
-            await self.service.remove_customer(request)
+            await self.service.delete_customer(request)
 
-    async def test_remove_customer_not_exist(self):
+    async def test_delete_customer_not_exist(self):
         request = _FakeRequest({"uuid": uuid4()})
         with self.assertRaises(ResponseException):
-            await self.service.remove_customer(request)
+            await self.service.delete_customer(request)
 
 
 if __name__ == "__main__":
