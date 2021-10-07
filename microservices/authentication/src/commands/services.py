@@ -91,7 +91,8 @@ class CredentialsCommandService(CommandService):
         diff = await request.content()
         user = diff.uuid
 
-        entries = {credentials async for credentials in Credentials.find(Condition.EQUAL("user", user))}
+        # FIXME: It should be unnecessary to cast ``user`` to ``str``.
+        entries = {credentials async for credentials in Credentials.find(Condition.EQUAL("user", str(user)))}
 
         if len(entries) == 0:
             return
