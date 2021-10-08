@@ -3,12 +3,13 @@ from collections import (
 )
 
 from minos.common import (
-    Model,
     ModelType,
 )
 from minos.saga import (
     Saga,
     SagaContext,
+    SagaRequest,
+    SagaResponse,
 )
 
 from src.aggregates import (
@@ -18,7 +19,7 @@ from src.aggregates import (
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 
 
-async def _reserve_products(context: SagaContext) -> Model:
+async def _reserve_products(context: SagaContext) -> SagaRequest:
     product_uuids = [context["product_uuid"]]
     cart_id = context["cart_id"]
     quantities = defaultdict(int)
@@ -26,10 +27,15 @@ async def _reserve_products(context: SagaContext) -> Model:
     for product_id in product_uuids:
         quantities[str(product_id)] += get_product_quantity(cart, product_id)
 
-    return _ReserveProductsQuery(quantities=quantities)
+    return SagaRequest("ReserveProducts", _ReserveProductsQuery(quantities=quantities))
 
 
-async def _release_products(context: SagaContext) -> Model:
+# noinspection PyUnusedLocal
+def _raise(context: SagaContext, response: SagaResponse) -> SagaContext:
+    raise ValueError("Errored response must abort the execution!")
+
+
+async def _release_products(context: SagaContext) -> SagaRequest:
     product_uuids = [context["product_uuid"]]
     cart_id = context["cart_id"]
     quantities = defaultdict(int)
@@ -37,7 +43,7 @@ async def _release_products(context: SagaContext) -> Model:
     for product_id in product_uuids:
         quantities[str(product_id)] -= get_product_quantity(cart, product_id)
 
-    return _ReserveProductsQuery(quantities=quantities)
+    return SagaRequest("ReserveProducts", _ReserveProductsQuery(quantities=quantities))
 
 
 async def _remove_cart_item(context: SagaContext) -> SagaContext:
@@ -58,9 +64,5 @@ def get_product_quantity(cart: Cart, product: str):
 
 
 REMOVE_CART_ITEM = (
-    Saga()
-    .step()
-    .invoke_participant("ReserveProducts", _reserve_products)
-    .with_compensation("ReserveProducts", _release_products)
-    .commit(_remove_cart_item)
+    Saga().step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_remove_cart_item)
 )
