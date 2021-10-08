@@ -10,8 +10,8 @@ python = "^3.9"
 typer = "^0.3.2"
 minos-microservice-common = "^0.1.15"
 minos-microservice-networks = ">=0.0.18<0.1"
-minos-microservice-saga = { git = "https://github.com/clariteia/minos_microservice_saga", rev = "0e41392991c1db6d25ae3e720165d5d7e2bf2955" }
-minos-microservice-cqrs =  { git = "https://github.com/clariteia/minos_microservice_cqrs", rev = "339add279840eed615039653a5418491e8a89830" }
+minos-microservice-saga = "^0.1.0"
+minos-microservice-cqrs =  ">=0.0.6<0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
