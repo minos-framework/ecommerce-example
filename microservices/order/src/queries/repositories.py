@@ -51,8 +51,8 @@ class OrderQueryRepository(MinosSetup):
         """
         kwargs = {k: v if not isinstance(v, FieldDiff) else v.value for k, v in kwargs.items()}
 
-        kwargs["ticket_uuid"] = kwargs["ticket"]
-        kwargs["payment_uuid"] = kwargs["payment"]
+        kwargs["ticket_uuid"] = kwargs["ticket"].uuid
+        kwargs["payment_uuid"] = kwargs["payment"].uuid
         kwargs["customer_uuid"] = kwargs["customer"]["uuid"]
         kwargs["payment_detail"] = dict(kwargs["payment_detail"])
         kwargs["shipment_detail"] = dict(kwargs["shipment_detail"])
