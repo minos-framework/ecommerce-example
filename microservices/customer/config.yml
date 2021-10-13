@@ -20,6 +20,7 @@ service:
     - minos.networks.SnapshotService
     - minos.networks.ConsumerService
     - minos.networks.ProducerService
+    - minos.networks.PeriodicTaskSchedulerService
 rest:
   host: 0.0.0.0
   port: 8086
@@ -46,8 +47,6 @@ snapshot:
   password: min0s
   host: localhost
   port: 5432
-events:
-  service: src.CustomerQueryService
 queries:
   service: src.CustomerQueryService
 commands:

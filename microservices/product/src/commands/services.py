@@ -1,5 +1,6 @@
 from uuid import (
     UUID,
+    uuid4,
 )
 
 from minos.common import (
@@ -18,6 +19,7 @@ from minos.networks import (
 )
 
 from ..aggregates import (
+    Inventory,
     Product,
 )
 
@@ -35,11 +37,14 @@ class ProductCommandService(CommandService):
         :return: A ``Response`` containing the already created product.
         """
         content = await request.content()
+
+        code = uuid4().hex.upper()[0:6]
         title = content["title"]
         description = content["description"]
         price = content["price"]
+        inventory = Inventory.empty()
 
-        product = await Product.create(title, description, price)
+        product = await Product.create(code, title, description, price, inventory)
 
         return Response(product)
 

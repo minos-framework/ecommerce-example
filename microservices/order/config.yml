@@ -21,6 +21,7 @@ service:
     - minos.networks.RestService
     - minos.networks.SnapshotService
     - minos.networks.ProducerService
+    - minos.networks.PeriodicTaskSchedulerService
 rest:
   host: 0.0.0.0
   port: 8082
@@ -47,8 +48,6 @@ snapshot:
   password: min0s
   host: localhost
   port: 5432
-events:
-  service: src.OrderQueryService
 queries:
   service: src.OrderQueryService
 commands:
