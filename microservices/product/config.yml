@@ -57,6 +57,6 @@ saga:
   storage:
     path: "./product.lmdb"
 discovery:
-  client: minos.networks.KongDiscoveryClient
+  client: minos.networks.MinosDiscoveryClient
   host: localhost
-  port: 8001
+  port: 5567
