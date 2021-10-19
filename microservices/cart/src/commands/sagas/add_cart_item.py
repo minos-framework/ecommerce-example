@@ -31,4 +31,6 @@ async def _create_cart_item(context: SagaContext) -> SagaContext:
     return SagaContext(cart=cart)
 
 
-ADD_CART_ITEM = Saga().step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_create_cart_item)
+ADD_CART_ITEM = (
+    Saga().remote_step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_create_cart_item)
+)

@@ -93,5 +93,9 @@ async def _update_cart_item(context: SagaContext) -> SagaContext:
 
 
 UPDATE_CART_ITEM = (
-    Saga().step(_release_or_reserve_products).on_error(_raise).on_failure(_compensation).commit(_update_cart_item)
+    Saga()
+    .remote_step(_release_or_reserve_products)
+    .on_error(_raise)
+    .on_failure(_compensation)
+    .commit(_update_cart_item)
 )

@@ -56,4 +56,4 @@ async def _commit_callback(context: SagaContext) -> SagaContext:
     return SagaContext(ticket=ticket)
 
 
-_CREATE_TICKET = Saga().step(_get_cart_items).on_success(_process_cart_items).commit(_commit_callback)
+_CREATE_TICKET = Saga().remote_step(_get_cart_items).on_success(_process_cart_items).commit(_commit_callback)

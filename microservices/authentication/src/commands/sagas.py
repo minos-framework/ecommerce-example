@@ -47,7 +47,7 @@ async def _create_credentials(context: SagaContext) -> SagaContext:
 
 CREATE_CREDENTIALS_SAGA = (
     Saga()
-    .step(_send_create_customer)
+    .remote_step(_send_create_customer)
     .on_success(_on_create_user_success)
     .on_failure(_send_delete_customer)
     .commit(_create_credentials)

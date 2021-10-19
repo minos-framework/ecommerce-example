@@ -64,5 +64,5 @@ def get_product_quantity(cart: Cart, product: str):
 
 
 REMOVE_CART_ITEM = (
-    Saga().step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_remove_cart_item)
+    Saga().remote_step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_remove_cart_item)
 )

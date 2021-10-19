@@ -43,4 +43,4 @@ async def _create_cart(context: SagaContext) -> SagaContext:
     return SagaContext(result=result)
 
 
-DELETE_CART = Saga().step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_create_cart)
+DELETE_CART = Saga().remote_step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_create_cart)

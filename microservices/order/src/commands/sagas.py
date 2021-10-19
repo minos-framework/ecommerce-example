@@ -90,12 +90,12 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 
 CREATE_ORDER = (
     Saga()
-    .step(_create_ticket)
+    .remote_step(_create_ticket)
     .on_success(_process_ticket_entries)
-    .step(_purchase_products)
+    .remote_step(_purchase_products)
     .on_error(_raise)
     .on_failure(_revert_purchase_products)
-    .step(_payment)
+    .remote_step(_payment)
     .on_success(_get_payment)
     .commit(_create_commit_callback)
 )
