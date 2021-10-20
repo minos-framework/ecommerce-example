@@ -60,7 +60,7 @@ services:
 
   api-gateway:
     restart: always
-    build: ./api_gateway
+    build: external/api_gateway
     ports:
       - "5566:5566"
     environment:
@@ -71,7 +71,7 @@ services:
 
   discovery:
     restart: always
-    build: ./external/discovery
+    build: external/discovery
     ports:
       - "5567:5567"
     environment:
