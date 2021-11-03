@@ -7,7 +7,7 @@ from dependency_injector.wiring import (
     inject,
 )
 from jwt.exceptions import (
-    InvalidSignatureError,
+    InvalidTokenError,
 )
 from minos.common import (
     AggregateDiff,
@@ -95,7 +95,7 @@ class CredentialsQueryService(QueryService):
 
         try:
             payload = jwt.decode(token, SECRET, algorithms=[JWT_ALGORITHM])
-        except InvalidSignatureError as exc:
+        except InvalidTokenError as exc:
             raise ResponseException(exc.args[0])
 
         return Response(payload)
