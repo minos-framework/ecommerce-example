@@ -1,6 +1,6 @@
 FROM python
 
-RUN pip install minos-apigateway==0.1.0
+RUN pip install minos-apigateway==0.1.1
 
 COPY config.yml ./config.yml
 CMD ["api_gateway", "start", "config.yml"]
