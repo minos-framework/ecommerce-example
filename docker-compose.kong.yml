@@ -42,8 +42,8 @@ services:
       - POSTGRES_MULTIPLE_DATABASES=kong,order_db,payment_db,product_db,ticket_db,customer_db,cart_query_db,ticket_query_db,product_query_db,payment_query_db,review_db,review_query_db,auth_db,auth_query_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
-    logging:
-      driver: none
+#    logging:
+#      driver: none
 
   redis:
     image: redis:latest
@@ -86,6 +86,8 @@ services:
     ports:
       - "8001:8001"
       - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
 
   microservice-order:
     restart: always
