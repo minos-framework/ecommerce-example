@@ -1,8 +1,12 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import sys
 import unittest
-from pathlib import Path
+from pathlib import (
+    Path,
+)
 from uuid import (
     UUID,
     uuid4,
@@ -14,8 +18,12 @@ from minos.common import (
     InMemoryRepository,
     InMemorySnapshot,
 )
-from minos.common.testing import PostgresAsyncTestCase
-from minos.networks import ResponseException
+from minos.common.testing import (
+    PostgresAsyncTestCase,
+)
+from minos.networks import (
+    ResponseException,
+)
 
 from src import (
     CredentialsQueryRepository,
