@@ -1,22 +1,6 @@
-FROM python:3.9-slim
+FROM python
 
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE 1
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED 1
+RUN pip install minos-apigateway==0.1.0
 
-RUN apt-get update && apt-get install --yes curl git netcat
-
-# Install and setup poetry
-RUN pip install -U pip \
-    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
-ENV PATH="${PATH}:/root/.local/bin"
-
-WORKDIR /api_gateway
-COPY . .
-RUN poetry config virtualenvs.in-project true \
-  && poetry install --no-interaction --no-ansi
-
-
-ENTRYPOINT ["poetry", "run"]
-CMD ["api_gateway", "start"]
+COPY config.yml ./config.yml
+CMD ["api_gateway", "start", "config.yml"]
