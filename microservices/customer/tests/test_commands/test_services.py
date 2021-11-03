@@ -4,9 +4,16 @@ from __future__ import (
 
 import sys
 import unittest
+from uuid import (
+    uuid4,
+)
 
+from minos.common import (
+    MinosSnapshotDeletedAggregateException,
+)
 from minos.networks import (
     Response,
+    ResponseException,
 )
 
 from src import (
@@ -50,6 +57,27 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
         )
 
         self.assertEqual(expected, observed)
+
+    async def test_delete_customer(self):
+        customer = await Customer.create("John", "Coltrane", Address(street="Green Dolphin Street", street_no=42),)
+
+        request = _FakeRequest({"uuid": customer.uuid})
+        await self.service.delete_customer(request)
+
+        with self.assertRaises(MinosSnapshotDeletedAggregateException):
+            await Customer.get(customer.uuid)
+
+    async def test_delete_customer_bad_request(self):
+        customer = await Customer.create("John", "Coltrane", Address(street="Green Dolphin Street", street_no=42),)
+
+        request = _FakeRequest({"uusdfasfid": customer.uuid})
+        with self.assertRaises(ResponseException):
+            await self.service.delete_customer(request)
+
+    async def test_delete_customer_not_exist(self):
+        request = _FakeRequest({"uuid": uuid4()})
+        with self.assertRaises(ResponseException):
+            await self.service.delete_customer(request)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ from __future__ import (
     annotations,
 )
 
+import base64
 from pathlib import (
     Path,
 )
@@ -25,7 +26,28 @@ from minos.common import (
 )
 from minos.networks import (
     Request,
+    RestRequest,
 )
+from minos.saga import (
+    SagaContext,
+)
+
+
+class _FakeRawRestRequest:
+    """For testing purposes"""
+
+    def __init__(self, headers: dict[str, str]):
+        self.headers = headers
+
+
+class _FakeRestRequest(RestRequest):
+    """For testing purposes"""
+
+    # noinspection PyMissingConstructor
+    def __init__(self, username: str, password: str):
+        encoded_credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
+        headers = {"Authorization": f"Basic {encoded_credentials}"}
+        self.raw_request = _FakeRawRestRequest(headers)
 
 
 class _FakeRequest(Request):
@@ -67,6 +89,11 @@ class _FakeSagaManager(MinosSagaManager):
 
     async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
         """For testing purposes."""
+
+
+class _FakeSagaExecution:
+    def __init__(self, context: SagaContext):
+        self.context = context
 
 
 def build_dependency_injector() -> DependencyInjector:

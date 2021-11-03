@@ -1,0 +1,1008 @@
+{
+	"info": {
+		"_postman_id": "c63c16fb-1c15-4a20-8f12-81ac27cabdb3",
+		"name": "minos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ecommerce",
+			"item": [
+				{
+					"name": "Order",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cart\": \"5b1a5558-0006-43cc-8476-85fe91a12e86\",\n    \"customer\": \"05693c6d-6a41-4bae-a8f5-68b4b15bfd9d\",\n    \"payment_detail\": {\n        \"card_holder\": \"Johnd\",\n        \"card_number\": \"2424242424242424\",\n        \"card_expire\": \"12/24\",\n        \"card_cvc\": \"123\"\n    },\n    \"shipment_detail\": {\n        \"name\": \"Jack\",\n        \"last_name\": \"Johnson\",\n        \"email\": \"jack@gmail.com\",\n        \"address\": \"Calle Gran Víia 34\",\n        \"country\": \"Spain\",\n        \"city\": \"Madrid\",\n        \"province\": \"Madrid\",\n        \"zip\": \"34324\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/orders",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuids\": [\"45d2cea5-087e-423e-b2ea-4923e031606e\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/orders/1af5b764-e767-4189-9868-446608a8bd5f",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"orders",
+										"1af5b764-e767-4189-9868-446608a8bd5f"
+									],
+									"query": [
+										{
+											"key": "ids",
+											"value": "7 ",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Orders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5566/orders/user/05693c6d-6a41-4bae-a8f5-68b4b15bfd9d",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"orders",
+										"user",
+										"05693c6d-6a41-4bae-a8f5-68b4b15bfd9d"
+									],
+									"query": [
+										{
+											"key": "ids",
+											"value": "7 ",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "Items",
+							"item": [
+								{
+									"name": "Add",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"product_uuid\": \"82e0da84-95f9-4811-a0a5-d43cf77aeeeb\",\n    \"quantity\": 4\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5566/carts/979dad1a-cc97-4849-a67e-c79ff6104034/items",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5566",
+											"path": [
+												"carts",
+												"979dad1a-cc97-4849-a67e-c79ff6104034",
+												"items"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"product_uuid\": \"9ddd48a5-ba2d-4d53-aaf2-2a4afab2c35f\",\n    \"quantity\": 10\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5566/carts/f50ff500-d6cb-41f1-b13c-51520daf0e60/items",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5566",
+											"path": [
+												"carts",
+												"f50ff500-d6cb-41f1-b13c-51520daf0e60",
+												"items"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"product_uuid\": \"5b2cc046-2968-4c69-b2a6-55c2c66fff83\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:5566/carts/1c2f2af7-b8b0-4ad8-8b84-4919220519e6/items",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5566",
+											"path": [
+												"carts",
+												"1c2f2af7-b8b0-4ad8-8b84-4919220519e6",
+												"items"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/carts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"carts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5566/carts/979dad1a-cc97-4849-a67e-c79ff6104034",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"carts",
+										"979dad1a-cc97-4849-a67e-c79ff6104034"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5566/carts/1c2f2af7-b8b0-4ad8-8b84-4919220519e6",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"carts",
+										"1c2f2af7-b8b0-4ad8-8b84-4919220519e6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Payment",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"credit_number\": 12345678123456768,\n    \"amount\": 30.0\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/payments",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuids\": [\"ab59e87e-46d5-4530-9925-cc53db15e279\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/payments",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Product",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Coca Cola Zero\",\n    \"description\": \"Zero sabor y zero azucar\",\n    \"price\": 0.4\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/products/26",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"products",
+										"26"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Inventory",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"amount\": 500\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/products/0f196db2-ba62-4d64-bd6c-b6191141c70c/inventory",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"products",
+										"0f196db2-ba62-4d64-bd6c-b6191141c70c",
+										"inventory"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Inventory",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"amount_diff\": 200\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/products/e8709a70-bd86-4fbb-9e59-9cf4d4207a7c/inventory",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"products",
+										"e8709a70-bd86-4fbb-9e59-9cf4d4207a7c",
+										"inventory"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update product information",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"CoCa-Cola Light\",\n    \"description\": \"Menos azucar, más sabor.\",\n    \"price\": 0.42\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/products/2ec0e1ac-e766-4407-ae79-db81e2d9a392",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"products",
+										"2ec0e1ac-e766-4407-ae79-db81e2d9a392"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update product information",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"ABC\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/products/3da5a974-75e8-4296-9bda-4ac1052a9a88",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"products",
+										"3da5a974-75e8-4296-9bda-4ac1052a9a88"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Products",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5566/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "ids",
+											"value": "32",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuid\": \"f3b8c5a2-71dc-4919-844e-93225cfe81e7\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/products/c3d87b17-7b38-43f9-9eac-5b2d67078eb7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"products",
+										"c3d87b17-7b38-43f9-9eac-5b2d67078eb7"
+									],
+									"query": [
+										{
+											"key": "ids",
+											"value": "32",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Ticket",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cart_uuid\": \"979dad1a-cc97-4849-a67e-c79ff6104034\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/tickets",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"tickets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5566/tickets/c3396d3c-ffc6-456c-b24b-4a830c9c5f24",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"tickets",
+										"c3396d3c-ffc6-456c-b24b-4a830c9c5f24"
+									],
+									"query": [
+										{
+											"key": "uuids",
+											"value": "dc72b040-9ade-45ce-b380-3b02b43d3f3d",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "_Discovery",
+					"item": [
+						{
+							"name": "New Request",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5567/discover?name=products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5567",
+									"path": [
+										"discover"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "products"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"vladyslav\",\n    \"surname\": \"fenchak\",\n    \"address\": {\n        \"street\": \"Green Dolphin Street\",\n        \"street_no\": 42\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/customer",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"customer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Credit Card",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Another\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5566/users/1fac9718-fc83-456d-80ed-16b136a92c44/credit_card",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5566",
+									"path": [
+										"users",
+										"1fac9718-fc83-456d-80ed-16b136a92c44",
+										"credit_card"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Review",
+					"item": [
+						{
+							"name": "Product Review Information",
+							"item": [
+								{
+									"name": "Product Best Reviews",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8087/reviews/product/2cc51893-153e-482e-b785-f77c5c1c4aea/score?order=desc&limit=1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8087",
+											"path": [
+												"reviews",
+												"product",
+												"2cc51893-153e-482e-b785-f77c5c1c4aea",
+												"score"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "desc"
+												},
+												{
+													"key": "limit",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Product Worst Reviews",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8087/reviews/product/2cc51893-153e-482e-b785-f77c5c1c4aea/score?order=asc&limit=1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8087",
+											"path": [
+												"reviews",
+												"product",
+												"2cc51893-153e-482e-b785-f77c5c1c4aea",
+												"score"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "asc"
+												},
+												{
+													"key": "limit",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "General Ratings",
+							"item": [
+								{
+									"name": "Top Rated Products",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:5566/reviews/score?order=desc&limit=10",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5566",
+											"path": [
+												"reviews",
+												"score"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "desc"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Worst Rated Products",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8087/reviews/score?order=desc&limit=10",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8087",
+											"path": [
+												"reviews",
+												"score"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "desc"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product\": \"7f722bca-cd5f-4a9b-a6dd-d5db233e4ebf\",\n    \"user\": \"4836220f-8ac7-433b-8a1d-0ed323463a88\",\n    \"title\": \"Nice package but product broken\",\n    \"description\": \"The product came nicely packaged but was broken. The seller took care of it and sent me a new one.\",\n    \"score\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8087/reviews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8087",
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Nice package but product broken.\",\n    \"description\": \"The product came nicely packaged but was broken. The seller took care of it and sent me a new one...\",\n    \"score\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8087/reviews/397388db-9de1-476a-935d-2274492797fb",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8087",
+									"path": [
+										"reviews",
+										"397388db-9de1-476a-935d-2274492797fb"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Product Reviews",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8087/reviews/product/7f722bca-cd5f-4a9b-a6dd-d5db233e4ebf",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8087",
+									"path": [
+										"reviews",
+										"product",
+										"7f722bca-cd5f-4a9b-a6dd-d5db233e4ebf"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Reviews",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8087/reviews/user/e015a2e1-9092-448f-b4ca-a678fc384d0e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8087",
+									"path": [
+										"reviews",
+										"user",
+										"e015a2e1-9092-448f-b4ca-a678fc384d0e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Last Reviews",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8087/reviews/last?limit=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8087",
+									"path": [
+										"reviews",
+										"last"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

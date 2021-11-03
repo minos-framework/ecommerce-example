@@ -47,7 +47,7 @@ class CredentialsQueryService(QueryService):
             else:
                 raise ResponseException("Invalid username or password")
 
-    async def generate_token(self, username):
+    async def generate_token(self, username) -> str:
         credentials = await self.repository.get_by_username(username)
         payload = {"sub": str(credentials["uuid"]), "name": credentials["username"], "iat": time.time()}
         jwt_token = jwt.encode(payload, SECRET, algorithm=JWT_ALGORITHM)
@@ -55,6 +55,26 @@ class CredentialsQueryService(QueryService):
 
     async def valid_credentials(self, username: str, password: str) -> bool:
         return await self.repository.exist_credentials(username, password)
+
+    @enroute.broker.query("GetByUsername")
+    async def get_by_username(self, request: Request) -> Response:
+        content = await request.content()
+        username = content["username"]
+        credentials = await self.repository.get_by_username(username)
+        if credentials:
+            return Response(credentials["username"])
+        else:
+            raise ResponseException("Username does not exist")
+
+    @enroute.broker.query("UniqueUsername")
+    async def unique_username(self, request: Request) -> Response:
+        content = await request.content()
+        username = content["username"]
+        credentials = await self.repository.get_by_username(username)
+        if credentials:
+            raise ResponseException("'username' already exists")
+        else:
+            return Response(True)
 
     @enroute.broker.event("CredentialsCreated")
     async def credentials_created(self, request: Request) -> None:

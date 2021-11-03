@@ -4,7 +4,9 @@ from __future__ import (
 
 from minos.common import (
     Aggregate,
+    AggregateRef,
     Condition,
+    ModelRef,
 )
 
 
@@ -17,6 +19,7 @@ class Credentials(Aggregate):
     username: str
     password: str
     active: bool
+    user: ModelRef[Customer]
 
     @classmethod
     async def exists_username(cls, username: str) -> bool:
@@ -30,3 +33,7 @@ class Credentials(Aggregate):
             return True
         except StopAsyncIteration:
             return False
+
+
+class Customer(AggregateRef):
+    """Customer Aggregate-Reference class."""
