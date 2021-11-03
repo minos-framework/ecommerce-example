@@ -1,13 +1,7 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    Union,
-)
-from uuid import (
-    UUID,
-)
+from typing import Union
+from uuid import UUID
 
 from minos.common import (
     MinosConfig,
@@ -17,16 +11,10 @@ from sqlalchemy import (
     and_,
     create_engine,
 )
-from sqlalchemy.exc import (
-    IntegrityError,
-)
+from sqlalchemy.exc import IntegrityError
 
-from ..aggregates import (
-    Customer,
-)
-from .exceptions import (
-    AlreadyExists,
-)
+from ..aggregates import Customer
+from .exceptions import AlreadyExists
 from .models import (
     CREDENTIALS_TABLE,
     META,
@@ -48,7 +36,7 @@ class CredentialsQueryRepository(MinosSetup):
         return cls(*args, **(config.repository._asdict() | {"database": "auth_query_db"}) | kwargs)
 
     async def create_credentials(
-            self, uuid: UUID, username: str, password: str, active: bool, user: Union[Customer, UUID]
+        self, uuid: UUID, username: str, password: str, active: bool, user: Union[Customer, UUID]
     ) -> None:
         """Create new row on the credentials table.
 

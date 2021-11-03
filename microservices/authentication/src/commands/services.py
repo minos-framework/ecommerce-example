@@ -1,27 +1,17 @@
 import logging
 
-from minos.common import (
-    Condition,
-)
-from minos.cqrs import (
-    CommandService,
-)
+from minos.common import Condition
+from minos.cqrs import CommandService
 from minos.networks import (
     Request,
     Response,
     ResponseException,
     enroute,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 
-from ..aggregates import (
-    Credentials,
-)
-from .sagas import (
-    CREATE_CREDENTIALS_SAGA,
-)
+from ..aggregates import Credentials
+from .sagas import CREATE_CREDENTIALS_SAGA
 
 logger = logging.getLogger(__name__)
 
