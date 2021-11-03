@@ -48,7 +48,7 @@ class CredentialsQueryRepository(MinosSetup):
         return cls(*args, **(config.repository._asdict() | {"database": "auth_query_db"}) | kwargs)
 
     async def create_credentials(
-            self, uuid: UUID, username: str, password: str, active: bool, user: Union[Customer, UUID]
+        self, uuid: UUID, username: str, password: str, active: bool, user: Union[Customer, UUID]
     ) -> None:
         """Create new row on the credentials table.
 
