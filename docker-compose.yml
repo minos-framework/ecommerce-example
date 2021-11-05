@@ -10,7 +10,7 @@ x-microservice-environment: &microservice-environment
 x-microservice-depends-on: &microservice-depends-on
   - postgres
   - kafka
-  - api-gateway
+  - discovery
 
 services:
   zookeeper:
@@ -65,9 +65,11 @@ services:
       - "5566:5566"
     environment:
       - PYTHONPATH=/api_gateway
-      - DISCOVERY_SERVICE_HOST=discovery
+      - API_GATEWAY_DISCOVERY_HOST=discovery
+      - API_GATEWAY_REST_AUTH_HOST=microservice-authentication
     depends_on:
       - discovery
+      - microservice-authentication
 
   discovery:
     restart: always
@@ -78,6 +80,14 @@ services:
       - DISCOVERY_SERVICE_DB_HOST=redis
     depends_on:
       - redis
+
+  microservice-authentication:
+    restart: always
+    build:
+      context: microservices/authentication
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-order:
     restart: always

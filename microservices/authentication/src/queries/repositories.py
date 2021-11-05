@@ -2,6 +2,9 @@ from __future__ import (
     annotations,
 )
 
+from typing import (
+    Union,
+)
 from uuid import (
     UUID,
 )
@@ -18,6 +21,9 @@ from sqlalchemy.exc import (
     IntegrityError,
 )
 
+from ..aggregates import (
+    Customer,
+)
 from .exceptions import (
     AlreadyExists,
 )
@@ -28,7 +34,7 @@ from .models import (
 
 
 class CredentialsQueryRepository(MinosSetup):
-    """ProductInventory Repository class."""
+    """Credentials Repository class."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,9 +47,25 @@ class CredentialsQueryRepository(MinosSetup):
     def _from_config(cls, *args, config: MinosConfig, **kwargs) -> CredentialsQueryRepository:
         return cls(*args, **(config.repository._asdict() | {"database": "auth_query_db"}) | kwargs)
 
-    async def create_credentials(self, uuid: UUID, username: str, password: str, active: bool) -> None:
+    async def create_credentials(
+        self, uuid: UUID, username: str, password: str, active: bool, user: Union[Customer, UUID]
+    ) -> None:
+        """Create new row on the credentials table.
+
+        :param uuid: The credentials identifier.
+        :param username: The credentials username.
+        :param password: The credentials password.
+        :param active: The credentials status.
+        :param user: The user related to the credentials.
+        :return: This method does not return anything.
+        """
+        if not isinstance(user, UUID):
+            user = user.uuid
+
         try:
-            query = CREDENTIALS_TABLE.insert().values(uuid=uuid, username=username, password=password, active=active)
+            query = CREDENTIALS_TABLE.insert().values(
+                uuid=uuid, username=username, password=password, active=active, user=user
+            )
             self.engine.execute(query)
         except IntegrityError:
             raise AlreadyExists

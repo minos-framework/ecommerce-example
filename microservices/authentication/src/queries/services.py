@@ -6,6 +6,9 @@ from dependency_injector.wiring import (
     Provide,
     inject,
 )
+from jwt.exceptions import (
+    InvalidTokenError,
+)
 from minos.common import (
     AggregateDiff,
 )
@@ -30,31 +33,72 @@ from .repositories import (
 
 
 class CredentialsQueryService(QueryService):
+    """Credentials Query Service class."""
+
     @inject
     def __init__(self, *args, repository: CredentialsQueryRepository = Provide["credentials_repository"], **kwargs):
         super().__init__(*args, **kwargs)
         self.repository = repository
 
     @enroute.rest.query("/login", "GET")
-    async def get_token(self, request: RestRequest) -> Response:
+    async def generate_token(self, request: RestRequest) -> Response:
+        """Get token from the given request.
+
+        :param request: A ``RestRequest`` containing the credentials on its headers.
+        :return: A ``Response`` containing the token.
+        """
         auth_type, encoded_credentials = request.raw_request.headers["Authorization"].split()
-        if auth_type == "Basic":
-            username, password = base64.b64decode(encoded_credentials).decode().split(":")
+        if auth_type != "Basic":
+            raise ResponseException("Only 'Basic Authentication' is supported")
 
-            if await self.valid_credentials(username, password):
-                jwt_token = await self.generate_token(username)
-                return Response(jwt_token)
-            else:
-                raise ResponseException("Invalid username or password")
+        username, password = base64.b64decode(encoded_credentials).decode().split(":")
 
-    async def generate_token(self, username) -> str:
-        credentials = await self.repository.get_by_username(username)
-        payload = {"sub": str(credentials["uuid"]), "name": credentials["username"], "iat": time.time()}
-        jwt_token = jwt.encode(payload, SECRET, algorithm=JWT_ALGORITHM)
-        return jwt_token
+        if not await self._validate_credentials(username, password):
+            raise ResponseException("Invalid username or password")
 
-    async def valid_credentials(self, username: str, password: str) -> bool:
+        token = await self._generate_token(username)
+
+        return Response({"token": token})
+
+    async def _validate_credentials(self, username: str, password: str) -> bool:
+        """Check if the given credentials are valid.
+
+        :param username: The username.
+        :param password: The password.
+        :return: ``True`` if are valid or ``False`` otherwise.
+        """
         return await self.repository.exist_credentials(username, password)
+
+    async def _generate_token(self, username: str) -> str:
+        """Generate a token for credentials identified by the given username.
+
+        :param username: The username that identifies the credentials.
+        :return: A token encoded as an string value.
+        """
+        credentials = await self.repository.get_by_username(username)
+
+        payload = {"sub": str(credentials["user"]), "name": credentials["username"], "iat": time.time()}
+
+        return jwt.encode(payload, SECRET, algorithm=JWT_ALGORITHM)
+
+    @enroute.rest.query("/token", "POST")
+    async def validate_token(self, request: RestRequest) -> Response:
+        """Validate if the given ``jwt`` token is valid.
+
+        :param request: A ``RestRequest`` containing the token in headers.
+        :return: The response containing the payload if everything is fine or an exception otherwise.
+        """
+        auth_type, token = request.raw_request.headers["Authorization"].split()
+
+        if auth_type != "Bearer":
+            raise ResponseException("Only 'Bearer Authentication' is supported")
+
+        try:
+            payload = jwt.decode(token, SECRET, algorithms=[JWT_ALGORITHM])
+        except InvalidTokenError as exc:
+            raise ResponseException(exc.args[0])
+
+        return Response(payload)
 
     @enroute.broker.query("GetByUsername")
     async def get_by_username(self, request: Request) -> Response:
@@ -78,5 +122,10 @@ class CredentialsQueryService(QueryService):
 
     @enroute.broker.event("CredentialsCreated")
     async def credentials_created(self, request: Request) -> None:
+        """Handle the ``CredentialsCreated`` domain event.
+
+        :param request: A ``Request`` instance containing the ``AggregateDiff``.
+        :return: This method does not return anything.
+        """
         diff: AggregateDiff = await request.content()
-        await self.repository.create_credentials(diff.uuid, diff.username, diff.password, diff.active)
+        await self.repository.create_credentials(diff.uuid, diff.username, diff.password, diff.active, diff.user)

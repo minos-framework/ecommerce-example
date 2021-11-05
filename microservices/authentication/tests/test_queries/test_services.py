@@ -63,16 +63,17 @@ class TestCredentialsQueryService(PostgresAsyncTestCase):
         uuid = uuid4()
         username = "foo"  # UUID just to ensure its unique
         password = "bar"
+        user = uuid4()
 
-        await self.service.repository.create_credentials(uuid, username, password, True)
+        await self.service.repository.create_credentials(uuid, username, password, True, user)
 
         fake_request = _FakeRestRequest(username, password)
-        response = await self.service.get_token(fake_request)
-        token = await response.content()
+        response = await self.service.generate_token(fake_request)
+        token = (await response.content())["token"]
         payload = jwt.decode(token, options={"verify_signature": False})
-        observed_uuid = UUID(payload["sub"])
+        observed = UUID(payload["sub"])
 
-        self.assertEqual(uuid, observed_uuid)
+        self.assertEqual(user, observed)
 
     async def test_get_by_username_does_not_exist(self):
         wrong_username = "should_not_exist"
@@ -87,7 +88,7 @@ class TestCredentialsQueryService(PostgresAsyncTestCase):
         self.assertTrue(await response.content())
 
     async def test_unique_username_raises(self):
-        await self.service.repository.create_credentials(uuid4(), "foo", "bar", True)
+        await self.service.repository.create_credentials(uuid4(), "foo", "bar", True, uuid4())
         with self.assertRaises(ResponseException):
             request = _FakeRequest({"username": "foo"})
             await self.service.unique_username(request)

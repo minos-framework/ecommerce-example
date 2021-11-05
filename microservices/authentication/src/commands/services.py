@@ -1,9 +1,5 @@
 import logging
 
-import jwt
-from jwt.exceptions import (
-    InvalidSignatureError,
-)
 from minos.common import (
     Condition,
 )
@@ -14,7 +10,6 @@ from minos.networks import (
     Request,
     Response,
     ResponseException,
-    RestRequest,
     enroute,
 )
 from minos.saga import (
@@ -24,10 +19,6 @@ from minos.saga import (
 from ..aggregates import (
     Credentials,
 )
-from ..jwt_env import (
-    JWT_ALGORITHM,
-    SECRET,
-)
 from .sagas import (
     CREATE_CREDENTIALS_SAGA,
 )
@@ -36,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 class CredentialsCommandService(CommandService):
-    """Login Command Service class"""
+    """Credentials Command Service class"""
 
     @enroute.rest.command("/login", "POST")
     async def create_credentials(self, request: Request) -> Response:
@@ -101,20 +92,3 @@ class CredentialsCommandService(CommandService):
 
         for credentials in entries:
             await credentials.delete()
-
-    @enroute.rest.command("/token", "POST")
-    async def validate_jwt(self, request: RestRequest) -> Response:
-        """Validate if the given ``jwt`` token is valid.
-
-        :param request: A ``RestRequest`` containing the token in headers.
-        :return: The response containing the payload if everything is fine or an exception otherwise.
-        """
-        auth_type, jwt_token = request.raw_request.headers["Authorization"].split()
-
-        if auth_type == "Bearer":
-            try:
-                payload = jwt.decode(jwt_token, SECRET, algorithms=[JWT_ALGORITHM])
-            except InvalidSignatureError as exc:
-                raise ResponseException(exc.args[0])
-            else:
-                return Response(payload)
