@@ -1,4 +1,4 @@
-FROM ghcr.io/clariteia/minos-microservice:0.1.5 as development
+FROM ghcr.io/clariteia/minos-microservice:0.1.6 as development
 
 COPY ./pyproject.toml ./poetry.lock ./
 RUN poetry install --no-root
