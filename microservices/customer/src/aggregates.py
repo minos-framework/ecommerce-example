@@ -1,6 +1,4 @@
-from datetime import (
-    datetime,
-)
+from datetime import datetime
 
 from minos.aggregate import (
     Aggregate,

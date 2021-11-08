@@ -1,10 +1,6 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
 from minos.aggregate import FieldDiff
 from minos.common import (
@@ -17,9 +13,7 @@ from sqlalchemy import (
     desc,
     func,
 )
-from sqlalchemy.orm import (
-    sessionmaker,
-)
+from sqlalchemy.orm import sessionmaker
 
 from .models import (
     META,

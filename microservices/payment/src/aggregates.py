@@ -1,6 +1,4 @@
-from minos.aggregate import (
-    Aggregate,
-)
+from minos.aggregate import Aggregate
 
 
 class Payment(Aggregate):
