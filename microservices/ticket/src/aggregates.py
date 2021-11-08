@@ -2,7 +2,7 @@ from __future__ import (
     annotations,
 )
 
-from minos.common import (
+from minos.aggregate import (
     Aggregate,
     AggregateRef,
     Entity,

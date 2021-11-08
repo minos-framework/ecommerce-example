@@ -6,8 +6,8 @@ from uuid import (
     UUID,
 )
 
+from minos.aggregate import FieldDiff
 from minos.common import (
-    FieldDiff,
     MinosConfig,
     MinosSetup,
 )
@@ -58,7 +58,7 @@ class ReviewQueryRepository(MinosSetup):
         kwargs["product_uuid"] = kwargs["product"]["uuid"]
         kwargs["product_title"] = kwargs["product"]["title"]
         kwargs["user_uuid"] = kwargs["user"]["uuid"]
-        kwargs["username"] = kwargs["user"]["username"]
+        kwargs["name"] = kwargs["user"]["name"]
 
         kwargs.pop("product")
         kwargs.pop("user")
@@ -181,8 +181,6 @@ class ReviewQueryRepository(MinosSetup):
         :param kwargs: The parameters to be updated.
         :return: This method does not return anything.
         """
-        kwargs = {k: v if not isinstance(v, FieldDiff) else v.value for k, v in kwargs.items()}
-
         query = REVIEW_TABLE.update().where(REVIEW_TABLE.columns.uuid == uuid).values(**kwargs)
         self.engine.execute(query)
 

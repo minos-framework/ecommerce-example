@@ -6,8 +6,8 @@ from uuid import (
     UUID,
 )
 
+from minos.aggregate import FieldDiff
 from minos.common import (
-    FieldDiff,
     MinosConfig,
     MinosSetup,
 )

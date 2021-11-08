@@ -2,15 +2,17 @@ service:
   name: cart
   aggregate: src.aggregates.Cart
   injections:
+    lock_pool: minos.common.PostgreSqlLockPool
     postgresql_pool: minos.common.PostgreSqlPool
     command_broker: minos.networks.CommandBroker
     command_reply_broker: minos.networks.CommandReplyBroker
     event_broker: minos.networks.EventBroker
     consumer: minos.networks.Consumer
     dynamic_handler_pool: minos.networks.DynamicHandlerPool
-    repository: minos.common.PostgreSqlRepository
+    transaction_repository: minos.aggregate.PostgreSqlTransactionRepository
+    event_repository: minos.aggregate.PostgreSqlEventRepository
+    snapshot_repository: minos.aggregate.PostgreSqlSnapshotRepository
     saga_manager: minos.saga.SagaManager
-    snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
     cart_repository: src.CartQueryRepository
   services:

@@ -9,7 +9,7 @@ from dependency_injector.wiring import (
 from jwt.exceptions import (
     InvalidTokenError,
 )
-from minos.common import (
+from minos.aggregate import (
     AggregateDiff,
 )
 from minos.cqrs import (

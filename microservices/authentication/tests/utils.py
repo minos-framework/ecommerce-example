@@ -14,13 +14,18 @@ from uuid import (
     uuid4,
 )
 
+from minos.aggregate import (
+    InMemoryEventRepository,
+    InMemorySnapshotRepository,
+    InMemoryTransactionRepository,
+)
 from minos.common import (
     CommandReply,
     DependencyInjector,
-    InMemoryRepository,
-    InMemorySnapshot,
+    Lock,
     MinosBroker,
     MinosConfig,
+    MinosPool,
     MinosSagaManager,
     Model,
 )
@@ -96,6 +101,28 @@ class _FakeSagaExecution:
         self.context = context
 
 
+class FakeLock(Lock):
+    """For testing purposes."""
+
+    def __init__(self, key=None, *args, **kwargs):
+        if key is None:
+            key = "fake"
+        super().__init__(key, *args, **kwargs)
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        return
+
+
+class FakeLockPool(MinosPool):
+    """For testing purposes."""
+
+    async def _create_instance(self):
+        return FakeLock()
+
+    async def _destroy_instance(self, instance) -> None:
+        """For testing purposes."""
+
+
 def build_dependency_injector() -> DependencyInjector:
     """For testing purposes"""
 
@@ -103,8 +130,10 @@ def build_dependency_injector() -> DependencyInjector:
         build_config(),
         saga_manager=_FakeSagaManager,
         event_broker=_FakeBroker,
-        repository=InMemoryRepository,
-        snapshot=InMemorySnapshot,
+        lock_pool=FakeLockPool,
+        transaction_repository=InMemoryTransactionRepository,
+        event_repository=InMemoryEventRepository,
+        snapshot_repository=InMemorySnapshotRepository,
     )
 
 

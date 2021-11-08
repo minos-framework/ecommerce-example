@@ -8,7 +8,7 @@ from uuid import (
     UUID,
 )
 
-from minos.common import (
+from minos.aggregate import (
     EntitySet,
 )
 

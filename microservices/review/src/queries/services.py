@@ -1,7 +1,7 @@
 from dependency_injector.wiring import (
     Provide,
 )
-from minos.common import (
+from minos.aggregate import (
     AggregateDiff,
 )
 from minos.cqrs import (
@@ -138,7 +138,7 @@ class ReviewQueryService(QueryService):
         diff: AggregateDiff = await request.content()
         print(diff)
 
-    @enroute.broker.event("CustomerUpdated.username")
+    @enroute.broker.event("CustomerUpdated.name")
     async def username_updated(self, request: Request) -> None:
         """Handle the product create and update events.
         TODO: Uncomplete

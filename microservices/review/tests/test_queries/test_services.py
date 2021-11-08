@@ -10,10 +10,13 @@ from pathlib import (
 from uuid import (
     uuid4,
 )
-
+from minos.aggregate import (
+    InMemoryEventRepository,
+    InMemoryTransactionRepository,
+    InMemorySnapshotRepository,
+)
 from minos.common import (
     DependencyInjector,
-    InMemorySnapshot,
     MinosConfig,
 )
 from minos.networks import (
@@ -31,7 +34,7 @@ from src import (
 from tests.utils import (
     _FakeBroker,
     _FakeRequest,
-    _FakeSagaManager,
+    _FakeSagaManager, FakeLockPool,
 )
 
 
@@ -44,8 +47,11 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
             self.config,
             saga_manager=_FakeSagaManager,
             event_broker=_FakeBroker,
+            lock_pool=FakeLockPool,
+            transaction_repository=InMemoryTransactionRepository,
+            event_repository=InMemoryEventRepository,
+            snapshot_repository=InMemorySnapshotRepository,
             review_repository=ReviewQueryRepository.from_config(self.config, database=self.config.repository.database),
-            snapshot=InMemorySnapshot,
         )
         await self.injector.wire(modules=[sys.modules[__name__]])
         self.service = ReviewQueryService()
@@ -53,8 +59,8 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
 
         self.product_1 = Product(uuid=uuid4(), title="Product 1", version=1)
         self.product_2 = Product(uuid=uuid4(), title="Product 2", version=1)
-        self.user_1 = Customer(uuid=uuid4(), username="test_user1", version=1)
-        self.user_2 = Customer(uuid=uuid4(), username="test_user2", version=1)
+        self.user_1 = Customer(uuid=uuid4(), name="test_user1", version=1)
+        self.user_2 = Customer(uuid=uuid4(), name="test_user2", version=1)
 
         await self._populate_reviews()
 
@@ -125,7 +131,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
                 "description": self.reviews[0]["description"],
                 "score": self.reviews[0]["score"],
                 "product_title": "Product 1",
-                "username": "test_user1",
+                "name": "test_user1",
                 "date": observed[0]["date"],
             },
             {
@@ -136,7 +142,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
                 "description": self.reviews[1]["description"],
                 "score": self.reviews[1]["score"],
                 "product_title": "Product 1",
-                "username": "test_user2",
+                "name": "test_user2",
                 "date": observed[1]["date"],
             },
         ]
@@ -160,7 +166,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
                 "description": self.reviews[0]["description"],
                 "score": self.reviews[0]["score"],
                 "product_title": "Product 1",
-                "username": "test_user1",
+                "name": "test_user1",
                 "date": observed[0]["date"],
             },
             {
@@ -171,7 +177,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
                 "description": self.reviews[2]["description"],
                 "score": self.reviews[2]["score"],
                 "product_title": "Product 2",
-                "username": "test_user1",
+                "name": "test_user1",
                 "date": observed[1]["date"],
             },
         ]
@@ -195,7 +201,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
                 "description": self.reviews[0]["description"],
                 "score": self.reviews[0]["score"],
                 "product_title": "Product 1",
-                "username": "test_user1",
+                "name": "test_user1",
                 "date": observed[0]["date"],
             },
         ]
@@ -219,7 +225,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
                 "description": self.reviews[1]["description"],
                 "score": self.reviews[1]["score"],
                 "product_title": "Product 1",
-                "username": "test_user2",
+                "name": "test_user2",
                 "date": observed[0]["date"],
             },
         ]
@@ -273,7 +279,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
                 "description": self.reviews[3]["description"],
                 "score": self.reviews[3]["score"],
                 "product_title": "Product 2",
-                "username": "test_user2",
+                "name": "test_user2",
                 "date": observed[0]["date"],
             },
         ]
