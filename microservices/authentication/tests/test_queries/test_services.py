@@ -28,7 +28,6 @@ from minos.networks import (
     ResponseException,
 )
 
-from microservices.authentication.tests.utils import FakeLockPool
 from src import (
     CredentialsQueryRepository,
     CredentialsQueryService,
@@ -38,6 +37,7 @@ from tests.utils import (
     _FakeRequest,
     _FakeRestRequest,
     _FakeSagaManager,
+    FakeLockPool,
 )
 
 
