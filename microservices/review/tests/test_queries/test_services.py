@@ -10,10 +10,11 @@ from pathlib import (
 from uuid import (
     uuid4,
 )
+
 from minos.aggregate import (
     InMemoryEventRepository,
-    InMemoryTransactionRepository,
     InMemorySnapshotRepository,
+    InMemoryTransactionRepository,
 )
 from minos.common import (
     DependencyInjector,
@@ -32,9 +33,10 @@ from src import (
     ReviewQueryService,
 )
 from tests.utils import (
+    FakeLockPool,
     _FakeBroker,
     _FakeRequest,
-    _FakeSagaManager, FakeLockPool,
+    _FakeSagaManager,
 )
 
 

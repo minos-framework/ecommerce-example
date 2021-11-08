@@ -2,6 +2,7 @@ from uuid import (
     UUID,
     uuid4,
 )
+
 from minos.aggregate import (
     AggregateNotFoundException,
     DeletedAggregateException,

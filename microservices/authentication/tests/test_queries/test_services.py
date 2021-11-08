@@ -14,9 +14,9 @@ from uuid import (
 
 import jwt
 from minos.aggregate import (
-    InMemoryTransactionRepository,
-    InMemorySnapshotRepository,
     InMemoryEventRepository,
+    InMemorySnapshotRepository,
+    InMemoryTransactionRepository,
 )
 from minos.common import (
     DependencyInjector,
@@ -33,11 +33,11 @@ from src import (
     CredentialsQueryService,
 )
 from tests.utils import (
+    FakeLockPool,
     _FakeBroker,
     _FakeRequest,
     _FakeRestRequest,
     _FakeSagaManager,
-    FakeLockPool,
 )
 
 
