@@ -1,14 +1,24 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import Optional
-from uuid import UUID
+from typing import (
+    Optional,
+)
+from uuid import (
+    UUID,
+)
 
-from minos.aggregate import FieldDiff
+from minos.aggregate import (
+    FieldDiff,
+)
 from minos.common import (
     MinosConfig,
     MinosSetup,
 )
-from sqlalchemy import create_engine
+from sqlalchemy import (
+    create_engine,
+)
 
 from .models import (
     META,

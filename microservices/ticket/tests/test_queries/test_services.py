@@ -1,16 +1,24 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import sys
 import unittest
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
-from minos.aggregate import EntitySet
+from minos.aggregate import (
+    EntitySet,
+)
 
 from src import (
     Ticket,
     TicketQueryService,
 )
-from tests.utils import build_dependency_injector
+from tests.utils import (
+    build_dependency_injector,
+)
 
 
 class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):

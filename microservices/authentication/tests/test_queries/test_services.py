@@ -1,8 +1,12 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import sys
 import unittest
-from pathlib import Path
+from pathlib import (
+    Path,
+)
 from uuid import (
     UUID,
     uuid4,
@@ -10,24 +14,30 @@ from uuid import (
 
 import jwt
 from minos.aggregate import (
-    InMemoryTransactionRepository,
-    InMemorySnapshotRepository,
     InMemoryEventRepository,
+    InMemorySnapshotRepository,
+    InMemoryTransactionRepository,
 )
-from minos.common import DependencyInjector
-from minos.common.testing import PostgresAsyncTestCase
-from minos.networks import ResponseException
+from minos.common import (
+    DependencyInjector,
+)
+from minos.common.testing import (
+    PostgresAsyncTestCase,
+)
+from minos.networks import (
+    ResponseException,
+)
 
 from src import (
     CredentialsQueryRepository,
     CredentialsQueryService,
 )
 from tests.utils import (
+    FakeLockPool,
     _FakeBroker,
     _FakeRequest,
     _FakeRestRequest,
     _FakeSagaManager,
-    FakeLockPool,
 )
 
 

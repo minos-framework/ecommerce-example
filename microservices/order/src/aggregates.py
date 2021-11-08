@@ -1,8 +1,16 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from datetime import datetime
-from enum import Enum
-from typing import Optional
+from datetime import (
+    datetime,
+)
+from enum import (
+    Enum,
+)
+from typing import (
+    Optional,
+)
 
 from minos.aggregate import (
     Aggregate,
