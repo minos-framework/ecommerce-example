@@ -16,14 +16,20 @@ service:
     discovery: minos.networks.DiscoveryConnector
     order_repository: src.OrderQueryRepository
   services:
-    - minos.networks.ConsumerService
-    - minos.networks.CommandHandlerService
-    - minos.networks.CommandReplyHandlerService
-    - minos.networks.EventHandlerService
-    - minos.networks.RestService
-    - minos.networks.SnapshotService
     - minos.networks.ProducerService
+    - minos.networks.ConsumerService
+    - minos.networks.RestService
+    - minos.networks.CommandHandlerService
+    - minos.networks.EventHandlerService
     - minos.networks.PeriodicTaskSchedulerService
+middleware:
+  - minos.saga.transactional_command
+services:
+  - minos.aggregate.TransactionService
+  - minos.aggregate.SnapshotService
+  - minos.saga.SagaService
+  - src.OrderQueryService
+  - src.OrderCommandService
 rest:
   host: 0.0.0.0
   port: 8082
@@ -50,10 +56,6 @@ snapshot:
   password: min0s
   host: localhost
   port: 5432
-queries:
-  service: src.OrderQueryService
-commands:
-  service: src.OrderCommandService
 saga:
   storage:
     path: "./order.lmdb"

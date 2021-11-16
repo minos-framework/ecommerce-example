@@ -16,14 +16,20 @@ service:
     discovery: minos.networks.DiscoveryConnector
     cart_repository: src.CartQueryRepository
   services:
-    - minos.networks.ConsumerService
-    - minos.networks.CommandHandlerService
-    - minos.networks.CommandReplyHandlerService
-    - minos.networks.EventHandlerService
-    - minos.networks.RestService
-    - minos.networks.SnapshotService
     - minos.networks.ProducerService
+    - minos.networks.ConsumerService
+    - minos.networks.RestService
+    - minos.networks.CommandHandlerService
+    - minos.networks.EventHandlerService
     - minos.networks.PeriodicTaskSchedulerService
+middleware:
+  - minos.saga.transactional_command
+services:
+  - minos.aggregate.TransactionService
+  - minos.aggregate.SnapshotService
+  - minos.saga.SagaService
+  - src.CartCommandService
+  - src.CartQueryService
 rest:
   host: 0.0.0.0
   port: 8088
@@ -50,10 +56,6 @@ snapshot:
   password: min0s
   host: localhost
   port: 5432
-commands:
-  service: src.CartCommandService
-queries:
-  service: src.CartQueryService
 saga:
   storage:
     path: "./cart.lmdb"

@@ -16,14 +16,20 @@ service:
     discovery: minos.networks.DiscoveryConnector
     credentials_repository: src.CredentialsQueryRepository
   services:
-    - minos.networks.ConsumerService
-    - minos.networks.CommandHandlerService
-    - minos.networks.CommandReplyHandlerService
-    - minos.networks.EventHandlerService
-    - minos.networks.RestService
-    - minos.networks.SnapshotService
     - minos.networks.ProducerService
+    - minos.networks.ConsumerService
+    - minos.networks.RestService
+    - minos.networks.CommandHandlerService
+    - minos.networks.EventHandlerService
     - minos.networks.PeriodicTaskSchedulerService
+middleware:
+  - minos.saga.transactional_command
+services:
+  - minos.aggregate.TransactionService
+  - minos.aggregate.SnapshotService
+  - minos.saga.SagaService
+  - src.CredentialsQueryService
+  - src.CredentialsCommandService
 rest:
   host: 0.0.0.0
   port: 8089
@@ -50,10 +56,6 @@ snapshot:
   password: min0s
   host: localhost
   port: 5432
-queries:
-  service: src.CredentialsQueryService
-commands:
-  service: src.CredentialsCommandService
 saga:
   storage:
     path: "./auth.lmdb"
