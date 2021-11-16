@@ -3,8 +3,10 @@ from uuid import (
     uuid4,
 )
 
-from minos.common import (
+from minos.aggregate import (
     EntitySet,
+)
+from minos.common import (
     ModelType,
 )
 from minos.saga import (

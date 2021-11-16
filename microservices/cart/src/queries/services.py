@@ -1,7 +1,7 @@
 from dependency_injector.wiring import (
     Provide,
 )
-from minos.common import (
+from minos.aggregate import (
     AggregateDiff,
 )
 from minos.cqrs import (

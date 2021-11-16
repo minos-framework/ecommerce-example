@@ -1,9 +1,11 @@
 from dependency_injector.wiring import (
     Provide,
 )
+from minos.aggregate import (
+    AggregateDiff,
+)
 from minos.common import (
     UUID_REGEX,
-    AggregateDiff,
 )
 from minos.cqrs import (
     QueryService,

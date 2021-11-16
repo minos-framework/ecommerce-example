@@ -1,6 +1,6 @@
 import logging
 
-from minos.common import (
+from minos.aggregate import (
     Condition,
 )
 from minos.cqrs import (

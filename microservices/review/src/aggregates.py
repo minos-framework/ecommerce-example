@@ -2,7 +2,7 @@ from __future__ import (
     annotations,
 )
 
-from minos.common import (
+from minos.aggregate import (
     Aggregate,
     AggregateRef,
     ModelRef,
@@ -34,4 +34,4 @@ class Product(AggregateRef):
 class Customer(AggregateRef):
     """Customer AggregateRef class."""
 
-    username: str
+    name: str

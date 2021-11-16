@@ -12,7 +12,7 @@ from typing import (
     Optional,
 )
 
-from minos.common import (
+from minos.aggregate import (
     Aggregate,
     AggregateRef,
     Entity,

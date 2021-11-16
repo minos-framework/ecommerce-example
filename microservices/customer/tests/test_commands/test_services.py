@@ -8,8 +8,8 @@ from uuid import (
     uuid4,
 )
 
-from minos.common import (
-    MinosSnapshotDeletedAggregateException,
+from minos.aggregate import (
+    DeletedAggregateException,
 )
 from minos.networks import (
     Response,
@@ -64,7 +64,7 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
         request = _FakeRequest({"uuid": customer.uuid})
         await self.service.delete_customer(request)
 
-        with self.assertRaises(MinosSnapshotDeletedAggregateException):
+        with self.assertRaises(DeletedAggregateException):
             await Customer.get(customer.uuid)
 
     async def test_delete_customer_bad_request(self):

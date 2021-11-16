@@ -8,10 +8,11 @@ packages = [{ include = "src" }]
 [tool.poetry.dependencies]
 python = "^3.9"
 typer = "^0.3.2"
-minos-microservice-common = "^0.1.17"
-minos-microservice-networks = ">=0.0.18<0.1"
-minos-microservice-saga = "^0.1.1"
-minos-microservice-cqrs = ">=0.0.7<0.1"
+minos-microservice-common = "^0.2.0"
+minos-microservice-aggregate = "^0.1.0"
+minos-microservice-networks = "^0.1.0"
+minos-microservice-saga = "^0.2.0"
+minos-microservice-cqrs = "^0.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

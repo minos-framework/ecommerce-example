@@ -3,10 +3,12 @@ from uuid import (
     uuid4,
 )
 
+from minos.aggregate import (
+    AggregateNotFoundException,
+    DeletedAggregateException,
+)
 from minos.common import (
     UUID_REGEX,
-    MinosSnapshotAggregateNotFoundException,
-    MinosSnapshotDeletedAggregateException,
 )
 from minos.cqrs import (
     CommandService,
@@ -146,7 +148,7 @@ class ProductCommandService(CommandService):
         try:
             product = await Product.get(uuid)
             await product.delete()
-        except (MinosSnapshotDeletedAggregateException, MinosSnapshotAggregateNotFoundException):
+        except (DeletedAggregateException, AggregateNotFoundException):
             raise ResponseException("The product does not exist.")
 
     @enroute.broker.command("ReserveProducts")
@@ -162,7 +164,7 @@ class ProductCommandService(CommandService):
 
         try:
             await Product.reserve(quantities)
-        except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
+        except (AggregateNotFoundException, DeletedAggregateException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")
@@ -180,7 +182,7 @@ class ProductCommandService(CommandService):
 
         try:
             await Product.purchase(quantities)
-        except (MinosSnapshotAggregateNotFoundException, MinosSnapshotDeletedAggregateException) as exc:
+        except (AggregateNotFoundException, DeletedAggregateException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")

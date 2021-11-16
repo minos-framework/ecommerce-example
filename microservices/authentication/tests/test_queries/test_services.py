@@ -13,10 +13,13 @@ from uuid import (
 )
 
 import jwt
+from minos.aggregate import (
+    InMemoryEventRepository,
+    InMemorySnapshotRepository,
+    InMemoryTransactionRepository,
+)
 from minos.common import (
     DependencyInjector,
-    InMemoryRepository,
-    InMemorySnapshot,
 )
 from minos.common.testing import (
     PostgresAsyncTestCase,
@@ -30,6 +33,7 @@ from src import (
     CredentialsQueryService,
 )
 from tests.utils import (
+    FakeLockPool,
     _FakeBroker,
     _FakeRequest,
     _FakeRestRequest,
@@ -46,8 +50,10 @@ class TestCredentialsQueryService(PostgresAsyncTestCase):
             self.config,
             saga_manager=_FakeSagaManager,
             event_broker=_FakeBroker,
-            repository=InMemoryRepository,
-            snapshot=InMemorySnapshot,
+            lock_pool=FakeLockPool,
+            transaction_repository=InMemoryTransactionRepository,
+            event_repository=InMemoryEventRepository,
+            snapshot_repository=InMemorySnapshotRepository,
             credentials_repository=CredentialsQueryRepository.from_config(
                 self.config, database=self.config.repository.database
             ),

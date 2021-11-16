@@ -29,7 +29,7 @@ REVIEW_TABLE = Table(
     Column("description", Text, nullable=False),
     Column("score", Integer, nullable=False),
     Column("product_title", Text, nullable=False),
-    Column("username", Text, nullable=False),
+    Column("name", Text, nullable=False),
     Column("date", DateTime, default=datetime.datetime.utcnow),
     UniqueConstraint("product_uuid", "user_uuid", name="uix_1"),
 )
@@ -44,7 +44,7 @@ ReviewDTO = ModelType.build(
         "description": str,
         "score": int,
         "product_title": str,
-        "username": str,
+        "name": str,
         "date": datetime.datetime,
     },
 )

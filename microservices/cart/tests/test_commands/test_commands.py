@@ -5,7 +5,7 @@ from __future__ import (
 import sys
 import unittest
 
-from minos.common import (
+from minos.aggregate import (
     EntitySet,
 )
 from minos.networks import (
