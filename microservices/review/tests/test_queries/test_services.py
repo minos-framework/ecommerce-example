@@ -1,15 +1,9 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from pathlib import (
-    Path,
-)
-from uuid import (
-    uuid4,
-)
+from pathlib import Path
+from uuid import uuid4
 
 from minos.aggregate import (
     InMemoryEventRepository,
@@ -20,9 +14,7 @@ from minos.common import (
     DependencyInjector,
     MinosConfig,
 )
-from minos.networks import (
-    Response,
-)
+from minos.networks import Response
 
 from src import (
     Customer,
