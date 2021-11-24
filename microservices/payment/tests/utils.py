@@ -20,14 +20,11 @@ from minos.aggregate import (
     InMemoryTransactionRepository,
 )
 from minos.common import (
-    CommandReply,
     DependencyInjector,
     Lock,
-    MinosBroker,
     MinosConfig,
     MinosPool,
-    MinosSagaManager,
-    Model,
+    MinosSetup,
 )
 from minos.networks import (
     Request,
@@ -79,20 +76,17 @@ class _FakeRequest(Request):
         return str()
 
 
-class _FakeBroker(MinosBroker):
+class _FakeBroker(MinosSetup):
     """For testing purposes."""
 
-    async def send(self, items: list[Model], **kwargs) -> None:
+    async def send(self, *args, **kwargs) -> None:
         """For testing purposes."""
 
 
-class _FakeSagaManager(MinosSagaManager):
+class _FakeSagaManager(MinosSetup):
     """For testing purposes."""
 
-    async def _run_new(self, name: str, **kwargs) -> UUID:
-        """For testing purposes."""
-
-    async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
+    async def run(self, *args, **kwargs) -> UUID:
         """For testing purposes."""
 
 
@@ -129,7 +123,7 @@ def build_dependency_injector() -> DependencyInjector:
     return DependencyInjector(
         build_config(),
         saga_manager=_FakeSagaManager,
-        event_broker=_FakeBroker,
+        broker_publisher=_FakeBroker,
         lock_pool=FakeLockPool,
         transaction_repository=InMemoryTransactionRepository,
         event_repository=InMemoryEventRepository,

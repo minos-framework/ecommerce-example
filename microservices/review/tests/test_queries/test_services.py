@@ -48,7 +48,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
         self.injector = DependencyInjector(
             self.config,
             saga_manager=_FakeSagaManager,
-            event_broker=_FakeBroker,
+            broker_publisher=_FakeBroker,
             lock_pool=FakeLockPool,
             transaction_repository=InMemoryTransactionRepository,
             event_repository=InMemoryEventRepository,
