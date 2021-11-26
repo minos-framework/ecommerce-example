@@ -348,7 +348,7 @@ minos-microservice-networks = ">=0.3.0,<0.4.0"
 
 [[package]]
 name = "minos-microservice-common"
-version = "0.3.0"
+version = "0.3.1"
 description = "Python Package with common Classes and Utilities used in Minos Microservices."
 category = "main"
 optional = false
@@ -384,16 +384,21 @@ version = "0.3.0"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
 category = "main"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "^3.9"
+develop = true
 
 [package.dependencies]
-aiohttp = ">=3.7.4,<4.0.0"
-aiokafka = ">=0.7.0,<0.8.0"
-aiomisc = ">=14.0.3,<15.0.0"
-aiopg = ">=1.2.1,<2.0.0"
-crontab = ">=0.23.0,<0.24.0"
-dependency-injector = ">=4.32.2,<5.0.0"
-minos-microservice-common = ">=0.3.0,<0.4.0"
+aiohttp = "^3.7.4"
+aiokafka = "^0.7.0"
+aiomisc = "^14.0.3"
+aiopg = "^1.2.1"
+crontab = "^0.23.0"
+dependency-injector = "^4.32.2"
+minos-microservice-common = "^0.3.0"
+
+[package.source]
+type = "directory"
+url = "../../../minos_microservice_networks"
 
 [[package]]
 name = "minos-microservice-saga"
@@ -401,17 +406,22 @@ version = "0.3.2"
 description = "Saga Library for MinOS project."
 category = "main"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "^3.9"
+develop = true
 
 [package.dependencies]
-dependency-injector = ">=4.32.2,<5.0.0"
-minos-microservice-aggregate = ">=0.2.0,<0.3.0"
-minos-microservice-common = ">=0.3.0,<0.4.0"
-minos-microservice-networks = ">=0.3.0,<0.4.0"
+dependency-injector = "^4.32.2"
+minos-microservice-aggregate = "^0.2.0"
+minos-microservice-common = "^0.3.0"
+minos-microservice-networks = "^0.3.0"
+
+[package.source]
+type = "directory"
+url = "../../../minos_microservice_saga"
 
 [[package]]
 name = "more-itertools"
-version = "8.11.0"
+version = "8.12.0"
 description = "More routines for operating on iterables, beyond itertools"
 category = "dev"
 optional = false
@@ -655,7 +665,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "cc7ea6613f2117a1765ecc4a40d274d60793ff3bcbd6b6d05ddaf9ee1f1192eb"
+content-hash = "4f2e8de1e59855c6904b660fe79c2f4e0707b6944b8fb479ec0af99fb9c9e4be"
 
 [metadata.files]
 aiohttp = [
@@ -1151,24 +1161,18 @@ minos-microservice-aggregate = [
     {file = "minos_microservice_aggregate-0.2.2.tar.gz", hash = "sha256:73ccc2a10d93c359b560f7b4a4e905c657e8fe816bad5baf457eaf95504f0b2a"},
 ]
 minos-microservice-common = [
-    {file = "minos_microservice_common-0.3.0-py3-none-any.whl", hash = "sha256:0951b79119ac49a79341fb9de7864f90830f2ff55fa94743d46b0b1aca17eb66"},
-    {file = "minos_microservice_common-0.3.0.tar.gz", hash = "sha256:0f0d601b789e6231d482660278e4bd07160bf656c785c5fd2d5c937a112748b8"},
+    {file = "minos_microservice_common-0.3.1-py3-none-any.whl", hash = "sha256:92c8f375859b41fbc217432694a1f23c3c0db49f391e2e0b880243d7ece0b292"},
+    {file = "minos_microservice_common-0.3.1.tar.gz", hash = "sha256:3a408a585e1ae99c663efd6b127cd220b54305f3db0b63910e45933d5446e1d2"},
 ]
 minos-microservice-cqrs = [
     {file = "minos_microservice_cqrs-0.2.1-py3-none-any.whl", hash = "sha256:6708671ec57f0405cea2668cb957d08db009289e237544274929f8146dd4ff86"},
     {file = "minos_microservice_cqrs-0.2.1.tar.gz", hash = "sha256:f03fa861c004007de8f19af662c849f20866afdb77c1ec1b05abbbb5cc5c974e"},
 ]
-minos-microservice-networks = [
-    {file = "minos_microservice_networks-0.3.0-py3-none-any.whl", hash = "sha256:7e67126454ccf7dd83b343174c17968cbc02087d0c7e2298973ce6dbbeab0090"},
-    {file = "minos_microservice_networks-0.3.0.tar.gz", hash = "sha256:3dc9e75599d748bc0ddf386cc6d9ce03362b9bfa03b441cf63898d4382588370"},
-]
-minos-microservice-saga = [
-    {file = "minos_microservice_saga-0.3.2-py3-none-any.whl", hash = "sha256:5f3216b8c8cf5b306ad6ce3796d3b9dcaa6fd64ad7bbe1e28d34e6685af50321"},
-    {file = "minos_microservice_saga-0.3.2.tar.gz", hash = "sha256:b8c3b98efab006a6af2c2eab56726c5f9a75c5382cc123afb921b6fdeb692351"},
-]
+minos-microservice-networks = []
+minos-microservice-saga = []
 more-itertools = [
-    {file = "more-itertools-8.11.0.tar.gz", hash = "sha256:0a2fd25d343c08d7e7212071820e7e7ea2f41d8fb45d6bc8a00cd6ce3b7aab88"},
-    {file = "more_itertools-8.11.0-py3-none-any.whl", hash = "sha256:88afff98d83d08fe5e4049b81e2b54c06ebb6b3871a600040865c7a592061cbb"},
+    {file = "more-itertools-8.12.0.tar.gz", hash = "sha256:7dc6ad46f05f545f900dd59e8dfb4e84a4827b97b3cfecb175ea0c7d247f6064"},
+    {file = "more_itertools-8.12.0-py3-none-any.whl", hash = "sha256:43e6dd9942dffd72661a2c4ef383ad7da1e6a3e968a927ad7a6083ab410a688b"},
 ]
 multidict = [
     {file = "multidict-5.2.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:3822c5894c72e3b35aae9909bef66ec83e44522faf767c0ad39e0e2de11d3b55"},
