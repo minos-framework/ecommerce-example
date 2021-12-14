@@ -31,9 +31,11 @@ class TicketCommandService(CommandService):
         content = await request.content()
         cart_uuid = content["cart_uuid"]
 
-        saga = await self.saga_manager.run(_CREATE_TICKET, context=SagaContext(cart_uuid=cart_uuid))
+        execution = await self.saga_manager.run(
+            _CREATE_TICKET, context=SagaContext(cart_uuid=cart_uuid), raise_on_error=False
+        )
 
-        if saga.status == SagaStatus.Finished:
-            return Response(saga.context["ticket"])
+        if execution.status == SagaStatus.Finished:
+            return Response(execution.context["ticket"])
         else:
             raise ResponseException("An error occurred during order creation.")
