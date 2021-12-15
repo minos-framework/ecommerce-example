@@ -1,3 +1,4 @@
+import logging
 from uuid import (
     UUID,
     uuid4,
@@ -26,6 +27,8 @@ from ..aggregates import (
     Product,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class ProductCommandService(CommandService):
     """Product Service class"""
@@ -51,9 +54,8 @@ class ProductCommandService(CommandService):
 
         return Response(product)
 
-    @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/inventory", "PUT")
-    async def update_inventory(request: RestRequest) -> Response:
+    async def update_inventory(self, request: RestRequest) -> Response:
         """Update inventory amount with a difference.
 
         :param request: ``Request`` that contains the needed information.
@@ -70,9 +72,8 @@ class ProductCommandService(CommandService):
 
         return Response(product)
 
-    @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/inventory", "PATCH")
-    async def update_inventory_diff(request: RestRequest) -> Response:
+    async def update_inventory_diff(self, request: RestRequest) -> Response:
         """Update inventory amount with a difference.
 
         :param request: ``Request`` that contains the needed information.
@@ -88,6 +89,28 @@ class ProductCommandService(CommandService):
         await product.save()
 
         return Response(product)
+
+    @update_inventory.check(max_attempts=1)
+    @update_inventory_diff.check()
+    async def check_positive_inventory(self, request: RestRequest) -> bool:
+        """Check if the inventory is positive.
+
+        :param request: The ``Request`` that contains the needed information.
+        :return:  ``True`` if is positive or ``False`` otherwise.
+        """
+        logger.info("Checking positive inventory...")
+        content = await request.content()
+
+        if "amount_diff" in content:
+            params = await request.params()
+            uuid = params["uuid"]
+            product = await Product.get(uuid)
+            amount_diff = content["amount_diff"]
+            amount = product.inventory.amount + amount_diff
+        else:
+            amount = content["amount"]
+
+        return amount >= 0
 
     @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "PUT")
