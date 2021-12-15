@@ -408,7 +408,7 @@ minos-microservice-common = "^0.3.0"
 type = "git"
 url = "https://github.com/Clariteia/minos_microservice_networks.git"
 reference = "issue-421-add-multiple-content-type-support"
-resolved_reference = "4c6b53e7b4fd4c1c9bd6b007ff8d18e8974ba9f1"
+resolved_reference = "3243644f8f76fb1bc3e78ada3f42f141812dba68"
 
 [[package]]
 name = "minos-microservice-saga"
