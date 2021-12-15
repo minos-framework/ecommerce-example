@@ -4,6 +4,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
+    RestRequest,
     enroute,
 )
 
@@ -45,7 +46,11 @@ class ReviewCommandService(CommandService):
         :return: A ``Response`` containing the already created product.
         """
         content = await request.content()
-        uuid = content["uuid"]
+        if isinstance(request, RestRequest):
+            params = await request.params()
+            uuid = params["uuid"]
+        else:
+            uuid = content["uuid"]
 
         review = await Review.get(uuid)
 

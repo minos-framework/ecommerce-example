@@ -7,6 +7,7 @@ from pathlib import (
     Path,
 )
 from typing import (
+    Any,
     Optional,
 )
 from uuid import (
@@ -49,15 +50,16 @@ class _FakeRestRequest(RestRequest):
     def __init__(self, username: str, password: str):
         encoded_credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
         headers = {"Authorization": f"Basic {encoded_credentials}"}
-        self.raw_request = _FakeRawRestRequest(headers)
+        self.raw = _FakeRawRestRequest(headers)
 
 
 class _FakeRequest(Request):
     """For testing purposes"""
 
-    def __init__(self, content):
+    def __init__(self, content, params=None):
         super().__init__()
         self._content = content
+        self._params = params
         self._user = uuid4()
 
     @property
@@ -69,8 +71,17 @@ class _FakeRequest(Request):
         """For testing purposes"""
         return self._content
 
-    def __eq__(self, other: _FakeRequest) -> bool:
-        return self._content == other._content and self.user == other.user
+    async def params(self, **kwargs):
+        """For testing purposes"""
+        return self._params
+
+    def __eq__(self, other: Any) -> bool:
+        return (
+            isinstance(other, type(self))
+            and self._content == other._content
+            and self._params == other._params
+            and self.user == other.user
+        )
 
     def __repr__(self) -> str:
         return str()

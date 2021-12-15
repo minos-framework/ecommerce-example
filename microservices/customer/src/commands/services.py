@@ -8,6 +8,7 @@ from minos.networks import (
     Request,
     Response,
     ResponseException,
+    RestRequest,
     enroute,
 )
 
@@ -50,8 +51,12 @@ class CustomerCommandService(CommandService):
         """
 
         try:
-            content = await request.content()
-            uuid = content["uuid"]
+            if isinstance(request, RestRequest):
+                params = await request.params()
+                uuid = params["uuid"]
+            else:
+                content = await request.content()
+                uuid = content["uuid"]
         except Exception:
             raise ResponseException("The given request could not be parsed.")
 

@@ -56,7 +56,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_update_product(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
 
-        request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao", "description": "1.5KG", "price": 4})
+        request = _FakeRequest({"title": "Cola-Cao", "description": "1.5KG", "price": 4}, {"uuid": product.uuid})
         response = await self.service.update_product(request)
         observed = await response.content()
         expected = Product(
@@ -75,7 +75,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_update_product_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
 
-        request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao"})
+        request = _FakeRequest({"title": "Cola-Cao"}, {"uuid": product.uuid})
         response = await self.service.update_product_diff(request)
         observed = await response.content()
         expected = Product(
@@ -94,7 +94,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_update_inventory(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
 
-        request = _FakeRequest({"uuid": product.uuid, "amount": 56})
+        request = _FakeRequest({"amount": 56}, {"uuid": product.uuid})
         response = await self.service.update_inventory(request)
         observed = await response.content()
         expected = Product(
@@ -113,7 +113,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_update_inventory_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
 
-        request = _FakeRequest({"uuid": product.uuid, "amount_diff": 12})
+        request = _FakeRequest({"amount_diff": 12}, {"uuid": product.uuid})
         response = await self.service.update_inventory_diff(request)
         observed = await response.content()
         expected = Product(

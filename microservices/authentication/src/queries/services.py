@@ -47,7 +47,7 @@ class CredentialsQueryService(QueryService):
         :param request: A ``RestRequest`` containing the credentials on its headers.
         :return: A ``Response`` containing the token.
         """
-        auth_type, encoded_credentials = request.raw_request.headers["Authorization"].split()
+        auth_type, encoded_credentials = request.headers["Authorization"].split()
         if auth_type != "Basic":
             raise ResponseException("Only 'Basic Authentication' is supported")
 
@@ -88,7 +88,7 @@ class CredentialsQueryService(QueryService):
         :param request: A ``RestRequest`` containing the token in headers.
         :return: The response containing the payload if everything is fine or an exception otherwise.
         """
-        auth_type, token = request.raw_request.headers["Authorization"].split()
+        auth_type, token = request.headers["Authorization"].split()
 
         if auth_type != "Bearer":
             raise ResponseException("Only 'Bearer Authentication' is supported")
