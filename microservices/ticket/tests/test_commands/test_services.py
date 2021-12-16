@@ -4,12 +4,22 @@ from __future__ import (
 
 import sys
 import unittest
+from unittest.mock import (
+    AsyncMock,
+)
 from uuid import (
     uuid4,
 )
 
+from microservices.authentication.tests.utils import (
+    _FakeSagaExecution,
+)
 from minos.networks import (
+    InMemoryRequest,
     Response,
+)
+from minos.saga import (
+    SagaContext,
 )
 
 from src import (
@@ -17,7 +27,6 @@ from src import (
     TicketCommandService,
 )
 from tests.utils import (
-    _FakeRequest,
     build_dependency_injector,
 )
 
@@ -33,24 +42,19 @@ class TestTicketCommandService(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
-    async def _test_create_ticket(self):
+    async def test_create_ticket(self):
         gen_uuid = [uuid4(), uuid4(), uuid4()]
-        request = _FakeRequest({"product_uuids": gen_uuid})
+        request = InMemoryRequest({"cart_uuid": gen_uuid})
+
+        expected = await Ticket.create("test", 0.0, [])
+
+        self.injector.saga_manager.run = AsyncMock(return_value=_FakeSagaExecution(SagaContext(ticket=expected)))
+
         response = await self.service.create_ticket(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Ticket(
-            observed.code,
-            [],
-            0.0,
-            uuid=observed.uuid,
-            version=observed.version,
-            created_at=observed.created_at,
-            updated_at=observed.updated_at,
-        )
-
         self.assertEqual(expected, observed)
 
 

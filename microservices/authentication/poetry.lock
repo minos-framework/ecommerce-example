@@ -407,8 +407,8 @@ minos-microservice-common = "^0.3.0"
 [package.source]
 type = "git"
 url = "https://github.com/Clariteia/minos_microservice_networks.git"
-reference = "issue-421-add-multiple-content-type-support"
-resolved_reference = "3243644f8f76fb1bc3e78ada3f42f141812dba68"
+reference = "issue-466-in-memory-request"
+resolved_reference = "39deddd8a2419ff17eb14ecf23417a22abc06fc7"
 
 [[package]]
 name = "minos-microservice-saga"
@@ -668,7 +668,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "7f300da2b913f50edcc7c95237fe4d6ebfbe7f59ad09c13775a9c07c1b3aa181"
+content-hash = "ae2db5f5d2c22ad5b78f6b9be2d2c547411586a34c5ae6c5ada2773d0f218ec5"
 
 [metadata.files]
 aiohttp = [

@@ -34,7 +34,7 @@ class TestTicketQueryService(unittest.IsolatedAsyncioTestCase):
     async def test_get_payments(self):
         expected = await Ticket.create("kokrte3432", 1.4, EntitySet())
 
-        # request = _FakeRequest({"uuid": expected.uuid})
+        # request = InMemoryRequest({"uuid": expected.uuid})
 
         # response = await self.service.get_ticket(request)
         # observed = await response.content()

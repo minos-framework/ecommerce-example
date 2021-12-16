@@ -6,6 +6,7 @@ import sys
 import unittest
 
 from minos.networks import (
+    InMemoryRequest,
     Response,
 )
 
@@ -14,7 +15,6 @@ from src import (
     PaymentCommandService,
 )
 from tests.utils import (
-    _FakeRequest,
     build_dependency_injector,
 )
 
@@ -30,7 +30,7 @@ class TestPaymentCommandService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_payment(self):
-        request = _FakeRequest({"credit_number": 1234, "amount": 3.4})
+        request = InMemoryRequest({"credit_number": 1234, "amount": 3.4})
         response = await self.service.create_payment(request)
 
         self.assertIsInstance(response, Response)

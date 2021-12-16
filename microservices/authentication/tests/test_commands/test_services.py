@@ -15,6 +15,7 @@ from uuid import (
 )
 
 from minos.networks import (
+    InMemoryRequest,
     Response,
     ResponseException,
 )
@@ -27,7 +28,6 @@ from src import (
     CredentialsCommandService,
 )
 from tests.utils import (
-    _FakeRequest,
     _FakeSagaExecution,
     build_dependency_injector,
 )
@@ -47,7 +47,7 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
 
         self.injector.saga_manager.run = AsyncMock(return_value=_FakeSagaExecution(SagaContext(credentials=expected)))
 
-        request = _FakeRequest(
+        request = InMemoryRequest(
             {"username": "foo", "password": "bar", "name": "John", "surname": "Snow", "address": "Winterfell"}
         )
         response = await self.service.create_credentials(request)
@@ -61,14 +61,14 @@ class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_create_credentials_raises_duplicated_username(self):
         await Credentials.create("foo", "bar", True, uuid4())
 
-        request = _FakeRequest({"username": "foo", "password": "bar"})
+        request = InMemoryRequest({"username": "foo", "password": "bar"})
 
         with self.assertRaises(ResponseException):
             await self.service.create_credentials(request)
 
     @unittest.skip
     async def test_create_credentials_concurrently(self):
-        request = _FakeRequest(
+        request = InMemoryRequest(
             {"username": "foo", "password": "bar", "name": "John", "surname": "Snow", "address": "Winterfell"}
         )
 

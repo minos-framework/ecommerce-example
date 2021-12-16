@@ -2,17 +2,11 @@ from __future__ import (
     annotations,
 )
 
-import base64
 from pathlib import (
     Path,
 )
-from typing import (
-    Any,
-    Optional,
-)
 from uuid import (
     UUID,
-    uuid4,
 )
 
 from minos.aggregate import (
@@ -27,64 +21,9 @@ from minos.common import (
     MinosPool,
     MinosSetup,
 )
-from minos.networks import (
-    Request,
-    RestRequest,
-)
 from minos.saga import (
-    SagaContext,
+    SagaContext, SagaStatus,
 )
-
-
-class _FakeRawRestRequest:
-    """For testing purposes"""
-
-    def __init__(self, headers: dict[str, str]):
-        self.headers = headers
-
-
-class _FakeRestRequest(RestRequest):
-    """For testing purposes"""
-
-    # noinspection PyMissingConstructor
-    def __init__(self, username: str, password: str):
-        encoded_credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
-        headers = {"Authorization": f"Basic {encoded_credentials}"}
-        self.raw = _FakeRawRestRequest(headers)
-
-
-class _FakeRequest(Request):
-    """For testing purposes"""
-
-    def __init__(self, content, params=None):
-        super().__init__()
-        self._content = content
-        self._params = params
-        self._user = uuid4()
-
-    @property
-    def user(self) -> Optional[UUID]:
-        """For testing purposes"""
-        return self._user
-
-    async def content(self, **kwargs):
-        """For testing purposes"""
-        return self._content
-
-    async def params(self, **kwargs):
-        """For testing purposes"""
-        return self._params
-
-    def __eq__(self, other: Any) -> bool:
-        return (
-            isinstance(other, type(self))
-            and self._content == other._content
-            and self._params == other._params
-            and self.user == other.user
-        )
-
-    def __repr__(self) -> str:
-        return str()
 
 
 class _FakeBroker(MinosSetup):
@@ -102,8 +41,9 @@ class _FakeSagaManager(MinosSetup):
 
 
 class _FakeSagaExecution:
-    def __init__(self, context: SagaContext):
+    def __init__(self, context: SagaContext, status: SagaStatus = SagaStatus.Finished):
         self.context = context
+        self.status = status
 
 
 class FakeLock(Lock):
