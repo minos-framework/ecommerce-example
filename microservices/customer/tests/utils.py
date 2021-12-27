@@ -23,6 +23,7 @@ from minos.common import (
 )
 from minos.saga import (
     SagaContext,
+    SagaStatus,
 )
 
 
@@ -41,8 +42,9 @@ class _FakeSagaManager(MinosSetup):
 
 
 class _FakeSagaExecution:
-    def __init__(self, context: SagaContext):
+    def __init__(self, context: SagaContext, status: SagaStatus = SagaStatus.Finished):
         self.context = context
+        self.status = status
 
 
 class FakeLock(Lock):
