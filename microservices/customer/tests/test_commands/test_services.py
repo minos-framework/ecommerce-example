@@ -1,10 +1,16 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import sys
 import unittest
-from uuid import uuid4
+from uuid import (
+    uuid4,
+)
 
-from minos.aggregate import DeletedAggregateException
+from minos.aggregate import (
+    DeletedAggregateException,
+)
 from minos.networks import (
     InMemoryRequest,
     Response,
@@ -16,7 +22,9 @@ from src import (
     Customer,
     CustomerCommandService,
 )
-from tests.utils import build_dependency_injector
+from tests.utils import (
+    build_dependency_injector,
+)
 
 
 class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):

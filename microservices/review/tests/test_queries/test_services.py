@@ -1,9 +1,15 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import sys
 import unittest
-from pathlib import Path
-from uuid import uuid4
+from pathlib import (
+    Path,
+)
+from uuid import (
+    uuid4,
+)
 
 from minos.aggregate import (
     InMemoryEventRepository,

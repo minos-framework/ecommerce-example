@@ -1,4 +1,6 @@
-from minos.cqrs import CommandService
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
     Request,
     Response,
@@ -6,7 +8,9 @@ from minos.networks import (
     enroute,
 )
 
-from ..aggregates import Review
+from ..aggregates import (
+    Review,
+)
 
 
 class ReviewCommandService(CommandService):

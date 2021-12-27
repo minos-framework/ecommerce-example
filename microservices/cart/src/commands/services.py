@@ -1,16 +1,26 @@
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
-from minos.aggregate import EntitySet
-from minos.cqrs import CommandService
+from minos.aggregate import (
+    EntitySet,
+)
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
     Request,
     Response,
     RestRequest,
     enroute,
 )
-from minos.saga import SagaContext
+from minos.saga import (
+    SagaContext,
+)
 
-from ..aggregates import Cart
+from ..aggregates import (
+    Cart,
+)
 from .sagas import (
     ADD_CART_ITEM,
     DELETE_CART,

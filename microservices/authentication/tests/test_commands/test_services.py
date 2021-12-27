@@ -1,17 +1,27 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import sys
 import unittest
-from asyncio import gather
-from unittest.mock import AsyncMock
-from uuid import uuid4
+from asyncio import (
+    gather,
+)
+from unittest.mock import (
+    AsyncMock,
+)
+from uuid import (
+    uuid4,
+)
 
 from minos.networks import (
     InMemoryRequest,
     Response,
     ResponseException,
 )
-from minos.saga import SagaContext
+from minos.saga import (
+    SagaContext,
+)
 
 from src import (
     Credentials,
