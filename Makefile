@@ -4,7 +4,6 @@ build:
 up: build
 	echo "Starting containers..."
 	docker compose up --detach
-	sleep 10  # FIXME: This "hotfix" must not be necessary.
 
 down:
 	echo "Stopping containers..."

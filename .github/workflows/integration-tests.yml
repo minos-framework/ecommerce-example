@@ -24,6 +24,9 @@ jobs:
       - name: Start System
         run: make up
 
+      - name: Wait until System is ready
+        run: sleep 30  # FIXME: This "hotfix" must not be necessary.
+
       - name: Run Integration Tests
         run: make integration-tests
 
