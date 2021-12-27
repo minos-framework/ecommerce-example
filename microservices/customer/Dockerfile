@@ -11,7 +11,7 @@ RUN poetry build --format wheel
 
 FROM python:3.9-slim as production
 COPY --from=build /microservice/dist/ ./dist
-RUN pip install --no-deps ./dist/*
+RUN pip install --upgrade pip && pip install --no-deps ./dist/*
 COPY ./config.yml ./config.yml
 ENTRYPOINT ["microservice"]
 CMD ["start"]
