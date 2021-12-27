@@ -9,6 +9,7 @@ from collections import (
 )
 
 from minos.networks import (
+    InMemoryRequest,
     Response,
 )
 
@@ -18,7 +19,6 @@ from src import (
     ProductCommandService,
 )
 from tests.utils import (
-    _FakeRequest,
     build_dependency_injector,
 )
 
@@ -33,7 +33,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_product(self):
-        request = _FakeRequest({"title": "Cacao", "description": "1KG", "price": 3})
+        request = InMemoryRequest({"title": "Cacao", "description": "1KG", "price": 3})
         response = await self.service.create_product(request)
 
         self.assertIsInstance(response, Response)
@@ -56,7 +56,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_update_product(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
 
-        request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao", "description": "1.5KG", "price": 4})
+        request = InMemoryRequest({"title": "Cola-Cao", "description": "1.5KG", "price": 4}, {"uuid": product.uuid})
         response = await self.service.update_product(request)
         observed = await response.content()
         expected = Product(
@@ -75,7 +75,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_update_product_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
 
-        request = _FakeRequest({"uuid": product.uuid, "title": "Cola-Cao"})
+        request = InMemoryRequest({"title": "Cola-Cao"}, {"uuid": product.uuid})
         response = await self.service.update_product_diff(request)
         observed = await response.content()
         expected = Product(
@@ -94,7 +94,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_update_inventory(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
 
-        request = _FakeRequest({"uuid": product.uuid, "amount": 56})
+        request = InMemoryRequest({"amount": 56}, {"uuid": product.uuid})
         response = await self.service.update_inventory(request)
         observed = await response.content()
         expected = Product(
@@ -113,7 +113,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_update_inventory_diff(self):
         product = await Product.create("abc", "Cacao", "1KG", 3, Inventory(amount=12, reserved=0, sold=0))
 
-        request = _FakeRequest({"uuid": product.uuid, "amount_diff": 12})
+        request = InMemoryRequest({"amount_diff": 12}, {"uuid": product.uuid})
         response = await self.service.update_inventory_diff(request)
         observed = await response.content()
         expected = Product(
@@ -135,7 +135,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         quantities = defaultdict(int)
         quantities[str(product.uuid)] += 3
 
-        request = _FakeRequest({"quantities": quantities})
+        request = InMemoryRequest({"quantities": quantities})
         await self.service.reserve_products(request)
         obtained = await Product.get(product.uuid)
         expected = Product(
@@ -158,7 +158,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         quantities = defaultdict(int)
         quantities[str(product.uuid)] += 3
 
-        request = _FakeRequest({"quantities": quantities})
+        request = InMemoryRequest({"quantities": quantities})
         await self.service.reserve_products(request)
 
         obtained = await Product.get(product.uuid)

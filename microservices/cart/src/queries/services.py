@@ -10,6 +10,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
+    RestRequest,
     enroute,
 )
 
@@ -30,9 +31,14 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
-        content = await request.content()
+        if isinstance(request, RestRequest):
+            params = await request.params()
+            uuid = params["uuid"]
+        else:
+            content = await request.content()
+            uuid = content["uuid"]
 
-        res = await self.repository.get_cart_items(content["uuid"])
+        res = await self.repository.get_cart_items(uuid)
 
         return Response(res)
 

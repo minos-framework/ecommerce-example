@@ -12,6 +12,7 @@ from minos.aggregate import (
     DeletedAggregateException,
 )
 from minos.networks import (
+    InMemoryRequest,
     Response,
     ResponseException,
 )
@@ -22,7 +23,6 @@ from src import (
     CustomerCommandService,
 )
 from tests.utils import (
-    _FakeRequest,
     build_dependency_injector,
 )
 
@@ -38,7 +38,7 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_customer(self):
-        request = _FakeRequest(
+        request = InMemoryRequest(
             {"name": "John", "surname": "Coltrane", "address": {"street": "Green Dolphin Street", "street_no": 42}}
         )
         response = await self.service.create_customer(request)
@@ -61,7 +61,7 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_delete_customer(self):
         customer = await Customer.create("John", "Coltrane", Address(street="Green Dolphin Street", street_no=42),)
 
-        request = _FakeRequest({"uuid": customer.uuid})
+        request = InMemoryRequest({"uuid": customer.uuid})
         await self.service.delete_customer(request)
 
         with self.assertRaises(DeletedAggregateException):
@@ -70,12 +70,12 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
     async def test_delete_customer_bad_request(self):
         customer = await Customer.create("John", "Coltrane", Address(street="Green Dolphin Street", street_no=42),)
 
-        request = _FakeRequest({"uusdfasfid": customer.uuid})
+        request = InMemoryRequest({"uusdfasfid": customer.uuid})
         with self.assertRaises(ResponseException):
             await self.service.delete_customer(request)
 
     async def test_delete_customer_not_exist(self):
-        request = _FakeRequest({"uuid": uuid4()})
+        request = InMemoryRequest({"uuid": uuid4()})
         with self.assertRaises(ResponseException):
             await self.service.delete_customer(request)
 

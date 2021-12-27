@@ -13,6 +13,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
+    RestRequest,
     enroute,
 )
 
@@ -34,9 +35,14 @@ class TicketQueryService(QueryService):
         :param request: The ``Request`` instance that contains the ticket identifier.
         :return: A ``Response`` instance containing the requested ticket.
         """
-        content = await request.content()
+        if isinstance(request, RestRequest):
+            params = await request.params()
+            uuid = params["uuid"]
+        else:
+            content = await request.content()
+            uuid = content["uuid"]
 
-        res = await self.repository.get_ticket(content["uuid"])
+        res = await self.repository.get_ticket(uuid)
 
         return Response(res)
 

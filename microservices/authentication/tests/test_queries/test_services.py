@@ -4,6 +4,9 @@ from __future__ import (
 
 import sys
 import unittest
+from base64 import (
+    b64encode,
+)
 from pathlib import (
     Path,
 )
@@ -25,6 +28,7 @@ from minos.common.testing import (
     PostgresAsyncTestCase,
 )
 from minos.networks import (
+    InMemoryRequest,
     ResponseException,
 )
 
@@ -35,8 +39,6 @@ from src import (
 from tests.utils import (
     FakeLockPool,
     _FakeBroker,
-    _FakeRequest,
-    _FakeRestRequest,
     _FakeSagaManager,
 )
 
@@ -73,8 +75,11 @@ class TestCredentialsQueryService(PostgresAsyncTestCase):
 
         await self.service.repository.create_credentials(uuid, username, password, True, user)
 
-        fake_request = _FakeRestRequest(username, password)
-        response = await self.service.generate_token(fake_request)
+        request = InMemoryRequest()
+        credentials = b64encode(f"{username}:{password}".encode()).decode()
+        request.headers = {"Authorization": f"Basic {credentials}"}
+
+        response = await self.service.generate_token(request)
         token = (await response.content())["token"]
         payload = jwt.decode(token, options={"verify_signature": False})
         observed = UUID(payload["sub"])
@@ -85,18 +90,18 @@ class TestCredentialsQueryService(PostgresAsyncTestCase):
         wrong_username = "should_not_exist"
 
         with self.assertRaises(ResponseException):
-            fake_request = _FakeRequest({"username": wrong_username})
+            fake_request = InMemoryRequest({"username": wrong_username})
             await self.service.get_by_username(fake_request)
 
     async def test_unique_username(self):
-        request = _FakeRequest({"username": "foo"})
+        request = InMemoryRequest({"username": "foo"})
         response = await self.service.unique_username(request)
         self.assertTrue(await response.content())
 
     async def test_unique_username_raises(self):
         await self.service.repository.create_credentials(uuid4(), "foo", "bar", True, uuid4())
         with self.assertRaises(ResponseException):
-            request = _FakeRequest({"username": "foo"})
+            request = InMemoryRequest({"username": "foo"})
             await self.service.unique_username(request)
 
 

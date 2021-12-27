@@ -6,6 +6,7 @@ import sys
 import unittest
 
 from minos.networks import (
+    InMemoryRequest,
     Response,
 )
 
@@ -14,7 +15,6 @@ from src import (
     ReviewCommandService,
 )
 from tests.utils import (
-    _FakeRequest,
     build_dependency_injector,
 )
 
@@ -31,7 +31,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def _create_one_review(self) -> Response:
-        request = _FakeRequest(
+        request = InMemoryRequest(
             {
                 "product": "2cc51893-153e-482e-b785-f77c5c1c4aea",
                 "user": "e015a2e1-9092-448f-b4ca-a678fc384d0e",
@@ -75,7 +75,7 @@ class TestProductCommandService(unittest.IsolatedAsyncioTestCase):
 
         observed = await response.content()
 
-        request = _FakeRequest({"uuid": observed.uuid, "title": "Good product!", "description": "Test.", "score": 5})
+        request = InMemoryRequest({"uuid": observed.uuid, "title": "Good product!", "description": "Test.", "score": 5})
 
         response = await self.service.update_review(request)
 

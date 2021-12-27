@@ -9,6 +9,7 @@ from minos.aggregate import (
     EntitySet,
 )
 from minos.networks import (
+    InMemoryRequest,
     Response,
 )
 
@@ -17,7 +18,6 @@ from src import (
     CartCommandService,
 )
 from tests.utils import (
-    _FakeRequest,
     build_dependency_injector,
 )
 
@@ -33,7 +33,7 @@ class TestCartCommandService(unittest.IsolatedAsyncioTestCase):
         await self.injector.unwire()
 
     async def test_create_cart(self):
-        request = _FakeRequest({"user": 3})
+        request = InMemoryRequest({"user": 3})
         response = await self.service.create_cart(request)
 
         self.assertIsInstance(response, Response)

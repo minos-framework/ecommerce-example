@@ -11,6 +11,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
+    RestRequest,
     enroute,
 )
 from minos.saga import (
@@ -52,7 +53,13 @@ class CartCommandService(CommandService):
         :return: A response containing the queried payment instances.
         """
         content = await request.content()
-        cart = content["uuid"]
+
+        if isinstance(request, RestRequest):
+            params = await request.params()
+            cart = params["uuid"]
+        else:
+            cart = content["uuid"]
+
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
         saga_execution = await self.saga_manager.run(
@@ -69,7 +76,13 @@ class CartCommandService(CommandService):
         :return: A response containing the queried payment instances.
         """
         content = await request.content()
-        cart = content["uuid"]
+
+        if isinstance(request, RestRequest):
+            params = await request.params()
+            cart = params["uuid"]
+        else:
+            cart = content["uuid"]
+
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
         saga_execution = await self.saga_manager.run(
@@ -86,7 +99,13 @@ class CartCommandService(CommandService):
         :return: A response containing the queried payment instances.
         """
         content = await request.content()
-        cart = content["uuid"]
+
+        if isinstance(request, RestRequest):
+            params = await request.params()
+            cart = params["uuid"]
+        else:
+            cart = content["uuid"]
+
         product_uuid = content["product_uuid"]
 
         idx, product = await self._get_cart_item(cart, product_uuid)
@@ -104,10 +123,14 @@ class CartCommandService(CommandService):
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
-        content = await request.content()
+        if isinstance(request, RestRequest):
+            params = await request.params()
+            uuid = params["uuid"]
+        else:
+            content = await request.content()
+            uuid = content["uuid"]
 
-        cart_id = content["uuid"]
-        cart = await Cart.get(cart_id)
+        cart = await Cart.get(uuid)
 
         saga_execution = await self.saga_manager.run(DELETE_CART, context=SagaContext(cart=cart))
 
