@@ -1,23 +1,15 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from unittest.mock import (
-    AsyncMock,
-)
-from uuid import (
-    uuid4,
-)
+from unittest.mock import AsyncMock
+from uuid import uuid4
 
 from minos.networks import (
     InMemoryRequest,
     Response,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 
 from src import (
     Ticket,

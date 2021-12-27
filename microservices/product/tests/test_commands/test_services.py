@@ -1,12 +1,8 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
-from collections import (
-    defaultdict,
-)
+from collections import defaultdict
 
 from minos.networks import (
     InMemoryRequest,
@@ -18,9 +14,7 @@ from src import (
     Product,
     ProductCommandService,
 )
-from tests.utils import (
-    build_dependency_injector,
-)
+from tests.utils import build_dependency_injector
 
 
 class TestProductCommandService(unittest.IsolatedAsyncioTestCase):

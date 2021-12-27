@@ -1,6 +1,4 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
@@ -14,9 +12,7 @@ from src import (
     Review,
     ReviewCommandService,
 )
-from tests.utils import (
-    build_dependency_injector,
-)
+from tests.utils import build_dependency_injector
 
 
 class TestProductCommandService(unittest.IsolatedAsyncioTestCase):

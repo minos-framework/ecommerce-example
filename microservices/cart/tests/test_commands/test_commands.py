@@ -1,13 +1,9 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
 
-from minos.aggregate import (
-    EntitySet,
-)
+from minos.aggregate import EntitySet
 from minos.networks import (
     InMemoryRequest,
     Response,
@@ -17,9 +13,7 @@ from src import (
     Cart,
     CartCommandService,
 )
-from tests.utils import (
-    build_dependency_injector,
-)
+from tests.utils import build_dependency_injector
 
 
 class TestCartCommandService(unittest.IsolatedAsyncioTestCase):

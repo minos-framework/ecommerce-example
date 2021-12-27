@@ -1,13 +1,9 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
 from base64 import b64encode
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from uuid import (
     UUID,
     uuid4,
@@ -19,14 +15,11 @@ from minos.aggregate import (
     InMemorySnapshotRepository,
     InMemoryTransactionRepository,
 )
-from minos.common import (
-    DependencyInjector,
-)
-from minos.common.testing import (
-    PostgresAsyncTestCase,
-)
+from minos.common import DependencyInjector
+from minos.common.testing import PostgresAsyncTestCase
 from minos.networks import (
-    ResponseException, InMemoryRequest,
+    ResponseException,
+    InMemoryRequest,
 )
 
 from src import (
@@ -36,7 +29,6 @@ from src import (
 from tests.utils import (
     FakeLockPool,
     _FakeBroker,
-
     _FakeSagaManager,
 )
 

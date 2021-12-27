@@ -1,14 +1,8 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
 from minos.aggregate import (
     InMemoryEventRepository,
@@ -22,9 +16,7 @@ from minos.common import (
     MinosPool,
     MinosSetup,
 )
-from minos.saga import (
-    SagaContext,
-)
+from minos.saga import SagaContext
 
 
 class _FakeBroker(MinosSetup):
