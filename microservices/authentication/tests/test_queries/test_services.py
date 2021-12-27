@@ -4,7 +4,9 @@ from __future__ import (
 
 import sys
 import unittest
-from base64 import b64encode
+from base64 import (
+    b64encode,
+)
 from pathlib import (
     Path,
 )
@@ -26,7 +28,8 @@ from minos.common.testing import (
     PostgresAsyncTestCase,
 )
 from minos.networks import (
-    ResponseException, InMemoryRequest,
+    InMemoryRequest,
+    ResponseException,
 )
 
 from src import (
@@ -36,7 +39,6 @@ from src import (
 from tests.utils import (
     FakeLockPool,
     _FakeBroker,
-
     _FakeSagaManager,
 )
 

@@ -5,7 +5,6 @@ from __future__ import (
 from pathlib import (
     Path,
 )
-
 from uuid import (
     UUID,
 )

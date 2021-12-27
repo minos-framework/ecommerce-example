@@ -22,7 +22,8 @@ from minos.common import (
     MinosSetup,
 )
 from minos.saga import (
-    SagaContext, SagaStatus,
+    SagaContext,
+    SagaStatus,
 )
 
 

@@ -24,8 +24,8 @@ from src import (
     TicketCommandService,
 )
 from tests.utils import (
-    build_dependency_injector,
     _FakeSagaExecution,
+    build_dependency_injector,
 )
 
 
