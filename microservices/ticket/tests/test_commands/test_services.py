@@ -11,9 +11,6 @@ from uuid import (
     uuid4,
 )
 
-from microservices.authentication.tests.utils import (
-    _FakeSagaExecution,
-)
 from minos.networks import (
     InMemoryRequest,
     Response,
@@ -28,6 +25,7 @@ from src import (
 )
 from tests.utils import (
     build_dependency_injector,
+    _FakeSagaExecution,
 )
 
 
