@@ -42,8 +42,8 @@ services:
       - POSTGRES_PASSWORD=min0s
 
   redis:
+    restart: always
     image: redis:latest
-    command: "redis-server"
 
   tavern:
     build: external/tavern
@@ -54,24 +54,31 @@ services:
 
   api-gateway:
     restart: always
-    build: external/api_gateway
+    image: ghcr.io/clariteia/minos-apigateway:0.1.0
     ports:
       - "5566:5566"
     environment:
-      - PYTHONPATH=/api_gateway
-      - API_GATEWAY_DISCOVERY_HOST=discovery
-      - API_GATEWAY_REST_AUTH_HOST=microservice-authentication
+      API_GATEWAY_REST_PORT: 5566
+      API_GATEWAY_REST_AUTH_ENABLED: true
+      API_GATEWAY_REST_AUTH_HOST: microservice-authentication
+      API_GATEWAY_REST_AUTH_PORT: 8089
+      API_GATEWAY_REST_AUTH_METHOD: POST
+      API_GATEWAY_REST_AUTH_PATH: /token
+      API_GATEWAY_DISCOVERY_PORT: 5567
+      API_GATEWAY_DISCOVERY_HOST: discovery
     depends_on:
       - discovery
       - microservice-authentication
 
   discovery:
     restart: always
-    build: external/discovery
+    image: ghcr.io/clariteia/minos-discovery:0.0.8
     ports:
       - "5567:5567"
     environment:
-      - DISCOVERY_SERVICE_DB_HOST=redis
+      DISCOVERY_SERVICE_PORT: 5567
+      DISCOVERY_SERVICE_DB_HOST: redis
+      DISCOVERY_SERVICE_DB_PORT: 6379
     depends_on:
       - redis
 
