@@ -385,27 +385,20 @@ minos-microservice-networks = ">=0.3.0,<0.4.0"
 
 [[package]]
 name = "minos-microservice-networks"
-version = "0.3.1"
+version = "0.3.2"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
 category = "main"
 optional = false
-python-versions = "^3.9"
-develop = false
+python-versions = ">=3.9,<4.0"
 
 [package.dependencies]
-aiohttp = "^3.7.4"
-aiokafka = "^0.7.0"
-aiomisc = "^14.0.3"
-aiopg = "^1.2.1"
-crontab = "^0.23.0"
-dependency-injector = "^4.32.2"
-minos-microservice-common = "^0.3.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/Clariteia/minos_microservice_networks.git"
-reference = "0.3.2"
-resolved_reference = "acbc3d54741d38d6dabb41053dcc7477decf35c9"
+aiohttp = ">=3.7.4,<4.0.0"
+aiokafka = ">=0.7.0,<0.8.0"
+aiomisc = ">=14.0.3,<15.0.0"
+aiopg = ">=1.2.1,<2.0.0"
+crontab = ">=0.23.0,<0.24.0"
+dependency-injector = ">=4.32.2,<5.0.0"
+minos-microservice-common = ">=0.3.0,<0.4.0"
 
 [[package]]
 name = "minos-microservice-saga"
@@ -657,7 +650,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "921100b2907c07b78a499bdc08a8bf3892aeb6570df2b82b4945ddedc50203e7"
+content-hash = "a21bc9877b29df535d07144d29eab260dbdd192562d6d7878ecd9bc66452ab69"
 
 [metadata.files]
 aiohttp = [
@@ -1159,7 +1152,10 @@ minos-microservice-cqrs = [
     {file = "minos_microservice_cqrs-0.2.1-py3-none-any.whl", hash = "sha256:6708671ec57f0405cea2668cb957d08db009289e237544274929f8146dd4ff86"},
     {file = "minos_microservice_cqrs-0.2.1.tar.gz", hash = "sha256:f03fa861c004007de8f19af662c849f20866afdb77c1ec1b05abbbb5cc5c974e"},
 ]
-minos-microservice-networks = []
+minos-microservice-networks = [
+    {file = "minos_microservice_networks-0.3.2-py3-none-any.whl", hash = "sha256:a355bf8f601cecb49d247e5f1ece55cd17ed31ab60ece8eabd5239988570b943"},
+    {file = "minos_microservice_networks-0.3.2.tar.gz", hash = "sha256:1721a6dcb94e1e02c5005fdac32b978790c3c6e4051a7f935776ccca6798ad41"},
+]
 minos-microservice-saga = [
     {file = "minos_microservice_saga-0.3.5-py3-none-any.whl", hash = "sha256:ea79c44d4164e9d1cb9c300d4b36c65478ec87585f301db123e2a7c45d8765db"},
     {file = "minos_microservice_saga-0.3.5.tar.gz", hash = "sha256:fd563fe8932412abedc7d274a849c96311d61bccf633859bbfd9fa40c9ed5a51"},
