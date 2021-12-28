@@ -1,9 +1,11 @@
-build:
-	docker-compose build --progress=plain --pull
-
-up: build
+up:
+	$(MAKE) build
 	echo "Starting containers..."
-	docker-compose up --detach
+	docker-compose up --quiet-pull --detach
+
+build:
+	echo "Building images..."
+	docker-compose build --progress=plain --pull
 
 down:
 	echo "Stopping containers..."
