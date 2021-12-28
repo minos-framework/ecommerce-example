@@ -59,7 +59,7 @@ services:
       - "5566:5566"
     environment:
       API_GATEWAY_REST_PORT: 5566
-      API_GATEWAY_REST_AUTH_ENABLED: true
+      API_GATEWAY_REST_AUTH_ENABLED: "true"
       API_GATEWAY_REST_AUTH_HOST: microservice-authentication
       API_GATEWAY_REST_AUTH_PORT: 8089
       API_GATEWAY_REST_AUTH_METHOD: POST
