@@ -16,7 +16,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: docker compose pull
+      - run: docker-compose pull
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
