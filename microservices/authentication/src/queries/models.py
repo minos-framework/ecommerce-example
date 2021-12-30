@@ -15,4 +15,5 @@ CREDENTIALS_TABLE = Table(
     Column("username", String(32), unique=True, nullable=False),
     Column("password", String(32), nullable=False),
     Column("active", Boolean),
+    Column("user", UUID_PG(as_uuid=True)),
 )

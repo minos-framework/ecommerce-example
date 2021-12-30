@@ -1,5 +1,3 @@
-"""src.commands.services module."""
-
 from minos.cqrs import (
     CommandService,
 )
@@ -42,7 +40,7 @@ class OrderCommandService(CommandService):
         payment_detail = PaymentDetail(**payment)
         shipment_detail = ShipmentDetail(**shipment)
 
-        saga = await self.saga_manager.run(
+        execution = await self.saga_manager.run(
             CREATE_ORDER,
             context=SagaContext(
                 cart_uuid=cart_uuid,
@@ -50,9 +48,10 @@ class OrderCommandService(CommandService):
                 payment_detail=payment_detail,
                 shipment_detail=shipment_detail,
             ),
+            raise_on_error=False,
         )
 
-        if saga.status == SagaStatus.Finished:
-            return Response(dict(saga.context["order"]))
+        if execution.status == SagaStatus.Finished:
+            return Response(dict(execution.context["order"]))
         else:
             raise ResponseException("An error occurred during order creation.")

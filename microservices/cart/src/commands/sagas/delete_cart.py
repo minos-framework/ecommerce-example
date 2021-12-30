@@ -1,20 +1,12 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from collections import (
     defaultdict,
 )
 
-from minos.common import (
-    Model,
-)
 from minos.saga import (
     Saga,
     SagaContext,
+    SagaRequest,
+    SagaResponse,
 )
 
 from .callbacks import (
@@ -22,22 +14,27 @@ from .callbacks import (
 )
 
 
-def _reserve_products(context: SagaContext) -> Model:
+def _reserve_products(context: SagaContext) -> SagaRequest:
     cart = context["cart"]
     quantities = defaultdict(int)
     for item in cart.entries:
         quantities[str(item.product)] += item.quantity
 
-    return _ReserveProductsQuery(quantities=quantities)
+    return SagaRequest("ReserveProducts", _ReserveProductsQuery(quantities))
 
 
-def _release_products(context: SagaContext) -> Model:
+# noinspection PyUnusedLocal
+def _raise(context: SagaContext, response: SagaResponse) -> SagaContext:
+    raise ValueError("Errored response must abort the execution!")
+
+
+def _release_products(context: SagaContext) -> SagaRequest:
     cart = context["cart"]
     quantities = defaultdict(int)
     for item in cart.entries:
         quantities[str(item.product)] -= item.quantity
 
-    return _ReserveProductsQuery(quantities=quantities)
+    return SagaRequest("ReserveProducts", _ReserveProductsQuery(quantities))
 
 
 async def _create_cart(context: SagaContext) -> SagaContext:
@@ -46,10 +43,4 @@ async def _create_cart(context: SagaContext) -> SagaContext:
     return SagaContext(result=result)
 
 
-DELETE_CART = (
-    Saga()
-    .step()
-    .invoke_participant("ReserveProducts", _reserve_products)
-    .with_compensation("ReserveProducts", _release_products)
-    .commit(_create_cart)
-)
+DELETE_CART = Saga().remote_step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_create_cart)

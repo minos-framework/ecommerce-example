@@ -1,14 +1,9 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from minos.saga import (
     Saga,
     SagaContext,
+    SagaResponse,
 )
+
 from src.aggregates import (
     Cart,
     CartEntry,
@@ -18,6 +13,11 @@ from .callbacks import (
     _release_products,
     _reserve_products,
 )
+
+
+# noinspection PyUnusedLocal
+def _raise(context: SagaContext, response: SagaResponse) -> SagaContext:
+    raise ValueError("Errored response must abort the execution!")
 
 
 async def _create_cart_item(context: SagaContext) -> SagaContext:
@@ -32,9 +32,5 @@ async def _create_cart_item(context: SagaContext) -> SagaContext:
 
 
 ADD_CART_ITEM = (
-    Saga()
-    .step()
-    .invoke_participant("ReserveProducts", _reserve_products)
-    .with_compensation("ReserveProducts", _release_products)
-    .commit(_create_cart_item)
+    Saga().remote_step(_reserve_products).on_error(_raise).on_failure(_release_products).commit(_create_cart_item)
 )

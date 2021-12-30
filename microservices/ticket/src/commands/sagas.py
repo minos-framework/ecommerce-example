@@ -1,24 +1,21 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from uuid import (
     UUID,
     uuid4,
 )
 
-from minos.common import (
+from minos.aggregate import (
     EntitySet,
-    Model,
+)
+from minos.common import (
     ModelType,
 )
 from minos.saga import (
     Saga,
     SagaContext,
+    SagaRequest,
+    SagaResponse,
 )
+
 from src import (
     Ticket,
     TicketEntry,
@@ -27,12 +24,14 @@ from src import (
 CartQuery = ModelType.build("CartQuery", {"uuid": UUID})
 
 
-def _get_cart_items(context: SagaContext) -> Model:
+def _get_cart_items(context: SagaContext) -> SagaRequest:
     cart_uuid = context["cart_uuid"]
-    return CartQuery(cart_uuid)
+    return SagaRequest("GetCartQRS", CartQuery(cart_uuid))
 
 
-async def _process_cart_items(cart) -> dict:
+async def _process_cart_items(context: SagaContext, response: SagaResponse) -> SagaContext:
+    cart = await response.content()
+
     cart_products = cart["products"]
 
     ticket_entries = EntitySet()
@@ -45,7 +44,8 @@ async def _process_cart_items(cart) -> dict:
         )
         ticket_entries.add(order_entry)
 
-    return dict(ticket_entries=ticket_entries, total_amount=total_amount)
+    context["products"] = dict(ticket_entries=ticket_entries, total_amount=total_amount)
+    return context
 
 
 async def _commit_callback(context: SagaContext) -> SagaContext:
@@ -58,10 +58,4 @@ async def _commit_callback(context: SagaContext) -> SagaContext:
     return SagaContext(ticket=ticket)
 
 
-_CREATE_TICKET = (
-    Saga()
-    .step()
-    .invoke_participant("GetCartQRS", _get_cart_items)
-    .on_reply("products", _process_cart_items)
-    .commit(_commit_callback)
-)
+_CREATE_TICKET = Saga().remote_step(_get_cart_items).on_success(_process_cart_items).commit(_commit_callback)

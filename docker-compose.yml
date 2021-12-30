@@ -10,14 +10,12 @@ x-microservice-environment: &microservice-environment
 x-microservice-depends-on: &microservice-depends-on
   - postgres
   - kafka
-  - api-gateway
+  - discovery
 
 services:
   zookeeper:
     restart: always
     image: wurstmeister/zookeeper:latest
-    logging:
-      driver: none
 
   kafka:
     restart: always
@@ -39,17 +37,13 @@ services:
     volumes:
       - postgres_volume:/var/lib/postgresql
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=order_db,payment_db,product_db,ticket_db,customer_db,cart_query_db,ticket_query_db,product_query_db,payment_query_db,review_db,review_query_db,auth_db,auth_query_db
+      - POSTGRES_MULTIPLE_DATABASES=order_db,order_query_db,payment_db,product_db,ticket_db,customer_db,cart_query_db,ticket_query_db,product_query_db,payment_query_db,review_db,review_query_db,auth_db,auth_query_db,cart_db,cart_query_db
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=min0s
-    logging:
-      driver: none
 
   redis:
+    restart: always
     image: redis:latest
-    command: "redis-server"
-    logging:
-      driver: none
 
   tavern:
     build: external/tavern
@@ -60,24 +54,41 @@ services:
 
   api-gateway:
     restart: always
-    build: ./api_gateway
+    image: ghcr.io/clariteia/minos-apigateway:0.1.0
     ports:
       - "5566:5566"
     environment:
-      - PYTHONPATH=/api_gateway
-      - DISCOVERY_SERVICE_HOST=discovery
+      API_GATEWAY_REST_PORT: 5566
+      API_GATEWAY_REST_AUTH_ENABLED: "true"
+      API_GATEWAY_REST_AUTH_HOST: microservice-authentication
+      API_GATEWAY_REST_AUTH_PORT: 8089
+      API_GATEWAY_REST_AUTH_METHOD: POST
+      API_GATEWAY_REST_AUTH_PATH: /token
+      API_GATEWAY_DISCOVERY_PORT: 5567
+      API_GATEWAY_DISCOVERY_HOST: discovery
     depends_on:
       - discovery
+      - microservice-authentication
 
   discovery:
     restart: always
-    build: ./external/discovery
+    image: ghcr.io/clariteia/minos-discovery:0.0.8
     ports:
       - "5567:5567"
     environment:
-      - DISCOVERY_SERVICE_DB_HOST=redis
+      DISCOVERY_SERVICE_PORT: 5567
+      DISCOVERY_SERVICE_DB_HOST: redis
+      DISCOVERY_SERVICE_DB_PORT: 6379
     depends_on:
       - redis
+
+  microservice-authentication:
+    restart: always
+    build:
+      context: microservices/authentication
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
 
   microservice-order:
     restart: always
@@ -127,5 +138,18 @@ services:
     environment: *microservice-environment
     depends_on: *microservice-depends-on
 
+  microservice-cart:
+    restart: always
+    build:
+      context: microservices/cart
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  frontend:
+    restart: always
+    build: external/front
+    ports:
+      - "3000:3000"
 volumes:
   postgres_volume:

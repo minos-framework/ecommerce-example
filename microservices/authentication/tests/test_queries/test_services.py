@@ -2,15 +2,13 @@ from __future__ import (
     annotations,
 )
 
-import base64
-import json
 import sys
 import unittest
+from base64 import (
+    b64encode,
+)
 from pathlib import (
     Path,
-)
-from typing import (
-    NoReturn,
 )
 from uuid import (
     UUID,
@@ -18,64 +16,46 @@ from uuid import (
 )
 
 import jwt
+from minos.aggregate import (
+    InMemoryEventRepository,
+    InMemorySnapshotRepository,
+    InMemoryTransactionRepository,
+)
 from minos.common import (
-    CommandReply,
     DependencyInjector,
-    InMemoryRepository,
-    InMemorySnapshot,
-    MinosBroker,
-    MinosConfig,
-    MinosSagaManager,
-    Model,
+)
+from minos.common.testing import (
+    PostgresAsyncTestCase,
 )
 from minos.networks import (
-    RestRequest,
+    InMemoryRequest,
+    ResponseException,
 )
+
 from src import (
     CredentialsQueryRepository,
     CredentialsQueryService,
 )
-from src.queries import (
-    AlreadyExists,
+from tests.utils import (
+    FakeLockPool,
+    _FakeBroker,
+    _FakeSagaManager,
 )
 
 
-class _FakeRawRequest:
-    def __init__(self, headers: dict[str, str]):
-        self.headers = headers
-
-
-class _FakeRestRequest(RestRequest):
-    def __init__(self, username: str, password: str):
-        encoded_credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
-        headers = {"Authorization": f"Basic {encoded_credentials}"}
-        self.raw_request = _FakeRawRequest(headers)
-
-
-class _FakeBroker(MinosBroker):
-    async def send(self, items: list[Model], **kwargs) -> NoReturn:
-        pass
-
-
-class _FakeSagaManager(MinosSagaManager):
-    async def _run_new(self, name: str, **kwargs) -> UUID:
-        pass
-
-    async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
-        pass
-
-
-class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
+class TestCredentialsQueryService(PostgresAsyncTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
-        self.config = MinosConfig(self.CONFIG_FILE_PATH)
+        await super().asyncSetUp()
         self.injector = DependencyInjector(
             self.config,
             saga_manager=_FakeSagaManager,
-            event_broker=_FakeBroker,
-            repository=InMemoryRepository,
-            snapshot=InMemorySnapshot,
+            broker_publisher=_FakeBroker,
+            lock_pool=FakeLockPool,
+            transaction_repository=InMemoryTransactionRepository,
+            event_repository=InMemoryEventRepository,
+            snapshot_repository=InMemorySnapshotRepository,
             credentials_repository=CredentialsQueryRepository.from_config(
                 self.config, database=self.config.repository.database
             ),
@@ -89,24 +69,40 @@ class TestCredentialsQueryService(unittest.IsolatedAsyncioTestCase):
 
     async def test_get_token(self):
         uuid = uuid4()
-        username = "test_username"  # UUID just to ensure its unique
-        password = "test_password"
+        username = "foo"  # UUID just to ensure its unique
+        password = "bar"
+        user = uuid4()
 
-        try:
-            await self.service.repository.create_credentials(uuid, username, password, True)
-        except AlreadyExists:
-            row = await self.service.repository.get_by_username(username)
-            uuid = UUID(str(row["uuid"]))
-            username = row["username"]
-            password = row["password"]
+        await self.service.repository.create_credentials(uuid, username, password, True, user)
 
-        fake_request = _FakeRestRequest(username, password)
-        response = await self.service.get_token(fake_request)
-        token = await response.content()
+        request = InMemoryRequest()
+        credentials = b64encode(f"{username}:{password}".encode()).decode()
+        request.headers = {"Authorization": f"Basic {credentials}"}
+
+        response = await self.service.generate_token(request)
+        token = (await response.content())["token"]
         payload = jwt.decode(token, options={"verify_signature": False})
-        observed_uuid = UUID(payload["sub"])
+        observed = UUID(payload["sub"])
 
-        self.assertEqual(uuid, observed_uuid)
+        self.assertEqual(user, observed)
+
+    async def test_get_by_username_does_not_exist(self):
+        wrong_username = "should_not_exist"
+
+        with self.assertRaises(ResponseException):
+            fake_request = InMemoryRequest({"username": wrong_username})
+            await self.service.get_by_username(fake_request)
+
+    async def test_unique_username(self):
+        request = InMemoryRequest({"username": "foo"})
+        response = await self.service.unique_username(request)
+        self.assertTrue(await response.content())
+
+    async def test_unique_username_raises(self):
+        await self.service.repository.create_credentials(uuid4(), "foo", "bar", True, uuid4())
+        with self.assertRaises(ResponseException):
+            request = InMemoryRequest({"username": "foo"})
+            await self.service.unique_username(request)
 
 
 if __name__ == "__main__":

@@ -2,25 +2,31 @@ service:
   name: ticket
   aggregate: src.aggregates.Ticket
   injections:
+    lock_pool: minos.common.PostgreSqlLockPool
     postgresql_pool: minos.common.PostgreSqlPool
-    command_broker: minos.networks.CommandBroker
-    command_reply_broker: minos.networks.CommandReplyBroker
-    event_broker: minos.networks.EventBroker
-    consumer: minos.networks.Consumer
-    dynamic_handler_pool: minos.networks.DynamicHandlerPool
-    repository: minos.common.PostgreSqlRepository
+    broker_publisher: minos.networks.BrokerPublisher
+    broker_consumer: minos.networks.BrokerConsumer
+    broker_pool: minos.networks.DynamicBrokerPool
+    transaction_repository: minos.aggregate.PostgreSqlTransactionRepository
+    event_repository: minos.aggregate.PostgreSqlEventRepository
+    snapshot_repository: minos.aggregate.PostgreSqlSnapshotRepository
     saga_manager: minos.saga.SagaManager
-    snapshot: minos.common.PostgreSqlSnapshot
     discovery: minos.networks.DiscoveryConnector
     ticket_repository: src.TicketQueryRepository
   services:
-    - minos.networks.CommandHandlerService
-    - minos.networks.CommandReplyHandlerService
-    - minos.networks.EventHandlerService
+    - minos.networks.BrokerProducerService
+    - minos.networks.BrokerConsumerService
+    - minos.networks.BrokerHandlerService
     - minos.networks.RestService
-    - minos.networks.SnapshotService
-    - minos.networks.ConsumerService
-    - minos.networks.ProducerService
+    - minos.networks.PeriodicTaskSchedulerService
+middleware:
+  - minos.saga.transactional_command
+services:
+  - minos.aggregate.TransactionService
+  - minos.aggregate.SnapshotService
+  - minos.saga.SagaService
+  - src.TicketQueryService
+  - src.TicketCommandService
 rest:
   host: 0.0.0.0
   port: 8085
@@ -47,12 +53,6 @@ snapshot:
   password: min0s
   host: localhost
   port: 5432
-events:
-  service: src.TicketQueryService
-queries:
-  service: src.TicketQueryService
-commands:
-  service: src.TicketCommandService
 saga:
   storage:
     path: "./ticket.lmdb"

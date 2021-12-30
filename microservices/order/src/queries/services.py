@@ -1,11 +1,11 @@
-"""src.queries.services module."""
-
 from dependency_injector.wiring import (
     Provide,
 )
+from minos.aggregate import (
+    AggregateDiff,
+)
 from minos.common import (
     UUID_REGEX,
-    AggregateDiff,
 )
 from minos.cqrs import (
     QueryService,
@@ -14,6 +14,7 @@ from minos.networks import (
     Request,
     Response,
     ResponseException,
+    RestRequest,
     enroute,
 )
 
@@ -35,10 +36,15 @@ class OrderQueryService(QueryService):
         :param request: The ``Request`` instance that contains the order identifier.
         :return: A ``Response`` instance containing the requested order.
         """
-        content = await request.content()
-        try:
-            order = await self.repository.get(content["uuid"])
 
+        if isinstance(request, RestRequest):
+            uuid = (await request.params())["uuid"]
+        else:
+            content = await request.content()
+            uuid = content["uuid"]
+
+        try:
+            order = await self.repository.get(uuid)
         except Exception as exc:
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 
@@ -52,10 +58,15 @@ class OrderQueryService(QueryService):
         :param request: The ``Request`` instance that contains the order identifier.
         :return: A ``Response`` instance containing the requested order.
         """
-        content = await request.content()
-        try:
-            order = await self.repository.get_by_user(content["uuid"])
+        if isinstance(request, RestRequest):
+            params = await request.params()
+            uuid = params["uuid"]
+        else:
+            content = await request.content()
+            uuid = content["uuid"]
 
+        try:
+            order = await self.repository.get_by_user(uuid)
         except Exception as exc:
             raise ResponseException(f"There was a problem while parsing the given request: {exc!r}")
 

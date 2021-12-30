@@ -4,111 +4,77 @@ from __future__ import (
 
 import sys
 import unittest
-from pathlib import (
-    Path,
+from asyncio import (
+    gather,
 )
-from typing import (
-    NoReturn,
-    Optional,
+from unittest.mock import (
+    AsyncMock,
 )
 from uuid import (
-    UUID,
+    uuid4,
 )
 
-from minos.common import (
-    CommandReply,
-    DependencyInjector,
-    InMemoryRepository,
-    InMemorySnapshot,
-    MinosBroker,
-    MinosConfig,
-    MinosSagaManager,
-    Model,
-)
 from minos.networks import (
-    Request,
+    InMemoryRequest,
     Response,
+    ResponseException,
 )
+from minos.saga import (
+    SagaContext,
+)
+
 from src import (
     Credentials,
     CredentialsCommandService,
 )
-
-
-class _FakeRequest(Request):
-    """For testing purposes"""
-
-    def __init__(self, content):
-        super().__init__()
-        self._content = content
-
-    async def content(self, **kwargs):
-        """For testing purposes"""
-        return self._content
-
-    async def user(self) -> Optional[UUID]:
-        pass
-
-    def __eq__(self, other: _FakeRequest) -> bool:
-        return self._content == other._content
-
-    def __repr__(self) -> str:
-        return str()
-
-
-class _FakeBroker(MinosBroker):
-    """For testing purposes."""
-
-    async def send(self, items: list[Model], **kwargs) -> NoReturn:
-        """For testing purposes."""
-
-
-class _FakeSagaManager(MinosSagaManager):
-    """For testing purposes."""
-
-    async def _run_new(self, name: str, **kwargs) -> UUID:
-        """For testing purposes."""
-
-    async def _load_and_run(self, reply: CommandReply, **kwargs) -> UUID:
-        """For testing purposes."""
+from tests.utils import (
+    _FakeSagaExecution,
+    build_dependency_injector,
+)
 
 
 class TestCredentialsCommandService(unittest.IsolatedAsyncioTestCase):
-    CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
-
     async def asyncSetUp(self) -> None:
-        self.config = MinosConfig(self.CONFIG_FILE_PATH)
-        self.injector = DependencyInjector(
-            self.config,
-            saga_manager=_FakeSagaManager,
-            event_broker=_FakeBroker,
-            repository=InMemoryRepository,
-            snapshot=InMemorySnapshot,
-        )
+        self.injector = build_dependency_injector()
         await self.injector.wire(modules=[sys.modules[__name__]])
-
         self.service = CredentialsCommandService()
 
     async def asyncTearDown(self) -> None:
         await self.injector.unwire()
 
     async def test_create_credentials(self):
-        request = _FakeRequest({"username": "test_name", "password": "test_password"})
+        expected = await Credentials.create("foo", "bar", active=True, user=uuid4())
+
+        self.injector.saga_manager.run = AsyncMock(return_value=_FakeSagaExecution(SagaContext(credentials=expected)))
+
+        request = InMemoryRequest(
+            {"username": "foo", "password": "bar", "name": "John", "surname": "Snow", "address": "Winterfell"}
+        )
         response = await self.service.create_credentials(request)
 
         self.assertIsInstance(response, Response)
 
         observed = await response.content()
-        expected = Credentials(
-            "test_name",
-            "test_password",
-            True,
-            uuid=observed.uuid,
-            version=observed.version,
-            created_at=observed.created_at,
-            updated_at=observed.updated_at,
+        self.assertEqual({"user": expected.user}, observed)
+
+    @unittest.skip
+    async def test_create_credentials_raises_duplicated_username(self):
+        await Credentials.create("foo", "bar", True, uuid4())
+
+        request = InMemoryRequest({"username": "foo", "password": "bar"})
+
+        with self.assertRaises(ResponseException):
+            await self.service.create_credentials(request)
+
+    @unittest.skip
+    async def test_create_credentials_concurrently(self):
+        request = InMemoryRequest(
+            {"username": "foo", "password": "bar", "name": "John", "surname": "Snow", "address": "Winterfell"}
         )
-        self.assertEqual(expected, observed)
+
+        observed = await gather(*(self.service.create_credentials(request) for _ in range(10)), return_exceptions=True)
+
+        self.assertEqual(1, sum(not isinstance(o, ResponseException) for o in observed))
 
 
 if __name__ == "__main__":

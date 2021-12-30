@@ -9,8 +9,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: docker-compose pull --quiet
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
       - name: Start System
         run: make up
+
+      - name: Wait until System is ready
+        run: sleep 60  # FIXME: This "hotfix" must not be necessary.
 
       - name: Run Integration Tests
         run: make integration-tests

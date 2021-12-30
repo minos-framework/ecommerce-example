@@ -1,5 +1,3 @@
-"""src.commands.sagas module."""
-
 from collections import (
     defaultdict,
 )
@@ -8,13 +6,13 @@ from uuid import (
 )
 
 from minos.common import (
-    Aggregate,
-    Model,
     ModelType,
 )
 from minos.saga import (
     Saga,
     SagaContext,
+    SagaRequest,
+    SagaResponse,
 )
 
 from ..aggregates import (
@@ -27,44 +25,53 @@ TicketQuery = ModelType.build("TicketQuery", {"cart_uuid": UUID})
 PaymentQuery = ModelType.build("PaymentQuery", {"credit_number": int, "amount": float})
 
 
-def _create_ticket(context: SagaContext) -> Model:
+def _create_ticket(context: SagaContext) -> SagaRequest:
     cart_uuid = context["cart_uuid"]
-    return TicketQuery(cart_uuid)
+    return SagaRequest("CreateTicket", TicketQuery(cart_uuid))
 
 
-async def _process_ticket_entries(ticket) -> dict:
+async def _process_ticket_entries(context: SagaContext, response: SagaResponse) -> SagaContext:
+    ticket = await response.content()
     product_uuids = list()
     for entry in ticket.entries.data.values():
         product_uuids.append(str(entry.product))
-    return dict(uuid=ticket.uuid, product_uuids=product_uuids, total_amount=ticket.total_price)
+    context["ticket"] = dict(uuid=ticket.uuid, product_uuids=product_uuids, total_amount=ticket.total_price)
+    return context
 
 
-def _purchase_products(context: SagaContext) -> Model:
+def _purchase_products(context: SagaContext) -> SagaRequest:
     product_uuids = context["ticket"]["product_uuids"]
     quantities = defaultdict(int)
     for product_uuid in product_uuids:
         quantities[str(product_uuid)] += 1
 
-    return PurchaseProductsQuery(quantities)
+    return SagaRequest("PurchaseProducts", PurchaseProductsQuery(quantities))
 
 
-def _revert_purchase_products(context: SagaContext) -> Model:
+# noinspection PyUnusedLocal
+def _raise(context: SagaContext, response: SagaResponse) -> SagaContext:
+    raise ValueError("Errored response must abort the execution!")
+
+
+def _revert_purchase_products(context: SagaContext) -> SagaRequest:
     product_uuids = context["ticket"]["product_uuids"]
     quantities = defaultdict(int)
     for product_uuid in product_uuids:
         quantities[str(product_uuid)] -= 1
 
-    return PurchaseProductsQuery(quantities)
+    return SagaRequest("PurchaseProducts", PurchaseProductsQuery(quantities))
 
 
-def _payment(context: SagaContext) -> Model:
+def _payment(context: SagaContext) -> SagaRequest:
     amount = context["ticket"]["total_amount"]
     card_number = context["payment_detail"].card_number
-    return PaymentQuery(card_number, amount)
+    return SagaRequest("CreatePayment", PaymentQuery(card_number, amount))
 
 
-def _get_payment(value: Aggregate) -> UUID:
-    return value.uuid
+async def _get_payment(context: SagaContext, response: SagaResponse) -> SagaContext:
+    value = await response.content()
+    context["payment"] = value.uuid
+    return context
 
 
 async def _create_commit_callback(context: SagaContext) -> SagaContext:
@@ -82,15 +89,13 @@ async def _create_commit_callback(context: SagaContext) -> SagaContext:
 
 
 CREATE_ORDER = (
-    Saga("CreateOrder")
-    .step()
-    .invoke_participant("CreateTicket", _create_ticket)
-    .on_reply("ticket", _process_ticket_entries)
-    .step()
-    .invoke_participant("PurchaseProducts", _purchase_products)
-    .with_compensation("PurchaseProducts", _revert_purchase_products)
-    .step()
-    .invoke_participant("CreatePayment", _payment)
-    .on_reply("payment", _get_payment)
+    Saga()
+    .remote_step(_create_ticket)
+    .on_success(_process_ticket_entries)
+    .remote_step(_purchase_products)
+    .on_error(_raise)
+    .on_failure(_revert_purchase_products)
+    .remote_step(_payment)
+    .on_success(_get_payment)
     .commit(_create_commit_callback)
 )

@@ -1,10 +1,3 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
 from __future__ import (
     annotations,
 )
@@ -12,16 +5,11 @@ from __future__ import (
 from asyncio import (
     gather,
 )
-from typing import (
-    NoReturn,
-    Optional,
-)
 from uuid import (
     UUID,
-    uuid4,
 )
 
-from minos.common import (
+from minos.aggregate import (
     Aggregate,
     ValueObject,
 )
@@ -37,15 +25,7 @@ class Product(Aggregate):
 
     inventory: Inventory
 
-    def __init__(self, *args, code: Optional[str] = None, inventory: Optional[Inventory] = None, **kwargs):
-        if code is None:
-            code = uuid4().hex.upper()[0:6]
-        if inventory is None:
-            inventory = Inventory.empty()
-
-        super().__init__(code, *args, inventory=inventory, **kwargs)
-
-    def set_inventory_amount(self, amount: int) -> NoReturn:
+    def set_inventory_amount(self, amount: int) -> None:
         """Update the inventory amount.
 
         :param amount: The new inventory amount.
@@ -53,7 +33,7 @@ class Product(Aggregate):
         """
         self.inventory = self.inventory.set_amount(amount)
 
-    def update_inventory_amount(self, amount_diff: int) -> NoReturn:
+    def update_inventory_amount(self, amount_diff: int) -> None:
         """Update the inventory amount.
 
         :param amount_diff: The difference from the actual amount.
@@ -62,7 +42,7 @@ class Product(Aggregate):
         self.inventory = self.inventory.update_amount(amount_diff)
 
     @classmethod
-    async def reserve(cls, quantities: dict[UUID, int]) -> NoReturn:
+    async def reserve(cls, quantities: dict[UUID, int]) -> None:
         """Reserve product quantities.
 
         :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are
@@ -86,7 +66,7 @@ class Product(Aggregate):
             raise ValueError("The reservation query could not be satisfied.")
 
     @classmethod
-    async def purchase(cls, quantities: dict[UUID, int]) -> NoReturn:
+    async def purchase(cls, quantities: dict[UUID, int]) -> None:
         """Purchase products.
 
         :param quantities: A dictionary in which the keys are the ``Product`` identifiers and the values are

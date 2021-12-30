@@ -1,17 +1,14 @@
-"""
-Copyright (C) 2021 Clariteia SL
-
-This file is part of minos framework.
-
-Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
-"""
-
+from minos.common import (
+    UUID_REGEX,
+)
 from minos.cqrs import (
     CommandService,
 )
 from minos.networks import (
     Request,
     Response,
+    ResponseException,
+    RestRequest,
     enroute,
 )
 
@@ -25,7 +22,7 @@ class CustomerCommandService(CommandService):
     """Customer Service class"""
 
     @staticmethod
-    @enroute.rest.command("/customer", "POST")
+    @enroute.rest.command("/customers", "POST")
     @enroute.broker.command("CreateCustomer")
     async def create_customer(request: Request) -> Response:
         """Create a new Customer instance.
@@ -42,3 +39,30 @@ class CustomerCommandService(CommandService):
         customer = await Customer.create(name, surname, address)
 
         return Response(customer)
+
+    @staticmethod
+    @enroute.rest.command(f"/customers/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
+    @enroute.broker.command("DeleteCustomer")
+    async def delete_customer(request: Request) -> None:
+        """Remove a Customer instance.
+
+        :param request: The ``Request`` that contains the needed customer identifier.
+        :return: This method does not return anything.
+        """
+
+        try:
+            if isinstance(request, RestRequest):
+                params = await request.params()
+                uuid = params["uuid"]
+            else:
+                content = await request.content()
+                uuid = content["uuid"]
+        except Exception:
+            raise ResponseException("The given request could not be parsed.")
+
+        try:
+            customer = await Customer.get(uuid)
+        except Exception:
+            raise ResponseException("The requested user could not be retrieved from the database.")
+
+        await customer.delete()
