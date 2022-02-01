@@ -7,11 +7,11 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = "^0.3.2"
-minos-microservice-networks = "^0.3.2"
-minos-microservice-aggregate = "^0.2.2"
-minos-microservice-saga = "^0.3.5"
-minos-microservice-cqrs = "^0.2.1"
+minos-microservice-common = "^0.4.0"
+minos-microservice-networks = "^0.4.0"
+minos-microservice-aggregate = "^0.4.0"
+minos-microservice-saga = "^0.4.0"
+minos-microservice-cqrs = "^0.4.0"
 typer = "^0.3.2"
 SQLAlchemy = "1.4.22"
 

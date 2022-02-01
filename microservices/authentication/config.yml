@@ -4,9 +4,9 @@ service:
   injections:
     lock_pool: minos.common.PostgreSqlLockPool
     postgresql_pool: minos.common.PostgreSqlPool
-    broker_publisher: minos.networks.BrokerPublisher
-    broker_consumer: minos.networks.BrokerConsumer
-    broker_pool: minos.networks.DynamicBrokerPool
+    broker_publisher: minos.networks.PostgreSqlQueuedKafkaBrokerPublisher
+    broker_subscriber_builder: minos.networks.PostgreSqlQueuedKafkaBrokerSubscriberBuilder
+    broker_pool: minos.networks.BrokerClientPool
     transaction_repository: minos.aggregate.PostgreSqlTransactionRepository
     event_repository: minos.aggregate.PostgreSqlEventRepository
     snapshot_repository: minos.aggregate.PostgreSqlSnapshotRepository
@@ -14,8 +14,6 @@ service:
     discovery: minos.networks.DiscoveryConnector
     credentials_repository: src.CredentialsQueryRepository
   services:
-    - minos.networks.BrokerProducerService
-    - minos.networks.BrokerConsumerService
     - minos.networks.BrokerHandlerService
     - minos.networks.RestService
     - minos.networks.PeriodicTaskSchedulerService
