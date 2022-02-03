@@ -13,11 +13,11 @@ from typing import (
 )
 
 from minos.aggregate import (
-    RootEntity,
-    ExternalEntity,
     Entity,
     EntitySet,
+    ExternalEntity,
     Ref,
+    RootEntity,
     ValueObject,
 )
 

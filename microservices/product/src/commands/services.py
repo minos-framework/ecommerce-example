@@ -5,8 +5,8 @@ from uuid import (
 )
 
 from minos.aggregate import (
-    NotFoundException,
     AlreadyDeletedException,
+    NotFoundException,
 )
 from minos.common import (
     UUID_REGEX,

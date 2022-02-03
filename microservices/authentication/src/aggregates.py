@@ -3,10 +3,10 @@ from __future__ import (
 )
 
 from minos.aggregate import (
-    RootEntity,
-    ExternalEntity,
     Condition,
+    ExternalEntity,
     Ref,
+    RootEntity,
 )
 
 
