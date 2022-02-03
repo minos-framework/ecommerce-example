@@ -1,13 +1,7 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from asyncio import (
-    gather,
-)
-from uuid import (
-    UUID,
-)
+from asyncio import gather
+from uuid import UUID
 
 from minos.aggregate import (
     RootEntity,
