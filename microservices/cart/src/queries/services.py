@@ -2,7 +2,7 @@ from dependency_injector.wiring import (
     Provide,
 )
 from minos.aggregate import (
-    AggregateDiff,
+    Event,
 )
 from minos.cqrs import (
     QueryService,
@@ -48,7 +48,7 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
 
         await self.repository.create_cart(diff.uuid, diff.version, diff.user)
 
@@ -58,7 +58,7 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         print(diff)
 
     @enroute.broker.event("CartUpdated.entries.create")
@@ -67,7 +67,7 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
 
         for entry in diff["entries"]:
             await self.repository.insert_cart_item(
@@ -85,7 +85,7 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
 
         for entry in diff["entries"]:
             await self.repository.delete_cart_item(diff.uuid, entry.product.uuid)
@@ -96,7 +96,7 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
 
         for entry in diff["entries"]:
             await self.repository.update_cart_item(
@@ -116,7 +116,7 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         await self.repository.update_cart_items(uuid=diff.uuid, **diff.fields_diff)
         print(diff)
 
@@ -126,7 +126,7 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         cart_uuid = diff.uuid
 
         await self.repository.delete_cart(cart_uuid)

@@ -315,80 +315,139 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "minos-microservice-aggregate"
-version = "0.4.0"
-description = "Python Package for Minos Microservices containing all the Aggregate stuff"
+name = "minos-broker-kafka"
+version = "0.4.1"
+description = "Minos Broker Kafka package"
 category = "main"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "^3.9"
+develop = true
 
 [package.dependencies]
-minos-microservice-common = ">=0.4.0,<0.5.0"
-minos-microservice-networks = ">=0.4.0,<0.5.0"
+aiokafka = "^0.7.0"
+minos-microservice-common = "^0.4.0"
+minos-microservice-networks = "^0.4.0"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/plugins/minos-broker-kafka"
+
+[[package]]
+name = "minos-discovery-minos"
+version = "0.4.1"
+description = "Minos Discovery Minos package"
+category = "main"
+optional = false
+python-versions = "^3.9"
+develop = true
+
+[package.dependencies]
+minos-microservice-common = "^0.4.0"
+minos-microservice-networks = "^0.4.0"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/plugins/minos-discovery-minos"
+
+[[package]]
+name = "minos-microservice-aggregate"
+version = "0.4.1"
+description = "Python Package for Minos Microservices containing all the RootEntity stuff"
+category = "main"
+optional = false
+python-versions = "^3.9"
+develop = true
+
+[package.dependencies]
+minos-microservice-common = "^0.4.0"
+minos-microservice-networks = "^0.4.0"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/core/minos-microservice-aggregate"
 
 [[package]]
 name = "minos-microservice-common"
-version = "0.4.0"
+version = "0.4.1"
 description = "Python Package with common Classes and Utilities used in Minos Microservices."
 category = "main"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "^3.9"
+develop = true
 
 [package.dependencies]
-aiomisc = ">=14.0.3,<15.0.0"
-aiopg = ">=1.2.1,<2.0.0"
-cached-property = ">=1.5.2,<2.0.0"
-dependency-injector = ">=4.32.2,<5.0.0"
-fastavro = ">=1.4.0,<2.0.0"
-lmdb = ">=1.2.1,<2.0.0"
-orjson = ">=3.5.2,<4.0.0"
+aiomisc = "^14.0.3"
+aiopg = "^1.2.1"
+cached-property = "^1.5.2"
+dependency-injector = "^4.32.2"
+fastavro = "^1.4.0"
+lmdb = "^1.2.1"
+orjson = "^3.5.2"
 PyYAML = ">=5.4.1,<7.0.0"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/core/minos-microservice-common"
 
 [[package]]
 name = "minos-microservice-cqrs"
-version = "0.4.0"
+version = "0.4.1"
 description = "Minos Microservice CQRS package"
 category = "main"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "^3.9"
+develop = true
 
 [package.dependencies]
-dependency-injector = ">=4.34.0,<5.0.0"
-minos-microservice-aggregate = ">=0.4.0,<0.5.0"
-minos-microservice-common = ">=0.4.0,<0.5.0"
-minos-microservice-networks = ">=0.4.0,<0.5.0"
+dependency-injector = "^4.34.0"
+minos-microservice-aggregate = "^0.4.0"
+minos-microservice-common = "^0.4.0"
+minos-microservice-networks = "^0.4.0"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/core/minos-microservice-cqrs"
 
 [[package]]
 name = "minos-microservice-networks"
-version = "0.4.0"
+version = "0.4.1"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
 category = "main"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "^3.9"
+develop = true
 
 [package.dependencies]
-aiohttp = ">=3.7.4,<4.0.0"
-aiokafka = ">=0.7.0,<0.8.0"
-aiomisc = ">=14.0.3,<15.0.0"
-aiopg = ">=1.2.1,<2.0.0"
-crontab = ">=0.23.0,<0.24.0"
-dependency-injector = ">=4.32.2,<5.0.0"
-minos-microservice-common = ">=0.4.0,<0.5.0"
-orjson = ">=3.6.5,<4.0.0"
+aiohttp = "^3.7.4"
+aiomisc = "^14.0.3"
+aiopg = "^1.2.1"
+crontab = "^0.23.0"
+dependency-injector = "^4.32.2"
+minos-microservice-common = "^0.4.0"
+orjson = "^3.6.5"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/core/minos-microservice-networks"
 
 [[package]]
 name = "minos-microservice-saga"
-version = "0.4.0"
+version = "0.4.1"
 description = "Saga Library for MinOS project."
 category = "main"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "^3.9"
+develop = true
 
 [package.dependencies]
-dependency-injector = ">=4.32.2,<5.0.0"
-minos-microservice-aggregate = ">=0.4.0,<0.5.0"
-minos-microservice-common = ">=0.4.0,<0.5.0"
-minos-microservice-networks = ">=0.4.0,<0.5.0"
+dependency-injector = "^4.32.2"
+minos-microservice-aggregate = "^0.4.0"
+minos-microservice-common = "^0.4.0"
+minos-microservice-networks = "^0.4.0"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/core/minos-microservice-saga"
 
 [[package]]
 name = "multidict"
@@ -573,7 +632,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "7da1d10e1e247f171e7b47edd4882cb7089e4579bf16637f6eabeb675c2cef18"
+content-hash = "993b94cd6a1db223673a58f294c6c42b3b58cf97a9e96d9100ff20b005df81f3"
 
 [metadata.files]
 aiohttp = [
@@ -952,26 +1011,13 @@ mccabe = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
-minos-microservice-aggregate = [
-    {file = "minos-microservice-aggregate-0.4.0.tar.gz", hash = "sha256:2ada8638f7bfec2c120df452648f438710d7e5dd63612d09c1ba7f8cb41ba23d"},
-    {file = "minos_microservice_aggregate-0.4.0-py3-none-any.whl", hash = "sha256:9edcb9931f7aeb9a472b64259fd7d0c1363d9ea5ee59fc5282642748a1c76ed3"},
-]
-minos-microservice-common = [
-    {file = "minos-microservice-common-0.4.0.tar.gz", hash = "sha256:b74995fba27ca383e52804e2c0013350d747dcc03c38098ad2026a9cceb04996"},
-    {file = "minos_microservice_common-0.4.0-py3-none-any.whl", hash = "sha256:65cecd809b243007d57740b7d40349544d6e98a69ce84aac86ca06a2a4b97e29"},
-]
-minos-microservice-cqrs = [
-    {file = "minos-microservice-cqrs-0.4.0.tar.gz", hash = "sha256:f494a4916b0ec4ad14e813e617ac307f895fa97d777e5fd457b1c5c3c45db471"},
-    {file = "minos_microservice_cqrs-0.4.0-py3-none-any.whl", hash = "sha256:f6998cfb9cb870139f851166f6b0e0975af1ce3aac0171fe862260b9178c7f76"},
-]
-minos-microservice-networks = [
-    {file = "minos-microservice-networks-0.4.0.tar.gz", hash = "sha256:4aa1791a723e148bc06fcb15e39ac9bd852d54a5101dcf4f5e1d6a7b472b9888"},
-    {file = "minos_microservice_networks-0.4.0-py3-none-any.whl", hash = "sha256:94ef940aa7c5a3f00127bed312ebea1c635be569c6500c81ce7914cbb5c4c7e9"},
-]
-minos-microservice-saga = [
-    {file = "minos-microservice-saga-0.4.0.tar.gz", hash = "sha256:6c1d7ff41261253512d1f1bb00a9d0c54b4b9860df470c71a424547fbe01638c"},
-    {file = "minos_microservice_saga-0.4.0-py3-none-any.whl", hash = "sha256:2cb332de5e405243b71f38ed7453c0f6d692e96827bb76811595425383fad18b"},
-]
+minos-broker-kafka = []
+minos-discovery-minos = []
+minos-microservice-aggregate = []
+minos-microservice-common = []
+minos-microservice-cqrs = []
+minos-microservice-networks = []
+minos-microservice-saga = []
 multidict = [
     {file = "multidict-6.0.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:0b9e95a740109c6047602f4db4da9949e6c5945cefbad34a1299775ddc9a62e2"},
     {file = "multidict-6.0.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:ac0e27844758d7177989ce406acc6a83c16ed4524ebc363c1f748cba184d89d3"},

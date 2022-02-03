@@ -4,8 +4,8 @@ service:
   injections:
     lock_pool: minos.common.PostgreSqlLockPool
     postgresql_pool: minos.common.PostgreSqlPool
-    broker_publisher: minos.networks.PostgreSqlQueuedKafkaBrokerPublisher
-    broker_subscriber_builder: minos.networks.PostgreSqlQueuedKafkaBrokerSubscriberBuilder
+    broker_publisher: minos.plugins.kafka.InMemoryQueuedKafkaBrokerPublisher
+    broker_subscriber_builder: minos.plugins.kafka.InMemoryQueuedKafkaBrokerSubscriberBuilder
     broker_pool: minos.networks.BrokerClientPool
     transaction_repository: minos.aggregate.PostgreSqlTransactionRepository
     event_repository: minos.aggregate.PostgreSqlEventRepository
@@ -54,6 +54,6 @@ saga:
   storage:
     path: "./customer.lmdb"
 discovery:
-  client: minos.networks.MinosDiscoveryClient
+  client: minos.plugins.minos_discovery.MinosDiscoveryClient
   host: localhost
   port: 5567
