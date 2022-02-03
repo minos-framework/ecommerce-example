@@ -1,12 +1,20 @@
-from dependency_injector.wiring import Provide
-from minos.aggregate import Event
-from minos.cqrs import QueryService
+from dependency_injector.wiring import (
+    Provide,
+)
+from minos.aggregate import (
+    Event,
+)
+from minos.cqrs import (
+    QueryService,
+)
 from minos.networks import (
     Request,
     enroute,
 )
 
-from .repositories import PaymentAmountRepository
+from .repositories import (
+    PaymentAmountRepository,
+)
 
 
 class PaymentQueryService(QueryService):

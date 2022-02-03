@@ -1,4 +1,6 @@
-from minos.aggregate import RootEntity
+from minos.aggregate import (
+    RootEntity,
+)
 
 
 class Payment(RootEntity):

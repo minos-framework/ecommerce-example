@@ -1,10 +1,12 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 from minos.aggregate import (
-    RootEntity,
-    ExternalEntity,
     Condition,
+    ExternalEntity,
     Ref,
+    RootEntity,
 )
 
 
