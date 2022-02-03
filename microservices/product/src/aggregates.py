@@ -10,12 +10,12 @@ from uuid import (
 )
 
 from minos.aggregate import (
-    Aggregate,
+    RootEntity,
     ValueObject,
 )
 
 
-class Product(Aggregate):
+class Product(RootEntity):
     """Product class."""
 
     code: str

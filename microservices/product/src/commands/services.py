@@ -5,8 +5,8 @@ from uuid import (
 )
 
 from minos.aggregate import (
-    AggregateNotFoundException,
-    DeletedAggregateException,
+    AlreadyDeletedException,
+    NotFoundException,
 )
 from minos.common import (
     UUID_REGEX,
@@ -176,7 +176,7 @@ class ProductCommandService(CommandService):
         try:
             product = await Product.get(uuid)
             await product.delete()
-        except (DeletedAggregateException, AggregateNotFoundException):
+        except (AlreadyDeletedException, NotFoundException):
             raise ResponseException("The product does not exist.")
 
     @enroute.broker.command("ReserveProducts")
@@ -192,7 +192,7 @@ class ProductCommandService(CommandService):
 
         try:
             await Product.reserve(quantities)
-        except (AggregateNotFoundException, DeletedAggregateException) as exc:
+        except (NotFoundException, AlreadyDeletedException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")
@@ -210,7 +210,7 @@ class ProductCommandService(CommandService):
 
         try:
             await Product.purchase(quantities)
-        except (AggregateNotFoundException, DeletedAggregateException) as exc:
+        except (NotFoundException, AlreadyDeletedException) as exc:
             raise ResponseException(f"Some products do not exist: {exc!r}")
         except Exception as exc:
             raise ResponseException(f"There is not enough product amount: {exc!r}")

@@ -1,10 +1,10 @@
 from minos.aggregate import (
-    Aggregate,
+    RootEntity,
 )
 
 
-class Payment(Aggregate):
-    """Payment Aggregate class."""
+class Payment(RootEntity):
+    """Payment RootEntity class."""
 
     credit_number: int
     amount: float

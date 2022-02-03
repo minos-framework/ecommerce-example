@@ -2,7 +2,7 @@ from dependency_injector.wiring import (
     Provide,
 )
 from minos.aggregate import (
-    AggregateDiff,
+    Event,
 )
 from minos.common import (
     UUID_REGEX,
@@ -79,7 +79,7 @@ class OrderQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         await self.repository.create(
             uuid=diff.uuid,
             version=diff.version,

@@ -2,7 +2,7 @@ from dependency_injector.wiring import (
     Provide,
 )
 from minos.aggregate import (
-    AggregateDiff,
+    Event,
 )
 from minos.cqrs import (
     QueryService,
@@ -133,7 +133,7 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ReviewUpdated")
@@ -143,7 +143,7 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ProductUpdated.title")
@@ -153,7 +153,7 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         print(diff)
 
     @enroute.broker.event("CustomerUpdated.name")
@@ -163,5 +163,5 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         print(diff)

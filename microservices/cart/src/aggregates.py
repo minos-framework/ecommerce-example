@@ -3,16 +3,16 @@ from __future__ import (
 )
 
 from minos.aggregate import (
-    Aggregate,
-    AggregateRef,
     Entity,
     EntitySet,
-    ModelRef,
+    ExternalEntity,
+    Ref,
+    RootEntity,
 )
 
 
-class Cart(Aggregate):
-    """Cart Aggregate class."""
+class Cart(RootEntity):
+    """Cart RootEntity class."""
 
     user: int
     entries: EntitySet[CartEntry]
@@ -22,11 +22,11 @@ class CartEntry(Entity):
     """Cart Item DeclarativeModel class."""
 
     quantity: int
-    product: ModelRef[Product]
+    product: Ref[Product]
 
 
-class Product(AggregateRef):
-    """Product AggregateRef class."""
+class Product(ExternalEntity):
+    """Product ExternalEntity class."""
 
     title: str
     description: str

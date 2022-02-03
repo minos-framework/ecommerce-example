@@ -13,11 +13,11 @@ from typing import (
 )
 
 from minos.aggregate import (
-    Aggregate,
-    AggregateRef,
     Entity,
     EntitySet,
-    ModelRef,
+    ExternalEntity,
+    Ref,
+    RootEntity,
     ValueObject,
 )
 
@@ -28,12 +28,12 @@ class OrderStatus(str, Enum):
     COMPLETED = "completed"
 
 
-class Order(Aggregate):
-    """Order Aggregate class."""
+class Order(RootEntity):
+    """Order RootEntity class."""
 
-    ticket: Optional[ModelRef[Ticket]]
+    ticket: Optional[Ref[Ticket]]
 
-    payment: Optional[ModelRef[Payment]]
+    payment: Optional[Ref[Payment]]
     payment_detail: PaymentDetail
 
     # TODO: Future Shipment Microservice
@@ -45,11 +45,11 @@ class Order(Aggregate):
     created_at: datetime
     updated_at: datetime
 
-    customer: ModelRef[Customer]
+    customer: Ref[Customer]
 
 
-class Ticket(AggregateRef):
-    """Ticket Aggregate class."""
+class Ticket(ExternalEntity):
+    """Ticket RootEntity class."""
 
     total_price: float
     entries: EntitySet[TicketEntry]
@@ -59,11 +59,11 @@ class TicketEntry(Entity):
     """Order Item class"""
 
     quantity: int
-    product: ModelRef[Product]
+    product: Ref[Product]
 
 
-class Product(AggregateRef):
-    """Order AggregateRef class."""
+class Product(ExternalEntity):
+    """Order ExternalEntity class."""
 
     title: str
     price: float
@@ -76,8 +76,8 @@ class PaymentDetail(ValueObject):
     card_cvc: str
 
 
-class Payment(AggregateRef):
-    """Payment AggregateRef class"""
+class Payment(ExternalEntity):
+    """Payment ExternalEntity class"""
 
     status: str
 
@@ -93,7 +93,7 @@ class ShipmentDetail(ValueObject):
     zip: int
 
 
-class Customer(AggregateRef):
+class Customer(ExternalEntity):
     """User class"""
 
     name: str

@@ -75,7 +75,7 @@ class CredentialsCommandService(CommandService):
     async def user_deleted(self, request: Request) -> None:
         """Delete the associated credentials to the already deleted user.
 
-        :param request: A ``Request`` containing a ``AggregateDiff`` instance.
+        :param request: A ``Request`` containing a ``Event`` instance.
         :return: This method does not return anything.
         """
 

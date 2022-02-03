@@ -3,15 +3,15 @@ from __future__ import (
 )
 
 from minos.aggregate import (
-    Aggregate,
-    AggregateRef,
     Condition,
-    ModelRef,
+    ExternalEntity,
+    Ref,
+    RootEntity,
 )
 
 
-class Credentials(Aggregate):
-    """Credentials Aggregate class.
+class Credentials(RootEntity):
+    """Credentials RootEntity class.
 
     The purpose of this aggregate is to store the needed information to be authenticated.
     """
@@ -19,7 +19,7 @@ class Credentials(Aggregate):
     username: str
     password: str
     active: bool
-    user: ModelRef[Customer]
+    user: Ref[Customer]
 
     @classmethod
     async def exists_username(cls, username: str) -> bool:
@@ -35,5 +35,5 @@ class Credentials(Aggregate):
             return False
 
 
-class Customer(AggregateRef):
-    """Customer Aggregate-Reference class."""
+class Customer(ExternalEntity):
+    """Customer ExternalEntity class."""

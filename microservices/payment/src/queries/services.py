@@ -2,7 +2,7 @@ from dependency_injector.wiring import (
     Provide,
 )
 from minos.aggregate import (
-    AggregateDiff,
+    Event,
 )
 from minos.cqrs import (
     QueryService,
@@ -30,7 +30,7 @@ class PaymentQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
         uuid = diff.uuid
         amount = diff["amount"]
 
@@ -43,6 +43,6 @@ class PaymentQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: AggregateDiff = await request.content()
+        diff: Event = await request.content()
 
         await self.repository.delete(diff.uuid)

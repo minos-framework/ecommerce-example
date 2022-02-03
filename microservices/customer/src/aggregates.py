@@ -3,7 +3,7 @@ from datetime import (
 )
 
 from minos.aggregate import (
-    Aggregate,
+    RootEntity,
     ValueObject,
 )
 
@@ -13,8 +13,8 @@ class Address(ValueObject):
     street_no: int
 
 
-class Customer(Aggregate):
-    """Customer Aggregate class."""
+class Customer(RootEntity):
+    """Customer RootEntity class."""
 
     name: str
     surname: str

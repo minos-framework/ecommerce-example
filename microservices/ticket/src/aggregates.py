@@ -3,16 +3,16 @@ from __future__ import (
 )
 
 from minos.aggregate import (
-    Aggregate,
-    AggregateRef,
     Entity,
     EntitySet,
-    ModelRef,
+    ExternalEntity,
+    Ref,
+    RootEntity,
 )
 
 
-class Ticket(Aggregate):
-    """Ticket Aggregate class."""
+class Ticket(RootEntity):
+    """Ticket RootEntity class."""
 
     code: str
     total_price: float
@@ -25,11 +25,11 @@ class TicketEntry(Entity):
     title: str
     unit_price: float
     quantity: int
-    product: ModelRef[Product]
+    product: Ref[Product]
 
 
-class Product(AggregateRef):
-    """Order AggregateRef class."""
+class Product(ExternalEntity):
+    """Order ExternalEntity class."""
 
     title: str
     price: float

@@ -9,7 +9,7 @@ from uuid import (
 )
 
 from minos.aggregate import (
-    DeletedAggregateException,
+    AlreadyDeletedException,
 )
 from minos.networks import (
     InMemoryRequest,
@@ -64,7 +64,7 @@ class TestCustomerCommandService(unittest.IsolatedAsyncioTestCase):
         request = InMemoryRequest({"uuid": customer.uuid})
         await self.service.delete_customer(request)
 
-        with self.assertRaises(DeletedAggregateException):
+        with self.assertRaises(AlreadyDeletedException):
             await Customer.get(customer.uuid)
 
     async def test_delete_customer_bad_request(self):

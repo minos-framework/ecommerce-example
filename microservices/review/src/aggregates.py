@@ -3,17 +3,17 @@ from __future__ import (
 )
 
 from minos.aggregate import (
-    Aggregate,
-    AggregateRef,
-    ModelRef,
+    ExternalEntity,
+    Ref,
+    RootEntity,
 )
 
 
-class Review(Aggregate):
+class Review(RootEntity):
     """Product Review class."""
 
-    product: ModelRef[Product]
-    user: ModelRef[Customer]
+    product: Ref[Product]
+    user: Ref[Customer]
     title: str
     description: str
     score: int
@@ -25,13 +25,13 @@ class Review(Aggregate):
         return 1 <= score <= 5
 
 
-class Product(AggregateRef):
-    """Product AggregateRef class."""
+class Product(ExternalEntity):
+    """Product ExternalEntity class."""
 
     title: str
 
 
-class Customer(AggregateRef):
-    """Customer AggregateRef class."""
+class Customer(ExternalEntity):
+    """Customer ExternalEntity class."""
 
     name: str
