@@ -81,12 +81,12 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div className="col-md-12">
+      <div className="col-md-6 mx-auto mt-5">
         <div className="card card-container">
           <img
             src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
             alt="profile-img"
-            className="profile-img-card"
+            className="profile-img-card mt-4"
           />
 
           <Form
@@ -95,7 +95,7 @@ export default class Login extends Component {
               this.form = c;
             }}
           >
-            <div className="form-group">
+            <div className="form-group ml-3 mr-3">
               <label htmlFor="username">Username</label>
               <Input
                 type="text"
@@ -107,7 +107,7 @@ export default class Login extends Component {
               />
             </div>
 
-            <div className="form-group">
+            <div className="form-group ml-3 mr-3">
               <label htmlFor="password">Password</label>
               <Input
                 type="password"
@@ -119,7 +119,7 @@ export default class Login extends Component {
               />
             </div>
 
-            <div className="form-group">
+            <div className="form-group ml-3 mr-3">
               <button
                 className="btn btn-primary btn-block"
                 disabled={this.state.loading}
@@ -132,7 +132,7 @@ export default class Login extends Component {
             </div>
 
             {this.state.message && (
-              <div className="form-group">
+              <div className="form-group ml-3 mr-3">
                 <div className="alert alert-danger" role="alert">
                   {this.state.message}
                 </div>
