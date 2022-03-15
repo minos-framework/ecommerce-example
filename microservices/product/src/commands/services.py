@@ -18,7 +18,7 @@ from minos.networks import (
     Request,
     Response,
     ResponseException,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 
@@ -55,7 +55,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/inventory", "PUT")
-    async def update_inventory(self, request: RestRequest) -> Response:
+    async def update_inventory(self, request: HttpRequest) -> Response:
         """Update inventory amount with a difference.
 
         :param request: ``Request`` that contains the needed information.
@@ -73,7 +73,7 @@ class ProductCommandService(CommandService):
         return Response(product)
 
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}/inventory", "PATCH")
-    async def update_inventory_diff(self, request: RestRequest) -> Response:
+    async def update_inventory_diff(self, request: HttpRequest) -> Response:
         """Update inventory amount with a difference.
 
         :param request: ``Request`` that contains the needed information.
@@ -92,7 +92,7 @@ class ProductCommandService(CommandService):
 
     @update_inventory.check(max_attempts=1)
     @update_inventory_diff.check()
-    async def check_positive_inventory(self, request: RestRequest) -> bool:
+    async def check_positive_inventory(self, request: HttpRequest) -> bool:
         """Check if the inventory is positive.
 
         :param request: The ``Request`` that contains the needed information.
@@ -114,7 +114,7 @@ class ProductCommandService(CommandService):
 
     @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "PUT")
-    async def update_product(request: RestRequest) -> Response:
+    async def update_product(request: HttpRequest) -> Response:
         """Update product information.
 
         :param request: ``Request`` that contains the needed information.
@@ -138,7 +138,7 @@ class ProductCommandService(CommandService):
 
     @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "PATCH")
-    async def update_product_diff(request: RestRequest) -> Response:
+    async def update_product_diff(request: HttpRequest) -> Response:
         """Update product information with a difference.
 
         :param request: ``Request`` that contains the needed information.
@@ -164,7 +164,7 @@ class ProductCommandService(CommandService):
 
     @staticmethod
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
-    async def delete_product(request: RestRequest) -> None:
+    async def delete_product(request: HttpRequest) -> None:
         """Delete a product by identifier.
 
         :param request: A request containing the product identifier.

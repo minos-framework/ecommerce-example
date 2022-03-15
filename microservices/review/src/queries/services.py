@@ -10,7 +10,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 
@@ -32,7 +32,7 @@ class ReviewQueryService(QueryService):
         :return: A response containing the queried payment instances.
         """
 
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             uuid = params["uuid"]
         else:
@@ -50,7 +50,7 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             uuid = params["uuid"]
         else:
@@ -70,7 +70,7 @@ class ReviewQueryService(QueryService):
         """
         content = await request.content()
 
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             uuid = params["uuid"]
         else:

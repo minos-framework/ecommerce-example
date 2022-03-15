@@ -19,7 +19,7 @@ from minos.networks import (
     Request,
     Response,
     ResponseException,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 
@@ -41,10 +41,10 @@ class CredentialsQueryService(QueryService):
         self.repository = repository
 
     @enroute.rest.query("/login", "GET")
-    async def generate_token(self, request: RestRequest) -> Response:
+    async def generate_token(self, request: HttpRequest) -> Response:
         """Get token from the given request.
 
-        :param request: A ``RestRequest`` containing the credentials on its headers.
+        :param request: A ``HttpRequest`` containing the credentials on its headers.
         :return: A ``Response`` containing the token.
         """
         auth_type, encoded_credentials = request.headers["Authorization"].split()
@@ -82,10 +82,10 @@ class CredentialsQueryService(QueryService):
         return jwt.encode(payload, SECRET, algorithm=JWT_ALGORITHM)
 
     @enroute.rest.query("/token", "POST")
-    async def validate_token(self, request: RestRequest) -> Response:
+    async def validate_token(self, request: HttpRequest) -> Response:
         """Validate if the given ``jwt`` token is valid.
 
-        :param request: A ``RestRequest`` containing the token in headers.
+        :param request: A ``HttpRequest`` containing the token in headers.
         :return: The response containing the payload if everything is fine or an exception otherwise.
         """
         auth_type, token = request.headers["Authorization"].split()

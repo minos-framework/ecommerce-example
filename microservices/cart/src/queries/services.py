@@ -10,7 +10,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 
@@ -31,7 +31,7 @@ class CartQueryService(QueryService):
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             uuid = params["uuid"]
         else:
@@ -70,6 +70,8 @@ class CartQueryService(QueryService):
         diff: Event = await request.content()
 
         for entry in diff["entries"]:
+            await entry["product"].resolve()
+
             await self.repository.insert_cart_item(
                 diff.uuid,
                 entry.product.uuid,
@@ -99,6 +101,8 @@ class CartQueryService(QueryService):
         diff: Event = await request.content()
 
         for entry in diff["entries"]:
+            await entry["product"].resolve()
+
             await self.repository.update_cart_item(
                 diff.uuid,
                 entry.product.uuid,

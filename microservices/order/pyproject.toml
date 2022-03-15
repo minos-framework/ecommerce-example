@@ -7,13 +7,14 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = "^0.5.0"
-minos-microservice-networks = "^0.5.0"
-minos-microservice-aggregate = "^0.5.0"
-minos-microservice-saga = "^0.5.0"
-minos-microservice-cqrs = "^0.5.0"
-minos-broker-kafka = "^0.5.0"
-minos-discovery-minos = "^0.5.0"
+minos-microservice-common = { path = "../../../minos-python/packages/core/minos-microservice-common", develop = true }
+minos-microservice-networks = { path = "../../../minos-python/packages/core/minos-microservice-networks", develop = true }
+minos-microservice-aggregate = { path = "../../../minos-python/packages/core/minos-microservice-aggregate", develop = true }
+minos-microservice-saga = { path = "../../../minos-python/packages/core/minos-microservice-saga", develop = true }
+minos-microservice-cqrs = { path = "../../../minos-python/packages/core/minos-microservice-cqrs", develop = true }
+minos-broker-kafka = { path = "../../../minos-python/packages/plugins/minos-broker-kafka", develop = true }
+minos-discovery-minos = { path = "../../../minos-python/packages/plugins/minos-discovery-minos", develop = true }
+minos-http-aiohttp = { path = "../../../minos-python/packages/plugins/minos-http-aiohttp", develop = true }
 typer = "^0.3.2"
 SQLAlchemy = "1.4.22"
 

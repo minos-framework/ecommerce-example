@@ -2,10 +2,11 @@ service:
   name: ticket
   aggregate: src.aggregates.Ticket
   injections:
+    http_connector: minos.plugins.aiohttp.AioHttpConnector
     lock_pool: minos.common.PostgreSqlLockPool
     postgresql_pool: minos.common.PostgreSqlPool
-    broker_publisher: minos.plugins.kafka.InMemoryQueuedKafkaBrokerPublisher
-    broker_subscriber_builder: minos.plugins.kafka.InMemoryQueuedKafkaBrokerSubscriberBuilder
+    broker_publisher: minos.plugins.kafka.PostgreSqlQueuedKafkaBrokerPublisher
+    broker_subscriber_builder: minos.plugins.kafka.PostgreSqlQueuedKafkaBrokerSubscriberBuilder
     broker_pool: minos.networks.BrokerClientPool
     transaction_repository: minos.aggregate.PostgreSqlTransactionRepository
     event_repository: minos.aggregate.PostgreSqlEventRepository
@@ -14,12 +15,17 @@ service:
     discovery: minos.networks.DiscoveryConnector
     ticket_repository: src.TicketQueryRepository
   services:
-    - minos.networks.BrokerHandlerService
-    - minos.networks.RestService
-    - minos.networks.PeriodicTaskSchedulerService
+    - minos.networks.BrokerHandlerPort
+    - minos.networks.HttpPort
+    - minos.networks.PeriodicTaskSchedulerPort
+routers:
+  - minos.networks.BrokerRouter
+  - minos.networks.PeriodicRouter
+  - minos.networks.RestHttpRouter
 middleware:
   - minos.saga.transactional_command
 services:
+  - minos.networks.SystemService
   - minos.aggregate.TransactionService
   - minos.aggregate.SnapshotService
   - minos.saga.SagaService

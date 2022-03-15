@@ -14,7 +14,7 @@ from minos.networks import (
     Request,
     Response,
     ResponseException,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 
@@ -41,7 +41,7 @@ class ProductQueryService(QueryService):
         return Response(res)
 
     @enroute.rest.query(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "GET")
-    async def get_product_by_uuid(self, request: RestRequest) -> Response:
+    async def get_product_by_uuid(self, request: HttpRequest) -> Response:
         """Get all products.
 
         :param request: The ``Request`` instance that contains the product identifiers.

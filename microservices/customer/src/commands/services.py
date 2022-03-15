@@ -8,7 +8,7 @@ from minos.networks import (
     Request,
     Response,
     ResponseException,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 
@@ -51,7 +51,7 @@ class CustomerCommandService(CommandService):
         """
 
         try:
-            if isinstance(request, RestRequest):
+            if isinstance(request, HttpRequest):
                 params = await request.params()
                 uuid = params["uuid"]
             else:

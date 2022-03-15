@@ -11,7 +11,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 from minos.saga import (
@@ -54,7 +54,7 @@ class CartCommandService(CommandService):
         """
         content = await request.content()
 
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             cart = params["uuid"]
         else:
@@ -77,7 +77,7 @@ class CartCommandService(CommandService):
         """
         content = await request.content()
 
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             cart = params["uuid"]
         else:
@@ -100,7 +100,7 @@ class CartCommandService(CommandService):
         """
         content = await request.content()
 
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             cart = params["uuid"]
         else:
@@ -123,7 +123,7 @@ class CartCommandService(CommandService):
         :param request: A request instance containing the payment identifiers.
         :return: A response containing the queried payment instances.
         """
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             uuid = params["uuid"]
         else:

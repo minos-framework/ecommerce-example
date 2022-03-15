@@ -1,3 +1,5 @@
+import logging
+
 from dependency_injector.wiring import (
     Provide,
 )
@@ -14,13 +16,14 @@ from minos.networks import (
     Request,
     Response,
     ResponseException,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 
 from .repositories import (
     OrderQueryRepository,
 )
+logger = logging.getLogger(__name__)
 
 
 class OrderQueryService(QueryService):
@@ -37,7 +40,7 @@ class OrderQueryService(QueryService):
         :return: A ``Response`` instance containing the requested order.
         """
 
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             uuid = (await request.params())["uuid"]
         else:
             content = await request.content()
@@ -58,7 +61,7 @@ class OrderQueryService(QueryService):
         :param request: The ``Request`` instance that contains the order identifier.
         :return: A ``Response`` instance containing the requested order.
         """
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             uuid = params["uuid"]
         else:
@@ -80,6 +83,11 @@ class OrderQueryService(QueryService):
         :return: This method does not return anything.
         """
         diff: Event = await request.content()
+
+        logger.info(f'Unresolved ticket: {diff["ticket"]!r}')
+        await diff["ticket"].resolve()
+        logger.info(f'Resolved ticket: {diff["ticket"]!r}')
+
         await self.repository.create(
             uuid=diff.uuid,
             version=diff.version,

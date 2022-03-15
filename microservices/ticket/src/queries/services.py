@@ -13,7 +13,7 @@ from minos.cqrs import (
 from minos.networks import (
     Request,
     Response,
-    RestRequest,
+    HttpRequest,
     enroute,
 )
 
@@ -35,7 +35,7 @@ class TicketQueryService(QueryService):
         :param request: The ``Request`` instance that contains the ticket identifier.
         :return: A ``Response`` instance containing the requested ticket.
         """
-        if isinstance(request, RestRequest):
+        if isinstance(request, HttpRequest):
             params = await request.params()
             uuid = params["uuid"]
         else:
