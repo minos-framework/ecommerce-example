@@ -1,23 +1,46 @@
-service:
-  name: product
-  aggregate: src.aggregates.Product
-  injections:
-    http_connector: minos.plugins.aiohttp.AioHttpConnector
-    lock_pool: minos.common.PostgreSqlLockPool
-    postgresql_pool: minos.common.PostgreSqlPool
-    broker_publisher: minos.plugins.kafka.PostgreSqlQueuedKafkaBrokerPublisher
-    broker_subscriber_builder: minos.plugins.kafka.PostgreSqlQueuedKafkaBrokerSubscriberBuilder
-    broker_pool: minos.networks.BrokerClientPool
-    transaction_repository: minos.aggregate.PostgreSqlTransactionRepository
-    event_repository: minos.aggregate.PostgreSqlEventRepository
-    snapshot_repository: minos.aggregate.PostgreSqlSnapshotRepository
-    saga_manager: minos.saga.SagaManager
-    discovery: minos.networks.DiscoveryConnector
-    product_repository: src.ProductQueryRepository
-  services:
-    - minos.networks.BrokerHandlerPort
-    - minos.networks.HttpPort
-    - minos.networks.PeriodicTaskSchedulerPort
+version: 2
+name: product
+injections:
+  - src.ProductQueryRepository
+databases:
+  default:
+    client: minos.common.AiopgDatabaseClient
+    database: product_db
+  saga:
+    path: "./product.lmdb"
+interfaces:
+  broker:
+    port: minos.networks.BrokerPort
+    common:
+      host: localhost
+      port: 9092
+    publisher:
+      client: minos.plugins.kafka.KafkaBrokerPublisher
+      queue: minos.networks.DatabaseBrokerPublisherQueue
+    subscriber:
+      client: minos.plugins.kafka.KafkaBrokerSubscriber
+      queue: minos.networks.DatabaseBrokerSubscriberQueue
+      validator: minos.networks.DatabaseBrokerSubscriberDuplicateValidator
+  http:
+    port: minos.networks.HttpPort
+    connector:
+      client: minos.plugins.aiohttp.AioHttpConnector
+      port: 8084
+  periodic:
+    port: minos.networks.PeriodicPort
+pools:
+  lock: minos.common.DatabaseLockPool
+  database: minos.common.DatabaseClientPool
+  broker: minos.networks.BrokerClientPool
+saga:
+  manager: minos.saga.SagaManager
+aggregate:
+  entities:
+    - src.aggregates.Product
+  repositories:
+    transaction: minos.aggregate.DatabaseTransactionRepository
+    event: minos.aggregate.DatabaseEventRepository
+    snapshot: minos.aggregate.DatabaseSnapshotRepository
 routers:
   - minos.networks.BrokerRouter
   - minos.networks.PeriodicRouter
@@ -29,38 +52,5 @@ services:
   - minos.aggregate.TransactionService
   - minos.aggregate.SnapshotService
   - minos.saga.SagaService
-  - src.ProductCommandService
   - src.ProductQueryService
-rest:
-  host: 0.0.0.0
-  port: 8084
-broker:
-  host: localhost
-  port: 9092
-  queue:
-    database: product_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 1000
-    retry: 2
-repository:
-  database: product_db
-  user: minos
-  password: min0s
-  host: localhost
-  port: 5432
-snapshot:
-  database: product_db
-  user: minos
-  password: min0s
-  host: localhost
-  port: 5432
-saga:
-  storage:
-    path: "./product.lmdb"
-discovery:
-  client: minos.plugins.minos_discovery.MinosDiscoveryClient
-  host: localhost
-  port: 5567
+  - src.ProductCommandService

@@ -18,7 +18,7 @@ from minos.aggregate import (
 )
 from minos.common import (
     DependencyInjector,
-    MinosConfig,
+    Config,
 )
 from minos.networks import (
     InMemoryRequest,
@@ -44,7 +44,7 @@ class TestReviewQueryService(unittest.IsolatedAsyncioTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:
-        self.config = MinosConfig(self.CONFIG_FILE_PATH)
+        self.config = Config(self.CONFIG_FILE_PATH)
         self.injector = DependencyInjector(
             self.config,
             saga_manager=_FakeSagaManager,

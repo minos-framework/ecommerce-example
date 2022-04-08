@@ -1,24 +1,15 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    Optional,
-)
-from uuid import (
-    UUID,
-)
+from typing import Optional
+from uuid import UUID
 
-from minos.aggregate import (
-    FieldDiff,
-)
+from minos.aggregate import FieldDiff
 from minos.common import (
-    MinosConfig,
-    MinosSetup,
+    Config,
+    SetupMixin,
+    Injectable,
 )
-from sqlalchemy import (
-    create_engine,
-)
+from sqlalchemy import create_engine
 
 from .models import (
     META,
@@ -27,7 +18,8 @@ from .models import (
 )
 
 
-class ProductQueryRepository(MinosSetup):
+@Injectable("product_repository")
+class ProductQueryRepository(SetupMixin):
     """ProductInventory Repository class."""
 
     def __init__(self, *args, **kwargs):
@@ -38,8 +30,21 @@ class ProductQueryRepository(MinosSetup):
         META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ProductQueryRepository:
-        return cls(*args, **(config.repository._asdict() | {"database": "product_query_db"}) | kwargs)
+    def _from_config(cls, *args, config: Config, **kwargs) -> ProductQueryRepository:
+        return cls(
+            *args,
+            **(
+                config.get_default_database()
+                | {
+                    "user": "postgres",
+                    "password": "",
+                    "host": "localhost",
+                    "port": 5432,
+                    "database": "product_query_db",
+                }
+            )
+            | kwargs
+        )
 
     async def get_all(self) -> ProductDTO:
         """Create a new row.

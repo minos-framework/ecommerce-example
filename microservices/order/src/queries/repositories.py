@@ -10,8 +10,9 @@ from minos.aggregate import (
     FieldDiff,
 )
 from minos.common import (
-    MinosConfig,
-    MinosSetup,
+    Config,
+    SetupMixin,
+    Injectable,
 )
 from sqlalchemy import (
     create_engine,
@@ -30,7 +31,8 @@ ORDER_ASC = "asc"
 ORDER_DESC = "desc"
 
 
-class OrderQueryRepository(MinosSetup):
+@Injectable("order_repository")
+class OrderQueryRepository(SetupMixin):
     """ProductInventory Repository class."""
 
     def __init__(self, *args, **kwargs):
@@ -42,8 +44,8 @@ class OrderQueryRepository(MinosSetup):
         META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> OrderQueryRepository:
-        return cls(*args, **(config.repository._asdict() | {"database": "order_query_db"}) | kwargs)
+    def _from_config(cls, *args, config: Config, **kwargs) -> OrderQueryRepository:
+        return cls(*args, **(config.get_default_database() | {"database": "order_query_db"}) | kwargs)
 
     async def create(self, **kwargs) -> None:
         """Create a new row.

@@ -7,8 +7,9 @@ from uuid import (
 )
 
 from minos.common import (
-    MinosConfig,
-    PostgreSqlMinosDatabase,
+    Config,
+    DatabaseMixin,
+    Injectable,
 )
 from sqlalchemy import (
     create_engine,
@@ -26,7 +27,8 @@ from .models import (
 )
 
 
-class TicketQueryRepository(PostgreSqlMinosDatabase):
+@Injectable("ticket_repository")
+class TicketQueryRepository(DatabaseMixin):
     """Ticket Amount repository"""
 
     def __init__(self, *args, **kwargs):
@@ -38,8 +40,8 @@ class TicketQueryRepository(PostgreSqlMinosDatabase):
         META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> TicketQueryRepository:
-        return cls(*args, **(config.repository._asdict() | {"database": "ticket_query_db"}) | kwargs)
+    def _from_config(cls, *args, config: Config, **kwargs) -> TicketQueryRepository:
+        return cls(*args, **(config.get_default_database() | {"database": "ticket_query_db"}) | kwargs)
 
     async def insert(self, uuid: UUID, version: int, code: str, total_price: float, entries) -> None:
         """Insert Payment amount

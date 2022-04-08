@@ -1,11 +1,11 @@
-from dependency_injector.wiring import (
-    Provide,
-)
 from minos.aggregate import (
     Event,
 )
 from minos.cqrs import (
     QueryService,
+)
+from minos.common import (
+    Inject,
 )
 from minos.networks import (
     Request,
@@ -20,7 +20,10 @@ from .repositories import (
 class PaymentQueryService(QueryService):
     """Payment Query Service class"""
 
-    repository: PaymentAmountRepository = Provide["payment_amount_repository"]
+    @Inject()
+    def __init__(self, repository: PaymentAmountRepository, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.repository = repository
 
     @enroute.broker.event("PaymentCreated")
     @enroute.broker.event("PaymentUpdated")

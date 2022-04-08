@@ -1,5 +1,5 @@
-from dependency_injector.wiring import (
-    Provide,
+from minos.common import (
+    Inject,
 )
 from minos.aggregate import (
     Event,
@@ -25,7 +25,10 @@ from .repositories import (
 class TicketQueryService(QueryService):
     """Ticket Query Service class."""
 
-    repository: TicketQueryRepository = Provide["ticket_repository"]
+    @Inject()
+    def __init__(self, repository: TicketQueryRepository, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.repository = repository
 
     @enroute.broker.query("GetTicketQRS")
     @enroute.rest.query(f"/tickets/{{uuid:{UUID_REGEX.pattern}}}", "GET")

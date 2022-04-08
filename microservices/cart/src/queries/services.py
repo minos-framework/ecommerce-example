@@ -1,8 +1,8 @@
-from dependency_injector.wiring import (
-    Provide,
-)
 from minos.aggregate import (
     Event,
+)
+from minos.common import (
+    Inject,
 )
 from minos.cqrs import (
     QueryService,
@@ -22,7 +22,10 @@ from .repositories import (
 class CartQueryService(QueryService):
     """Cart Query Service class"""
 
-    repository: CartQueryRepository = Provide["cart_repository"]
+    @Inject()
+    def __init__(self, repository: CartQueryRepository, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.repository = repository
 
     @enroute.rest.query("/carts/{uuid}", "GET")
     @enroute.broker.query("GetCartQRS")

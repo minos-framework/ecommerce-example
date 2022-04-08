@@ -1,5 +1,5 @@
-import logging
-import sys
+
+
 from pathlib import (
     Path,
 )
@@ -12,7 +12,6 @@ from minos.common import (
     EntrypointLauncher,
 )
 
-logging.getLogger("aiohttp.access").setLevel(logging.WARNING)
 
 app = typer.Typer()
 
@@ -24,7 +23,7 @@ def start(
     )
 ):
     """Start the microservice."""
-    launcher = EntrypointLauncher.from_config(file_path, external_modules=[sys.modules["src"]])
+    launcher = EntrypointLauncher.from_config(file_path)
     launcher.launch()
 
 

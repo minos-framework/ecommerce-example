@@ -25,7 +25,7 @@ from minos.common import (
     DependencyInjector,
 )
 from minos.common.testing import (
-    PostgresAsyncTestCase,
+    DatabaseMinosTestCase,
 )
 from minos.networks import (
     InMemoryRequest,
@@ -43,7 +43,7 @@ from tests.utils import (
 )
 
 
-class TestCredentialsQueryService(PostgresAsyncTestCase):
+class TestCredentialsQueryService(DatabaseMinosTestCase):
     CONFIG_FILE_PATH = Path(__file__).parents[2] / "config.yml"
 
     async def asyncSetUp(self) -> None:

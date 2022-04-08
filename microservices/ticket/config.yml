@@ -3,21 +3,21 @@ service:
   aggregate: src.aggregates.Ticket
   injections:
     http_connector: minos.plugins.aiohttp.AioHttpConnector
-    lock_pool: minos.common.PostgreSqlLockPool
-    postgresql_pool: minos.common.PostgreSqlPool
-    broker_publisher: minos.plugins.kafka.PostgreSqlQueuedKafkaBrokerPublisher
-    broker_subscriber_builder: minos.plugins.kafka.PostgreSqlQueuedKafkaBrokerSubscriberBuilder
+    lock_pool: minos.common.DatabaseLockPool
+    database_pool: minos.common.DatabaseClientPool
+    broker_publisher: minos.plugins.kafka.KafkaBrokerPublisher
+    broker_subscriber_builder: minos.plugins.kafka.KafkaBrokerSubscriberBuilder
     broker_pool: minos.networks.BrokerClientPool
-    transaction_repository: minos.aggregate.PostgreSqlTransactionRepository
-    event_repository: minos.aggregate.PostgreSqlEventRepository
-    snapshot_repository: minos.aggregate.PostgreSqlSnapshotRepository
+    transaction_repository: minos.aggregate.DatabaseTransactionRepository
+    event_repository: minos.aggregate.DatabaseEventRepository
+    snapshot_repository: minos.aggregate.DatabaseSnapshotRepository
     saga_manager: minos.saga.SagaManager
     discovery: minos.networks.DiscoveryConnector
     ticket_repository: src.TicketQueryRepository
   services:
-    - minos.networks.BrokerHandlerPort
+    - minos.networks.BrokerPort
     - minos.networks.HttpPort
-    - minos.networks.PeriodicTaskSchedulerPort
+    - minos.networks.PeriodicPort
 routers:
   - minos.networks.BrokerRouter
   - minos.networks.PeriodicRouter
@@ -35,9 +35,8 @@ rest:
   host: 0.0.0.0
   port: 8085
 broker:
-  host: localhost
-  port: 9092
   queue:
+    client: minos.common.AiopgDatabaseClient
     database: ticket_db
     user: minos
     password: min0s
@@ -46,12 +45,14 @@ broker:
     records: 1000
     retry: 2
 repository:
+  client: minos.common.AiopgDatabaseClient
   database: ticket_db
   user: minos
   password: min0s
   host: localhost
   port: 5432
 snapshot:
+  client: minos.common.AiopgDatabaseClient
   database: ticket_db
   user: minos
   password: min0s

@@ -10,8 +10,9 @@ from uuid import (
 )
 
 from minos.common import (
-    MinosConfig,
-    MinosSetup,
+    Config,
+    SetupMixin,
+    Injectable,
 )
 from sqlalchemy import (
     and_,
@@ -33,7 +34,8 @@ from .models import (
 )
 
 
-class CredentialsQueryRepository(MinosSetup):
+@Injectable("credentials_repository")
+class CredentialsQueryRepository(SetupMixin):
     """Credentials Repository class."""
 
     def __init__(self, *args, **kwargs):
@@ -44,8 +46,8 @@ class CredentialsQueryRepository(MinosSetup):
         META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> CredentialsQueryRepository:
-        return cls(*args, **(config.repository._asdict() | {"database": "auth_query_db"}) | kwargs)
+    def _from_config(cls, *args, config: Config, **kwargs) -> CredentialsQueryRepository:
+        return cls(*args, **(config.get_default_database() | {"database": "auth_query_db"}) | kwargs)
 
     async def create_credentials(
         self, uuid: UUID, username: str, password: str, active: bool, user: Union[Customer, UUID]

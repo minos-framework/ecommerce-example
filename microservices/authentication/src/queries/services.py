@@ -2,15 +2,14 @@ import base64
 import time
 
 import jwt
-from dependency_injector.wiring import (
-    Provide,
-    inject,
-)
 from jwt.exceptions import (
     InvalidTokenError,
 )
 from minos.aggregate import (
     Event,
+)
+from minos.common import (
+    Inject,
 )
 from minos.cqrs import (
     QueryService,
@@ -35,8 +34,8 @@ from .repositories import (
 class CredentialsQueryService(QueryService):
     """Credentials Query Service class."""
 
-    @inject
-    def __init__(self, *args, repository: CredentialsQueryRepository = Provide["credentials_repository"], **kwargs):
+    @Inject()
+    def __init__(self, repository: CredentialsQueryRepository, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.repository = repository
 

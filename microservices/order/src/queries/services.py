@@ -1,12 +1,10 @@
 import logging
 
-from dependency_injector.wiring import (
-    Provide,
-)
 from minos.aggregate import (
     Event,
 )
 from minos.common import (
+    Inject,
     UUID_REGEX,
 )
 from minos.cqrs import (
@@ -29,7 +27,10 @@ logger = logging.getLogger(__name__)
 class OrderQueryService(QueryService):
     """Order Query Service class."""
 
-    repository: OrderQueryRepository = Provide["order_repository"]
+    @Inject()
+    def __init__(self, repository: OrderQueryRepository, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.repository = repository
 
     @enroute.broker.query("GetOrderQRS")
     @enroute.rest.query(f"/orders/{{uuid:{UUID_REGEX.pattern}}}", "GET")

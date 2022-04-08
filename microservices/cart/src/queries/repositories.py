@@ -1,25 +1,18 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
-from minos.aggregate import (
-    FieldDiff,
-)
+from minos.aggregate import FieldDiff
 from minos.common import (
-    MinosConfig,
-    MinosSetup,
+    Config,
+    SetupMixin,
+    Injectable,
 )
 from sqlalchemy import (
     and_,
     create_engine,
 )
-from sqlalchemy.orm import (
-    sessionmaker,
-)
+from sqlalchemy.orm import sessionmaker
 
 from .models import (
     CART_ITEM_TABLE,
@@ -30,7 +23,8 @@ from .models import (
 )
 
 
-class CartQueryRepository(MinosSetup):
+@Injectable("cart_repository")
+class CartQueryRepository(SetupMixin):
     """Cart inventory repository"""
 
     def __init__(self, *args, **kwargs):
@@ -42,8 +36,15 @@ class CartQueryRepository(MinosSetup):
         META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> CartQueryRepository:
-        return cls(*args, **(config.repository._asdict() | {"database": "cart_query_db"}) | kwargs)
+    def _from_config(cls, *args, config: Config, **kwargs) -> CartQueryRepository:
+        return cls(
+            *args,
+            **(
+                config.get_default_database()
+                | {"user": "postgres", "password": "", "host": "localhost", "port": 5432, "database": "cart_query_db"}
+            )
+            | kwargs
+        )
 
     async def create_cart(self, uuid: UUID, version: int, user_id: int) -> None:
         """Insert Payment amount

@@ -10,8 +10,9 @@ from minos.aggregate import (
     FieldDiff,
 )
 from minos.common import (
-    MinosConfig,
-    MinosSetup,
+    Config,
+    SetupMixin,
+    Injectable,
 )
 from sqlalchemy import (
     asc,
@@ -34,7 +35,8 @@ ORDER_ASC = "asc"
 ORDER_DESC = "desc"
 
 
-class ReviewQueryRepository(MinosSetup):
+@Injectable("review_repository")
+class ReviewQueryRepository(SetupMixin):
     """ProductInventory Repository class."""
 
     def __init__(self, *args, **kwargs):
@@ -46,8 +48,8 @@ class ReviewQueryRepository(MinosSetup):
         META.create_all(self.engine)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> ReviewQueryRepository:
-        return cls(*args, **(config.repository._asdict() | {"database": "review_query_db"}) | kwargs)
+    def _from_config(cls, *args, config: Config, **kwargs) -> ReviewQueryRepository:
+        return cls(*args, **(config.get_default_database() | {"database": "review_query_db"}) | kwargs)
 
     async def create(self, **kwargs) -> None:
         """Create a new row.

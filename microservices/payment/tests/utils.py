@@ -17,9 +17,9 @@ from minos.aggregate import (
 from minos.common import (
     DependencyInjector,
     Lock,
-    MinosConfig,
+    Config,
     MinosPool,
-    MinosSetup,
+    SetupMixin,
 )
 from minos.saga import (
     SagaContext,
@@ -27,14 +27,14 @@ from minos.saga import (
 )
 
 
-class _FakeBroker(MinosSetup):
+class _FakeBroker(SetupMixin):
     """For testing purposes."""
 
     async def send(self, *args, **kwargs) -> None:
         """For testing purposes."""
 
 
-class _FakeSagaManager(MinosSetup):
+class _FakeSagaManager(SetupMixin):
     """For testing purposes."""
 
     async def run(self, *args, **kwargs) -> UUID:
@@ -83,10 +83,10 @@ def build_dependency_injector() -> DependencyInjector:
     )
 
 
-def build_config() -> MinosConfig:
+def build_config() -> Config:
     """For testing purposes"""
 
-    return MinosConfig(DEFAULT_CONFIG_FILE_PATH)
+    return Config(DEFAULT_CONFIG_FILE_PATH)
 
 
 DEFAULT_CONFIG_FILE_PATH = Path(__file__).parents[1] / "config.yml"

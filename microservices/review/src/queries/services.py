@@ -1,5 +1,5 @@
-from dependency_injector.wiring import (
-    Provide,
+from minos.common import (
+    Inject,
 )
 from minos.aggregate import (
     Event,
@@ -22,7 +22,10 @@ from .repositories import (
 class ReviewQueryService(QueryService):
     """Product Query Service class."""
 
-    repository: ReviewQueryRepository = Provide["review_repository"]
+    @Inject()
+    def __init__(self, repository: ReviewQueryRepository, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.repository = repository
 
     @enroute.rest.query("/reviews/product/{uuid}", "GET")
     @enroute.broker.query("GetProductReviews")

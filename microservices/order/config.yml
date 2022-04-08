@@ -1,23 +1,72 @@
-service:
-  name: order
-  aggregate: src.aggregates.Order
-  injections:
-    http_connector: minos.plugins.aiohttp.AioHttpConnector
-    lock_pool: minos.common.PostgreSqlLockPool
-    postgresql_pool: minos.common.PostgreSqlPool
-    broker_publisher: minos.plugins.kafka.PostgreSqlQueuedKafkaBrokerPublisher
-    broker_subscriber_builder: minos.plugins.kafka.PostgreSqlQueuedKafkaBrokerSubscriberBuilder
-    broker_pool: minos.networks.BrokerClientPool
-    transaction_repository: minos.aggregate.PostgreSqlTransactionRepository
-    event_repository: minos.aggregate.PostgreSqlEventRepository
-    snapshot_repository: minos.aggregate.PostgreSqlSnapshotRepository
-    saga_manager: minos.saga.SagaManager
-    discovery: minos.networks.DiscoveryConnector
-    order_repository: src.OrderQueryRepository
-  services:
-    - minos.networks.BrokerHandlerPort
-    - minos.networks.HttpPort
-    - minos.networks.PeriodicTaskSchedulerPort
+version: 2
+name: order
+injections:
+  - src.OrderQueryRepository
+databases:
+  default:
+    client: minos.common.AiopgDatabaseClient
+    database: order_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+  snapshot:
+    client: minos.common.AiopgDatabaseClient
+    flavor: mysql
+    database: order_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+  broker:
+    client: minos.common.AiopgDatabaseClient
+    database: order_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+  saga:
+    path: "./order.lmdb"
+interfaces:
+  broker:
+    port: minos.networks.BrokerPort
+    common:
+      queue:
+        records: 1000
+        retry: 2
+    publisher:
+      client: minos.plugins.kafka.KafkaBrokerPublisher
+      queue: minos.networks.DatabaseBrokerPublisherQueue
+    subscriber:
+      client: minos.plugins.kafka.KafkaBrokerSubscriber
+      queue: minos.networks.DatabaseBrokerSubscriberQueue
+      validator: minos.networks.DatabaseBrokerSubscriberDuplicateValidator
+  http:
+    port: minos.networks.HttpPort
+    connector:
+      client: minos.plugins.aiohttp.AioHttpConnector
+      host: 0.0.0.0
+      port: 8082
+  periodic:
+    port: minos.networks.PeriodicPort
+pools:
+  lock: minos.common.DatabaseLockPool
+  database: minos.common.DatabaseClientPool
+  broker: minos.networks.BrokerClientPool
+discovery:
+  connector: minos.networks.DiscoveryConnector
+  client: minos.plugins.minos_discovery.MinosDiscoveryClient
+  host: localhost
+  port: 5567
+saga:
+  manager: minos.saga.SagaManager
+aggregate:
+  entities:
+    - src.aggregates.Order
+  repositories:
+    transaction: minos.aggregate.DatabaseTransactionRepository
+    event: minos.aggregate.DatabaseEventRepository
+    snapshot: minos.aggregate.DatabaseSnapshotRepository
 routers:
   - minos.networks.BrokerRouter
   - minos.networks.PeriodicRouter
@@ -31,36 +80,3 @@ services:
   - minos.saga.SagaService
   - src.OrderQueryService
   - src.OrderCommandService
-rest:
-  host: 0.0.0.0
-  port: 8082
-broker:
-  host: localhost
-  port: 9092
-  queue:
-    database: order_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-    records: 1000
-    retry: 2
-repository:
-  database: order_db
-  user: minos
-  password: min0s
-  host: localhost
-  port: 5432
-snapshot:
-  database: order_db
-  user: minos
-  password: min0s
-  host: localhost
-  port: 5432
-saga:
-  storage:
-    path: "./order.lmdb"
-discovery:
-  client: minos.plugins.minos_discovery.MinosDiscoveryClient
-  host: localhost
-  port: 5567

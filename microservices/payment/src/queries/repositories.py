@@ -7,20 +7,24 @@ from uuid import (
 )
 
 from minos.common import (
-    MinosConfig,
-    PostgreSqlMinosDatabase,
+    AiopgDatabaseOperation,
+    Config,
+    DatabaseMixin,
+    Injectable,
 )
 
 
-class PaymentAmountRepository(PostgreSqlMinosDatabase):
+@Injectable("payment_amount_repository")
+class PaymentAmountRepository(DatabaseMixin):
     """Payment inventory repository"""
 
     async def _setup(self) -> None:
-        await self.submit_query(_CREATE_TABLE)
+        operation = AiopgDatabaseOperation(_CREATE_TABLE)
+        await self.submit_query(operation)
 
     @classmethod
-    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> PaymentAmountRepository:
-        return cls(*args, **(config.repository._asdict() | {"database": "payment_query_db"}) | kwargs)
+    def _from_config(cls, *args, config: Config, **kwargs) -> PaymentAmountRepository:
+        return cls(*args, **(config.get_default_database() | {"database": "payment_query_db"}) | kwargs)
 
     async def insert_payment_amount(self, uuid: UUID, amount: int) -> None:
         """ Insert Payment amount
