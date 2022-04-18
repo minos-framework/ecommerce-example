@@ -7,10 +7,12 @@ from uuid import (
 )
 
 from minos.common import (
-    AiopgDatabaseOperation,
     Config,
     DatabaseMixin,
     Injectable,
+)
+from minos.plugins.aiopg import (
+    AiopgDatabaseOperation,
 )
 
 
@@ -20,7 +22,7 @@ class PaymentAmountRepository(DatabaseMixin):
 
     async def _setup(self) -> None:
         operation = AiopgDatabaseOperation(_CREATE_TABLE)
-        await self.submit_query(operation)
+        await self.execute_on_database(operation)
 
     @classmethod
     def _from_config(cls, *args, config: Config, **kwargs) -> PaymentAmountRepository:
@@ -32,14 +34,16 @@ class PaymentAmountRepository(DatabaseMixin):
         :param amount: Amount in float format
         :return: Nothing
         """
-        await self.submit_query(_INSERT_PAYMENT_QUERY, {"uuid": uuid, "amount": amount})
+        operation = AiopgDatabaseOperation(_INSERT_PAYMENT_QUERY, {"uuid": uuid, "amount": amount})
+        await self.execute_on_database(operation)
 
     async def delete(self, uuid: UUID) -> None:
         """ Delete Payment
         :param uuid: UUID
         :return: Nothing
         """
-        await self.submit_query(_DELETE_PAYMENT_QUERY, {"uuid": uuid})
+        operation = AiopgDatabaseOperation(_DELETE_PAYMENT_QUERY, {"uuid": uuid})
+        await self.execute_on_database(operation)
 
 
 _CREATE_TABLE = """

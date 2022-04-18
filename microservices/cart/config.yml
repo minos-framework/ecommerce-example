@@ -35,13 +35,13 @@ rest:
   port: 8088
 broker:
   queue:
-    client: minos.common.AiopgDatabaseClient
+    client: minos.plugins.aiopg.AiopgDatabaseClient
     database: cart_db
 repository:
-  client: minos.common.AiopgDatabaseClient
+  client: minos.plugins.aiopg.AiopgDatabaseClient
   database: cart_db
 snapshot:
-  client: minos.common.AiopgDatabaseClient
+  client: minos.plugins.aiopg.AiopgDatabaseClient
   database: cart_db
 discovery:
   client: minos.plugins.minos_discovery.MinosDiscoveryClient

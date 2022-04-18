@@ -4,7 +4,7 @@ injections:
   - src.ProductQueryRepository
 databases:
   default:
-    client: minos.common.AiopgDatabaseClient
+    client: minos.plugins.aiopg.AiopgDatabaseClient
     database: product_db
   saga:
     path: "./product.lmdb"

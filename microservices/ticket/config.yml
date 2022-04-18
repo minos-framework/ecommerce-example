@@ -36,7 +36,7 @@ rest:
   port: 8085
 broker:
   queue:
-    client: minos.common.AiopgDatabaseClient
+    client: minos.plugins.aiopg.AiopgDatabaseClient
     database: ticket_db
     user: minos
     password: min0s
@@ -45,14 +45,14 @@ broker:
     records: 1000
     retry: 2
 repository:
-  client: minos.common.AiopgDatabaseClient
+  client: minos.plugins.aiopg.AiopgDatabaseClient
   database: ticket_db
   user: minos
   password: min0s
   host: localhost
   port: 5432
 snapshot:
-  client: minos.common.AiopgDatabaseClient
+  client: minos.plugins.aiopg.AiopgDatabaseClient
   database: ticket_db
   user: minos
   password: min0s

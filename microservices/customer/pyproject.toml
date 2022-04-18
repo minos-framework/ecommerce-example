@@ -15,6 +15,7 @@ minos-microservice-cqrs = { path = "../../../minos-python/packages/core/minos-mi
 minos-broker-kafka = { path = "../../../minos-python/packages/plugins/minos-broker-kafka", develop = true }
 minos-discovery-minos = { path = "../../../minos-python/packages/plugins/minos-discovery-minos", develop = true }
 minos-http-aiohttp = { path = "../../../minos-python/packages/plugins/minos-http-aiohttp", develop = true }
+minos-database-aiopg = { path = "../../../minos-python/packages/plugins/minos-database-aiopg", develop = true }
 typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
