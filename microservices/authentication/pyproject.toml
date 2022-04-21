@@ -16,6 +16,7 @@ minos-broker-kafka = { path = "../../../minos-python/packages/plugins/minos-brok
 minos-discovery-minos = { path = "../../../minos-python/packages/plugins/minos-discovery-minos", develop = true }
 minos-http-aiohttp = { path = "../../../minos-python/packages/plugins/minos-http-aiohttp", develop = true }
 minos-database-aiopg = { path = "../../../minos-python/packages/plugins/minos-database-aiopg", develop = true }
+minos-database-lmdb = { path = "../../../minos-python/packages/plugins/minos-database-lmdb", develop = true }
 typer = "^0.3.2"
 PyJWT = "^2.1.0"
 SQLAlchemy = "1.4.22"

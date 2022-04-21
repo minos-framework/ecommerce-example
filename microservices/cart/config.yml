@@ -33,6 +33,9 @@ services:
   - src.CartQueryService
 rest:
   port: 8088
+saga:
+  storage:
+    client: minos.plugins.lmdb.LmdbDatabaseClient
 broker:
   queue:
     client: minos.plugins.aiopg.AiopgDatabaseClient

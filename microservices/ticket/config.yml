@@ -60,6 +60,7 @@ snapshot:
   port: 5432
 saga:
   storage:
+    client: minos.plugins.lmdb.LmdbDatabaseClient
     path: "./ticket.lmdb"
 discovery:
   client: minos.plugins.minos_discovery.MinosDiscoveryClient
