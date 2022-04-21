@@ -351,6 +351,7 @@ aiopg = "^1.2.1"
 minos-microservice-aggregate = "^0.7.0*"
 minos-microservice-common = "^0.7.0*"
 minos-microservice-networks = "^0.7.0*"
+minos-microservice-transactions = "^0.0.0*"
 psycopg2-binary = "^2.9.3"
 
 [package.source]
@@ -426,6 +427,7 @@ develop = true
 cached-property = "^1.5.2"
 minos-microservice-common = "^0.7.0*"
 minos-microservice-networks = "^0.7.0*"
+minos-microservice-transactions = "^0.0.0*"
 
 [package.source]
 type = "directory"
@@ -445,7 +447,6 @@ aiomisc = ">=14.0.3,<15.8.0"
 cached-property = "^1.5.2"
 dependency-injector = "^4.32.2"
 fastavro = "^1.4.0"
-lmdb = "^1.2.1"
 orjson = "^3.5.2"
 PyYAML = ">=5.4.1,<7.0.0"
 uvloop = "^0.16.0"
@@ -500,13 +501,30 @@ develop = true
 
 [package.dependencies]
 cached-property = "^1.5.2"
-minos-microservice-aggregate = "^0.7.0*"
 minos-microservice-common = "^0.7.0*"
 minos-microservice-networks = "^0.7.0*"
+minos-microservice-transactions = "^0.0.0*"
 
 [package.source]
 type = "directory"
 url = "../../../minos-python/packages/core/minos-microservice-saga"
+
+[[package]]
+name = "minos-microservice-transactions"
+version = "0.0.0"
+description = "The transactions core of the Minos Framework"
+category = "main"
+optional = false
+python-versions = "^3.9"
+develop = true
+
+[package.dependencies]
+cached-property = "^1.5.2"
+minos-microservice-common = "^0.7.0*"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/core/minos-microservice-transactions"
 
 [[package]]
 name = "more-itertools"
@@ -751,7 +769,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "f44c37ac53c6554248b9a2a07dadaf3d43a87c6d11a6fb4eb83bfc86afefa54b"
+content-hash = "f7dbfaf9cb14c0d58c2da336b3ebcfe8dc131ab2b84e7140402e26138e48e5cf"
 
 [metadata.files]
 aiohttp = [
@@ -1193,6 +1211,7 @@ minos-microservice-common = []
 minos-microservice-cqrs = []
 minos-microservice-networks = []
 minos-microservice-saga = []
+minos-microservice-transactions = []
 more-itertools = [
     {file = "more-itertools-8.12.0.tar.gz", hash = "sha256:7dc6ad46f05f545f900dd59e8dfb4e84a4827b97b3cfecb175ea0c7d247f6064"},
     {file = "more_itertools-8.12.0-py3-none-any.whl", hash = "sha256:43e6dd9942dffd72661a2c4ef383ad7da1e6a3e968a927ad7a6083ab410a688b"},

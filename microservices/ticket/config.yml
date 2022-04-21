@@ -8,7 +8,7 @@ service:
     broker_publisher: minos.plugins.kafka.KafkaBrokerPublisher
     broker_subscriber_builder: minos.plugins.kafka.KafkaBrokerSubscriberBuilder
     broker_pool: minos.networks.BrokerClientPool
-    transaction_repository: minos.aggregate.DatabaseTransactionRepository
+    transaction_repository: minos.transactions.DatabaseTransactionRepository
     event_repository: minos.aggregate.DatabaseEventRepository
     snapshot_repository: minos.aggregate.DatabaseSnapshotRepository
     saga_manager: minos.saga.SagaManager
@@ -26,7 +26,6 @@ middleware:
   - minos.saga.transactional_command
 services:
   - minos.networks.SystemService
-  - minos.aggregate.TransactionService
   - minos.aggregate.SnapshotService
   - minos.saga.SagaService
   - src.TicketQueryService

@@ -39,7 +39,7 @@ aggregate:
   entities:
     - src.aggregates.Product
   repositories:
-    transaction: minos.aggregate.DatabaseTransactionRepository
+    transaction: minos.transactions.DatabaseTransactionRepository
     event: minos.aggregate.DatabaseEventRepository
     snapshot: minos.aggregate.DatabaseSnapshotRepository
 routers:
@@ -50,7 +50,6 @@ middleware:
   - minos.saga.transactional_command
 services:
   - minos.networks.SystemService
-  - minos.aggregate.TransactionService
   - minos.aggregate.SnapshotService
   - minos.saga.SagaService
   - src.ProductQueryService

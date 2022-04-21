@@ -8,6 +8,7 @@ packages = [{ include = "src" }]
 [tool.poetry.dependencies]
 python = "^3.9"
 minos-microservice-common = { path = "../../../minos-python/packages/core/minos-microservice-common", develop = true }
+minos-microservice-transactions = { path = "../../../minos-python/packages/core/minos-microservice-transactions", develop = true }
 minos-microservice-networks = { path = "../../../minos-python/packages/core/minos-microservice-networks", develop = true }
 minos-microservice-aggregate = { path = "../../../minos-python/packages/core/minos-microservice-aggregate", develop = true }
 minos-microservice-saga = { path = "../../../minos-python/packages/core/minos-microservice-saga", develop = true }

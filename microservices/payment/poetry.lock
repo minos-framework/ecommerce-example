@@ -348,6 +348,7 @@ aiopg = "^1.2.1"
 minos-microservice-aggregate = "^0.7.0*"
 minos-microservice-common = "^0.7.0*"
 minos-microservice-networks = "^0.7.0*"
+minos-microservice-transactions = "^0.0.0*"
 psycopg2-binary = "^2.9.3"
 
 [package.source]
@@ -423,6 +424,7 @@ develop = true
 cached-property = "^1.5.2"
 minos-microservice-common = "^0.7.0*"
 minos-microservice-networks = "^0.7.0*"
+minos-microservice-transactions = "^0.0.0*"
 
 [package.source]
 type = "directory"
@@ -442,7 +444,6 @@ aiomisc = ">=14.0.3,<15.8.0"
 cached-property = "^1.5.2"
 dependency-injector = "^4.32.2"
 fastavro = "^1.4.0"
-lmdb = "^1.2.1"
 orjson = "^3.5.2"
 PyYAML = ">=5.4.1,<7.0.0"
 uvloop = "^0.16.0"
@@ -497,13 +498,30 @@ develop = true
 
 [package.dependencies]
 cached-property = "^1.5.2"
-minos-microservice-aggregate = "^0.7.0*"
 minos-microservice-common = "^0.7.0*"
 minos-microservice-networks = "^0.7.0*"
+minos-microservice-transactions = "^0.0.0*"
 
 [package.source]
 type = "directory"
 url = "../../../minos-python/packages/core/minos-microservice-saga"
+
+[[package]]
+name = "minos-microservice-transactions"
+version = "0.0.0"
+description = "The transactions core of the Minos Framework"
+category = "main"
+optional = false
+python-versions = "^3.9"
+develop = true
+
+[package.dependencies]
+cached-property = "^1.5.2"
+minos-microservice-common = "^0.7.0*"
+
+[package.source]
+type = "directory"
+url = "../../../minos-python/packages/core/minos-microservice-transactions"
 
 [[package]]
 name = "multidict"
@@ -701,7 +719,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "e1c2644fcb6b15870c3d3c5e0384ca3380b3b013ad2efa1d13f7b1257716bc0d"
+content-hash = "73f73b02252c1a08851df886dff4c16c63be833fb95174bd09ce805c704c06ff"
 
 [metadata.files]
 aiohttp = [
@@ -1090,6 +1108,7 @@ minos-microservice-common = []
 minos-microservice-cqrs = []
 minos-microservice-networks = []
 minos-microservice-saga = []
+minos-microservice-transactions = []
 multidict = [
     {file = "multidict-6.0.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:0b9e95a740109c6047602f4db4da9949e6c5945cefbad34a1299775ddc9a62e2"},
     {file = "multidict-6.0.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:ac0e27844758d7177989ce406acc6a83c16ed4524ebc363c1f748cba184d89d3"},
