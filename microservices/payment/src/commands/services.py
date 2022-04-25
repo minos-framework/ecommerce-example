@@ -7,18 +7,13 @@ from minos.networks import (
     enroute,
 )
 
-from ..aggregates import (
-    Payment,
-)
-
 
 class PaymentCommandService(CommandService):
     """Payment Command Service class"""
 
-    @staticmethod
     @enroute.rest.command("/payments", "POST")
     @enroute.broker.command("CreatePayment")
-    async def create_payment(request: Request) -> Response:
+    async def create_payment(self, request: Request) -> Response:
         """Create a payment.
 
         :param request: A request instance containing the information to build a payment instance.
@@ -27,8 +22,5 @@ class PaymentCommandService(CommandService):
         content = await request.content()
         credit_number = content["credit_number"]
         amount = content["amount"]
-        status = "created"
-
-        payment = await Payment.create(credit_number, amount, status)
-
+        payment = await self.aggregate.create_payment(credit_number, amount)
         return Response(payment)

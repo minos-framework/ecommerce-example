@@ -7,18 +7,6 @@ from minos.networks import (
     ResponseException,
     enroute,
 )
-from minos.saga import (
-    SagaContext,
-    SagaStatus,
-)
-
-from ..aggregates import (
-    PaymentDetail,
-    ShipmentDetail,
-)
-from .sagas import (
-    CREATE_ORDER,
-)
 
 
 class OrderCommandService(CommandService):
@@ -37,21 +25,9 @@ class OrderCommandService(CommandService):
         payment = content["payment_detail"]
         shipment = content["shipment_detail"]
 
-        payment_detail = PaymentDetail(**payment)
-        shipment_detail = ShipmentDetail(**shipment)
-
-        execution = await self.saga_manager.run(
-            CREATE_ORDER,
-            context=SagaContext(
-                cart_uuid=cart_uuid,
-                customer_uuid=customer_uuid,
-                payment_detail=payment_detail,
-                shipment_detail=shipment_detail,
-            ),
-            raise_on_error=False,
-        )
-
-        if execution.status == SagaStatus.Finished:
-            return Response(dict(execution.context["order"]))
-        else:
+        try:
+            order = await self.aggregate.create_order(cart_uuid, customer_uuid, payment, shipment)
+        except ValueError:
             raise ResponseException("An error occurred during order creation.")
+
+        return Response(order)

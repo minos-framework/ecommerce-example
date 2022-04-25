@@ -12,19 +12,13 @@ from minos.networks import (
     enroute,
 )
 
-from ..aggregates import (
-    Address,
-    Customer,
-)
-
 
 class CustomerCommandService(CommandService):
     """Customer Service class"""
 
-    @staticmethod
     @enroute.rest.command("/customers", "POST")
     @enroute.broker.command("CreateCustomer")
-    async def create_customer(request: Request) -> Response:
+    async def create_customer(self, request: Request) -> Response:
         """Create a new Customer instance.
 
         :param request: The ``Request`` that contains the needed information to create the Customer.
@@ -34,16 +28,15 @@ class CustomerCommandService(CommandService):
 
         name = content["name"]
         surname = content["surname"]
-        address = Address(**content["address"])
+        address = content["address"]
 
-        customer = await Customer.create(name, surname, address)
+        customer = await self.aggregate.create_customer(name, surname, address)
 
         return Response(customer)
 
-    @staticmethod
     @enroute.rest.command(f"/customers/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
     @enroute.broker.command("DeleteCustomer")
-    async def delete_customer(request: Request) -> None:
+    async def delete_customer(self, request: Request) -> None:
         """Remove a Customer instance.
 
         :param request: The ``Request`` that contains the needed customer identifier.
@@ -61,8 +54,6 @@ class CustomerCommandService(CommandService):
             raise ResponseException("The given request could not be parsed.")
 
         try:
-            customer = await Customer.get(uuid)
+            await self.aggregate.delete_customer(uuid)
         except Exception:
             raise ResponseException("The requested user could not be retrieved from the database.")
-
-        await customer.delete()

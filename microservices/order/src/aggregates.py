@@ -9,7 +9,11 @@ from enum import (
     Enum,
 )
 from typing import (
+    Any,
     Optional,
+)
+from uuid import (
+    UUID,
 )
 
 from minos.aggregate import (
@@ -21,9 +25,17 @@ from minos.aggregate import (
     RootEntity,
     ValueObject,
 )
+from minos.common import (
+    Inject,
+)
 from minos.networks import (
     BrokerMessageV1,
     BrokerMessageV1Payload,
+)
+from minos.saga import (
+    SagaContext,
+    SagaManager,
+    SagaStatus,
 )
 
 
@@ -108,6 +120,38 @@ class Customer(ExternalEntity):
 class OrderAggregate(Aggregate[Order]):
     """Order Aggregate class."""
 
+    @Inject()
+    def __init__(self, *args, saga_manager: SagaManager, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.saga_manager = saga_manager
+
     async def something(self):
         message = BrokerMessageV1("foo", BrokerMessageV1Payload("bar"),)
         await self.broker_publisher.send(message)
+
+    async def create_order(
+        self, cart_uuid: UUID, customer_uuid: UUID, payment: dict[str, Any], shipment: dict[str, Any]
+    ) -> Order:
+        """TODO"""
+        from .commands import (
+            CREATE_ORDER,
+        )
+
+        payment_detail = PaymentDetail(**payment)
+        shipment_detail = ShipmentDetail(**shipment)
+
+        execution = await self.saga_manager.run(
+            CREATE_ORDER,
+            context=SagaContext(
+                cart_uuid=cart_uuid,
+                customer_uuid=customer_uuid,
+                payment_detail=payment_detail,
+                shipment_detail=shipment_detail,
+            ),
+            raise_on_error=False,
+        )
+
+        if execution.status != SagaStatus.Finished:
+            raise ValueError("An error occurred during order creation.")
+
+        return execution.context["order"]

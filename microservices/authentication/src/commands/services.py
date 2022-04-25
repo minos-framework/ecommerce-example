@@ -12,15 +12,9 @@ from minos.networks import (
     ResponseException,
     enroute,
 )
-from minos.saga import (
-    SagaContext,
-)
 
 from ..aggregates import (
     Credentials,
-)
-from .sagas import (
-    CREATE_CREDENTIALS_SAGA,
 )
 
 logger = logging.getLogger(__name__)
@@ -44,14 +38,10 @@ class CredentialsCommandService(CommandService):
         metadata = {k: v for k, v in content.items() if k not in {"username", "password"}}
 
         try:
-            execution = await self.saga_manager.run(
-                definition=CREATE_CREDENTIALS_SAGA,
-                context=SagaContext(username=username, password=password, metadata=metadata),
-            )
+            credentials = await self.aggregate.create_credentials(username, password, metadata)
         except Exception as exc:
             raise ResponseException(repr(exc))
 
-        credentials = execution.context["credentials"]
         return Response({"user": credentials.user})
 
     @enroute.rest.command("/login", "DELETE")
@@ -65,11 +55,9 @@ class CredentialsCommandService(CommandService):
         content = await request.content()
 
         try:
-            credentials = await Credentials.get(content["uuid"])
+            await self.aggregate.delete_credentials(content["uuid"])
         except Exception as exc:
             raise ResponseException(f"The credentials could not be retrieved: {exc}")
-
-        await credentials.delete()
 
     @enroute.broker.event("CustomerDeleted")
     async def user_deleted(self, request: Request) -> None:
@@ -82,13 +70,4 @@ class CredentialsCommandService(CommandService):
         diff = await request.content()
         user = diff.uuid
 
-        entries = {credentials async for credentials in Credentials.find(Condition.EQUAL("user", user))}
-
-        if len(entries) == 0:
-            return
-
-        if len(entries) > 1:
-            logger.warning(f"The user identified by {user!r} had multiple associated credentials")
-
-        for credentials in entries:
-            await credentials.delete()
+        await self.aggregate.delete_credentials_by_user(user)

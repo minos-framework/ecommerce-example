@@ -8,18 +8,13 @@ from minos.networks import (
     enroute,
 )
 
-from ..aggregates import (
-    Review,
-)
-
 
 class ReviewCommandService(CommandService):
     """Product Service class"""
 
-    @staticmethod
     @enroute.broker.command("CreateReview")
     @enroute.rest.command("/reviews", "POST")
-    async def create_review(request: Request) -> Response:
+    async def create_review(self, request: Request) -> Response:
         """Create a new product instance.
 
         :param request: The ``Request`` that contains the needed information to create the product.
@@ -32,14 +27,15 @@ class ReviewCommandService(CommandService):
         description = content["description"]
         score = content["score"]
 
-        product = await Review.create(product=product, user=user, title=title, description=description, score=score)
+        product = await self.aggregate.create_review(
+            product=product, user=user, title=title, description=description, score=score
+        )
 
         return Response(product)
 
-    @staticmethod
     @enroute.broker.command("UpdateReview")
     @enroute.rest.command("/reviews/{uuid}", "PUT")
-    async def update_review(request: Request) -> Response:
+    async def update_review(self, request: Request) -> Response:
         """Create a new product instance.
 
         :param request: The ``Request`` that contains the needed information to create the product.
@@ -52,10 +48,6 @@ class ReviewCommandService(CommandService):
         else:
             uuid = content["uuid"]
 
-        review = await Review.get(uuid)
-
-        kwargs = dict(content)
-        kwargs.pop("uuid")
-        await review.update(**kwargs)
+        review = await self.aggregate.update_review(uuid, content)
 
         return Response(review)

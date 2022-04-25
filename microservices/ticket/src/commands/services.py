@@ -7,14 +7,6 @@ from minos.networks import (
     ResponseException,
     enroute,
 )
-from minos.saga import (
-    SagaContext,
-    SagaStatus,
-)
-
-from .sagas import (
-    _CREATE_TICKET,
-)
 
 
 class TicketCommandService(CommandService):
@@ -31,11 +23,9 @@ class TicketCommandService(CommandService):
         content = await request.content()
         cart_uuid = content["cart_uuid"]
 
-        execution = await self.saga_manager.run(
-            _CREATE_TICKET, context=SagaContext(cart_uuid=cart_uuid), raise_on_error=False
-        )
-
-        if execution.status == SagaStatus.Finished:
-            return Response(execution.context["ticket"])
-        else:
+        try:
+            ticket = await self.aggregate.create_ticket(cart_uuid)
+        except ValueError:
             raise ResponseException("An error occurred during order creation.")
+
+        return Response(ticket)
