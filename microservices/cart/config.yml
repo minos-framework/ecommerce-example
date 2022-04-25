@@ -1,6 +1,10 @@
 version: 2
 name: cart
 aggregate:
+  client: src.aggregates.CartAggregate
+  publisher:
+    client: minos.networks.TransactionalBrokerPublisher
+    repository: minos.networks.DatabaseBrokerPublisherTransactionRepository
   entities:
     - src.aggregates.Cart
   repositories:
@@ -44,7 +48,7 @@ services:
 databases:
   default:
     client: minos.plugins.aiopg.AiopgDatabaseClient
-    database: auth_db
+    database: cart_db
     user: minos
     password: min0s
   saga:

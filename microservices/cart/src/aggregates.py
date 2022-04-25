@@ -9,6 +9,7 @@ from minos.aggregate import (
     Ref,
     RootEntity,
 )
+from minos.aggregate import Aggregate
 
 
 class Cart(RootEntity):
@@ -31,3 +32,7 @@ class Product(ExternalEntity):
     title: str
     description: str
     price: float
+
+
+class CartAggregate(Aggregate[Cart]):
+    """Cart Aggregate class."""

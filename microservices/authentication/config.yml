@@ -1,6 +1,10 @@
 version: 2
 name: authentication
 aggregate:
+  client: src.aggregates.CredentialsAggregate
+  publisher:
+    client: minos.networks.TransactionalBrokerPublisher
+    repository: minos.networks.DatabaseBrokerPublisherTransactionRepository
   entities:
     - src.aggregates.Credentials
   repositories:

@@ -6,6 +6,7 @@ from minos.aggregate import (
     RootEntity,
     ValueObject,
 )
+from minos.aggregate import Aggregate
 
 
 class Address(ValueObject):
@@ -21,3 +22,7 @@ class Customer(RootEntity):
     address: Address
     created_at: datetime
     updated_at: datetime
+
+
+class CustomerAggregate(Aggregate[Customer]):
+    """Customer Aggregate class."""

@@ -7,6 +7,7 @@ from minos.aggregate import (
     Ref,
     RootEntity,
 )
+from minos.aggregate import Aggregate
 
 
 class Review(RootEntity):
@@ -35,3 +36,7 @@ class Customer(ExternalEntity):
     """Customer ExternalEntity class."""
 
     name: str
+
+
+class ReviewAggregate(Aggregate[Review]):
+    """Review Aggregate class."""

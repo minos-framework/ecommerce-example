@@ -1,6 +1,10 @@
 version: 2
 name: user
 aggregate:
+  client: src.aggregates.CustomerAggregate
+  publisher:
+    client: minos.networks.TransactionalBrokerPublisher
+    repository: minos.networks.DatabaseBrokerPublisherTransactionRepository
   entities:
     - src.aggregates.Customer
   repositories:

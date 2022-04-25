@@ -3,6 +3,10 @@ name: ticket
 injections:
   - src.TicketQueryRepository
 aggregate:
+  client: src.aggregates.TicketAggregate
+  publisher:
+    client: minos.networks.TransactionalBrokerPublisher
+    repository: minos.networks.DatabaseBrokerPublisherTransactionRepository
   entities:
     - src.aggregates.Ticket
   repositories:

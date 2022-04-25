@@ -3,6 +3,7 @@ from __future__ import (
 )
 
 from minos.aggregate import (
+    Aggregate,
     Entity,
     EntitySet,
     ExternalEntity,
@@ -33,3 +34,7 @@ class Product(ExternalEntity):
 
     title: str
     price: float
+
+
+class TicketAggregate(Aggregate[Ticket]):
+    """Ticket Aggregate class."""

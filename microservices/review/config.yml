@@ -3,6 +3,10 @@ name: review
 injections:
   - src.ReviewQueryRepository
 aggregate:
+  client: src.aggregates.ReviewAggregate
+  publisher:
+    client: minos.networks.TransactionalBrokerPublisher
+    repository: minos.networks.DatabaseBrokerPublisherTransactionRepository
   entities:
     - src.aggregates.Review
   repositories:

@@ -3,6 +3,10 @@ name: payment
 injections:
   - src.PaymentAmountRepository
 aggregate:
+  client: src.aggregates.PaymentAggregate
+  publisher:
+    client: minos.networks.TransactionalBrokerPublisher
+    repository: minos.networks.DatabaseBrokerPublisherTransactionRepository
   entities:
     - src.aggregates.Payment
   repositories:

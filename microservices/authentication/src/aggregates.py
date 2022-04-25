@@ -8,6 +8,7 @@ from minos.aggregate import (
     Ref,
     RootEntity,
 )
+from minos.aggregate import Aggregate
 
 
 class Credentials(RootEntity):
@@ -37,3 +38,7 @@ class Credentials(RootEntity):
 
 class Customer(ExternalEntity):
     """Customer ExternalEntity class."""
+
+
+class CredentialsAggregate(Aggregate[Credentials]):
+    """Credentials Aggregate class."""
