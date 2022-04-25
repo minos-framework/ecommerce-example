@@ -10,8 +10,13 @@ from uuid import (
 )
 
 from minos.aggregate import (
+    Aggregate,
     RootEntity,
     ValueObject,
+)
+from minos.networks import (
+    BrokerMessageV1,
+    BrokerMessageV1Payload,
 )
 
 
@@ -123,3 +128,13 @@ class Inventory(ValueObject):
         :return: An ``Inventory`` instance.
         """
         return Inventory(self.amount + amount_diff, self.reserved, self.sold)
+
+
+class ProductAggregate(Aggregate[Product]):
+    """Product Aggregate class."""
+
+    async def something(self):
+        message = BrokerMessageV1(
+            "bar", BrokerMessageV1Payload("foo"),
+        )
+        await self.broker_publisher.send(message)

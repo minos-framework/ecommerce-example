@@ -13,12 +13,17 @@ from typing import (
 )
 
 from minos.aggregate import (
-    RootEntity,
-    ExternalEntity,
+    Aggregate,
     Entity,
     EntitySet,
+    ExternalEntity,
     Ref,
+    RootEntity,
     ValueObject,
+)
+from minos.networks import (
+    BrokerMessageV1,
+    BrokerMessageV1Payload,
 )
 
 
@@ -98,3 +103,13 @@ class Customer(ExternalEntity):
 
     name: str
     surname: str
+
+
+class OrderAggregate(Aggregate[Order]):
+    """Order Aggregate class."""
+
+    async def something(self):
+        message = BrokerMessageV1(
+            "foo", BrokerMessageV1Payload("bar"),
+        )
+        await self.broker_publisher.send(message)

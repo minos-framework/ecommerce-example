@@ -62,6 +62,10 @@ discovery:
 saga:
   manager: minos.saga.SagaManager
 aggregate:
+  client: src.aggregates.OrderAggregate
+  publisher:
+      client: minos.networks.TransactionalBrokerPublisher
+      repository: minos.networks.DatabaseBrokerPublisherTransactionRepository
   entities:
     - src.aggregates.Order
   repositories:
