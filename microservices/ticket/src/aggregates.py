@@ -3,11 +3,11 @@ from __future__ import (
 )
 
 from minos.aggregate import (
-    RootEntity,
-    ExternalEntity,
     Entity,
     EntitySet,
+    ExternalEntity,
     Ref,
+    RootEntity,
 )
 
 

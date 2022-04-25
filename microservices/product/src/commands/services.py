@@ -5,8 +5,8 @@ from uuid import (
 )
 
 from minos.aggregate import (
-    NotFoundException,
     AlreadyDeletedException,
+    NotFoundException,
 )
 from minos.common import (
     UUID_REGEX,
@@ -15,10 +15,10 @@ from minos.cqrs import (
     CommandService,
 )
 from minos.networks import (
+    HttpRequest,
     Request,
     Response,
     ResponseException,
-    HttpRequest,
     enroute,
 )
 

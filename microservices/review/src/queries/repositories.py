@@ -11,8 +11,8 @@ from minos.aggregate import (
 )
 from minos.common import (
     Config,
-    SetupMixin,
     Injectable,
+    SetupMixin,
 )
 from sqlalchemy import (
     asc,

@@ -15,9 +15,9 @@ from minos.aggregate import (
     InMemoryTransactionRepository,
 )
 from minos.common import (
+    Config,
     DependencyInjector,
     Lock,
-    Config,
     MinosPool,
     SetupMixin,
 )

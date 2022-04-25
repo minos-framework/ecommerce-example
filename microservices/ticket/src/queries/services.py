@@ -1,19 +1,17 @@
-from minos.common import (
-    Inject,
-)
 from minos.aggregate import (
     Event,
 )
 from minos.common import (
     UUID_REGEX,
+    Inject,
 )
 from minos.cqrs import (
     QueryService,
 )
 from minos.networks import (
+    HttpRequest,
     Request,
     Response,
-    HttpRequest,
     enroute,
 )
 

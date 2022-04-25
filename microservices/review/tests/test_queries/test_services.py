@@ -17,8 +17,8 @@ from minos.aggregate import (
     InMemoryTransactionRepository,
 )
 from minos.common import (
-    DependencyInjector,
     Config,
+    DependencyInjector,
 )
 from minos.networks import (
     InMemoryRequest,

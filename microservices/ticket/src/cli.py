@@ -1,5 +1,3 @@
-
-
 from pathlib import (
     Path,
 )
@@ -11,7 +9,6 @@ import typer
 from minos.common import (
     EntrypointLauncher,
 )
-
 
 app = typer.Typer()
 

@@ -2,9 +2,9 @@ from minos.cqrs import (
     CommandService,
 )
 from minos.networks import (
+    HttpRequest,
     Request,
     Response,
-    HttpRequest,
     enroute,
 )
 

@@ -3,9 +3,9 @@ from __future__ import (
 )
 
 from minos.aggregate import (
-    RootEntity,
     ExternalEntity,
     Ref,
+    RootEntity,
 )
 
 

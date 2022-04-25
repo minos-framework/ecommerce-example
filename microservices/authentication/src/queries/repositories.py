@@ -11,8 +11,8 @@ from uuid import (
 
 from minos.common import (
     Config,
-    SetupMixin,
     Injectable,
+    SetupMixin,
 )
 from sqlalchemy import (
     and_,

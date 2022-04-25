@@ -15,10 +15,10 @@ from minos.cqrs import (
     QueryService,
 )
 from minos.networks import (
+    HttpRequest,
     Request,
     Response,
     ResponseException,
-    HttpRequest,
     enroute,
 )
 

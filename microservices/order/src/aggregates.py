@@ -109,7 +109,5 @@ class OrderAggregate(Aggregate[Order]):
     """Order Aggregate class."""
 
     async def something(self):
-        message = BrokerMessageV1(
-            "foo", BrokerMessageV1Payload("bar"),
-        )
+        message = BrokerMessageV1("foo", BrokerMessageV1Payload("bar"),)
         await self.broker_publisher.send(message)

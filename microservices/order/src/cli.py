@@ -10,7 +10,6 @@ from minos.common import (
     EntrypointLauncher,
 )
 
-
 app = typer.Typer()
 
 

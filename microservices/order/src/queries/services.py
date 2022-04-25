@@ -4,23 +4,24 @@ from minos.aggregate import (
     Event,
 )
 from minos.common import (
-    Inject,
     UUID_REGEX,
+    Inject,
 )
 from minos.cqrs import (
     QueryService,
 )
 from minos.networks import (
+    HttpRequest,
     Request,
     Response,
     ResponseException,
-    HttpRequest,
     enroute,
 )
 
 from .repositories import (
     OrderQueryRepository,
 )
+
 logger = logging.getLogger(__name__)
 
 

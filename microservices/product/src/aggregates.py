@@ -134,7 +134,5 @@ class ProductAggregate(Aggregate[Product]):
     """Product Aggregate class."""
 
     async def something(self):
-        message = BrokerMessageV1(
-            "bar", BrokerMessageV1Payload("foo"),
-        )
+        message = BrokerMessageV1("bar", BrokerMessageV1Payload("foo"),)
         await self.broker_publisher.send(message)
