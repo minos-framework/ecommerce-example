@@ -1,23 +1,34 @@
-service:
-  name: ticket
-  aggregate: src.aggregates.Ticket
-  injections:
-    http_connector: minos.plugins.aiohttp.AioHttpConnector
-    lock_pool: minos.common.DatabaseLockPool
-    database_pool: minos.common.DatabaseClientPool
-    broker_publisher: minos.plugins.kafka.KafkaBrokerPublisher
-    broker_subscriber_builder: minos.plugins.kafka.KafkaBrokerSubscriberBuilder
-    broker_pool: minos.networks.BrokerClientPool
-    transaction_repository: minos.transactions.DatabaseTransactionRepository
-    event_repository: minos.aggregate.DatabaseEventRepository
-    snapshot_repository: minos.aggregate.DatabaseSnapshotRepository
-    saga_manager: minos.saga.SagaManager
-    discovery: minos.networks.DiscoveryConnector
-    ticket_repository: src.TicketQueryRepository
-  services:
-    - minos.networks.BrokerPort
-    - minos.networks.HttpPort
-    - minos.networks.PeriodicPort
+version: 2
+name: ticket
+injections:
+  - src.TicketQueryRepository
+aggregate:
+  entities:
+    - src.aggregates.Ticket
+  repositories:
+    transaction: minos.transactions.DatabaseTransactionRepository
+    event: minos.aggregate.DatabaseEventRepository
+    snapshot: minos.aggregate.DatabaseSnapshotRepository
+pools:
+  lock: minos.common.DatabaseLockPool
+  database: minos.common.DatabaseClientPool
+  broker: minos.networks.BrokerClientPool
+interfaces:
+  broker:
+    port: minos.networks.BrokerPort
+    publisher:
+      client: minos.plugins.kafka.KafkaBrokerPublisher
+      queue: minos.networks.DatabaseBrokerPublisherQueue
+    subscriber:
+      client: minos.plugins.kafka.KafkaBrokerSubscriber
+      queue: minos.networks.DatabaseBrokerSubscriberQueue
+  http:
+    port: minos.networks.HttpPort
+    connector:
+      client: minos.plugins.aiohttp.AioHttpConnector
+      port: 8085
+  periodic:
+    port: minos.networks.PeriodicPort
 routers:
   - minos.networks.BrokerRouter
   - minos.networks.PeriodicRouter
@@ -30,38 +41,18 @@ services:
   - minos.saga.SagaService
   - src.TicketQueryService
   - src.TicketCommandService
-rest:
-  host: 0.0.0.0
-  port: 8085
-broker:
-  queue:
+databases:
+  default:
     client: minos.plugins.aiopg.AiopgDatabaseClient
     database: ticket_db
     user: minos
     password: min0s
     host: localhost
     port: 5432
-    records: 1000
-    retry: 2
-repository:
-  client: minos.plugins.aiopg.AiopgDatabaseClient
-  database: ticket_db
-  user: minos
-  password: min0s
-  host: localhost
-  port: 5432
-snapshot:
-  client: minos.plugins.aiopg.AiopgDatabaseClient
-  database: ticket_db
-  user: minos
-  password: min0s
-  host: localhost
-  port: 5432
-saga:
-  storage:
+  saga:
     client: minos.plugins.lmdb.LmdbDatabaseClient
-    path: "./ticket.lmdb"
+saga:
+  manager: minos.saga.SagaManager
 discovery:
+  connector: minos.networks.DiscoveryConnector
   client: minos.plugins.minos_discovery.MinosDiscoveryClient
-  host: localhost
-  port: 5567
