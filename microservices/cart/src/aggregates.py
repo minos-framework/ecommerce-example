@@ -47,10 +47,9 @@ class Product(ExternalEntity):
 class CartAggregate(Aggregate[Cart]):
     """Cart Aggregate class."""
 
-    @staticmethod
-    async def create_cart(user: int) -> Cart:
+    async def create_cart(self, user: int) -> Cart:
         """TODO"""
-        cart = await Cart.create(user=user, entries=EntitySet())
+        cart, _ = await self.repository.create(Cart, user=user, entries=EntitySet())
         return cart
 
     async def add_cart_item(self, cart_uuid: UUID, product_uuid: UUID, quantity: int) -> UUID:
@@ -95,14 +94,13 @@ class CartAggregate(Aggregate[Cart]):
             DELETE_CART,
         )
 
-        cart = await Cart.get(uuid)
+        cart = await self.repository.get(Cart, uuid)
 
         saga_execution = await self.saga_manager.run(DELETE_CART, context=SagaContext(cart=cart))
         return saga_execution.uuid
 
-    @staticmethod
-    async def _get_cart_item(cart_id: UUID, product_uuid: UUID) -> Optional[tuple[int, CartEntry]]:
-        cart = await Cart.get(cart_id)
+    async def _get_cart_item(self, cart_id: UUID, product_uuid: UUID) -> Optional[tuple[int, CartEntry]]:
+        cart = await self.repository.get(Cart, cart_id)
         for idx, product in enumerate(cart.entries):
             if str(product.product) == product_uuid:
                 return idx, product

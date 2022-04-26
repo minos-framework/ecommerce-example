@@ -7,6 +7,7 @@ from minos.aggregate import (
     EntitySet,
 )
 from minos.common import (
+    Inject,
     ModelType,
 )
 from minos.saga import (
@@ -16,8 +17,9 @@ from minos.saga import (
     SagaResponse,
 )
 
-from src import (
+from ..aggregates import (
     Ticket,
+    TicketAggregate,
     TicketEntry,
 )
 
@@ -48,7 +50,8 @@ async def _process_cart_items(context: SagaContext, response: SagaResponse) -> S
     return context
 
 
-async def _commit_callback(context: SagaContext) -> SagaContext:
+@Inject()
+async def _commit_callback(context: SagaContext, aggregate: TicketAggregate) -> SagaContext:
     ticket = await Ticket.create(
         code=uuid4().hex.upper()[0:6],
         total_price=context["products"]["total_amount"],

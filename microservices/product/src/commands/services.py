@@ -21,11 +21,17 @@ from minos.networks import (
     enroute,
 )
 
+from ..aggregates import (
+    ProductAggregate,
+)
+
 logger = logging.getLogger(__name__)
 
 
 class ProductCommandService(CommandService):
     """Product Service class"""
+
+    aggregate: ProductAggregate
 
     @enroute.broker.command("CreateProduct")
     @enroute.rest.command("/products", "POST")
@@ -127,8 +133,6 @@ class ProductCommandService(CommandService):
         uuid = params["uuid"]
         product = await self.aggregate.update_product_diff(uuid, content)
 
-        await product.save()
-
         return Response(product)
 
     @enroute.rest.command(f"/products/{{uuid:{UUID_REGEX.pattern}}}", "DELETE")
@@ -142,7 +146,7 @@ class ProductCommandService(CommandService):
         uuid = params["uuid"]
 
         try:
-            self.aggregate.delete_product(uuid)
+            await self.aggregate.delete_product(uuid)
         except (AlreadyDeletedException, NotFoundException):
             raise ResponseException("The product does not exist.")
 

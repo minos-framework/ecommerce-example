@@ -1,12 +1,6 @@
-from minos.aggregate import (
-    Event,
-)
-from minos.common import (
-    Inject,
-)
-from minos.cqrs import (
-    QueryService,
-)
+from minos.aggregate import Event
+from minos.common import Inject
+from minos.cqrs import QueryService
 from minos.networks import (
     HttpRequest,
     Request,
@@ -14,9 +8,7 @@ from minos.networks import (
     enroute,
 )
 
-from .repositories import (
-    ReviewQueryRepository,
-)
+from .repositories import ReviewQueryRepository
 
 
 class ReviewQueryService(QueryService):

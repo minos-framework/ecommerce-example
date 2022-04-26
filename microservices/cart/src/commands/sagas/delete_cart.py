@@ -2,6 +2,9 @@ from collections import (
     defaultdict,
 )
 
+from minos.common import (
+    Inject,
+)
 from minos.saga import (
     Saga,
     SagaContext,
@@ -9,6 +12,9 @@ from minos.saga import (
     SagaResponse,
 )
 
+from ...aggregates import (
+    CartAggregate,
+)
 from .callbacks import (
     _ReserveProductsQuery,
 )
@@ -37,7 +43,8 @@ def _release_products(context: SagaContext) -> SagaRequest:
     return SagaRequest("ReserveProducts", _ReserveProductsQuery(quantities))
 
 
-async def _create_cart(context: SagaContext) -> SagaContext:
+@Inject()
+async def _create_cart(context: SagaContext, aggregate: CartAggregate) -> SagaContext:
     cart = context["cart"]
     result = await cart.delete()
     return SagaContext(result=result)

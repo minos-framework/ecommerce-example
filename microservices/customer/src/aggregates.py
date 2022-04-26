@@ -1,13 +1,9 @@
-from datetime import (
-    datetime,
-)
+from datetime import datetime
 from typing import (
     Any,
     Union,
 )
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
 from minos.aggregate import (
     Aggregate,
@@ -34,16 +30,14 @@ class Customer(RootEntity):
 class CustomerAggregate(Aggregate[Customer]):
     """Customer Aggregate class."""
 
-    @staticmethod
-    async def create_customer(name: str, surname: str, address: Union[dict[str, Any], Address]) -> Customer:
+    async def create_customer(self, name: str, surname: str, address: Union[dict[str, Any], Address]) -> Customer:
         """TODO"""
         if not isinstance(address, Address):
             address = Address(**address)
-        customer = await Customer.create(name, surname, address)
+        customer, _ = await self.repository.create(Customer, name, surname, address)
         return customer
 
-    @staticmethod
-    async def delete_customer(uuid: UUID) -> None:
+    async def delete_customer(self, uuid: UUID) -> None:
         """TODO"""
-        customer = await Customer.get(uuid)
-        await customer.delete()
+        customer = await self.repository.get(Customer, uuid)
+        await self.repository.delete(customer)

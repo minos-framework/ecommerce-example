@@ -6,6 +6,7 @@ from uuid import (
 )
 
 from minos.common import (
+    Inject,
     ModelType,
 )
 from minos.saga import (
@@ -17,6 +18,7 @@ from minos.saga import (
 
 from ..aggregates import (
     Order,
+    OrderAggregate,
     OrderStatus,
 )
 
@@ -74,7 +76,8 @@ async def _get_payment(context: SagaContext, response: SagaResponse) -> SagaCont
     return context
 
 
-async def _create_commit_callback(context: SagaContext) -> SagaContext:
+@Inject()
+async def _create_commit_callback(context: SagaContext, aggregate: OrderAggregate) -> SagaContext:
     order = await Order.create(
         ticket=context["ticket"]["uuid"],
         payment=context["payment"],

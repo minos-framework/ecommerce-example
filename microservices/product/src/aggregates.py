@@ -19,9 +19,13 @@ from minos.aggregate import (
     RootEntity,
     ValueObject,
 )
+from minos.aggregate.entities import (
+    EntityRepository,
+)
 from minos.networks import (
     BrokerMessageV1,
     BrokerMessageV1Payload,
+    TransactionalBrokerPublisher,
 )
 
 
@@ -91,57 +95,52 @@ class ProductAggregate(Aggregate[Product]):
         message = BrokerMessageV1("bar", BrokerMessageV1Payload("foo"),)
         await self.broker_publisher.send(message)
 
-    @staticmethod
-    async def create_product(title: str, description: str, price: float) -> Product:
+    async def create_product(self, title: str, description: str, price: float) -> Product:
         """TODO"""
         code = uuid4().hex.upper()[0:6]
         inventory = Inventory.empty()
 
-        product = await Product.create(code, title, description, price, inventory)
+        product, _ = await self.repository.create(Product, code, title, description, price, inventory)
+
         return product
 
-    @staticmethod
-    async def update_inventory(uuid: UUID, amount: int) -> Product:
+    async def update_inventory(self, uuid: UUID, amount: int) -> Product:
         """TODO"""
-        product = await Product.get(uuid)
+        product = await self.repository.get(Product, uuid)
         product.set_inventory_amount(amount)
-        await product.save()
+        await self.repository.save(product)
         return product
 
-    @staticmethod
-    async def update_inventory_diff(uuid: UUID, amount_diff: int) -> Product:
+    async def update_inventory_diff(self, uuid: UUID, amount_diff: int) -> Product:
         """TODO"""
-        product = await Product.get(uuid)
+        product = await self.repository.get(Product, uuid)
         product.update_inventory_amount(amount_diff)
-        await product.save()
+        await self.repository.save(product)
         return product
 
-    @staticmethod
-    async def check_positive_inventory(uuid: UUID, amount: Optional[int], amount_diff: Optional[int]) -> bool:
+    async def check_positive_inventory(self, uuid: UUID, amount: Optional[int], amount_diff: Optional[int]) -> bool:
         """TODO"""
         if amount_diff is not None:
-            product = await Product.get(uuid)
+            product = await self.repository.get(Product, uuid)
             amount = product.inventory.amount + amount_diff
 
         return amount >= 0
 
-    @staticmethod
-    async def update_product(uuid: UUID, title: str, description: str, price: float) -> Product:
+    async def update_product(self, uuid: UUID, title: str, description: str, price: float) -> Product:
         """TODO"""
 
-        product = await Product.get(uuid)
+        product = await self.repository.get(Product, uuid)
         product.title = title
         product.description = description
         product.price = price
 
-        await product.save()
+        await self.repository.save(product)
         return product
 
-    @staticmethod
-    async def update_product_diff(uuid: UUID, content: dict[str, Any]) -> Product:
+    async def update_product_diff(self, uuid: UUID, content: dict[str, Any]) -> Product:
         """TODO"""
 
-        product = await Product.get(uuid)
+        product = await self.repository.get(Product, uuid)
 
         if "title" in content:
             product.title = content["title"]
@@ -152,14 +151,13 @@ class ProductAggregate(Aggregate[Product]):
         if "price" in content:
             product.price = content["price"]
 
-        await product.save()
+        await self.repository.save(product)
         return product
 
-    @staticmethod
-    async def delete_product(uuid: UUID) -> None:
+    async def delete_product(self, uuid: UUID) -> None:
         """TODO"""
-        product = await Product.get(uuid)
-        await product.delete()
+        product = await self.repository.get(Product, uuid)
+        await self.repository.delete(product)
 
     async def reserve(self, quantities: dict[UUID, int]) -> None:
         """Reserve product quantities.
@@ -170,7 +168,7 @@ class ProductAggregate(Aggregate[Product]):
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
-        products = await gather(*(Product.get(uuid) for uuid in quantities.keys()))
+        products = await gather(*(self.repository.get(Product, uuid) for uuid in quantities.keys()))
         for product in products:
             inventory = product.inventory
             reserved = inventory.reserved
@@ -178,7 +176,7 @@ class ProductAggregate(Aggregate[Product]):
                 feasible = False
             reserved += quantities[product.uuid]
             product.inventory = Inventory(inventory.amount, reserved, inventory.sold)
-            await product.save()
+            await self.repository.save(product)
 
         if not feasible:
             await self.reserve({k: -v for k, v in quantities.items()})
@@ -193,7 +191,7 @@ class ProductAggregate(Aggregate[Product]):
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
-        products = await gather(*(Product.get(uuid) for uuid in quantities.keys()))
+        products = await gather(*(self.repository.get(Product, uuid) for uuid in quantities.keys()))
         for product in products:
             inventory = product.inventory
             reserved = inventory.reserved
@@ -204,7 +202,7 @@ class ProductAggregate(Aggregate[Product]):
             reserved -= quantities[product.uuid]
             sold += quantities[product.uuid]
             product.inventory = Inventory(amount, reserved, sold)
-            await product.save()
+            await self.repository.save(product)
 
         if not feasible:
             await self.purchase({k: -v for k, v in quantities.items()})

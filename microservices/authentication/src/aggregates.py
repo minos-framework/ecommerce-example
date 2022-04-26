@@ -39,19 +39,6 @@ class Credentials(RootEntity):
     active: bool
     user: Ref[Customer]
 
-    @classmethod
-    async def exists_username(cls, username: str) -> bool:
-        """Check if username already exists.
-
-        :param username: The username to be checked.
-        :return: ``True`` if the username exists or ``False`` otherwise.
-        """
-        try:
-            await cls.find(Condition.EQUAL("username", username)).__anext__()
-            return True
-        except StopAsyncIteration:
-            return False
-
 
 class Customer(ExternalEntity):
     """Customer ExternalEntity class."""
@@ -79,17 +66,29 @@ class CredentialsAggregate(Aggregate[Credentials]):
         credentials = execution.context["credentials"]
         return credentials
 
-    @staticmethod
-    async def delete_credentials(uuid: UUID) -> None:
-        """TODO"""
-        credentials = await Credentials.get(uuid)
+    async def exists_username(self, username: str) -> bool:
+        """Check if username already exists.
 
-        await credentials.delete()
+        :param username: The username to be checked.
+        :return: ``True`` if the username exists or ``False`` otherwise.
+        """
+        try:
+            await self.repository.find(Credentials, Condition.EQUAL("username", username)).__anext__()
+            return True
+        except StopAsyncIteration:
+            return False
 
-    @staticmethod
-    async def delete_credentials_by_user(user: UUID) -> None:
+    async def delete_credentials(self, uuid: UUID) -> None:
         """TODO"""
-        entries = {credentials async for credentials in Credentials.find(Condition.EQUAL("user", user))}
+        credentials = await self.repository.get(Credentials, uuid)
+
+        await self.repositsaory.delete(credentials)
+
+    async def delete_credentials_by_user(self, user: UUID) -> None:
+        """TODO"""
+        entries = {
+            credentials async for credentials in self.repository.find(Credentials, Condition.EQUAL("user", user))
+        }
 
         if len(entries) == 0:
             return
@@ -98,4 +97,4 @@ class CredentialsAggregate(Aggregate[Credentials]):
             logger.warning(f"The user identified by {user!r} had multiple associated credentials")
 
         for credentials in entries:
-            await credentials.delete()
+            await self.repository.delete(credentials)

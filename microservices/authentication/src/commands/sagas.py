@@ -2,6 +2,9 @@ from __future__ import (
     annotations,
 )
 
+from minos.common import (
+    Inject,
+)
 from minos.saga import (
     Saga,
     SagaContext,
@@ -11,6 +14,7 @@ from minos.saga import (
 
 from ..aggregates import (
     Credentials,
+    CredentialsAggregate,
 )
 
 
@@ -33,12 +37,13 @@ async def _on_create_user_success(context: SagaContext, response: SagaResponse) 
     return context
 
 
-async def _create_credentials(context: SagaContext) -> SagaContext:
+@Inject()
+async def _create_credentials(context: SagaContext, aggregate: CredentialsAggregate) -> SagaContext:
     username = context["username"]
     password = context["password"]
     user = context["user"]
 
-    if await Credentials.exists_username(username):
+    if await aggregate.exists_username(username):
         raise Exception(f"The given username already exists: {username}")
 
     credentials = await Credentials.create(username, password, active=True, user=user)

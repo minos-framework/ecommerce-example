@@ -1,16 +1,10 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import sys
 import unittest
 
-from src import (
-    CustomerQueryService,
-)
-from tests.utils import (
-    build_dependency_injector,
-)
+from src import CustomerQueryService
+from tests.utils import build_dependency_injector
 
 
 class TestCustomerQueryService(unittest.IsolatedAsyncioTestCase):

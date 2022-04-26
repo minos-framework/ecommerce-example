@@ -1,14 +1,17 @@
+from minos.common import (
+    Inject,
+)
 from minos.saga import (
     Saga,
     SagaContext,
     SagaResponse,
 )
 
-from src.aggregates import (
+from ...aggregates import (
     Cart,
+    CartAggregate,
     CartEntry,
 )
-
 from .callbacks import (
     _release_products,
     _reserve_products,
@@ -20,7 +23,8 @@ def _raise(context: SagaContext, response: SagaResponse) -> SagaContext:
     raise ValueError("Errored response must abort the execution!")
 
 
-async def _create_cart_item(context: SagaContext) -> SagaContext:
+@Inject()
+async def _create_cart_item(context: SagaContext, aggregate: CartAggregate) -> SagaContext:
     cart_id = context["cart_id"]
     product_uuid = context["product_uuid"]
     quantity = context["quantity"]

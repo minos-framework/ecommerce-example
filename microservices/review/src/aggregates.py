@@ -1,13 +1,7 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    Any,
-)
-from uuid import (
-    UUID,
-)
+from typing import Any
+from uuid import UUID
 
 from minos.aggregate import (
     Aggregate,
@@ -48,19 +42,19 @@ class Customer(ExternalEntity):
 class ReviewAggregate(Aggregate[Review]):
     """Review Aggregate class."""
 
-    @staticmethod
-    async def create_review(product: UUID, user: UUID, title: str, description: str, score: int) -> Review:
+    async def create_review(self, product: UUID, user: UUID, title: str, description: str, score: int) -> Review:
         """TODO"""
-        review = await Review.create(product=product, user=user, title=title, description=description, score=score)
+        review, _ = await self.repository.create(
+            Review, product=product, user=user, title=title, description=description, score=score,
+        )
         return review
 
-    @staticmethod
-    async def update_review(uuid: UUID, content: dict[str, Any]) -> Review:
+    async def update_review(self, uuid: UUID, content: dict[str, Any]) -> Review:
         """TODO"""
-        review = await Review.get(uuid)
+        review = await self.repository.get(Review, uuid)
 
         kwargs = dict(content)
         kwargs.pop("uuid")
-        await review.update(**kwargs)
+        await self.repository.update(review, **kwargs)
 
         return review

@@ -3,6 +3,7 @@ from collections import (
 )
 
 from minos.common import (
+    Inject,
     ModelType,
 )
 from minos.saga import (
@@ -12,14 +13,16 @@ from minos.saga import (
     SagaResponse,
 )
 
-from src.aggregates import (
+from ...aggregates import (
     Cart,
+    CartAggregate,
 )
 
 _ReserveProductsQuery = ModelType.build("ValidateProductsQuery", {"quantities": dict[str, int]})
 
 
-async def _reserve_products(context: SagaContext) -> SagaRequest:
+@Inject()
+async def _reserve_products(context: SagaContext, aggregate: CartAggregate) -> SagaRequest:
     product_uuids = [context["product_uuid"]]
     cart_id = context["cart_id"]
     quantities = defaultdict(int)
@@ -35,7 +38,8 @@ def _raise(context: SagaContext, response: SagaResponse) -> SagaContext:
     raise ValueError("Errored response must abort the execution!")
 
 
-async def _release_products(context: SagaContext) -> SagaRequest:
+@Inject()
+async def _release_products(context: SagaContext, aggregate: CartAggregate) -> SagaRequest:
     product_uuids = [context["product_uuid"]]
     cart_id = context["cart_id"]
     quantities = defaultdict(int)
@@ -46,7 +50,8 @@ async def _release_products(context: SagaContext) -> SagaRequest:
     return SagaRequest("ReserveProducts", _ReserveProductsQuery(quantities=quantities))
 
 
-async def _remove_cart_item(context: SagaContext) -> SagaContext:
+@Inject()
+async def _remove_cart_item(context: SagaContext, aggregate: CartAggregate) -> SagaContext:
     cart_id = context["cart_id"]
     product = context["product"]
     cart = await Cart.get(cart_id)
