@@ -1,7 +1,17 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import Any
-from uuid import UUID
+from asyncio import (
+    gather,
+)
+from typing import (
+    Any,
+    Optional,
+)
+from uuid import (
+    UUID,
+)
 
 from minos.aggregate import (
     Aggregate,

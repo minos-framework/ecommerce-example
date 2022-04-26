@@ -14,7 +14,6 @@ from minos.saga import (
 )
 
 from ...aggregates import (
-    Cart,
     CartAggregate,
 )
 
@@ -29,7 +28,7 @@ async def _release_or_reserve_products(context: SagaContext, aggregate: CartAggr
     quantity = context["quantity"]
 
     for product_id in product_uuids:
-        prev = await Cart.get(cart_id)
+        prev = await aggregate.get_cart(cart_id)
 
         prev_quantity = 0
         for key, value in prev.entries.data.items():
@@ -62,7 +61,7 @@ async def _compensation(context: SagaContext, aggregate: CartAggregate) -> SagaR
     quantity = context["quantity"]
 
     for product_id in product_uuids:
-        prev = await Cart.get(cart_id)
+        prev = await aggregate.get_cart(cart_id)
 
         prev_quantity = 0
         for key, value in prev.entries.data.items():
@@ -87,13 +86,9 @@ async def _update_cart_item(context: SagaContext, aggregate: CartAggregate) -> S
     cart_id = context["cart_id"]
     product_uuid = context["product_uuid"]
     quantity = context["quantity"]
-    cart = await Cart.get(cart_id)
 
-    for key, value in cart.entries.data.items():
-        if str(value.product) == product_uuid:
-            value.quantity = quantity
+    cart = await aggregate.update_cart_item_instance(cart_id, product_uuid, quantity)
 
-    await cart.save()
     return SagaContext(cart=cart)
 
 

@@ -1,1 +1,3 @@
-from .services import CustomerCommandService
+from .services import (
+    CustomerCommandService,
+)

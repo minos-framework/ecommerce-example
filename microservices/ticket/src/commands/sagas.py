@@ -52,10 +52,8 @@ async def _process_cart_items(context: SagaContext, response: SagaResponse) -> S
 
 @Inject()
 async def _commit_callback(context: SagaContext, aggregate: TicketAggregate) -> SagaContext:
-    ticket = await Ticket.create(
-        code=uuid4().hex.upper()[0:6],
-        total_price=context["products"]["total_amount"],
-        entries=context["products"]["ticket_entries"],
+    ticket = await aggregate.create_ticket_instance(
+        total_price=context["products"]["total_amount"], entries=context["products"]["ticket_entries"],
     )
 
     return SagaContext(ticket=ticket)

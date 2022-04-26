@@ -155,3 +155,25 @@ class OrderAggregate(Aggregate[Order]):
             raise ValueError("An error occurred during order creation.")
 
         return execution.context["order"]
+
+    async def create_order_instance(
+        self,
+        ticket: Ref[Ticket],
+        payment: Ref[Payment],
+        payment_detail: PaymentDetail,
+        shipment_detail: ShipmentDetail,
+        total_amount: float,
+        customer: Ref[Customer],
+    ) -> Order:
+        """TODO"""
+        order, _ = await self.repository.create(
+            Order,
+            ticket=ticket,
+            payment=payment,
+            payment_detail=payment_detail,
+            shipment_detail=shipment_detail,
+            total_amount=total_amount,
+            status=OrderStatus.COMPLETED,
+            customer=customer,
+        )
+        return order

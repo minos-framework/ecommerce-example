@@ -1,8 +1,14 @@
-from pathlib import Path
-from typing import Optional
+from pathlib import (
+    Path,
+)
+from typing import (
+    Optional,
+)
 
 import typer
-from minos.common import EntrypointLauncher
+from minos.common import (
+    EntrypointLauncher,
+)
 
 app = typer.Typer()
 

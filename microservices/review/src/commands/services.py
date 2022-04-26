@@ -1,4 +1,6 @@
-from minos.cqrs import CommandService
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
     HttpRequest,
     Request,

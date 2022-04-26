@@ -54,7 +54,6 @@ class CartAggregate(Aggregate[Cart]):
 
     async def add_cart_item(self, cart_uuid: UUID, product_uuid: UUID, quantity: int) -> UUID:
         """TODO"""
-
         from .commands import (
             ADD_CART_ITEM,
         )
@@ -63,6 +62,16 @@ class CartAggregate(Aggregate[Cart]):
             ADD_CART_ITEM, context=SagaContext(cart_id=cart_uuid, product_uuid=product_uuid, quantity=quantity)
         )
         return saga_execution.uuid
+
+    async def add_cart_item_instance(self, cart_uuid: UUID, product_uuid: UUID, quantity: int) -> Cart:
+        """TODO"""
+        cart = await self.get_cart(cart_uuid)
+
+        cart_item = CartEntry(product=product_uuid, quantity=quantity)
+        cart.entries.add(cart_item)
+        await self.repository.save(cart)
+
+        return cart
 
     async def update_cart_item(self, cart_uuid: UUID, product_uuid: UUID, quantity: int) -> UUID:
         """TODO"""
@@ -74,6 +83,18 @@ class CartAggregate(Aggregate[Cart]):
             UPDATE_CART_ITEM, context=SagaContext(cart_id=cart_uuid, product_uuid=product_uuid, quantity=quantity)
         )
         return saga_execution.uuid
+
+    async def update_cart_item_instance(self, cart_uuid: UUID, product_uuid: UUID, quantity: int) -> Cart:
+        """TODO"""
+        cart = await self.get_cart(cart_uuid)
+
+        for key, value in cart.entries.data.items():
+            if str(value.product) == product_uuid:
+                value.quantity = quantity
+
+        await self.repository.save(cart)
+
+        return cart
 
     async def remove_cart_item(self, cart_uuid: UUID, product_uuid: UUID) -> UUID:
         """TODO"""
@@ -88,6 +109,15 @@ class CartAggregate(Aggregate[Cart]):
         )
         return saga_execution.uuid
 
+    async def remove_cart_item_instance(self, cart_uuid: UUID, entry: CartEntry) -> Cart:
+        """TODO"""
+        cart = await self.get_cart(cart_uuid)
+        cart.entries.discard(entry)
+
+        await self.repository.save(cart)
+
+        return cart
+
     async def delete_cart(self, uuid: UUID) -> UUID:
         """TODO"""
         from .commands import (
@@ -99,8 +129,17 @@ class CartAggregate(Aggregate[Cart]):
         saga_execution = await self.saga_manager.run(DELETE_CART, context=SagaContext(cart=cart))
         return saga_execution.uuid
 
-    async def _get_cart_item(self, cart_id: UUID, product_uuid: UUID) -> Optional[tuple[int, CartEntry]]:
-        cart = await self.repository.get(Cart, cart_id)
+    async def delete_cart_instance(self, cart: Cart) -> None:
+        """TODO"""
+        _ = await self.repository.delete(cart)
+
+    async def get_cart(self, uuid: UUID) -> Cart:
+        """TODO"""
+        cart = await self.repository.get(Cart, uuid)
+        return cart
+
+    async def _get_cart_item(self, cart_uuid: UUID, product_uuid: UUID) -> Optional[tuple[int, CartEntry]]:
+        cart = await self.repository.get(Cart, cart_uuid)
         for idx, product in enumerate(cart.entries):
             if str(product.product) == product_uuid:
                 return idx, product

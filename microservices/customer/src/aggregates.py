@@ -1,9 +1,13 @@
-from datetime import datetime
+from datetime import (
+    datetime,
+)
 from typing import (
     Any,
     Union,
 )
-from uuid import UUID
+from uuid import (
+    UUID,
+)
 
 from minos.aggregate import (
     Aggregate,

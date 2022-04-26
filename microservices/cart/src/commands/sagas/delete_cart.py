@@ -46,7 +46,7 @@ def _release_products(context: SagaContext) -> SagaRequest:
 @Inject()
 async def _create_cart(context: SagaContext, aggregate: CartAggregate) -> SagaContext:
     cart = context["cart"]
-    result = await cart.delete()
+    result = await aggregate.delete_cart_instance(cart)
     return SagaContext(result=result)
 
 

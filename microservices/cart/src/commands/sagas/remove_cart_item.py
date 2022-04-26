@@ -26,7 +26,7 @@ async def _reserve_products(context: SagaContext, aggregate: CartAggregate) -> S
     product_uuids = [context["product_uuid"]]
     cart_id = context["cart_id"]
     quantities = defaultdict(int)
-    cart = await Cart.get(cart_id)
+    cart = await aggregate.get_cart(cart_id)
     for product_id in product_uuids:
         quantities[str(product_id)] += get_product_quantity(cart, product_id)
 
@@ -43,7 +43,7 @@ async def _release_products(context: SagaContext, aggregate: CartAggregate) -> S
     product_uuids = [context["product_uuid"]]
     cart_id = context["cart_id"]
     quantities = defaultdict(int)
-    cart = await Cart.get(cart_id)
+    cart = await aggregate.get_cart(cart_id)
     for product_id in product_uuids:
         quantities[str(product_id)] -= get_product_quantity(cart, product_id)
 
@@ -54,10 +54,7 @@ async def _release_products(context: SagaContext, aggregate: CartAggregate) -> S
 async def _remove_cart_item(context: SagaContext, aggregate: CartAggregate) -> SagaContext:
     cart_id = context["cart_id"]
     product = context["product"]
-    cart = await Cart.get(cart_id)
-    cart.entries.discard(product)
-
-    await cart.save()
+    cart = await aggregate.remove_cart_item_instance(cart_id, product)
     return SagaContext(cart=cart)
 
 

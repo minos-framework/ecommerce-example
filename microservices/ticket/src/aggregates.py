@@ -4,6 +4,7 @@ from __future__ import (
 
 from uuid import (
     UUID,
+    uuid4,
 )
 
 from minos.aggregate import (
@@ -70,3 +71,10 @@ class TicketAggregate(Aggregate[Ticket]):
             raise ValueError("An error occurred during order creation.")
 
         return execution.context["ticket"]
+
+    async def create_ticket_instance(self, total_price: float, entries: EntitySet[TicketEntry]) -> Ticket:
+        """TODO"""
+        ticket, _ = await self.repository.create(
+            Ticket, code=uuid4().hex.upper()[0:6], total_price=total_price, entries=entries,
+        )
+        return ticket

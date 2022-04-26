@@ -8,7 +8,6 @@ from minos.saga import (
 )
 
 from ...aggregates import (
-    Cart,
     CartAggregate,
     CartEntry,
 )
@@ -28,10 +27,7 @@ async def _create_cart_item(context: SagaContext, aggregate: CartAggregate) -> S
     cart_id = context["cart_id"]
     product_uuid = context["product_uuid"]
     quantity = context["quantity"]
-    cart = await Cart.get(cart_id)
-    cart_item = CartEntry(product=product_uuid, quantity=quantity)
-    cart.entries.add(cart_item)
-    await cart.save()
+    cart = await aggregate.add_cart_item_instance(cart_id, product_uuid, quantity)
     return SagaContext(cart=cart)
 
 

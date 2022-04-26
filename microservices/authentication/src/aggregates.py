@@ -66,6 +66,15 @@ class CredentialsAggregate(Aggregate[Credentials]):
         credentials = execution.context["credentials"]
         return credentials
 
+    async def create_credentials_instance(self, username: str, password: str, user: Ref[Customer]) -> Credentials:
+        """TODO"""
+
+        if await self.exists_username(username):
+            raise Exception(f"The given username already exists: {username}")
+
+        credentials, _ = await self.repository.create(Credentials, username, password, active=True, user=user)
+        return credentials
+
     async def exists_username(self, username: str) -> bool:
         """Check if username already exists.
 

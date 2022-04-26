@@ -78,16 +78,14 @@ async def _get_payment(context: SagaContext, response: SagaResponse) -> SagaCont
 
 @Inject()
 async def _create_commit_callback(context: SagaContext, aggregate: OrderAggregate) -> SagaContext:
-    order = await Order.create(
+    order = await aggregate.create_order_instance(
         ticket=context["ticket"]["uuid"],
         payment=context["payment"],
         payment_detail=context["payment_detail"],
         shipment_detail=context["shipment_detail"],
         total_amount=context["ticket"]["total_amount"],
-        status=OrderStatus.COMPLETED,
         customer=context["customer_uuid"],
     )
-
     return SagaContext(order=order)
 
 

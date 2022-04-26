@@ -43,10 +43,8 @@ async def _create_credentials(context: SagaContext, aggregate: CredentialsAggreg
     password = context["password"]
     user = context["user"]
 
-    if await aggregate.exists_username(username):
-        raise Exception(f"The given username already exists: {username}")
+    credentials = await aggregate.create_credentials_instance(username, password, user=user)
 
-    credentials = await Credentials.create(username, password, active=True, user=user)
     return SagaContext(credentials=credentials)
 
 

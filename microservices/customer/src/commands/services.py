@@ -1,5 +1,9 @@
-from minos.common import UUID_REGEX
-from minos.cqrs import CommandService
+from minos.common import (
+    UUID_REGEX,
+)
+from minos.cqrs import (
+    CommandService,
+)
 from minos.networks import (
     HttpRequest,
     Request,
