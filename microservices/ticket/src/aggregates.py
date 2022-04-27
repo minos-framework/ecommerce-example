@@ -2,21 +2,34 @@ from __future__ import (
     annotations,
 )
 
+from asyncio import (
+    gather,
+)
+from typing import (
+    Optional,
+)
 from uuid import (
     UUID,
     uuid4,
 )
 
 from minos.aggregate import (
+    Action,
     Aggregate,
     Entity,
     EntitySet,
+    Event,
     ExternalEntity,
+    IncrementalFieldDiff,
     Ref,
     RootEntity,
 )
 from minos.common import (
     Inject,
+)
+from minos.networks import (
+    BrokerMessageV1,
+    BrokerMessageV1Payload,
 )
 from minos.saga import (
     SagaContext,
@@ -74,7 +87,8 @@ class TicketAggregate(Aggregate[Ticket]):
 
     async def create_ticket_instance(self, total_price: float, entries: EntitySet[TicketEntry]) -> Ticket:
         """TODO"""
-        ticket, _ = await self.repository.create(
+        ticket, delta = await self.repository.create(
             Ticket, code=uuid4().hex.upper()[0:6], total_price=total_price, entries=entries,
         )
+        await self.publish_domain_event(delta)
         return ticket

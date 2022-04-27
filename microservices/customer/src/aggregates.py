@@ -1,9 +1,10 @@
+from asyncio import gather
 from datetime import (
     datetime,
 )
 from typing import (
     Any,
-    Union,
+    Union, Optional,
 )
 from uuid import (
     UUID,
@@ -12,8 +13,9 @@ from uuid import (
 from minos.aggregate import (
     Aggregate,
     RootEntity,
-    ValueObject,
+    ValueObject, Action, IncrementalFieldDiff, Event,
 )
+from minos.networks import BrokerMessageV1, BrokerMessageV1Payload
 
 
 class Address(ValueObject):
@@ -38,10 +40,14 @@ class CustomerAggregate(Aggregate[Customer]):
         """TODO"""
         if not isinstance(address, Address):
             address = Address(**address)
-        customer, _ = await self.repository.create(Customer, name, surname, address)
+
+        customer, delta = await self.repository.create(Customer, name, surname, address)
+        await self.publish_domain_event(delta)
+
         return customer
 
     async def delete_customer(self, uuid: UUID) -> None:
         """TODO"""
         customer = await self.repository.get(Customer, uuid)
-        await self.repository.delete(customer)
+        delta = await self.repository.delete(customer)
+        await self.publish_domain_event(delta)

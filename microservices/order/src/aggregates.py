@@ -2,6 +2,7 @@ from __future__ import (
     annotations,
 )
 
+from asyncio import gather
 from datetime import (
     datetime,
 )
@@ -23,7 +24,7 @@ from minos.aggregate import (
     ExternalEntity,
     Ref,
     RootEntity,
-    ValueObject,
+    ValueObject, Action, IncrementalFieldDiff, Event,
 )
 from minos.common import (
     Inject,
@@ -125,10 +126,6 @@ class OrderAggregate(Aggregate[Order]):
         super().__init__(*args, **kwargs)
         self.saga_manager = saga_manager
 
-    async def something(self):
-        message = BrokerMessageV1("foo", BrokerMessageV1Payload("bar"),)
-        await self.broker_publisher.send(message)
-
     async def create_order(
         self, cart_uuid: UUID, customer_uuid: UUID, payment: dict[str, Any], shipment: dict[str, Any]
     ) -> Order:
@@ -166,7 +163,7 @@ class OrderAggregate(Aggregate[Order]):
         customer: Ref[Customer],
     ) -> Order:
         """TODO"""
-        order, _ = await self.repository.create(
+        order, delta = await self.repository.create(
             Order,
             ticket=ticket,
             payment=payment,
@@ -176,4 +173,6 @@ class OrderAggregate(Aggregate[Order]):
             status=OrderStatus.COMPLETED,
             customer=customer,
         )
+        await self.publish_domain_event(delta)
+
         return order

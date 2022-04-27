@@ -14,10 +14,17 @@ from uuid import (
 )
 
 from minos.aggregate import (
+    Action,
     Aggregate,
+    Event,
     ExternalEntity,
+    IncrementalFieldDiff,
     Ref,
     RootEntity,
+)
+from minos.networks import (
+    BrokerMessageV1,
+    BrokerMessageV1Payload,
 )
 
 
@@ -54,9 +61,11 @@ class ReviewAggregate(Aggregate[Review]):
 
     async def create_review(self, product: UUID, user: UUID, title: str, description: str, score: int) -> Review:
         """TODO"""
-        review, _ = await self.repository.create(
+        review, delta = await self.repository.create(
             Review, product=product, user=user, title=title, description=description, score=score,
         )
+        await self.publish_domain_event(delta)
+
         return review
 
     async def update_review(self, uuid: UUID, content: dict[str, Any]) -> Review:
@@ -65,6 +74,8 @@ class ReviewAggregate(Aggregate[Review]):
 
         kwargs = dict(content)
         kwargs.pop("uuid")
-        await self.repository.update(review, **kwargs)
+
+        _, delta = await self.repository.update(review, **kwargs)
+        await self.publish_domain_event(delta)
 
         return review

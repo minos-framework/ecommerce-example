@@ -3,8 +3,9 @@ from __future__ import (
 )
 
 import logging
+from asyncio import gather
 from typing import (
-    Any,
+    Any, Optional,
 )
 from uuid import (
     UUID,
@@ -15,11 +16,12 @@ from minos.aggregate import (
     Condition,
     ExternalEntity,
     Ref,
-    RootEntity,
+    RootEntity, Event, Action, IncrementalFieldDiff,
 )
 from minos.common import (
     Inject,
 )
+from minos.networks import BrokerMessageV1, BrokerMessageV1Payload
 from minos.saga import (
     SagaContext,
     SagaManager,
@@ -72,7 +74,9 @@ class CredentialsAggregate(Aggregate[Credentials]):
         if await self.exists_username(username):
             raise Exception(f"The given username already exists: {username}")
 
-        credentials, _ = await self.repository.create(Credentials, username, password, active=True, user=user)
+        credentials, delta = await self.repository.create(Credentials, username, password, active=True, user=user)
+        await self.publish_domain_event(delta)
+
         return credentials
 
     async def exists_username(self, username: str) -> bool:
@@ -106,4 +110,5 @@ class CredentialsAggregate(Aggregate[Credentials]):
             logger.warning(f"The user identified by {user!r} had multiple associated credentials")
 
         for credentials in entries:
-            await self.repository.delete(credentials)
+            delta = await self.repository.delete(credentials)
+            await self.publish_domain_event(delta)

@@ -15,17 +15,16 @@ from uuid import (
 )
 
 from minos.aggregate import (
+    Action,
     Aggregate,
+    Event,
+    IncrementalFieldDiff,
     RootEntity,
     ValueObject,
-)
-from minos.aggregate.entities import (
-    EntityRepository,
 )
 from minos.networks import (
     BrokerMessageV1,
     BrokerMessageV1Payload,
-    TransactionalBrokerPublisher,
 )
 
 
@@ -91,16 +90,13 @@ class Inventory(ValueObject):
 class ProductAggregate(Aggregate[Product]):
     """Product Aggregate class."""
 
-    async def something(self):
-        message = BrokerMessageV1("bar", BrokerMessageV1Payload("foo"),)
-        await self.broker_publisher.send(message)
-
     async def create_product(self, title: str, description: str, price: float) -> Product:
         """TODO"""
         code = uuid4().hex.upper()[0:6]
         inventory = Inventory.empty()
 
-        product, _ = await self.repository.create(Product, code, title, description, price, inventory)
+        product, delta = await self.repository.create(Product(code, title, description, price, inventory))
+        await self.publish_domain_event(delta)
 
         return product
 
@@ -108,14 +104,20 @@ class ProductAggregate(Aggregate[Product]):
         """TODO"""
         product = await self.repository.get(Product, uuid)
         product.set_inventory_amount(amount)
-        await self.repository.save(product)
+
+        delta = await self.repository.save(product)
+        await self.publish_domain_event(delta)
+
         return product
 
     async def update_inventory_diff(self, uuid: UUID, amount_diff: int) -> Product:
         """TODO"""
         product = await self.repository.get(Product, uuid)
         product.update_inventory_amount(amount_diff)
-        await self.repository.save(product)
+
+        delta = await self.repository.save(product)
+        await self.publish_domain_event(delta)
+
         return product
 
     async def check_positive_inventory(self, uuid: UUID, amount: Optional[int], amount_diff: Optional[int]) -> bool:
@@ -134,7 +136,9 @@ class ProductAggregate(Aggregate[Product]):
         product.description = description
         product.price = price
 
-        await self.repository.save(product)
+        delta = await self.repository.save(product)
+        await self.publish_domain_event(delta)
+
         return product
 
     async def update_product_diff(self, uuid: UUID, content: dict[str, Any]) -> Product:
@@ -151,13 +155,16 @@ class ProductAggregate(Aggregate[Product]):
         if "price" in content:
             product.price = content["price"]
 
-        await self.repository.save(product)
+        delta = await self.repository.save(product)
+        await self.publish_domain_event(delta)
+
         return product
 
     async def delete_product(self, uuid: UUID) -> None:
         """TODO"""
         product = await self.repository.get(Product, uuid)
-        await self.repository.delete(product)
+        delta = await self.repository.delete(product)
+        await self.publish_domain_event(delta)
 
     async def reserve(self, quantities: dict[UUID, int]) -> None:
         """Reserve product quantities.
@@ -168,7 +175,8 @@ class ProductAggregate(Aggregate[Product]):
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
-        products = await gather(*(self.repository.get(Product, uuid) for uuid in quantities.keys()))
+        futures = (self.repository.get(Product, uuid) for uuid in quantities.keys())
+        products = await gather(*futures)
         for product in products:
             inventory = product.inventory
             reserved = inventory.reserved
@@ -176,7 +184,9 @@ class ProductAggregate(Aggregate[Product]):
                 feasible = False
             reserved += quantities[product.uuid]
             product.inventory = Inventory(inventory.amount, reserved, inventory.sold)
-            await self.repository.save(product)
+
+            delta = await self.repository.save(product)
+            await self.publish_domain_event(delta)
 
         if not feasible:
             await self.reserve({k: -v for k, v in quantities.items()})
@@ -191,7 +201,8 @@ class ProductAggregate(Aggregate[Product]):
         :return: ``True`` if all products can be satisfied or ``False`` otherwise.
         """
         feasible = True
-        products = await gather(*(self.repository.get(Product, uuid) for uuid in quantities.keys()))
+        futures = (self.repository.get(Product, uuid) for uuid in quantities.keys())
+        products = await gather(*futures)
         for product in products:
             inventory = product.inventory
             reserved = inventory.reserved
@@ -202,8 +213,11 @@ class ProductAggregate(Aggregate[Product]):
             reserved -= quantities[product.uuid]
             sold += quantities[product.uuid]
             product.inventory = Inventory(amount, reserved, sold)
-            await self.repository.save(product)
+
+            delta = await self.repository.save(product)
+            await self.publish_domain_event(delta)
 
         if not feasible:
             await self.purchase({k: -v for k, v in quantities.items()})
             raise ValueError("The purchase products query could not be satisfied.")
+

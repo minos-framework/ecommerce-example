@@ -49,7 +49,9 @@ class CartAggregate(Aggregate[Cart]):
 
     async def create_cart(self, user: int) -> Cart:
         """TODO"""
-        cart, _ = await self.repository.create(Cart, user=user, entries=EntitySet())
+        cart, delta = await self.repository.create(Cart, user=user, entries=EntitySet())
+        await self.publish_domain_event(delta)
+
         return cart
 
     async def add_cart_item(self, cart_uuid: UUID, product_uuid: UUID, quantity: int) -> UUID:
@@ -69,7 +71,9 @@ class CartAggregate(Aggregate[Cart]):
 
         cart_item = CartEntry(product=product_uuid, quantity=quantity)
         cart.entries.add(cart_item)
-        await self.repository.save(cart)
+
+        delta = await self.repository.save(cart)
+        await self.publish_domain_event(delta)
 
         return cart
 
@@ -92,7 +96,8 @@ class CartAggregate(Aggregate[Cart]):
             if str(value.product) == product_uuid:
                 value.quantity = quantity
 
-        await self.repository.save(cart)
+        delta = await self.repository.save(cart)
+        await self.publish_domain_event(delta)
 
         return cart
 
@@ -114,7 +119,8 @@ class CartAggregate(Aggregate[Cart]):
         cart = await self.get_cart(cart_uuid)
         cart.entries.discard(entry)
 
-        await self.repository.save(cart)
+        delta = await self.repository.save(cart)
+        await self.publish_domain_event(delta)
 
         return cart
 
@@ -131,7 +137,8 @@ class CartAggregate(Aggregate[Cart]):
 
     async def delete_cart_instance(self, cart: Cart) -> None:
         """TODO"""
-        _ = await self.repository.delete(cart)
+        delta = await self.repository.delete(cart)
+        await self.publish_domain_event(delta)
 
     async def get_cart(self, uuid: UUID) -> Cart:
         """TODO"""

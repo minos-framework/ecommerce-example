@@ -1,11 +1,13 @@
+from asyncio import gather
 from typing import (
     Optional,
 )
 
 from minos.aggregate import (
     Aggregate,
-    RootEntity,
+    RootEntity, Action, IncrementalFieldDiff, Event,
 )
+from minos.networks import BrokerMessageV1, BrokerMessageV1Payload
 
 
 class Payment(RootEntity):
@@ -23,5 +25,8 @@ class PaymentAggregate(Aggregate[Payment]):
         """TODO"""
         if status is None:
             status = "created"
-        payment, _ = await self.repository.create(Payment, credit_number, amount, status)
+
+        payment, delta = await self.repository.create(Payment, credit_number, amount, status)
+        await self.publish_domain_event(delta)
+
         return payment
