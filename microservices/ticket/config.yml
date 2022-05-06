@@ -11,7 +11,7 @@ aggregate:
     - src.aggregates.Ticket
   repositories:
     transaction: minos.transactions.DatabaseTransactionRepository
-    event: minos.aggregate.DatabaseEventRepository
+    event: minos.aggregate.DatabaseDeltaRepository
     snapshot: minos.aggregate.DatabaseSnapshotRepository
 pools:
   lock: minos.common.DatabaseLockPool

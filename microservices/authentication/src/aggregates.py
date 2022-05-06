@@ -3,9 +3,8 @@ from __future__ import (
 )
 
 import logging
-from asyncio import gather
 from typing import (
-    Any, Optional,
+    Any,
 )
 from uuid import (
     UUID,
@@ -14,14 +13,12 @@ from uuid import (
 from minos.aggregate import (
     Aggregate,
     Condition,
-    ExternalEntity,
+    Entity,
     Ref,
-    RootEntity, Event, Action, IncrementalFieldDiff,
 )
 from minos.common import (
     Inject,
 )
-from minos.networks import BrokerMessageV1, BrokerMessageV1Payload
 from minos.saga import (
     SagaContext,
     SagaManager,
@@ -30,8 +27,9 @@ from minos.saga import (
 logger = logging.getLogger(__name__)
 
 
-class Credentials(RootEntity):
-    """Credentials RootEntity class.
+# noinspection PyUnresolvedReferences
+class Credentials(Entity):
+    """Credentials Entity class.
 
     The purpose of this aggregate is to store the needed information to be authenticated.
     """
@@ -39,13 +37,10 @@ class Credentials(RootEntity):
     username: str
     password: str
     active: bool
-    user: Ref[Customer]
+    user: Ref["src.aggregates.Customer"]
 
 
-class Customer(ExternalEntity):
-    """Customer ExternalEntity class."""
-
-
+# noinspection PyUnresolvedReferences
 class CredentialsAggregate(Aggregate[Credentials]):
     """Credentials Aggregate class."""
 
@@ -68,7 +63,9 @@ class CredentialsAggregate(Aggregate[Credentials]):
         credentials = execution.context["credentials"]
         return credentials
 
-    async def create_credentials_instance(self, username: str, password: str, user: Ref[Customer]) -> Credentials:
+    async def create_credentials_instance(
+        self, username: str, password: str, user: Ref["src.aggregates.Customer"]
+    ) -> Credentials:
         """TODO"""
 
         if await self.exists_username(username):

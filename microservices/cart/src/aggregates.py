@@ -13,35 +13,26 @@ from minos.aggregate import (
     Aggregate,
     Entity,
     EntitySet,
-    ExternalEntity,
     Ref,
-    RootEntity,
 )
 from minos.saga import (
     SagaContext,
 )
 
 
-class Cart(RootEntity):
-    """Cart RootEntity class."""
+class Cart(Entity):
+    """Cart Entity class."""
 
     user: int
-    entries: EntitySet[CartEntry]
+    entries: EntitySet[Ref[CartEntry]]
 
 
+# noinspection PyUnresolvedReferences
 class CartEntry(Entity):
-    """Cart Item DeclarativeModel class."""
+    """CartEntry Entity class."""
 
     quantity: int
-    product: Ref[Product]
-
-
-class Product(ExternalEntity):
-    """Product ExternalEntity class."""
-
-    title: str
-    description: str
-    price: float
+    product: Ref["src.aggregates.Product"]
 
 
 class CartAggregate(Aggregate[Cart]):
@@ -69,8 +60,10 @@ class CartAggregate(Aggregate[Cart]):
         """TODO"""
         cart = await self.get_cart(cart_uuid)
 
-        cart_item = CartEntry(product=product_uuid, quantity=quantity)
-        cart.entries.add(cart_item)
+        cart_item, delta = await self.repository.create(CartEntry, product=product_uuid, quantity=quantity)
+        await self.publish_domain_event(delta)
+
+        cart.entries.add(Ref(cart_item))
 
         delta = await self.repository.save(cart)
         await self.publish_domain_event(delta)
@@ -117,9 +110,12 @@ class CartAggregate(Aggregate[Cart]):
     async def remove_cart_item_instance(self, cart_uuid: UUID, entry: CartEntry) -> Cart:
         """TODO"""
         cart = await self.get_cart(cart_uuid)
-        cart.entries.discard(entry)
+        cart.entries.discard(Ref(entry))
 
         delta = await self.repository.save(cart)
+        await self.publish_domain_event(delta)
+
+        delta = await self.repository.delete(entry)
         await self.publish_domain_event(delta)
 
         return cart
@@ -147,6 +143,7 @@ class CartAggregate(Aggregate[Cart]):
 
     async def _get_cart_item(self, cart_uuid: UUID, product_uuid: UUID) -> Optional[tuple[int, CartEntry]]:
         cart = await self.repository.get(Cart, cart_uuid)
-        for idx, product in enumerate(cart.entries):
-            if str(product.product) == product_uuid:
-                return idx, product
+        for idx, entry_ref in enumerate(cart.entries):
+            entry = await self.repository.get(CartEntry, entry_ref.uuid)
+            if str(entry.product) == product_uuid:
+                return idx, entry

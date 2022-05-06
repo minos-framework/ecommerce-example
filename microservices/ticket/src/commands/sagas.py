@@ -31,7 +31,8 @@ def _get_cart_items(context: SagaContext) -> SagaRequest:
     return SagaRequest("GetCartQRS", CartQuery(cart_uuid))
 
 
-async def _process_cart_items(context: SagaContext, response: SagaResponse) -> SagaContext:
+@Inject()
+async def _process_cart_items(context: SagaContext, response: SagaResponse, aggregate: TicketAggregate) -> SagaContext:
     cart = await response.content()
 
     cart_products = cart["products"]
@@ -41,10 +42,10 @@ async def _process_cart_items(context: SagaContext, response: SagaResponse) -> S
     for product in cart_products:
         total_price = product.price * product.quantity
         total_amount += total_price
-        order_entry = TicketEntry(
+        entry = await aggregate.create_ticket_entry_instance(
             title=product.title, unit_price=product.price, quantity=product.quantity, product=product.product_id
         )
-        ticket_entries.add(order_entry)
+        ticket_entries.add(entry)
 
     context["products"] = dict(ticket_entries=ticket_entries, total_amount=total_amount)
     return context

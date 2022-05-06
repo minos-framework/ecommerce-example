@@ -1,6 +1,4 @@
 from .aggregates import (
-    Customer,
-    Product,
     Review,
 )
 from .commands import (

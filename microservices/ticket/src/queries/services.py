@@ -1,5 +1,5 @@
 from minos.aggregate import (
-    Event,
+    Delta,
 )
 from minos.common import (
     UUID_REGEX,
@@ -24,8 +24,8 @@ class TicketQueryService(QueryService):
     """Ticket Query Service class."""
 
     @Inject()
-    def __init__(self, repository: TicketQueryRepository, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, repository: TicketQueryRepository, **kwargs):
+        super().__init__(**kwargs)
         self.repository = repository
 
     @enroute.broker.query("GetTicketQRS")
@@ -53,7 +53,7 @@ class TicketQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content(resolve_references=True)
         uuid = diff.uuid
         version = diff["version"]
         code = diff["code"]
@@ -68,6 +68,6 @@ class TicketQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
 
         print(diff)

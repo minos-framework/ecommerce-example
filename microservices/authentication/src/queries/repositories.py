@@ -9,6 +9,9 @@ from uuid import (
     UUID,
 )
 
+from minos.aggregate import (
+    Ref,
+)
 from minos.common import (
     Config,
     Injectable,
@@ -22,9 +25,6 @@ from sqlalchemy.exc import (
     IntegrityError,
 )
 
-from ..aggregates import (
-    Customer,
-)
 from .exceptions import (
     AlreadyExists,
 )
@@ -34,6 +34,7 @@ from .models import (
 )
 
 
+# noinspection PyUnresolvedReferences
 @Injectable("credentials_repository")
 class CredentialsQueryRepository(SetupMixin):
     """Credentials Repository class."""
@@ -50,13 +51,13 @@ class CredentialsQueryRepository(SetupMixin):
         return cls(*args, **(config.get_default_database() | {"database": "auth_query_db"}) | kwargs)
 
     async def create_credentials(
-        self, uuid: UUID, username: str, password: str, active: bool, user: Union[Customer, UUID]
+        self, uuid: UUID, username: str, password: str, active: bool, user: Ref["src.aggregates.Customer"]
     ) -> None:
         """Create new row on the credentials table.
 
         :param uuid: The credentials identifier.
-        :param username: The credentials username.
-        :param password: The credentials password.
+        :param username: The username.
+        :param password: The password.
         :param active: The credentials status.
         :param user: The user related to the credentials.
         :return: This method does not return anything.

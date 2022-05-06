@@ -2,37 +2,26 @@ from __future__ import (
     annotations,
 )
 
-from asyncio import (
-    gather,
-)
 from typing import (
     Any,
-    Optional,
 )
 from uuid import (
     UUID,
 )
 
 from minos.aggregate import (
-    Action,
     Aggregate,
-    Event,
-    ExternalEntity,
-    IncrementalFieldDiff,
+    Entity,
     Ref,
-    RootEntity,
-)
-from minos.networks import (
-    BrokerMessageV1,
-    BrokerMessageV1Payload,
 )
 
 
-class Review(RootEntity):
-    """Product Review class."""
+# noinspection PyUnresolvedReferences
+class Review(Entity):
+    """Product Review Entity class."""
 
-    product: Ref[Product]
-    user: Ref[Customer]
+    product: Ref["src.aggregates.Product"]
+    user: Ref["src.aggregates.Customer"]
     title: str
     description: str
     score: int
@@ -42,18 +31,6 @@ class Review(RootEntity):
         if not isinstance(score, int):
             return False
         return 1 <= score <= 5
-
-
-class Product(ExternalEntity):
-    """Product ExternalEntity class."""
-
-    title: str
-
-
-class Customer(ExternalEntity):
-    """Customer ExternalEntity class."""
-
-    name: str
 
 
 class ReviewAggregate(Aggregate[Review]):

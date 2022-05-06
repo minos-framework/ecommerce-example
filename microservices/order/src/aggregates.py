@@ -2,7 +2,6 @@ from __future__ import (
     annotations,
 )
 
-from asyncio import gather
 from datetime import (
     datetime,
 )
@@ -20,18 +19,11 @@ from uuid import (
 from minos.aggregate import (
     Aggregate,
     Entity,
-    EntitySet,
-    ExternalEntity,
     Ref,
-    RootEntity,
-    ValueObject, Action, IncrementalFieldDiff, Event,
+    ValueObject,
 )
 from minos.common import (
     Inject,
-)
-from minos.networks import (
-    BrokerMessageV1,
-    BrokerMessageV1Payload,
 )
 from minos.saga import (
     SagaContext,
@@ -41,17 +33,20 @@ from minos.saga import (
 
 
 class OrderStatus(str, Enum):
+    """Order Status class."""
+
     CREATED = "created"
     PROCESSING = "processing"
     COMPLETED = "completed"
 
 
-class Order(RootEntity):
-    """Order RootEntity class."""
+# noinspection PyUnresolvedReferences
+class Order(Entity):
+    """Order Entity class."""
 
-    ticket: Optional[Ref[Ticket]]
+    ticket: Optional[Ref["src.aggregates.Ticket"]]
 
-    payment: Optional[Ref[Payment]]
+    payment: Optional[Ref["src.aggregates.Payment"]]
     payment_detail: PaymentDetail
 
     # TODO: Future Shipment Microservice
@@ -63,44 +58,21 @@ class Order(RootEntity):
     created_at: datetime
     updated_at: datetime
 
-    customer: Ref[Customer]
-
-
-class Ticket(ExternalEntity):
-    """Ticket RootEntity class."""
-
-    total_price: float
-    entries: EntitySet[TicketEntry]
-
-
-class TicketEntry(Entity):
-    """Order Item class"""
-
-    quantity: int
-    product: Ref[Product]
-
-
-class Product(ExternalEntity):
-    """Order ExternalEntity class."""
-
-    title: str
-    price: float
+    customer: Ref["src.aggregates.Customer"]
 
 
 class PaymentDetail(ValueObject):
+    """Payment Detail class."""
+
     card_holder: str
     card_number: int
     card_expire: str
     card_cvc: str
 
 
-class Payment(ExternalEntity):
-    """Payment ExternalEntity class"""
-
-    status: str
-
-
 class ShipmentDetail(ValueObject):
+    """Shipment Detail class."""
+
     name: str
     last_name: str
     email: str
@@ -111,13 +83,7 @@ class ShipmentDetail(ValueObject):
     zip: int
 
 
-class Customer(ExternalEntity):
-    """User class"""
-
-    name: str
-    surname: str
-
-
+# noinspection PyUnresolvedReferences
 class OrderAggregate(Aggregate[Order]):
     """Order Aggregate class."""
 
@@ -155,12 +121,12 @@ class OrderAggregate(Aggregate[Order]):
 
     async def create_order_instance(
         self,
-        ticket: Ref[Ticket],
-        payment: Ref[Payment],
+        ticket: Ref["src.aggregates.Ticket"],
+        payment: Ref["src.aggregates.Payment"],
         payment_detail: PaymentDetail,
         shipment_detail: ShipmentDetail,
         total_amount: float,
-        customer: Ref[Customer],
+        customer: Ref["src.aggregates.Customer"],
     ) -> Order:
         """TODO"""
         order, delta = await self.repository.create(

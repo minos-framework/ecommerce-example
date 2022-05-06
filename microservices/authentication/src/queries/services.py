@@ -6,7 +6,7 @@ from jwt.exceptions import (
     InvalidTokenError,
 )
 from minos.aggregate import (
-    Event,
+    Delta,
 )
 from minos.common import (
     Inject,
@@ -123,8 +123,8 @@ class CredentialsQueryService(QueryService):
     async def credentials_created(self, request: Request) -> None:
         """Handle the ``CredentialsCreated`` domain event.
 
-        :param request: A ``Request`` instance containing the ``Event``.
+        :param request: A ``Request`` instance containing the ``Delta``.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
         await self.repository.create_credentials(diff.uuid, diff.username, diff.password, diff.active, diff.user)

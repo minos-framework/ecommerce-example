@@ -1,7 +1,7 @@
 import logging
 
 from minos.aggregate import (
-    Event,
+    Delta,
 )
 from minos.common import (
     UUID_REGEX,
@@ -84,7 +84,7 @@ class OrderQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
 
         logger.info(f'Unresolved ticket: {diff["ticket"]!r}')
         await diff["ticket"].resolve()

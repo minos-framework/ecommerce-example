@@ -70,7 +70,7 @@ aggregate:
     - src.aggregates.Order
   repositories:
     transaction: minos.transactions.DatabaseTransactionRepository
-    event: minos.aggregate.DatabaseEventRepository
+    event: minos.aggregate.DatabaseDeltaRepository
     snapshot: minos.aggregate.DatabaseSnapshotRepository
 routers:
   - minos.networks.BrokerRouter

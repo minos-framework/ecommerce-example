@@ -1,5 +1,5 @@
 from minos.aggregate import (
-    Event,
+    Delta,
 )
 from minos.common import (
     Inject,
@@ -33,7 +33,7 @@ class PaymentQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
         uuid = diff.uuid
         amount = diff["amount"]
 
@@ -46,6 +46,6 @@ class PaymentQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
 
         await self.repository.delete(diff.uuid)

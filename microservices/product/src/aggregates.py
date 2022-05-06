@@ -15,21 +15,14 @@ from uuid import (
 )
 
 from minos.aggregate import (
-    Action,
     Aggregate,
-    Event,
-    IncrementalFieldDiff,
-    RootEntity,
+    Entity,
     ValueObject,
 )
-from minos.networks import (
-    BrokerMessageV1,
-    BrokerMessageV1Payload,
-)
 
 
-class Product(RootEntity):
-    """Product class."""
+class Product(Entity):
+    """Product Entity class."""
 
     code: str
     title: str
@@ -220,4 +213,3 @@ class ProductAggregate(Aggregate[Product]):
         if not feasible:
             await self.purchase({k: -v for k, v in quantities.items()})
             raise ValueError("The purchase products query could not be satisfied.")
-

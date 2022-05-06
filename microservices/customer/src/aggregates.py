@@ -1,10 +1,9 @@
-from asyncio import gather
 from datetime import (
     datetime,
 )
 from typing import (
     Any,
-    Union, Optional,
+    Union,
 )
 from uuid import (
     UUID,
@@ -12,19 +11,20 @@ from uuid import (
 
 from minos.aggregate import (
     Aggregate,
-    RootEntity,
-    ValueObject, Action, IncrementalFieldDiff, Event,
+    Entity,
+    ValueObject,
 )
-from minos.networks import BrokerMessageV1, BrokerMessageV1Payload
 
 
 class Address(ValueObject):
+    """Address Value Object class."""
+
     street: str
     street_no: int
 
 
-class Customer(RootEntity):
-    """Customer RootEntity class."""
+class Customer(Entity):
+    """Customer Entity class."""
 
     name: str
     surname: str

@@ -1,5 +1,5 @@
 from minos.aggregate import (
-    Event,
+    Delta,
 )
 from minos.common import (
     Inject,
@@ -136,7 +136,7 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
         await self.repository.create(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ReviewUpdated")
@@ -146,7 +146,7 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
         await self.repository.update(uuid=diff.uuid, version=diff.version, **diff.fields_diff)
 
     @enroute.broker.event("ProductUpdated.title")
@@ -156,7 +156,7 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
         print(diff)
 
     @enroute.broker.event("CustomerUpdated.name")
@@ -166,5 +166,5 @@ class ReviewQueryService(QueryService):
         :param request: A request instance containing the aggregate difference.
         :return: This method does not return anything.
         """
-        diff: Event = await request.content()
+        diff: Delta = await request.content()
         print(diff)
