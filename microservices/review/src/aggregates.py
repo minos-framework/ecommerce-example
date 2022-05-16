@@ -20,8 +20,8 @@ from minos.aggregate import (
 class Review(Entity):
     """Product Review Entity class."""
 
-    product: Ref["src.aggregates.Product"]
-    user: Ref["src.aggregates.Customer"]
+    product: Ref["Product"]
+    user: Ref["Customer"]
     title: str
     description: str
     score: int

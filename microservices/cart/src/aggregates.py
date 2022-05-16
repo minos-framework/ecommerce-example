@@ -32,7 +32,7 @@ class CartEntry(Entity):
     """CartEntry Entity class."""
 
     quantity: int
-    product: Ref["src.aggregates.Product"]
+    product: Ref["Product"]
 
 
 class CartAggregate(Aggregate[Cart]):

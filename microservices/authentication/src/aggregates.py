@@ -16,12 +16,8 @@ from minos.aggregate import (
     Entity,
     Ref,
 )
-from minos.common import (
-    Inject,
-)
 from minos.saga import (
     SagaContext,
-    SagaManager,
 )
 
 logger = logging.getLogger(__name__)
@@ -37,17 +33,12 @@ class Credentials(Entity):
     username: str
     password: str
     active: bool
-    user: Ref["src.aggregates.Customer"]
+    user: Ref["Customer"]
 
 
 # noinspection PyUnresolvedReferences
 class CredentialsAggregate(Aggregate[Credentials]):
     """Credentials Aggregate class."""
-
-    @Inject()
-    def __init__(self, *args, saga_manager: SagaManager, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.saga_manager = saga_manager
 
     async def create_credentials(self, username: str, password: str, metadata: dict[str, Any]) -> Credentials:
         """TODO"""
@@ -64,7 +55,7 @@ class CredentialsAggregate(Aggregate[Credentials]):
         return credentials
 
     async def create_credentials_instance(
-        self, username: str, password: str, user: Ref["src.aggregates.Customer"]
+        self, username: str, password: str, user: Ref["Customer"]
     ) -> Credentials:
         """TODO"""
 

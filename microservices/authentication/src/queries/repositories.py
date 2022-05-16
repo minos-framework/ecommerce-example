@@ -51,7 +51,7 @@ class CredentialsQueryRepository(SetupMixin):
         return cls(*args, **(config.get_default_database() | {"database": "auth_query_db"}) | kwargs)
 
     async def create_credentials(
-        self, uuid: UUID, username: str, password: str, active: bool, user: Ref["src.aggregates.Customer"]
+        self, uuid: UUID, username: str, password: str, active: bool, user: Ref["Customer"]
     ) -> None:
         """Create new row on the credentials table.
 

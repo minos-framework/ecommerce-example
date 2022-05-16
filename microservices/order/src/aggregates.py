@@ -22,12 +22,8 @@ from minos.aggregate import (
     Ref,
     ValueObject,
 )
-from minos.common import (
-    Inject,
-)
 from minos.saga import (
     SagaContext,
-    SagaManager,
     SagaStatus,
 )
 
@@ -44,9 +40,9 @@ class OrderStatus(str, Enum):
 class Order(Entity):
     """Order Entity class."""
 
-    ticket: Optional[Ref["src.aggregates.Ticket"]]
+    ticket: Optional[Ref["Ticket"]]
 
-    payment: Optional[Ref["src.aggregates.Payment"]]
+    payment: Optional[Ref["Payment"]]
     payment_detail: PaymentDetail
 
     # TODO: Future Shipment Microservice
@@ -58,7 +54,7 @@ class Order(Entity):
     created_at: datetime
     updated_at: datetime
 
-    customer: Ref["src.aggregates.Customer"]
+    customer: Ref["Customer"]
 
 
 class PaymentDetail(ValueObject):
@@ -86,11 +82,6 @@ class ShipmentDetail(ValueObject):
 # noinspection PyUnresolvedReferences
 class OrderAggregate(Aggregate[Order]):
     """Order Aggregate class."""
-
-    @Inject()
-    def __init__(self, *args, saga_manager: SagaManager, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.saga_manager = saga_manager
 
     async def create_order(
         self, cart_uuid: UUID, customer_uuid: UUID, payment: dict[str, Any], shipment: dict[str, Any]
@@ -121,12 +112,12 @@ class OrderAggregate(Aggregate[Order]):
 
     async def create_order_instance(
         self,
-        ticket: Ref["src.aggregates.Ticket"],
-        payment: Ref["src.aggregates.Payment"],
+        ticket: Ref["Ticket"],
+        payment: Ref["Payment"],
         payment_detail: PaymentDetail,
         shipment_detail: ShipmentDetail,
         total_amount: float,
-        customer: Ref["src.aggregates.Customer"],
+        customer: Ref["Customer"],
     ) -> Order:
         """TODO"""
         order, delta = await self.repository.create(
