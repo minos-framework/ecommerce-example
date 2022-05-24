@@ -1,0 +1,141 @@
+version: "3.9"
+
+x-microservice-environment: &microservice-environment
+  - MINOS_BROKER_QUEUE_HOST=postgres
+  - MINOS_BROKER_HOST=kafka
+  - MINOS_REPOSITORY_HOST=postgres
+  - MINOS_SNAPSHOT_HOST=postgres
+  - MINOS_DISCOVERY_HOST=discovery
+
+x-microservice-depends-on: &microservice-depends-on
+  - postgres
+  - kafka
+  - api-gateway
+
+services:
+  zookeeper:
+    restart: always
+    image: wurstmeister/zookeeper:latest
+    logging:
+      driver: none
+
+  kafka:
+    restart: always
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+  postgres:
+    restart: always
+    build: external/postgres
+    ports:
+    - "5432:5432"
+    volumes:
+      - postgres_volume:/var/lib/postgresql
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=kong,order_db,payment_db,product_db,ticket_db,customer_db,cart_query_db,ticket_query_db,product_query_db,payment_query_db,review_db,review_query_db,auth_db,auth_query_db
+      - POSTGRES_USER=minos
+      - POSTGRES_PASSWORD=min0s
+#    logging:
+#      driver: none
+
+  redis:
+    image: redis:latest
+    command: "redis-server"
+    logging:
+      driver: none
+
+  tavern:
+    build: external/tavern
+    profiles:
+      - donotstart
+    volumes:
+      - ./external/tavern/:/tavern/:ro
+
+  kong-migration:
+    image: kong:latest
+    command: "kong migrations bootstrap"
+    restart: on-failure
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_USER: minos
+      KONG_PG_PASSWORD: min0s
+    depends_on:
+      - postgres
+
+  api-gateway:
+    image: kong:latest
+    restart: always
+    environment:
+      KONG_PG_HOST: postgres
+      KONG_PG_USER: minos
+      KONG_PG_PASSWORD: min0s
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_PROXY_LISTEN_SSL: 0.0.0.0:8443
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    depends_on:
+      - kong-migration
+      - postgres
+    ports:
+      - "8001:8001"
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+
+  microservice-order:
+    restart: always
+    build:
+      context: microservices/order
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-payment:
+    restart: always
+    build:
+      context: microservices/payment
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-product:
+    restart: always
+    build:
+      context: microservices/product
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-ticket:
+    restart: always
+    build:
+      context: microservices/ticket
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-customer:
+    restart: always
+    build:
+      context: microservices/customer
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+  microservice-review:
+    restart: always
+    build:
+      context: microservices/review
+      target: production
+    environment: *microservice-environment
+    depends_on: *microservice-depends-on
+
+volumes:
+  postgres_volume:
