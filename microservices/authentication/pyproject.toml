@@ -13,7 +13,7 @@ minos-microservice-aggregate = "^0.4.0"
 minos-microservice-saga = "^0.4.0"
 minos-microservice-cqrs = "^0.4.0"
 typer = "^0.3.2"
-PyJWT = "^2.1.0"
+PyJWT = "^2.4.0"
 SQLAlchemy = "1.4.22"
 
 [tool.poetry.dev-dependencies]
