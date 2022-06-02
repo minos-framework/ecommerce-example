@@ -6,8 +6,6 @@ databases:
   default:
     client: minos.plugins.aiopg.AiopgDatabaseClient
     database: product_db
-  saga:
-    client: minos.plugins.lmdb.LmdbDatabaseClient
     path: "./product.lmdb"
 interfaces:
   broker:

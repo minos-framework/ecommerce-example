@@ -53,8 +53,6 @@ databases:
     password: min0s
     host: localhost
     port: 5432
-  saga:
-    client: minos.plugins.lmdb.LmdbDatabaseClient
 saga:
   manager: minos.saga.SagaManager
 discovery:

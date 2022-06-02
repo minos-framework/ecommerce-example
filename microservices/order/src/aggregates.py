@@ -88,14 +88,14 @@ class OrderAggregate(Aggregate[Order]):
     ) -> Order:
         """TODO"""
         from .commands import (
-            CREATE_ORDER,
+            CreateOrderSaga,
         )
 
         payment_detail = PaymentDetail(**payment)
         shipment_detail = ShipmentDetail(**shipment)
 
         execution = await self.saga_manager.run(
-            CREATE_ORDER,
+            CreateOrderSaga,
             context=SagaContext(
                 cart_uuid=cart_uuid,
                 customer_uuid=customer_uuid,

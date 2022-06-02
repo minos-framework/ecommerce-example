@@ -5,7 +5,6 @@ from .aggregates import (
     ShipmentDetail,
 )
 from .commands import (
-    CREATE_ORDER,
     OrderCommandService,
 )
 from .queries import (

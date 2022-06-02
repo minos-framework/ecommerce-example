@@ -25,9 +25,6 @@ databases:
     password: min0s
     host: localhost
     port: 5432
-  saga:
-    client: minos.plugins.lmdb.LmdbDatabaseClient
-    path: "./order.lmdb"
 interfaces:
   broker:
     port: minos.networks.BrokerPort

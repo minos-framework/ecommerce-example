@@ -1,5 +1,5 @@
 from .sagas import (
-    CREATE_ORDER,
+    CreateOrderSaga,
 )
 from .services import (
     OrderCommandService,

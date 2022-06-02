@@ -51,8 +51,6 @@ databases:
     database: payment_db
     user: minos
     password: min0s
-  saga:
-    client: minos.plugins.lmdb.LmdbDatabaseClient
 saga:
   manager: minos.saga.SagaManager
 discovery:
