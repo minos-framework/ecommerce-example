@@ -7,17 +7,17 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = { path = "../../../minos-python/packages/core/minos-microservice-common", develop = true }
-minos-microservice-transactions = { path = "../../../minos-python/packages/core/minos-microservice-transactions", develop = true }
-minos-microservice-networks = { path = "../../../minos-python/packages/core/minos-microservice-networks", develop = true }
-minos-microservice-aggregate = { path = "../../../minos-python/packages/core/minos-microservice-aggregate", develop = true }
-minos-microservice-saga = { path = "../../../minos-python/packages/core/minos-microservice-saga", develop = true }
-minos-microservice-cqrs = { path = "../../../minos-python/packages/core/minos-microservice-cqrs", develop = true }
-minos-broker-kafka = { path = "../../../minos-python/packages/plugins/minos-broker-kafka", develop = true }
-minos-discovery-minos = { path = "../../../minos-python/packages/plugins/minos-discovery-minos", develop = true }
-minos-http-aiohttp = { path = "../../../minos-python/packages/plugins/minos-http-aiohttp", develop = true }
-minos-database-aiopg = { path = "../../../minos-python/packages/plugins/minos-database-aiopg", develop = true }
-minos-database-lmdb = { path = "../../../minos-python/packages/plugins/minos-database-lmdb", develop = true }
+minos-microservice-common = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-microservice-transactions = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-microservice-networks = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-microservice-aggregate = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-microservice-saga = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-microservice-cqrs = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-broker-kafka = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-discovery-minos = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-http-aiohttp = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-database-aiopg = {version = "^0.8.0.dev2", allow-prereleases = true}
+minos-database-lmdb = {version = "^0.8.0.dev2", allow-prereleases = true}
 typer = "^0.3.2"
 PyJWT = "^2.1.0"
 SQLAlchemy = "1.4.22"
