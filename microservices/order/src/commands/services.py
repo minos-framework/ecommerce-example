@@ -31,3 +31,9 @@ class OrderCommandService(CommandService):
             raise ResponseException("An error occurred during order creation.")
 
         return Response(order)
+
+    # noinspection PyMissingOrEmptyDocstring,PyUnusedLocal
+    @enroute.rest.command("/orders", "GET")
+    async def get_order(self, request: Request) -> Response:
+        orders = await self.aggregate.get_orders_with_positive_total_amount()
+        return Response(orders)

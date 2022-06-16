@@ -22,10 +22,12 @@ from minos.aggregate import (
     Ref,
     ValueObject,
 )
+from minos.common import DatabaseMixin
 from minos.saga import (
     SagaContext,
     SagaStatus,
 )
+from sqlalchemy import select
 
 
 class OrderStatus(str, Enum):
@@ -79,8 +81,7 @@ class ShipmentDetail(ValueObject):
     zip: int
 
 
-# noinspection PyUnresolvedReferences
-class OrderAggregate(Aggregate[Order]):
+class OrderAggregate(Aggregate[Order], DatabaseMixin):
     """Order Aggregate class."""
 
     async def create_order(
@@ -133,3 +134,11 @@ class OrderAggregate(Aggregate[Order]):
         await self.publish_domain_event(delta)
 
         return order
+
+    # noinspection PyMissingOrEmptyDocstring
+    async def get_orders_with_positive_total_amount(self) -> list[Order]:
+        order_table = await self.repository.snapshot.get_table(Order)
+
+        statement = select(order_table).filter(order_table.columns["total_amount"] > 0)
+
+        return [Order(**row) async for row in self.repository.snapshot.execute_statement(statement)]
