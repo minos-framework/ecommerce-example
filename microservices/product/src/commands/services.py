@@ -63,7 +63,7 @@ class ProductCommandService(CommandService):
         uuid = params["uuid"]
         amount = content["amount"]
 
-        product = self.aggregate.update_inventory(uuid, amount)
+        product = await self.aggregate.update_inventory(uuid, amount)
 
         return Response(product)
 
@@ -79,7 +79,7 @@ class ProductCommandService(CommandService):
         uuid = params["uuid"]
         amount_diff = content["amount_diff"]
 
-        product = self.aggregate.update_inventory_diff(uuid, amount_diff)
+        product = await self.aggregate.update_inventory_diff(uuid, amount_diff)
 
         return Response(product)
 

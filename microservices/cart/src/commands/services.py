@@ -41,7 +41,7 @@ class CartCommandService(CommandService):
 
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
-        execution_uuid = self.aggregate.add_cart_item(cart, product_uuid, quantity)
+        execution_uuid = await self.aggregate.add_cart_item(cart, product_uuid, quantity)
 
         return Response(execution_uuid)
 
@@ -62,7 +62,7 @@ class CartCommandService(CommandService):
 
         product_uuid = content["product_uuid"]
         quantity = content["quantity"]
-        execution_uuid = self.aggregate.update_cart_item(cart, product_uuid, quantity)
+        execution_uuid = await self.aggregate.update_cart_item(cart, product_uuid, quantity)
         return Response(execution_uuid)
 
     @enroute.rest.command("/carts/{uuid}/items", "DELETE")
@@ -82,7 +82,7 @@ class CartCommandService(CommandService):
 
         product_uuid = content["product_uuid"]
 
-        execution_uuid = self.aggregate.remove_cart_item(cart, product_uuid)
+        execution_uuid = await self.aggregate.remove_cart_item(cart, product_uuid)
 
         return Response(execution_uuid)
 
@@ -100,6 +100,6 @@ class CartCommandService(CommandService):
             content = await request.content()
             uuid = content["uuid"]
 
-        execution_uuid = self.aggregate.delete_cart(uuid)
+        execution_uuid = await self.aggregate.delete_cart(uuid)
 
         return Response(execution_uuid)

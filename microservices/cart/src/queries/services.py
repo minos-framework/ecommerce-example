@@ -73,6 +73,7 @@ class CartQueryService(QueryService):
         diff: Delta = await request.content()
 
         for entry in diff["entries"]:
+            await entry.resolve()
             await entry["product"].resolve()
 
             await self.repository.insert_cart_item(
