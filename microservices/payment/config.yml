@@ -12,7 +12,7 @@ aggregate:
   repositories:
     transaction: minos.transactions.DatabaseTransactionRepository
     event: minos.aggregate.DatabaseDeltaRepository
-    snapshot: minos.aggregate.DatabaseSnapshotRepository
+    snapshot: minos.plugins.sqlalchemy.SqlAlchemySnapshotRepository
 pools:
   lock: minos.common.DatabaseLockPool
   database: minos.common.DatabaseClientPool
@@ -51,6 +51,14 @@ databases:
     database: payment_db
     user: minos
     password: min0s
+  snapshot:
+    client: minos.plugins.sqlalchemy.SqlAlchemyDatabaseClient
+    driver: postgresql+asyncpg
+    database: payment_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
 saga:
   manager: minos.saga.SagaManager
 discovery:

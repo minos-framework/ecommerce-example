@@ -10,7 +10,7 @@ aggregate:
   repositories:
     transaction: minos.transactions.DatabaseTransactionRepository
     event: minos.aggregate.DatabaseDeltaRepository
-    snapshot: minos.aggregate.DatabaseSnapshotRepository
+    snapshot: minos.plugins.sqlalchemy.SqlAlchemySnapshotRepository
 pools:
   lock: minos.common.DatabaseLockPool
   database: minos.common.DatabaseClientPool
@@ -48,6 +48,14 @@ services:
 databases:
   default:
     client: minos.plugins.aiopg.AiopgDatabaseClient
+    database: auth_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+  snapshot:
+    client: minos.plugins.sqlalchemy.SqlAlchemyDatabaseClient
+    driver: postgresql+asyncpg
     database: auth_db
     user: minos
     password: min0s

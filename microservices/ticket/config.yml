@@ -9,10 +9,11 @@ aggregate:
     repository: minos.networks.DatabaseBrokerPublisherTransactionRepository
   entities:
     - src.aggregates.Ticket
+    - src.aggregates.TicketEntry
   repositories:
     transaction: minos.transactions.DatabaseTransactionRepository
     event: minos.aggregate.DatabaseDeltaRepository
-    snapshot: minos.aggregate.DatabaseSnapshotRepository
+    snapshot: minos.plugins.sqlalchemy.SqlAlchemySnapshotRepository
 pools:
   lock: minos.common.DatabaseLockPool
   database: minos.common.DatabaseClientPool
@@ -48,6 +49,14 @@ services:
 databases:
   default:
     client: minos.plugins.aiopg.AiopgDatabaseClient
+    database: ticket_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+  snapshot:
+    client: minos.plugins.sqlalchemy.SqlAlchemyDatabaseClient
+    driver: postgresql+asyncpg
     database: ticket_db
     user: minos
     password: min0s

@@ -6,7 +6,18 @@ databases:
   default:
     client: minos.plugins.aiopg.AiopgDatabaseClient
     database: product_db
-    path: "./product.lmdb"
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+  snapshot:
+    client: minos.plugins.sqlalchemy.SqlAlchemyDatabaseClient
+    driver: postgresql+asyncpg
+    database: product_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
 interfaces:
   broker:
     port: minos.networks.BrokerPort
@@ -27,6 +38,9 @@ interfaces:
       port: 8084
   periodic:
     port: minos.networks.PeriodicPort
+discovery:
+  connector: minos.networks.DiscoveryConnector
+  client: minos.plugins.minos_discovery.MinosDiscoveryClient
 pools:
   lock: minos.common.DatabaseLockPool
   database: minos.common.DatabaseClientPool
@@ -43,7 +57,7 @@ aggregate:
   repositories:
     transaction: minos.transactions.DatabaseTransactionRepository
     event: minos.aggregate.DatabaseDeltaRepository
-    snapshot: minos.aggregate.DatabaseSnapshotRepository
+    snapshot: minos.plugins.sqlalchemy.SqlAlchemySnapshotRepository
 routers:
   - minos.networks.BrokerRouter
   - minos.networks.PeriodicRouter

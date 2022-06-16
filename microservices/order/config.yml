@@ -11,15 +11,8 @@ databases:
     host: localhost
     port: 5432
   snapshot:
-    client: minos.plugins.aiopg.AiopgDatabaseClient
-    flavor: mysql
-    database: order_db
-    user: minos
-    password: min0s
-    host: localhost
-    port: 5432
-  broker:
-    client: minos.plugins.aiopg.AiopgDatabaseClient
+    client: minos.plugins.sqlalchemy.SqlAlchemyDatabaseClient
+    driver: postgresql+asyncpg
     database: order_db
     user: minos
     password: min0s
@@ -68,7 +61,7 @@ aggregate:
   repositories:
     transaction: minos.transactions.DatabaseTransactionRepository
     event: minos.aggregate.DatabaseDeltaRepository
-    snapshot: minos.aggregate.DatabaseSnapshotRepository
+    snapshot: minos.plugins.sqlalchemy.SqlAlchemySnapshotRepository
 routers:
   - minos.networks.BrokerRouter
   - minos.networks.PeriodicRouter
